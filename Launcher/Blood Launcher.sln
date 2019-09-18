@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29306.81
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blood.Launcher", "Blood.Launcher\Blood.Launcher.csproj", "{42E04315-138C-43B1-A9D6-06EC2DFF72E4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{42E04315-138C-43B1-A9D6-06EC2DFF72E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42E04315-138C-43B1-A9D6-06EC2DFF72E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42E04315-138C-43B1-A9D6-06EC2DFF72E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42E04315-138C-43B1-A9D6-06EC2DFF72E4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1D78451A-6148-4CB6-9090-F0C304E7EF5F}
+	EndGlobalSection
+EndGlobal
