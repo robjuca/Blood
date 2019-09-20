@@ -1,17 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
+﻿/*----------------------------------------------------------------
+  Copyright (C) 2001 R&R Soft - All rights reserved.
+  author: Roberto Oliveira Jucá    
+----------------------------------------------------------------*/
 
-namespace Blood.Launcher
+//----- Include
+using System.Windows;
+//---------------------------//
+
+namespace Launcher
 {
-  /// <summary>
-  /// Interaction logic for App.xaml
-  /// </summary>
-  public partial class App : Application
+  public partial class TApp : Application
   {
-  }
-}
+    #region Overrides
+    protected override void OnStartup (StartupEventArgs e)
+    {
+      rr.Library.Types.TSingleInstance.Make ();
+
+      base.OnStartup (e);
+    }
+    #endregion
+  };
+  //---------------------------//
+
+}  // namespace

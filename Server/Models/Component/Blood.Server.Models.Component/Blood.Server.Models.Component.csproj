@@ -1,13 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>b124992c-bd9d-404e-9ea5-c64704ab1bfa</ProjectGuid>
+    <ProjectGuid>{B124992C-BD9D-404E-9EA5-C64704AB1BFA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Blood.Server.Models.Component</RootNamespace>
+    <RootNamespace>Server.Models.Component</RootNamespace>
     <AssemblyName>Blood.Server.Models.Component</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\..\..\Bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -31,24 +31,58 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System"/>
-    
-    <Reference Include="System.Core"/>
-    <Reference Include="System.Xml.Linq"/>
-    <Reference Include="System.Data.DataSetExtensions"/>
-    
-    
-    <Reference Include="Microsoft.CSharp"/>
-    
-    <Reference Include="System.Data"/>
-    
-    <Reference Include="System.Net.Http"/>
-    
-    <Reference Include="System.Xml"/>
+    <Reference Include="Blood.Server.Models.Infrastructure, Version=1.0.2019.10, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Bin\Blood.Server.Models.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="rr.Library.Helper, Version=1.0.2014.11, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Bin\rr.Library.Helper.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="Infrastructure\CollectionAction.cs" />
+    <Compile Include="Infrastructure\ComponentOperation.cs" />
+    <Compile Include="Infrastructure\EntityAction.cs" />
+    <Compile Include="Infrastructure\ModelAction.cs" />
+    <Compile Include="Infrastructure\Model\ComponentModel.cs" />
+    <Compile Include="Models\CategoryRelation.cs" />
+    <Compile Include="Models\ComponentDescriptor.cs" />
+    <Compile Include="Models\ComponentInfo.cs" />
+    <Compile Include="Models\ComponentRelation.cs" />
+    <Compile Include="Models\ComponentStatus.cs" />
+    <Compile Include="Models\ExtensionDocument.cs" />
+    <Compile Include="Models\ExtensionGeometry.cs" />
+    <Compile Include="Models\ExtensionImage.cs" />
+    <Compile Include="Models\ExtensionLayout.cs" />
+    <Compile Include="Models\ExtensionNode.cs" />
+    <Compile Include="Models\ExtensionText.cs" />
+    <Compile Include="Models\Extension\CategoryRelationEntity.cs" />
+    <Compile Include="Models\Extension\ComponentDescriptorEntity.cs" />
+    <Compile Include="Models\Extension\ComponentInfoEntity.cs" />
+    <Compile Include="Models\Extension\ComponentRelationEntity.cs" />
+    <Compile Include="Models\Extension\ComponentStatusEntity.cs" />
+    <Compile Include="Models\Extension\ExtensionDocumentEntity.cs" />
+    <Compile Include="Models\Extension\ExtensionGeometryEntity.cs" />
+    <Compile Include="Models\Extension\ExtensionImageEntity.cs" />
+    <Compile Include="Models\Extension\ExtensionLayoutEntity.cs" />
+    <Compile Include="Models\Extension\ExtensionNodeEntity.cs" />
+    <Compile Include="Models\Extension\ExtensionTextEntity.cs" />
+    <Compile Include="Models\Extension\Settings.cs" />
+    <Compile Include="Models\Settings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
- </Project>
+</Project>

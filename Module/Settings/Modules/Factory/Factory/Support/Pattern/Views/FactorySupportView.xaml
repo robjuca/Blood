@@ -1,0 +1,139 @@
+﻿<base:ViewChildBase x:Class="Module.Settings.Factory.Support.Pattern.Views.TFactorySupportView"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+                    xmlns:base="clr-namespace:rr.Library.Infrastructure;assembly=rr.Library.Infrastructure"
+                    xmlns:validation="clr-namespace:rr.Library.Helper;assembly=rr.Library.Helper"
+                    xmlns:caliburn="http://www.caliburnproject.org"
+                    DataContext="{x:Null}"
+                    x:Name="ModuleSettingsFactorySupportViewModel">
+
+    <UserControl.Resources>
+        <CollectionViewSource x:Key="SupportInfoViewSource"
+                              Source="{Binding Model.SupportInfoCollection}" />
+
+        <DataTemplate x:Key="SupportInfoDataTemplate">
+            <Border Padding="6"
+                    BorderThickness="0 .8 0 .8"
+                    BorderBrush="LightGray">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+
+                    <Border Grid.Row="0">
+                        <StackPanel Orientation="Horizontal">
+                            <!--support icon-->
+                            <ContentControl Margin="0 0 5 0"
+                                            Style="{Binding PropertyIconStyle}" />
+
+                            <!--PropertyName-->
+                            <TextBlock Text="{Binding PropertyName}"
+                                       FontWeight="Bold" />
+
+                            <!--PropertyDescription-->
+                            <TextBlock Margin="5 0 0 0"
+                                       Text="{Binding PropertyDescription}" />
+                        </StackPanel>
+                    </Border>
+
+                    <!--value-->
+                    <Border Grid.Row="1">
+                        <StackPanel Orientation="Horizontal"
+                                    Margin="20 0 0 0">
+                            <TextBlock Text="value:"
+                                       VerticalAlignment="Bottom" />
+
+                            <TextBox Margin="5 0 0 0"
+                                     Width="100"
+                                     MaxLength="3"
+                                     HorizontalContentAlignment="Center"
+                                     materialDesign:HintAssist.Hint="260 - 460"
+                                     materialDesign:HintAssist.FloatingScale="1.0"
+                                     materialDesign:TextFieldAssist.TextBoxViewMargin="3"
+                                     materialDesign:ValidationAssist.UsePopup="True"
+                                     Style="{StaticResource MaterialDesignFloatingHintTextBox}">
+                                <TextBox.Text>
+                                    <Binding Path="PropertyValue"
+                                             UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <validation:TNumberOnlyValidationRule ValidatesOnTargetUpdated="True" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Border>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Border>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!--title-->
+            <Border Grid.Row="0">
+                <materialDesign:Card Padding="4"
+                                     HorizontalAlignment="Stretch"
+                                     VerticalAlignment="Center">
+                    <StackPanel Margin="0 0 10 0"
+                                Orientation="Horizontal"
+                                HorizontalAlignment="Right">
+                        <TextBlock Text="support"
+                                   VerticalAlignment="Center" />
+
+                        <ContentControl Margin="5 0 0 0"
+                                        Style="{DynamicResource SettingsSupportIcon}" />
+                    </StackPanel>
+                </materialDesign:Card>
+            </Border>
+
+            <!--property list-->
+            <Border Grid.Row="1"
+                    Padding="30 10 30 10">
+                <ItemsControl ItemsSource="{Binding Source={StaticResource SupportInfoViewSource}}"
+                              ItemTemplate="{StaticResource SupportInfoDataTemplate}">
+                </ItemsControl>
+            </Border>
+
+            <!--error panel, apply button-->
+            <Border Grid.Row="2"
+                    Padding="0 0 5 5"
+                    VerticalAlignment="Bottom">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <!--error panel-->
+                    <Border Grid.Column="0"
+                            Visibility="{Binding Model.ErrorPanelVisibility}">
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Center">
+                            <ContentControl Style="{DynamicResource ErrorMessageIcon}" />
+                            <TextBlock Margin="5 0 0 0"
+                                       VerticalAlignment="Center"
+                                       Text="{Binding Model.ErrorPanelMessage}" />
+                        </StackPanel>
+                    </Border>
+
+                    <!--apply button-->
+                    <Border Grid.Column="1">
+                        <Button Width="70"
+                                Content="apply"
+                                caliburn:Message.Attach="[Event Click] = [OnApplyCommadClicked ()]" />
+                    </Border>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+
+</base:ViewChildBase>

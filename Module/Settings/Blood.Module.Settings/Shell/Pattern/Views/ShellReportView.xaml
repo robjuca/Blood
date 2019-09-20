@@ -1,0 +1,165 @@
+﻿<base:ViewChildBase x:Class="Module.Settings.Shell.Pattern.Views.TShellReportView"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:base="clr-namespace:rr.Library.Infrastructure;assembly=rr.Library.Infrastructure"
+                    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+                    xmlns:controls="clr-namespace:Shared.DashBoard;assembly=Suite.Shared.DashBoard"
+                    DataContext="{x:Null}"
+                    x:Name="ModuleShellReportViewModel">
+
+    <UserControl.Resources>
+        <CollectionViewSource x:Key="PropertyInfoViewSource"
+                              Source="{Binding Model.PropertySettingsInfoCollection}" />
+
+        <DataTemplate x:Key="PropertyInfoDataTemplate">
+            <Border Padding="6"
+                    BorderThickness="0 .8 0 .8"
+                    BorderBrush="LightGray">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+
+                    <Border Grid.Row="0">
+                        <StackPanel Orientation="Horizontal">
+                            <!--icon primary-->
+                            <ContentControl Margin="0 0 5 0"
+                                            Style="{Binding PropertyIconStylePrimary}" />
+
+                            <!--icon secondary-->
+                            <ContentControl Margin="0 0 5 0"
+                                            Style="{Binding PropertyIconStyleSecondary}" />
+
+                            <!--PropertyName-->
+                            <TextBlock Text="{Binding PropertyName}"
+                                       FontWeight="Bold" />
+                        </StackPanel>
+                    </Border>
+
+                    <!--value-->
+                    <Border Grid.Row="1"
+                            Padding="30 0 0 0">
+                        <ItemsControl ItemsSource="{Binding PropertyValueCollection}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <ContentControl Margin="0 0 5 0"
+                                                        Style="{Binding PropertyValueIconStyle}" />
+
+                                        <TextBlock Text="{Binding ValueString}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Border>
+                </Grid>
+            </Border>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Border x:Name="Root"
+            Opacity="0"
+            Visibility="Collapsed">
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="ShowViewAnimation">
+                    <Storyboard>
+                        <DoubleAnimation Storyboard.TargetName="Root"
+                                         Storyboard.TargetProperty="(FrameworkElement.Opacity)"
+                                         From="0"
+                                         To="1"
+                                         Duration="0:0:0.5" />
+
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Root"
+                                                       Storyboard.TargetProperty="(FrameworkElement.Visibility)">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Visibility>
+                                        Collapsed
+                                    </Visibility>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0.1">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Visibility>
+                                        Visible
+                                    </Visibility>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+
+                <VisualState x:Name="HideViewAnimation">
+                    <Storyboard>
+                        <DoubleAnimation Storyboard.TargetName="Root"
+                                         Storyboard.TargetProperty="(FrameworkElement.Opacity)"
+                                         From="1"
+                                         To="0"
+                                         Duration="0:0:0.5" />
+
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Root"
+                                                       Storyboard.TargetProperty="(FrameworkElement.Visibility)">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Visibility>
+                                        Visible
+                                    </Visibility>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0.1">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Visibility>
+                                        Collapsed
+                                    </Visibility>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <!--context-->
+        <StackPanel>
+            <!--title-->
+            <materialDesign:Card Padding="4"
+                                 HorizontalAlignment="Stretch"
+                                 VerticalAlignment="Center">
+                <StackPanel Margin="0 0 10 0"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Right">
+                    <TextBlock Text="current settings"
+                               VerticalAlignment="Center" />
+
+                    <ContentControl Margin="5 0 0 0"
+                                    Style="{DynamicResource MenuSettingsInfoIcon}" />
+                </StackPanel>
+            </materialDesign:Card>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <!-- property list-->
+                <Border Grid.Column="0"
+                        Padding="30 10 30 10">
+                    <ItemsControl ItemsSource="{Binding Source={StaticResource PropertyInfoViewSource}}"
+                                  ItemTemplate="{StaticResource PropertyInfoDataTemplate}">
+                    </ItemsControl>
+                </Border>
+
+                <Border Grid.Column="1"
+                        VerticalAlignment="Top"
+                        Margin="0 10 0 0">
+                    <!--<controls:TDashBoardSettingsControl x:Name="DashBoardSettingsControl" />-->
+                </Border>
+            </Grid>
+        </StackPanel>
+    </Border>
+
+</base:ViewChildBase>
