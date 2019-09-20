@@ -3,7 +3,6 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:base="clr-namespace:rr.Library.Infrastructure;assembly=rr.Library.Infrastructure"
                     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-                    xmlns:controls="clr-namespace:Shared.DashBoard;assembly=Suite.Shared.DashBoard"
                     DataContext="{x:Null}"
                     x:Name="ModuleShellReportViewModel">
 

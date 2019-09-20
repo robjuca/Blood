@@ -86,7 +86,7 @@
                             <Border Grid.Column="1"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center">
-                                <TextBlock Text="[Suite - Module]" />
+                                <TextBlock Text="[Blood - Module]" />
                             </Border>
 
                             <!--module icon-->

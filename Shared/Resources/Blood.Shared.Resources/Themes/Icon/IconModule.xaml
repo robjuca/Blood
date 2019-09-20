@@ -18,7 +18,7 @@
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
-                        <Image Source="pack://application:,,,/Suite.Shared.Resources;component/Images/Collection.ico"
+                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/Collection.ico"
                                Width="16"
                                Height="16" />
                     </Border>
@@ -42,7 +42,7 @@
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
-                        <Image Source="pack://application:,,,/Suite.Shared.Resources;component/Images/Factory.ico"
+                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/Factory.ico"
                                Width="16"
                                Height="16" />
                     </Border>
@@ -116,7 +116,7 @@
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
-                        <Image Source="pack://application:,,,/Suite.Shared.Resources;component/Images/SQL.ico"
+                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/SQL.ico"
                                Width="24"
                                Height="24" />
                     </Border>
@@ -140,7 +140,7 @@
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
-                        <Image Source="pack://application:,,,/Suite.Shared.Resources;component/Images/Windows.ico"
+                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/Windows.ico"
                                Width="16"
                                Height="16" />
                     </Border>

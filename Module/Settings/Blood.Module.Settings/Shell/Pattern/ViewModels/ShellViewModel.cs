@@ -245,7 +245,7 @@ namespace Module.Settings.Shell.Pattern.ViewModels
       if (data.Request ()) {
         TDispatcher.Invoke (CloseSnackbarDispatcher);
 
-        Model.SnackbarContent.SetMessage ("Welcome to Suite application");
+        Model.SnackbarContent.SetMessage ("Welcome to Blood application");
         TDispatcher.BeginInvoke (ShowSnackbarDispatcher, false);
 
         TDispatcher.Invoke (DatabaseValidateDispatcher);

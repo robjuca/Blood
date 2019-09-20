@@ -19,7 +19,7 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.PopupBox.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Flipper.xaml" />
 
-                <ResourceDictionary Source="pack://application:,,,/Suite.Shared.Resources;component/Themes/Generic.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Blood.Shared.Resources;component/Themes/Generic.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

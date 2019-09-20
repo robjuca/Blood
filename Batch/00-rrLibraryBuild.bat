@@ -8,6 +8,12 @@
 	echo ---- XDMessaging.Lite...
 	copy "D:\Documents\Visual Studio\Projects\Library\Bin\XDMessaging.Lite.dll"  "D:\Documents\GitHub\Source\Repository\WPF\Blood\Bin" /V
 	
+	echo ---- MadMilkman.Ini...
+	copy "D:\Documents\Visual Studio\Projects\Library\Bin\MadMilkman.Ini.dll"  "D:\Documents\GitHub\Source\Repository\WPF\Blood\Bin" /V
+	
+	
+	
+	
 	echo ---- Communication...
 	copy "D:\Documents\Visual Studio\Projects\Library\Bin\rr.Library.Communication.dll"  "D:\Documents\GitHub\Source\Repository\WPF\Blood\Bin" /V
 	

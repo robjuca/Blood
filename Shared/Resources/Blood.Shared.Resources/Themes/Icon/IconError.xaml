@@ -37,7 +37,7 @@
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
-                        <Image Source="pack://application:,,,/Suite.Shared.Resources;component/Images/ErrorMessage.ico"
+                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/ErrorMessage.ico"
                                Width="19"
                                Height="19" />
                     </Border>

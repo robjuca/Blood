@@ -376,7 +376,7 @@
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
-                        <Image Source="pack://application:,,,/Suite.Shared.Resources;component/Images/DND.ico"
+                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/DND.ico"
                                Width="24"
                                Height="24" />
                     </Border>
@@ -399,7 +399,7 @@
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
-                        <Image Source="pack://application:,,,/Suite.Shared.Resources;component/Images/Order.ico"
+                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/Order.ico"
                                Width="20"
                                Height="20" />
                     </Border>
@@ -424,7 +424,7 @@
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
-                        <Image Source="pack://application:,,,/Suite.Shared.Resources;component/Images/Active.ico"
+                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/Active.ico"
                                Width="20"
                                Height="20" />
                     </Border>
@@ -475,7 +475,7 @@
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
-                        <Image Source="pack://application:,,,/Suite.Shared.Resources;component/Images/Document.ico"
+                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/Document.ico"
                                Width="16"
                                Height="16" />
                     </Border>
@@ -500,7 +500,7 @@
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
-                        <Image Source="pack://application:,,,/Suite.Shared.Resources;component/Images/Image.ico"
+                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/Image.ico"
                                Width="16"
                                Height="16" />
                     </Border>
@@ -525,7 +525,7 @@
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
-                        <Image Source="pack://application:,,,/Suite.Shared.Resources;component/Images/Bag.ico"
+                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/Bag.ico"
                                Width="16"
                                Height="16" />
                     </Border>
@@ -550,7 +550,7 @@
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
-                        <Image Source="pack://application:,,,/Suite.Shared.Resources;component/Images/Shelf.ico"
+                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/Shelf.ico"
                                Width="16"
                                Height="16" />
                     </Border>
@@ -575,7 +575,7 @@
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
-                        <Image Source="pack://application:,,,/Suite.Shared.Resources;component/Images/Drawer.ico"
+                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/Drawer.ico"
                                Width="16"
                                Height="16" />
                     </Border>
@@ -600,7 +600,7 @@
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
-                        <Image Source="pack://application:,,,/Suite.Shared.Resources;component/Images/Chest.ico"
+                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/Chest.ico"
                                Width="16"
                                Height="16" />
                     </Border>
@@ -624,7 +624,7 @@
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
-                        <Image Source="pack://application:,,,/Suite.Shared.Resources;component/Images/DashBoard.ico"
+                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/DashBoard.ico"
                                Width="16"
                                Height="16" />
                     </Border>

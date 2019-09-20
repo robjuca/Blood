@@ -38,12 +38,6 @@ namespace Launcher.Shell.Pattern.ViewModels
 
       string [] keys = new string []
         {
-          "Gadget.Document",
-          "Gadget.Image",
-          "Layout.Bag",
-          "Layout.Shelf",
-          "Layout.Drawer",
-          "Layout.Chest",
           "Module.Settings",
         };
 
@@ -52,7 +46,6 @@ namespace Launcher.Shell.Pattern.ViewModels
       }
 
       m_CurrentModule = TProcessName.Settings;
-      m_SettingsValidating = true;
 
       m_DataComm = TDataComm.CreateDefault;
 
@@ -62,45 +55,10 @@ namespace Launcher.Shell.Pattern.ViewModels
     #endregion
 
     #region View Event
-    public void OnDocumentCommadClicked ()
-    {
-      m_CurrentModule = TProcessName.Document;
-      TDispatcher.BeginInvoke (StartProcessDispatcher, "Suite.Gadget");
-    }
-
-    public void OnImageCommadClicked ()
-    {
-      m_CurrentModule = TProcessName.Image;
-      TDispatcher.BeginInvoke (StartProcessDispatcher, "Suite.Gadget");
-    }
-
-    public void OnBagCommadClicked ()
-    {
-      m_CurrentModule = TProcessName.Bag;
-      TDispatcher.BeginInvoke( StartProcessDispatcher, "Suite.Layout");
-    }
-
-    public void OnShelfCommadClicked ()
-    {
-      m_CurrentModule = TProcessName.Shelf;
-      TDispatcher.BeginInvoke (StartProcessDispatcher, "Suite.Layout");
-    }
-
-    public void OnDrawerCommadClicked ()
-    {
-      m_CurrentModule = TProcessName.Drawer;
-      TDispatcher.BeginInvoke (StartProcessDispatcher, "Suite.Layout");
-    }
-
-    public void OnChestCommadClicked ()
-    {
-      m_CurrentModule = TProcessName.Chest;
-      TDispatcher.BeginInvoke (StartProcessDispatcher, "Suite.Layout");
-    }
-
     public void OnSettingsCommadClicked ()
     {
-      m_CurrentModule = TProcessName.Settings;
+      m_CurrentModule = TProcessName.Settings; 
+
       THelper.DispatcherLater (StartSettingsProcessDispatcher);
     }
     #endregion
@@ -111,7 +69,7 @@ namespace Launcher.Shell.Pattern.ViewModels
       if (m_CurrentModule.Equals (TProcessName.Settings)) {
         var module = m_CurrentModule.ToString ();
         var key = m_Modules [module];
-        var processName = $"Suite.Module.{module}.exe";
+        var processName = $"Blood.Module.{module}.exe";
 
         if (m_Process.ContainsKey (key)) {
           if (m_Process [key].HasExited) {
@@ -122,23 +80,16 @@ namespace Launcher.Shell.Pattern.ViewModels
         else {
           var processKey = key;
 
-          if (m_CurrentModule.Equals (TProcessName.Settings)) {
-            if (m_SettingsValidating) {
-              processKey += ".Validating";
-            }
+          Process process = new Process { StartInfo = new ProcessStartInfo (processName, processKey) };
+
+          try {
+            process.Start ();
+            m_Process.Add (key, process);
           }
 
-          using (Process process = new Process { StartInfo = new ProcessStartInfo (processName, processKey) }) 
-          {
-            try {
-              process.Start ();
-              m_Process.Add (key, process);
-            }
-
-            catch (Exception) {
-              string error = $"Process --{processName}-- NOT FOUND! Launcher will ABORT";
-              throw new Exception (error);
-            }
+          catch (Exception) {
+            string error = $"Process --{processName}-- NOT FOUND! Launcher will ABORT";
+            throw new Exception (error);
           }
         }
 
@@ -163,11 +114,7 @@ namespace Launcher.Shell.Pattern.ViewModels
       else {
         var processKey = key;
 
-        Process process = new Process
-        {
-          StartInfo = new ProcessStartInfo (processName, processKey)
-        };
-
+        Process process = new Process { StartInfo = new ProcessStartInfo (processName, processKey) };
         process.Start ();
 
         m_Process.Add (key, process);
@@ -193,8 +140,14 @@ namespace Launcher.Shell.Pattern.ViewModels
     void OnClosing (object sender, System.ComponentModel.CancelEventArgs e)
     {
       foreach (var process in m_Process) {
-        if (process.Value.HasExited == false) {
-          process.Value.Kill ();
+        try {
+          if (process.Value.HasExited.IsFalse ()) {
+            process.Value.Kill ();
+          }
+        }
+
+        catch (Exception ex) {
+          throw new Exception (ex.Message);
         }
       }
 
@@ -223,7 +176,6 @@ namespace Launcher.Shell.Pattern.ViewModels
                 break;
 
               case TCommandComm.Success: {
-                  m_SettingsValidating = false;
                 }
                 break;
 
@@ -231,69 +183,7 @@ namespace Launcher.Shell.Pattern.ViewModels
                   Model.SettingsOnly ();
                   RaiseChanged ();
 
-                  m_SettingsValidating = true;
-
                   THelper.DispatcherLater (RemoveProcessPartialDispatcher);
-                }
-                break;
-            }
-          }
-          break;
-
-        case TProcessName.Document: {
-            switch (e.Data.Command) {
-              case TCommandComm.Closed: {
-                  RemoveProcess (DOCUMENT);
-                }
-                break;
-            }
-          }
-          break;
-
-        case TProcessName.Image: {
-            switch (e.Data.Command) {
-              case TCommandComm.Closed: {
-                  RemoveProcess (IMAGE);
-                }
-                break;
-            }
-          }
-          break;
-
-        case TProcessName.Bag: {
-            switch (e.Data.Command) {
-              case TCommandComm.Closed: {
-                  RemoveProcess (BAG);
-                }
-                break;
-            }
-          }
-          break;
-
-        case TProcessName.Shelf: {
-            switch (e.Data.Command) {
-              case TCommandComm.Closed: {
-                  RemoveProcess (SHELF);
-                }
-                break;
-            }
-          }
-          break;
-
-        case TProcessName.Drawer: {
-            switch (e.Data.Command) {
-              case TCommandComm.Closed: {
-                  RemoveProcess (DRAWER);
-                }
-                break;
-            }
-          }
-          break;
-
-        case TProcessName.Chest: {
-            switch (e.Data.Command) {
-              case TCommandComm.Closed: {
-                  RemoveProcess (CHEST);
                 }
                 break;
             }
@@ -325,65 +215,11 @@ namespace Launcher.Shell.Pattern.ViewModels
     #region Data
     enum TProcessName
     {
-      Document,
-      Image,
-      Bag,
-      Shelf,
-      Drawer,
-      Chest,
       Settings,
     };
     #endregion
 
     #region Property
-    static string DOCUMENT
-    {
-      get
-      {
-        return (TProcessName.Document.ToString ());
-      }
-    }
-
-    static string IMAGE
-    {
-      get
-      {
-        return (TProcessName.Image.ToString ());
-      }
-    }
-
-    static string BAG
-    {
-      get
-      {
-        return (TProcessName.Bag.ToString ());
-      }
-    }
-
-    static string SHELF
-    {
-      get
-      {
-        return (TProcessName.Shelf.ToString ());
-      }
-    }
-
-    static string DRAWER
-    {
-      get
-      {
-        return (TProcessName.Drawer.ToString ());
-      }
-    }
-
-    static string CHEST
-    {
-      get
-      {
-        return (TProcessName.Chest.ToString ());
-      }
-    }
-
     static string SETTINGS
     {
       get
@@ -399,8 +235,7 @@ namespace Launcher.Shell.Pattern.ViewModels
     readonly Dictionary<string, Process>                                  m_Process;
     readonly Dictionary<string, string>                                   m_Modules;
     TProcessName                                                          m_CurrentModule;
-    bool                                                                  m_SettingsValidating;
-    static readonly string []                                             Modules = new string [] { DOCUMENT, IMAGE, BAG, SHELF, DRAWER, CHEST, SETTINGS };
+    static readonly string []                                             Modules = new string [] { SETTINGS };
     #endregion
 
     #region Support
@@ -410,18 +245,24 @@ namespace Launcher.Shell.Pattern.ViewModels
       var key = m_Modules [moduleName];
 
       if (m_Process.ContainsKey (key)) {
-        var process = m_Process [key];
+        try {
+          var process = m_Process [key];
 
-        if (process.HasExited.IsFalse ()) {
-          process.Kill ();
+          if (process.HasExited.IsFalse ()) {
+            process.Kill ();
+          }
+
+          m_Process.Remove (key);
+
+          if (m_Process.Count.Equals (0)) {
+            Model.EnableAll ();
+            RaiseChanged ();
+          }
         }
 
-        m_Process.Remove (key);
-      }
-
-      if (m_Process.Count.Equals (0)) {
-        Model.EnableAll ();
-        RaiseChanged ();
+        catch (Exception ex) {
+          throw new Exception (ex.Message);
+        }
       }
     } 
     #endregion

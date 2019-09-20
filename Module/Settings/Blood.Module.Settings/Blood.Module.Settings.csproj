@@ -58,6 +58,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Bin\Blood.Shared.Resources.dll</HintPath>
     </Reference>
+    <Reference Include="Blood.Shared.Services, Version=1.0.2019.10, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Bin\Blood.Shared.Services.dll</HintPath>
+    </Reference>
     <Reference Include="Blood.Shared.Types, Version=1.0.2019.10, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Bin\Blood.Shared.Types.dll</HintPath>
@@ -197,6 +201,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Modules\Factory\Blood.Module.Settings.Factory.csproj">
+      <Project>{9c289a7e-0266-4c6a-a5f9-0f3a358e7f2a}</Project>
+      <Name>Blood.Module.Settings.Factory</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
