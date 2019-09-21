@@ -41,7 +41,7 @@
                     <Border Grid.Column="1">
                         <StackPanel Orientation="Horizontal"
                                     HorizontalAlignment="Center">
-                            <ContentControl Style="{StaticResource DatabaseOnIcon}" />
+                            <ContentControl Style="{DynamicResource DatabaseOnIcon}" />
 
                             <RadioButton x:Name="WinAuth"
                                          Margin="5 0 0 0"
@@ -58,7 +58,7 @@
                     <Border Grid.Column="2">
                         <StackPanel Orientation="Horizontal"
                                     HorizontalAlignment="Right">
-                            <ContentControl Style="{StaticResource WindowsAuthenticationIcon}" />
+                            <ContentControl Style="{DynamicResource WindowsAuthenticationIcon}" />
                             <TextBlock Margin="5 0 0 0"
                                        VerticalAlignment="Center"
                                        Text="authentication" />
@@ -80,7 +80,7 @@
             <Border Grid.Row="2">
                 <Button HorizontalAlignment="Right"
                         Content="edit"
-                        Style="{StaticResource MaterialDesignFlatButton}"
+                        Style="{DynamicResource MaterialDesignFlatButton}"
                         Command="{x:Static materialDesign:Flipper.FlipCommand}"
                         caliburn:Message.Attach="[Event Click] = [OnEditCommandClicked ()]" />
             </Border>

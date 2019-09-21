@@ -13,7 +13,6 @@ namespace Server.Models.Component
   {
     [Key]
     public string       MyName { get; set; }
-    public int          ColumnWidth { get; set; }
   }
   //---------------------------//
 

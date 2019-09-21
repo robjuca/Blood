@@ -31,11 +31,11 @@
                                     Command="{x:Static materialDesign:Flipper.FlipCommand}"
                                     caliburn:Message.Attach="[Event Click] = [OnBackCommadClicked ()]">
 
-                                <ContentControl Style="{StaticResource BackIcon}" />
+                                <ContentControl Style="{DynamicResource BackIcon}" />
                             </Button>
 
                             <ContentControl Margin="5 0 0 0"
-                                            Style="{StaticResource WindowsAuthenticationIcon}" />
+                                            Style="{DynamicResource WindowsAuthenticationIcon}" />
                         </StackPanel>
                     </Border>
 
@@ -47,12 +47,12 @@
                             <Button Width="70"
                                     Content="apply"
                                     HorizontalAlignment="Right"
-                                    Style="{StaticResource MaterialDesignFlatButton}"
+                                    Style="{DynamicResource MaterialDesignFlatButton}"
                                     caliburn:Message.Attach="[Event Click] = [OnDatabaseApplyCommadClicked ()]" />
 
                             <ContentControl Margin="5 0 0 0"
                                             Visibility="{Binding Model.CheckVisibility}"
-                                            Style="{StaticResource ApplyCheckIcon}" />
+                                            Style="{DynamicResource ApplyCheckIcon}" />
                         </StackPanel>
                     </Border>
                 </Grid>
@@ -77,7 +77,7 @@
                                 </Grid.ColumnDefinitions>
 
                                 <ContentControl Grid.Column="0"
-                                                Style="{StaticResource SettingsDatabaseServerIcon}" />
+                                                Style="{DynamicResource SettingsDatabaseServerIcon}" />
 
                                 <TextBox Grid.Column="1"
                                          Margin="6 0 0 0"
@@ -85,7 +85,7 @@
                                          materialDesign:HintAssist.Hint="database server"
                                          materialDesign:HintAssist.FloatingScale="1.0"
                                          materialDesign:TextFieldAssist.TextBoxViewMargin="1 0 1 0"
-                                         Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
                             </Grid>
 
                             <!--database name-->
@@ -96,14 +96,14 @@
                                 </Grid.ColumnDefinitions>
 
                                 <ContentControl Grid.Column="0"
-                                                Style="{StaticResource DatabaseNameMiniIcon}" />
+                                                Style="{DynamicResource DatabaseNameMiniIcon}" />
 
                                 <TextBox Grid.Column="1"
                                          Margin="0 6 0 6"
                                          Text="{Binding Model.DatabaseConnectionData.DatabaseName}"
                                          materialDesign:HintAssist.Hint="database name"
                                          materialDesign:HintAssist.FloatingScale="1.0"
-                                         Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
                             </Grid>
                         </StackPanel>
                     </Border>

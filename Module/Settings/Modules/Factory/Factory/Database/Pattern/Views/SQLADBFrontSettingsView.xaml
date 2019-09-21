@@ -83,7 +83,7 @@
                     VerticalAlignment="Bottom">
                 <Button HorizontalAlignment="Right"
                         Content="edit"
-                        Style="{StaticResource MaterialDesignFlatButton}"
+                        Style="{DynamicResource MaterialDesignFlatButton}"
                         Command="{x:Static materialDesign:Flipper.FlipCommand}"
                         caliburn:Message.Attach="[Event Click] = [OnEditCommandClicked ()]" />
             </Border>

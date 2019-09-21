@@ -324,7 +324,7 @@ namespace Module.Settings.Shell.Pattern.ViewModels
         DelegateCommand.PublishModuleMessage.Execute (message);
 
         // update INI support section
-        SupportSettings.Change ("ColumnWidth", action.ModelAction.SettingsModel.ColumnWidth.ToString ()); 
+        //SupportSettings.Change ("ColumnWidth", action.ModelAction.SettingsModel.ColumnWidth.ToString ()); 
 
         OnSettingsReportCommadClicked (); // show current settings
       }

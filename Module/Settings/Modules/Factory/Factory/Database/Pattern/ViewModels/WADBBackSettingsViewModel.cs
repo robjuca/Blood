@@ -70,7 +70,7 @@ namespace Module.Settings.Factory.Database.Pattern.ViewModels
       RaiseChanged ();
 
       // to sibiling 
-      var message = new TFactoryMessageInternal (TInternalMessageAction.EditLeave, TAuthentication.Windows, TypeInfo);
+      var message = new TFactoryMessageInternal (TInternalMessageAction.EditLeave, TAuthentication.SQL, TypeInfo);
       message.Node.SelectRelationSibling (TChild.None);
 
       DelegateCommand.PublishInternalMessage.Execute (message);

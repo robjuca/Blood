@@ -111,8 +111,6 @@ namespace Server.Context.Component
     protected override void OnConfiguring (DbContextOptionsBuilder optionsBuilder)
     {
       if (!optionsBuilder.IsConfigured) {
-        //ConnectionString = "Server=(localdb)\\mssqllocaldb;Database=Suite18;Trusted_Connection=True;";///////////////////migration
-
         optionsBuilder.UseSqlServer (ConnectionString);
       }
     }

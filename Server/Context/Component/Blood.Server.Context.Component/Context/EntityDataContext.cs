@@ -14,11 +14,11 @@ namespace Server.Context.Component
     public TEntityDataContext ()
       : base()
     {
-      //AddOperation (Server.Models.Infrastructure.TOperation.Collection, new TOperationCollection ());
-      //AddOperation (Server.Models.Infrastructure.TOperation.Insert, new TOperationInsert ());
-      //AddOperation (Server.Models.Infrastructure.TOperation.Change, new TOperationChange ());
-      //AddOperation (Server.Models.Infrastructure.TOperation.Remove, new TOperationRemove ());
-      //AddOperation (Server.Models.Infrastructure.TOperation.Select, new TOperationSelect ());
+      AddOperation (Server.Models.Infrastructure.TOperation.Collection, new TOperationCollection ());
+      AddOperation (Server.Models.Infrastructure.TOperation.Insert, new TOperationInsert ());
+      AddOperation (Server.Models.Infrastructure.TOperation.Change, new TOperationChange ());
+      AddOperation (Server.Models.Infrastructure.TOperation.Remove, new TOperationRemove ());
+      AddOperation (Server.Models.Infrastructure.TOperation.Select, new TOperationSelect ());
     }
     #endregion
 

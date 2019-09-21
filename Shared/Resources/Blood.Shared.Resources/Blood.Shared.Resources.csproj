@@ -41,6 +41,7 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -62,24 +63,17 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Images\Active.ico" />
-    <Content Include="Images\Bag.ico" />
-    <Content Include="Images\Chest.ico" />
-    <Content Include="Images\Collection.ico" />
-    <Content Include="Images\Dashboard.ico" />
-    <Content Include="Images\Database.ico" />
-    <Content Include="Images\DND.ico" />
-    <Content Include="Images\Document.ico" />
-    <Content Include="Images\Drawer.ico" />
-    <Content Include="Images\ErrorMessage.ico" />
-    <Content Include="Images\Factory.ico" />
-    <Content Include="Images\Image.ico" />
-    <Content Include="Images\Order.ico" />
-    <Content Include="Images\Settings.ico" />
-    <Content Include="Images\Shelf.ico" />
-    <Content Include="Images\SQL.ico" />
-    <Content Include="Images\Support.ico" />
-    <Content Include="Images\Windows.ico" />
+    <Resource Include="Images\Active.ico" />
+    <Resource Include="Images\Collection.ico" />
+    <Resource Include="Images\Database.ico" />
+    <Resource Include="Images\DND.ico" />
+    <Resource Include="Images\ErrorMessage.ico" />
+    <Resource Include="Images\Factory.ico" />
+    <Resource Include="Images\Order.ico" />
+    <Resource Include="Images\Settings.ico" />
+    <Resource Include="Images\SQL.ico" />
+    <Resource Include="Images\Support.ico" />
+    <Resource Include="Images\Windows.ico" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Themes\Generic.xaml">

@@ -65,7 +65,7 @@ namespace Module.Settings.Factory.Support.Pattern.Models
     {
       if (item.NotNull ()) {
         if (PropertyName.Equals ("ColumnWidth")) {
-          PropertyValue = item.SettingsModel.ColumnWidth;
+          //PropertyValue = item.SettingsModel.ColumnWidth;
         }
       }
     }
@@ -86,7 +86,7 @@ namespace Module.Settings.Factory.Support.Pattern.Models
 
     public void Request (Server.Models.Component.TEntityAction action)
     {
-      action.ModelAction.SettingsModel.ColumnWidth = int.Parse (PropertyValue.ToString ());
+      //action.ModelAction.SettingsModel.ColumnWidth = int.Parse (PropertyValue.ToString ());
     }
     #endregion
   };

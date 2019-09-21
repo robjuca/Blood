@@ -73,7 +73,7 @@ namespace Server.Models.Infrastructure
   //  Bag      = 00011000 binary -> 18 hex -> 24 decimal
   //  Shelf    = 00001010 binary -> 0A hex -> 10 decimal
   //  Drawer   = 00101010 binary -> 2A hex -> 42 decimal
-  //  Chest    = 00000000 binary -> 00 hex -> 00 decimal
+  //  Chest    = 00000000 binary -> 40 hex -> 00 decimal
 
 
   [Flags]

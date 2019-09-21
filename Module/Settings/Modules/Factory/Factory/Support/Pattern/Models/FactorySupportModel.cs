@@ -33,15 +33,23 @@ namespace Module.Settings.Factory.Support.Pattern.Models
       get;
       private set;
     }
+
+    public bool IsEnabledApply
+    {
+      get;
+      private set;
+    }
     #endregion
 
     #region Constructor
     public TFactorySupportModel ()
     {
-      SupportInfoCollection = new ObservableCollection<TSupportInfo>
-      {
-        new TSupportInfo ("SettingsSupportIcon", "ColumnWidth", "('mini' style column width [260 - 460 pixel])")
-      };
+      //SupportInfoCollection = new ObservableCollection<TSupportInfo>
+      //{
+      //  new TSupportInfo ("SettingsSupportIcon", "ColumnWidth", "('mini' style column width [260 - 460 pixel])")
+      //};
+      // TODO: for new features
+      SupportInfoCollection = new ObservableCollection<TSupportInfo> ();
 
       ErrorPanelVisibility = Visibility.Hidden;
       ErrorPanelMessage = string.Empty;

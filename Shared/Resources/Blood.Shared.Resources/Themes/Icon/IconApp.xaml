@@ -41,150 +41,6 @@
     </Style>
 
     <!--menu-->
-    <!--MenuDocumentIcon-->
-    <Style x:Key="MenuDocumentIcon"
-           TargetType="{x:Type ContentControl}">
-        <Setter Property="ToolTip"
-                Value="document" />
-        <Setter Property="VerticalAlignment"
-                Value="Center" />
-        <Setter Property="HorizontalAlignment"
-                Value="Center" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type ContentControl}">
-                    <Border Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
-                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/Document.ico"
-                               Width="24"
-                               Height="24" />
-                    </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <!--MenuImageIcon-->
-    <Style x:Key="MenuImageIcon"
-           TargetType="{x:Type ContentControl}">
-        <Setter Property="ToolTip"
-                Value="image" />
-        <Setter Property="VerticalAlignment"
-                Value="Center" />
-        <Setter Property="HorizontalAlignment"
-                Value="Center" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type ContentControl}">
-                    <Border Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
-                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/Image.ico"
-                               Width="24"
-                               Height="24" />
-                    </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-    
-    <!--MenuBagIcon-->
-    <Style x:Key="MenuBagIcon"
-           TargetType="{x:Type ContentControl}">
-        <Setter Property="ToolTip"
-                Value="bag" />
-        <Setter Property="VerticalAlignment"
-                Value="Center" />
-        <Setter Property="HorizontalAlignment"
-                Value="Center" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type ContentControl}">
-                    <Border Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
-                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/Bag.ico"
-                               Width="24"
-                               Height="24" />
-                    </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <!--MenuShelfIcon-->
-    <Style x:Key="MenuShelfIcon"
-           TargetType="{x:Type ContentControl}">
-        <Setter Property="ToolTip"
-                Value="shelf" />
-        <Setter Property="VerticalAlignment"
-                Value="Center" />
-        <Setter Property="HorizontalAlignment"
-                Value="Center" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type ContentControl}">
-                    <Border Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
-                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/Shelf.ico"
-                               Width="24"
-                               Height="24" />
-                    </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <!--MenuDrawerIcon-->
-    <Style x:Key="MenuDrawerIcon"
-           TargetType="{x:Type ContentControl}">
-        <Setter Property="ToolTip"
-                Value="drawer" />
-        <Setter Property="VerticalAlignment"
-                Value="Center" />
-        <Setter Property="HorizontalAlignment"
-                Value="Center" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type ContentControl}">
-                    <Border Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
-                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/Drawer.ico"
-                               Width="24"
-                               Height="24" />
-                    </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <!--MenuChestIcon-->
-    <Style x:Key="MenuChestIcon"
-           TargetType="{x:Type ContentControl}">
-        <Setter Property="ToolTip"
-                Value="chest" />
-        <Setter Property="VerticalAlignment"
-                Value="Center" />
-        <Setter Property="HorizontalAlignment"
-                Value="Center" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type ContentControl}">
-                    <Border Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
-                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/Chest.ico"
-                               Width="24"
-                               Height="24" />
-                    </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
     <!--MenuSettingsIcon-->
     <Style x:Key="MenuSettingsIcon"
            TargetType="{x:Type ContentControl}">
@@ -331,7 +187,7 @@
 
     <!--MenuDatabaseIcon-->
     <Style x:Key="MenuDatabaseIcon"
-           TargetType="{x:Type ContentControl}">
+           TargetType="ContentControl">
         <Setter Property="ToolTip"
                 Value="database" />
         <Setter Property="VerticalAlignment"
@@ -340,7 +196,7 @@
                 Value="Center" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type ContentControl}">
+                <ControlTemplate TargetType="ContentControl">
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
@@ -377,29 +233,6 @@
         </Setter>
     </Style>
 
-    <!--BagMiniIcon-->
-    <Style x:Key="BagMiniIcon"
-           TargetType="{x:Type ContentControl}">
-        <Setter Property="ToolTip"
-                Value="bag" />
-        <Setter Property="VerticalAlignment"
-                Value="Center" />
-        <Setter Property="HorizontalAlignment"
-                Value="Center" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type ContentControl}">
-                    <Border Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
-                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/Bag.ico"
-                               Width="16"
-                               Height="16" />
-                    </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
     <!-- ____________________ -->
 
 </ResourceDictionary>

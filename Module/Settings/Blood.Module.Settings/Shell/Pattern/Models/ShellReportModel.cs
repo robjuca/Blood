@@ -96,16 +96,6 @@ namespace Module.Settings.Shell.Pattern.Models
     {
       PropertySettingsInfoCollection.Clear ();
 
-      var contentStyle = TContentStyle.CreateDefault;
-      contentStyle.SelectColumnWidth (ComponentModelItem.SettingsModel.ColumnWidth);
-
-      // support
-      var propertySettingsInfo = new TPropertySettingsInfo ("SettingsSupportIcon", "ColumnWidth");
-      propertySettingsInfo.AddPropertyValue (new TPropertyValueInfo (ComponentModelItem.SettingsModel.ColumnWidth.ToString ()));
-      propertySettingsInfo.AddPropertyValue (new TPropertyValueInfo (contentStyle.DashBoardSizeString));
-
-      PropertySettingsInfoCollection.Add (propertySettingsInfo);
-
       // database
       if (Authentication.NotEquals (TAuthentication.None)) {
         var secondaryIcon = string.Empty;
@@ -142,7 +132,7 @@ namespace Module.Settings.Shell.Pattern.Models
             break;
         }
 
-        propertySettingsInfo = new TPropertySettingsInfo ("SettingsDatabaseIcon", secondaryIcon, "Database");
+        var propertySettingsInfo = new TPropertySettingsInfo ("SettingsDatabaseIcon", secondaryIcon, "Database");
 
         foreach (var item in propertyValues) {
           propertySettingsInfo.AddPropertyValue (item);

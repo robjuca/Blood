@@ -4,11 +4,9 @@
 ----------------------------------------------------------------*/
 
 //----- Include
-using System;
 using System.ComponentModel.Composition;
 
 using rr.Library.Infrastructure;
-using rr.Library.Types;
 using rr.Library.Helper;
 
 using Shared.Types;

@@ -135,6 +135,12 @@
   <ItemGroup>
     <Compile Include="Context\EntityDataContext.cs" />
     <Compile Include="ModelContext.cs" />
+    <Compile Include="Operations\Change.cs" />
+    <Compile Include="Operations\Collection.cs" />
+    <Compile Include="Operations\Insert.cs" />
+    <Compile Include="Operations\Remove.cs" />
+    <Compile Include="Operations\Select.cs" />
+    <Compile Include="Operations\Support.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

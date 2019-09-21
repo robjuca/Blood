@@ -15,7 +15,6 @@ namespace Server.Models.Component
     public Settings ()
     {
       MyName = "robjuca";
-      ColumnWidth = 0;
     }
 
     public Settings (Settings alias)
@@ -30,14 +29,12 @@ namespace Server.Models.Component
     {
       if (alias.NotNull ()) {
         MyName = alias.MyName;
-        ColumnWidth = alias.ColumnWidth;
       }
     }
 
     public void Change (Settings alias)
     {
       if (alias.NotNull ()) {
-        ColumnWidth = alias.ColumnWidth;
       }
     }
     #endregion
