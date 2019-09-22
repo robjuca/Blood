@@ -7,7 +7,7 @@
 using System.Windows;
 //---------------------------//
 
-namespace Module.Settings
+namespace Gadget.Material
 {
   public partial class TApp : Application
   {
@@ -17,10 +17,7 @@ namespace Module.Settings
       if (e.Args.Length > 0) {
         var key = e.Args [0];
 
-        if (key.Contains ("Module.Settings")) {
-          Settings.Properties.Settings.Default.Shutdown = false;
-          Settings.Properties.Settings.Default.Save ();
-
+        if (key.Contains ("Gadget.Material")) {
           rr.Library.Types.TSingleInstance.Make ();
 
           base.OnStartup (e);

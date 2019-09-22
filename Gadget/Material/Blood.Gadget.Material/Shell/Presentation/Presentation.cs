@@ -17,7 +17,7 @@ using Shared.Message;
 using Shared.ViewModel;
 //---------------------------//
 
-namespace Module.Settings.Shell.Presentation
+namespace Gadget.Material.Shell.Presentation
 {
   [Export (typeof (IShellPresentation))]
   public class TShellPresentation : TPresentation, IHandleNavigateRequest, IHandleMessageModule, IShellPresentation
@@ -70,19 +70,9 @@ namespace Module.Settings.Shell.Presentation
     {
       Type typeNavigateTo = null;
 
-      switch (m_NavigateRequestMessage.Where) {
-        case TNavigateMessage.TWhere.Database:
-          typeNavigateTo = typeof (Module.Settings.Shell.Pattern.ViewModels.TShellFactoryDatabaseViewModel);
-          break;
-
-        case TNavigateMessage.TWhere.Support:
-          typeNavigateTo = typeof (Module.Settings.Shell.Pattern.ViewModels.TShellFactorySupportViewModel);
-          break;
-
-        case TNavigateMessage.TWhere.Report:
-          typeNavigateTo = typeof (Module.Settings.Shell.Pattern.ViewModels.TShellReportViewModel);
-          break;
-      }
+      //switch (m_NavigateRequestMessage.Where) {
+        
+      //}
 
       if (typeNavigateTo.NotNull ()) {
         var message = new TNavigateResponseMessage (m_NavigateRequestMessage.Sender, m_NavigateRequestMessage.Where, (Type) typeNavigateTo);

@@ -86,7 +86,6 @@
     <Compile Include="Types\Support\ContentInfo.cs" />
     <Compile Include="Types\Support\FilterInfo.cs" />
     <Compile Include="Types\Support\Names.cs" />
-    <Compile Include="Types\Support\Process.cs" />
     <Compile Include="Types\Support\RandomColors.cs" />
     <Compile Include="Types\Support\SnackbarMessage.cs" />
     <Compile Include="Types\Support\SupportSettings.cs" />

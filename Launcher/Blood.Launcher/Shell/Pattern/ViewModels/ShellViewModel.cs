@@ -13,6 +13,7 @@ using rr.Library.Infrastructure;
 using rr.Library.Helper;
 using rr.Library.Communication;
 
+using Shared.Resources;
 using Shared.Communication;
 
 using Launcher.Shell.Presentation;
@@ -33,19 +34,7 @@ namespace Launcher.Shell.Pattern.ViewModels
 
       presentation.ViewModel = this;
 
-      m_Process = new Dictionary<string, Process> ();
-      m_Modules = new Dictionary<string, string> ();
-
-      string [] keys = new string []
-        {
-          "Module.Settings",
-        };
-
-      for (int i = 0; i < Modules.Length; i++) {
-        m_Modules.Add (Modules [i], keys [i]);
-      }
-
-      m_CurrentModule = TProcessName.Settings;
+      m_Process = new Dictionary<TProcess.TName, Process> ();
 
       m_DataComm = TDataComm.CreateDefault;
 
@@ -57,68 +46,37 @@ namespace Launcher.Shell.Pattern.ViewModels
     #region View Event
     public void OnSettingsCommadClicked ()
     {
-      m_CurrentModule = TProcessName.Settings; 
-
       THelper.DispatcherLater (StartSettingsProcessDispatcher);
+    }
+
+    public void OnMedicalTestMaterialCommadClicked ()
+    {
+      TDispatcher.BeginInvoke (StartProcessDispatcher, TProcess.TName.GadgetMaterial);
+    }
+
+    public void OnMedicalTestTargetCommadClicked ()
+    {
+      TDispatcher.BeginInvoke (StartProcessDispatcher, TProcess.TName.GadgetTarget);
+    }
+
+    public void OnMedicalTestCommadClicked ()
+    {
+      TDispatcher.BeginInvoke (StartProcessDispatcher, TProcess.TName.GadgetTest);
     }
     #endregion
 
     #region Dispatcher
     void StartSettingsProcessDispatcher ()
     {
-      if (m_CurrentModule.Equals (TProcessName.Settings)) {
-        var module = m_CurrentModule.ToString ();
-        var key = m_Modules [module];
-        var processName = $"Blood.Module.{module}.exe";
+      StartProcess (TProcess.TName.ModuleSettings);
 
-        if (m_Process.ContainsKey (key)) {
-          if (m_Process [key].HasExited) {
-            m_Process [key].Start ();
-          }
-        }
-
-        else {
-          var processKey = key;
-
-          Process process = new Process { StartInfo = new ProcessStartInfo (processName, processKey) };
-
-          try {
-            process.Start ();
-            m_Process.Add (key, process);
-          }
-
-          catch (Exception) {
-            string error = $"Process --{processName}-- NOT FOUND! Launcher will ABORT";
-            throw new Exception (error);
-          }
-        }
-
-        Model.DisableAll ();
-        RaiseChanged ();
-      }
+      Model.DisableAll ();
+      RaiseChanged ();
     }
 
-    void StartProcessDispatcher (string processName)
+    void StartProcessDispatcher (TProcess.TName name)
     {
-      var module = m_CurrentModule.ToString ();
-      var key = m_Modules [module];
-
-      processName += $".{module}.exe";
-
-      if (m_Process.ContainsKey (key)) {
-        if (m_Process [key].HasExited) {
-          m_Process [key].Start ();
-        }
-      }
-
-      else {
-        var processKey = key;
-
-        Process process = new Process { StartInfo = new ProcessStartInfo (processName, processKey) };
-        process.Start ();
-
-        m_Process.Add (key, process);
-      }
+      StartProcess (name);
 
       Model.MenuOnly ();
       RaiseChanged ();
@@ -126,12 +84,14 @@ namespace Launcher.Shell.Pattern.ViewModels
 
     void RemoveProcessPartialDispatcher ()
     {
-      foreach (var module in Modules) {
-        if (module.Equals (TProcessName.Settings.ToString())) {
+      foreach (var name in Enum.GetNames (typeof (TProcess.TName))) {
+        if (name.Equals (TProcess.TName.ModuleSettings)) {
           continue;
         }
 
-        RemoveProcess (module);
+        else {
+          RemoveProcess ((TProcess.TName) Enum.Parse (typeof (TProcess.TName), name));
+        }
       }
     }
     #endregion
@@ -158,18 +118,18 @@ namespace Launcher.Shell.Pattern.ViewModels
     #region MessageEvent
     void OnCommunicationHandle (object sender, TMessagingEventArgs<TDataComm> e)
     {
-      var module = Enum.Parse (typeof (TProcessName), e.Data.ClientName);
+      TProcess.TName module = (TProcess.TName) Enum.Parse (typeof (TProcess.TName), e.Data.ClientName);
 
       switch (module) {
-        case TProcessName.Settings: {
+        case TProcess.TName.ModuleSettings: {
             switch (e.Data.Command) {
               case TCommandComm.Shutdown: {
-                  RemoveProcess (SETTINGS);
+                  RemoveProcess (module);
                 }
                 break;
 
               case TCommandComm.Closed: {
-                  RemoveProcess (SETTINGS);
+                  RemoveProcess (module);
                   Model.EnableAll ();
                   RaiseChanged ();
                 }
@@ -181,6 +141,36 @@ namespace Launcher.Shell.Pattern.ViewModels
 
               case TCommandComm.Error: {
                   THelper.DispatcherLater (RemoveProcessPartialDispatcher);
+                }
+                break;
+            }
+          }
+          break;
+
+        case TProcess.TName.GadgetMaterial: {
+            switch (e.Data.Command) {
+              case TCommandComm.Closed: {
+                  RemoveProcess (module);
+                }
+                break;
+            }
+          }
+          break;
+
+        case TProcess.TName.GadgetTarget: {
+            switch (e.Data.Command) {
+              case TCommandComm.Closed: {
+                  RemoveProcess (module);
+                }
+                break;
+            }
+          }
+          break;
+
+        case TProcess.TName.GadgetTest: {
+            switch (e.Data.Command) {
+              case TCommandComm.Closed: {
+                  RemoveProcess (module);
                 }
                 break;
             }
@@ -209,47 +199,53 @@ namespace Launcher.Shell.Pattern.ViewModels
     }
     #endregion
 
-    #region Data
-    enum TProcessName
-    {
-      Settings,
-    };
-    #endregion
-
-    #region Property
-    static string SETTINGS
-    {
-      get
-      {
-        return (TProcessName.Settings.ToString ());
-      }
-    }
-    #endregion
-
     #region Fields
     readonly TMessagingComm<TDataComm>                                    m_Communication;
     readonly TDataComm                                                    m_DataComm;
-    readonly Dictionary<string, Process>                                  m_Process;
-    readonly Dictionary<string, string>                                   m_Modules;
-    TProcessName                                                          m_CurrentModule;
-    static readonly string []                                             Modules = new string [] { SETTINGS };
+    readonly Dictionary<TProcess.TName, Process>                          m_Process;
     #endregion
 
     #region Support
-    void RemoveProcess (string moduleName)
+    void StartProcess (TProcess.TName name)
+    {
+      if (m_Process.ContainsKey (name)) {
+        var currentProcess = m_Process [name];
+
+        if (currentProcess.HasExited) {
+          currentProcess.Start ();
+        }
+      }
+
+      else {
+        var moduleKey = TProcess.ModuleKey [name];
+        var processExecutable = TProcess.ModuleExecutable [name];
+
+        Process process = new Process { StartInfo = new ProcessStartInfo (processExecutable, moduleKey) };
+
+        try {
+          process.Start ();
+          m_Process.Add (name, process);
+        }
+
+        catch (Exception) {
+          string error = $"Process --{processExecutable}-- NOT FOUND! Launcher will ABORT";
+          throw new Exception (error);
+        }
+      }
+    }
+
+    void RemoveProcess (TProcess.TName name)
     {
       // remove process
-      var key = m_Modules [moduleName];
-
-      if (m_Process.ContainsKey (key)) {
+      if (m_Process.ContainsKey (name)) {
         try {
-          var process = m_Process [key];
+          var process = m_Process [name];
 
           if (process.HasExited.IsFalse ()) {
             process.Kill ();
           }
 
-          m_Process.Remove (key);
+          m_Process.Remove (name);
 
           if (m_Process.Count.Equals (0)) {
             Model.EnableAll ();

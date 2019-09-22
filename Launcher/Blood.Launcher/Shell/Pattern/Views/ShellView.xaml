@@ -46,7 +46,7 @@
                     <!--medical test material-->
                     <Button ToolTip="material"
                             IsEnabled="{Binding Model.IsMenuEnabled}"
-                            caliburn:Message.Attach="[Event Click] = [OnDocumentCommadClicked ()]">
+                            caliburn:Message.Attach="[Event Click] = [OnMedicalTestMaterialCommadClicked ()]">
                         <ContentControl Style="{DynamicResource MenuMedicalTestMaterialIcon}" />
                     </Button>
 

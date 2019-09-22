@@ -76,6 +76,9 @@ CALL :error "Could not find Visual Studio directory."
 	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Module\Settings\Blood Module Settings.sln" -t:rebuild -verbosity:minimal -nologo
 
 	
+	echo  -- Blood GADGET
+	echo --- Blood GETGET MATERIAL . . .
+	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Gadget\Material\Blood Gadget Material.sln" -t:rebuild -verbosity:minimal -nologo
 	
 	
 

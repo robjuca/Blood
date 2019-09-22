@@ -57,6 +57,7 @@
     <Compile Include="Shared\Controls\Footer.cs" />
     <Compile Include="Shared\Controls\ShellStatusBar.cs" />
     <Compile Include="Shared\Controls\StyleSelector.cs" />
+    <Compile Include="Types\Process.cs" />
     <Compile Include="Types\Types.cs" />
   </ItemGroup>
   <ItemGroup>

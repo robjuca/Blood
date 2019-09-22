@@ -30,7 +30,7 @@ namespace Module.Settings.Shell.Pattern.ViewModels
     #region Constructor
     [ImportingConstructor]
     public TShellViewModel (IShellPresentation presentation)
-      : base (new TShellModel (), TProcess.SETTINGS)
+      : base (new TShellModel (), TProcess.MODULESETTINGS)
     {
       presentation.ViewModel = this;
     }

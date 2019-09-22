@@ -32,14 +32,16 @@ namespace Shared.Types
   //-----TModuleName
   public enum TModuleName
   {
-    Bag,
+    GadgetMaterial,
+    GadgetTarget,
+    GadgetTest,
+    ModuleSettings,
     Edit,
-    None,
     Services,
-    Settings,
     Shell,
     Collection,
     Factory,
+    None,
   };
   //---------------------------//
 
