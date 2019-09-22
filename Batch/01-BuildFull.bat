@@ -24,6 +24,9 @@ CALL :error "Could not find Visual Studio directory."
 	 
 	rem "do not change this order"
 
+	echo ---- DELETING...
+	del "D:\Documents\GitHub\Source\Repository\WPF\Blood\Bin\Blood*.dll" 
+	
     echo Blood SERVER MODELS 
 	echo --- Blood SERVER MODELS INFRASTRUCTURE . . .
     msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Server\Models\Infrastructure\Blood Server Models Infrastructure.sln" -t:rebuild -verbosity:minimal -nologo
@@ -37,6 +40,11 @@ CALL :error "Could not find Visual Studio directory."
     msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Server\Context\Component\Blood Server Context Component.sln" -t:rebuild -verbosity:minimal -nologo
 
 
+	echo Blood SERVER SERVICES
+	echo --- Blood SERVER SERVICES COMPONENT . . .
+    msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Server\Services\Component\Blood Server Services Component.sln" -t:rebuild -verbosity:minimal -nologo
+
+
 	echo Blood SHARED
 	echo --- Blood SHARED RESOURCE . . .
 	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\Resources\Blood Shared Resources.sln" -t:rebuild -verbosity:minimal -nologo
@@ -47,20 +55,16 @@ CALL :error "Could not find Visual Studio directory."
 	echo --- Blood SHARED MESSAGE . . .
 	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\Message\Blood Shared Message.sln" -t:rebuild -verbosity:minimal -nologo
 
+	echo --- COMMUNICATION . . .
+	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\Communication\Blood Shared Communication.sln" -t:rebuild -verbosity:minimal -nologo
+	
 	echo --- Blood SHARED VIEWMODEL . . .
 	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\ViewModel\Blood Shared ViewModel.sln" -t:rebuild -verbosity:minimal -nologo
 	
-	echo --- COMMUNICATION . . .
-	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\Communication\Blood Shared Communication.sln" -t:rebuild -verbosity:minimal -nologo
-		
+	
+	
 	echo --- Blood SHARED SERVICES . . .
 	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\Services\Blood Shared Services.sln" -t:rebuild -verbosity:minimal -nologo
-	   
-	
-	
-	echo Blood SERVER SERVICES
-	echo --- Blood SERVER SERVICES COMPONENT . . .
-    msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Server\Services\Component\Blood Server Services Component.sln" -t:rebuild -verbosity:minimal -nologo
 	
 	
 	echo  -- Blood LAUNCHER

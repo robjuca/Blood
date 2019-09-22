@@ -19,6 +19,8 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.PopupBox.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Flipper.xaml" />
 
+                <ResourceDictionary Source="pack://application:,,,/Blood.Shared.Resources;component/Themes/Generic.xaml" />
+                
                 <ResourceDictionary Source="/Assets/Resources/Style.xaml" />
                 <ResourceDictionary Source="/Assets/Resources/IconApp.xaml" />
 

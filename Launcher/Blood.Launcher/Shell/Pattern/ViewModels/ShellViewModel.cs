@@ -180,9 +180,6 @@ namespace Launcher.Shell.Pattern.ViewModels
                 break;
 
               case TCommandComm.Error: {
-                  Model.SettingsOnly ();
-                  RaiseChanged ();
-
                   THelper.DispatcherLater (RemoveProcessPartialDispatcher);
                 }
                 break;

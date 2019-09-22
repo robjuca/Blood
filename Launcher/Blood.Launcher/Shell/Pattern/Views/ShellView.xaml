@@ -26,67 +26,44 @@
             <Button ToolTip="settings"
                     IsEnabled="{Binding Model.IsSettingsEnabled}"
                     caliburn:Message.Attach="[Event Click] = [OnSettingsCommadClicked ()]">
-                <ContentControl Style="{StaticResource MenuSettingsIcon}" />
+                <ContentControl Style="{DynamicResource MenuSettingsIcon}" />
             </Button>
-            
+
+            <!--medical test-->
             <materialDesign:PopupBox Width="44"
                                      Height="44"
-                                     ToolTip="gadget"
-                                     Background="LightPink" 
-                                     Style="{StaticResource MaterialDesignMultiFloatingActionPopupBox}"
+                                     ToolTip="medical test"
+                                     Style="{DynamicResource MaterialDesignMultiFloatingActionPopupBox}"
                                      PlacementMode="BottomAndAlignCentres">
-                <!--<StackPanel>
-                    --><!--document--><!--
-                    <Button ToolTip="document"
+
+                <materialDesign:PopupBox.ToggleCheckedContent>
+                    <materialDesign:PackIcon Kind="MedicalBag"
+                                             Width="24"
+                                             Height="24" />
+                </materialDesign:PopupBox.ToggleCheckedContent>
+
+                <StackPanel>
+                    <!--medical test material-->
+                    <Button ToolTip="material"
                             IsEnabled="{Binding Model.IsMenuEnabled}"
                             caliburn:Message.Attach="[Event Click] = [OnDocumentCommadClicked ()]">
-                        <ContentControl Style="{StaticResource MenuDocumentIcon}" />
+                        <ContentControl Style="{DynamicResource MenuMedicalTestMaterialIcon}" />
                     </Button>
 
-                    --><!--image--><!--
-                    <Button ToolTip="image"
+                    <!--medical test target-->
+                    <Button ToolTip="target"
+                            IsEnabled="{Binding Model.IsMenuEnabled}"
+                            caliburn:Message.Attach="[Event Click] = [OnDocumentCommadClicked ()]">
+                        <ContentControl Style="{DynamicResource MenuMedicalTestTargetIcon}" />
+                    </Button>
+
+                    <!--medical test-->
+                    <Button ToolTip="test"
                             IsEnabled="{Binding Model.IsMenuEnabled}"
                             caliburn:Message.Attach="[Event Click] = [OnImageCommadClicked ()]">
-                        <ContentControl Style="{StaticResource MenuImageIcon}" />
+                        <ContentControl Style="{DynamicResource MenuMedicalTestIcon}" />
                     </Button>
-                </StackPanel>-->
-            </materialDesign:PopupBox>
-
-            <materialDesign:PopupBox Width="44"
-                                     Height="44"
-                                     ToolTip="layout"
-                                     Background="LightBlue"
-                                     Style="{StaticResource MaterialDesignMultiFloatingActionPopupBox}"
-                                     PlacementMode="BottomAndAlignCentres">
-                <!--<StackPanel>
-                    --><!--bag--><!--
-                    <Button ToolTip="bag"
-                            IsEnabled="{Binding Model.IsMenuEnabled}"
-                            caliburn:Message.Attach="[Event Click] = [OnBagCommadClicked ()]">
-                        <ContentControl Style="{StaticResource MenuBagIcon}" />
-                    </Button>
-
-                    --><!--shelf--><!--
-                    <Button ToolTip="shelf"
-                            IsEnabled="{Binding Model.IsMenuEnabled}"
-                            caliburn:Message.Attach="[Event Click] = [OnShelfCommadClicked ()]">
-                        <ContentControl Style="{StaticResource MenuShelfIcon}" />
-                    </Button>
-
-                    --><!--drawer--><!--
-                    <Button ToolTip="drawer"
-                            IsEnabled="{Binding Model.IsMenuEnabled}"
-                            caliburn:Message.Attach="[Event Click] = [OnDrawerCommadClicked ()]">
-                        <ContentControl Style="{StaticResource MenuDrawerIcon}" />
-                    </Button>
-
-                    --><!--chest--><!--
-                    <Button ToolTip="chest"
-                            IsEnabled="{Binding Model.IsMenuEnabled}"
-                            caliburn:Message.Attach="[Event Click] = [OnChestCommadClicked ()]">
-                        <ContentControl Style="{StaticResource MenuChestIcon}" />
-                    </Button>
-                </StackPanel>-->
+                </StackPanel>
             </materialDesign:PopupBox>
         </StackPanel>
     </Border>

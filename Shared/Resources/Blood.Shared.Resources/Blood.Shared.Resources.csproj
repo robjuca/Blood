@@ -109,5 +109,12 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\MedicalTest.ico" />
+    <Resource Include="Images\MedicalTestTarget.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\MedicalTestMaterial.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
