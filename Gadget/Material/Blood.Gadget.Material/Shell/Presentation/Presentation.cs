@@ -70,9 +70,15 @@ namespace Gadget.Material.Shell.Presentation
     {
       Type typeNavigateTo = null;
 
-      //switch (m_NavigateRequestMessage.Where) {
-        
-      //}
+      switch (m_NavigateRequestMessage.Where) {
+        case TNavigateMessage.TWhere.Collection:
+          typeNavigateTo = typeof (Pattern.ViewModels.TShellCollectionViewModel);
+          break;
+
+        case TNavigateMessage.TWhere.Factory:
+          typeNavigateTo = typeof (Pattern.ViewModels.TShellFactoryViewModel);
+          break;
+      }
 
       if (typeNavigateTo.NotNull ()) {
         var message = new TNavigateResponseMessage (m_NavigateRequestMessage.Sender, m_NavigateRequestMessage.Where, (Type) typeNavigateTo);

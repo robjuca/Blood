@@ -4,16 +4,18 @@
 ----------------------------------------------------------------*/
 
 //----- Include
-using System;
-
-using Shared.ViewModel;
-using Shared.Types;
 //---------------------------//
 
-namespace Gadget.Material.Shell.Pattern.Models
+namespace Gadget.Material.Factory
 {
-  public class TShellModel : TShellModelReference
+  public sealed class TModuleCatalog
   {
+    //just to add to catalog
+    #region Constructor
+    public TModuleCatalog ()
+    {
+    }
+    #endregion
   };
   //---------------------------//
 

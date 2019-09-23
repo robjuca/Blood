@@ -8,11 +8,11 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 //---------------------------//
 
-[assembly: AssemblyTitle ("Blood Module Settings Factory")]
+[assembly: AssemblyTitle ("Blood Gadget Material Factory")]
 [assembly: AssemblyDescription ("This .NET assembly is a WPF application.")]
 [assembly: AssemblyConfiguration ("Build")]
 [assembly: AssemblyCompany ("R&R Soft")]
-[assembly: AssemblyProduct ("Blood.Module.Settings.Factory")]
+[assembly: AssemblyProduct ("Blood.Gadget.Material.Factory")]
 [assembly: AssemblyCopyright ("Roberto Jucá (robjuca@pobox.com) Copyright © R&R Soft 2001")]
 [assembly: AssemblyTrademark ("R&R Soft® is a registered trademark of R&R Soft.")]
 [assembly: AssemblyCulture ("")]

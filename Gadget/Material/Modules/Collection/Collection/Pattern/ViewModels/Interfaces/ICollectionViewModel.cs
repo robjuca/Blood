@@ -4,16 +4,14 @@
 ----------------------------------------------------------------*/
 
 //----- Include
-using System;
-
-using Shared.ViewModel;
-using Shared.Types;
+using rr.Library.Infrastructure;
 //---------------------------//
 
-namespace Gadget.Material.Shell.Pattern.Models
+namespace Gadget.Collection.Pattern.ViewModels
 {
-  public class TShellModel : TShellModelReference
+  public interface ICollectionViewModel : IViewModel
   {
+    
   };
   //---------------------------//
 

@@ -4,17 +4,19 @@
 ----------------------------------------------------------------*/
 
 //----- Include
-using System;
-
-using Shared.ViewModel;
-using Shared.Types;
 //---------------------------//
 
-namespace Gadget.Material.Shell.Pattern.Models
+namespace Gadget.Material.Shell.Pattern.Views
 {
-  public class TShellModel : TShellModelReference
+  public partial class TShellCollectionView : rr.Library.Infrastructure.ViewChildBase
   {
-  };
+    #region Constructor
+    public TShellCollectionView ()
+    {
+      InitializeComponent ();
+    } 
+    #endregion
+  }
   //---------------------------//
 
 }  // namespace

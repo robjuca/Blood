@@ -4,16 +4,13 @@
 ----------------------------------------------------------------*/
 
 //----- Include
-using System;
-
-using Shared.ViewModel;
-using Shared.Types;
 //---------------------------//
 
 namespace Gadget.Material.Shell.Pattern.Models
 {
-  public class TShellModel : TShellModelReference
+  public class TShellFactoryModel
   {
+    
   };
   //---------------------------//
 
