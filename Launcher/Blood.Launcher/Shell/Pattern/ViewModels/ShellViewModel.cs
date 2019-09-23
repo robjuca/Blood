@@ -185,6 +185,8 @@ namespace Launcher.Shell.Pattern.ViewModels
     {
       (FrameworkElementView as System.Windows.Window).Closing += OnClosing;
 
+      ValidateProcessAlive ();
+
       OnSettingsCommadClicked ();
     }
     #endregion
@@ -206,6 +208,20 @@ namespace Launcher.Shell.Pattern.ViewModels
     #endregion
 
     #region Support
+    void ValidateProcessAlive ()
+    {
+      foreach (var name in Enum.GetNames (typeof (TProcess.TName))) {
+        var processName = (TProcess.TName) Enum.Parse (typeof (TProcess.TName), name);
+        var processExecutable = TProcess.ModuleExecutable [processName];
+
+        bool alive = System.IO.File.Exists (processExecutable);
+
+        Model.ProcessAlive (processName, alive);
+      }
+
+      RaiseChanged ();
+    }
+
     void StartProcess (TProcess.TName name)
     {
       if (m_Process.ContainsKey (name)) {

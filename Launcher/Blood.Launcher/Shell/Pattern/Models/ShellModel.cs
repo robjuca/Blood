@@ -4,6 +4,9 @@
 ----------------------------------------------------------------*/
 
 //----- Include
+using System.Collections.Generic;
+
+using Shared.Resources;
 //---------------------------//
 
 namespace Launcher.Shell.Pattern.Models
@@ -11,50 +14,97 @@ namespace Launcher.Shell.Pattern.Models
   public class TShellModel
   {
     #region Property
-    public bool IsMenuEnabled
+    public bool IsEnabledSettings
     {
-      get;
-      set;
+      get
+      {
+        return (m_IsSettingsEnabled && IsProcessAlive (TProcess.TName.ModuleSettings));
+      }
     }
-    public bool IsSettingsEnabled
+
+    public bool IsEnabledMedicalTestMaterial
     {
-      get;
-      set;
+      get
+      {
+        return (m_IsMenuEnabled && IsProcessAlive (TProcess.TName.GadgetMaterial));
+      }
+    }
+
+    public bool IsEnabledMedicalTestTarget
+    {
+      get
+      {
+        return (m_IsMenuEnabled && IsProcessAlive (TProcess.TName.GadgetTarget));
+      }
+    }
+
+    public bool IsEnabledMedicalTest
+    {
+      get
+      {
+        return (m_IsMenuEnabled && IsProcessAlive (TProcess.TName.GadgetTest));
+      }
     }
     #endregion
 
     #region Constructor
     public TShellModel ()
     {
-      IsMenuEnabled = false;
-      IsSettingsEnabled = true;
+      m_IsMenuEnabled = false;
+      m_IsSettingsEnabled = true;
+
+      m_Process = new Dictionary<TProcess.TName, bool> ();
     }
     #endregion
 
     #region Members
     internal void EnableAll ()
     {
-      IsMenuEnabled = true;
-      IsSettingsEnabled = true;
+      m_IsMenuEnabled = true;
+      m_IsSettingsEnabled = true;
     }
 
     internal void DisableAll ()
     {
-      IsMenuEnabled = false;
-      IsSettingsEnabled = false;
+      m_IsMenuEnabled = false;
+      m_IsSettingsEnabled = false;
     }
 
     internal void MenuOnly ()
     {
-      IsMenuEnabled = true;
-      IsSettingsEnabled = false;
+      m_IsMenuEnabled = true;
+      m_IsSettingsEnabled = false;
     }
 
     internal void SettingsOnly ()
     {
-      IsMenuEnabled = false;
-      IsSettingsEnabled = true;
+      m_IsMenuEnabled = false;
+      m_IsSettingsEnabled = true;
     }
+
+    internal void ProcessAlive (TProcess.TName name, bool alive)
+    {
+      if (m_Process.ContainsKey (name)) {
+        m_Process [name] = alive;
+      }
+
+      else {
+        m_Process.Add (name, alive);
+      }
+    }
+    #endregion
+
+    #region Fields
+    readonly Dictionary<TProcess.TName, bool>                             m_Process;
+    bool                                                                  m_IsMenuEnabled;
+    bool                                                                  m_IsSettingsEnabled;
+    #endregion
+
+    #region Support
+    bool IsProcessAlive (TProcess.TName name)
+    {
+      return (m_Process.ContainsKey (name) ? m_Process [name] : false);
+    } 
     #endregion
   };
   //---------------------------//

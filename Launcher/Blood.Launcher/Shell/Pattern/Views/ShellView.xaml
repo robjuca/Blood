@@ -24,7 +24,7 @@
         <StackPanel Orientation="Horizontal">
             <!--settings-->
             <Button ToolTip="settings"
-                    IsEnabled="{Binding Model.IsSettingsEnabled}"
+                    IsEnabled="{Binding Model.IsEnabledSettings, Mode=OneWay}"
                     caliburn:Message.Attach="[Event Click] = [OnSettingsCommadClicked ()]">
                 <ContentControl Style="{DynamicResource MenuSettingsIcon}" />
             </Button>
@@ -45,22 +45,22 @@
                 <StackPanel>
                     <!--medical test material-->
                     <Button ToolTip="material"
-                            IsEnabled="{Binding Model.IsMenuEnabled}"
+                            IsEnabled="{Binding Model.IsEnabledMedicalTestMaterial, Mode=OneWay}"
                             caliburn:Message.Attach="[Event Click] = [OnMedicalTestMaterialCommadClicked ()]">
                         <ContentControl Style="{DynamicResource MenuMedicalTestMaterialIcon}" />
                     </Button>
 
                     <!--medical test target-->
                     <Button ToolTip="target"
-                            IsEnabled="{Binding Model.IsMenuEnabled}"
-                            caliburn:Message.Attach="[Event Click] = [OnDocumentCommadClicked ()]">
+                            IsEnabled="{Binding Model.IsEnabledMedicalTestTarget, Mode=OneWay}"
+                            caliburn:Message.Attach="[Event Click] = [OnMedicalTestTargetCommadClicked ()]">
                         <ContentControl Style="{DynamicResource MenuMedicalTestTargetIcon}" />
                     </Button>
 
                     <!--medical test-->
                     <Button ToolTip="test"
-                            IsEnabled="{Binding Model.IsMenuEnabled}"
-                            caliburn:Message.Attach="[Event Click] = [OnImageCommadClicked ()]">
+                            IsEnabled="{Binding Model.IsEnabledMedicalTest, Mode=OneWay}"
+                            caliburn:Message.Attach="[Event Click] = [OnMedicalTestCommadClicked ()]">
                         <ContentControl Style="{DynamicResource MenuMedicalTestIcon}" />
                     </Button>
                 </StackPanel>
