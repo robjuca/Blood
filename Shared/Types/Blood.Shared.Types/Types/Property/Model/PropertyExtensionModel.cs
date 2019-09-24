@@ -71,12 +71,12 @@ namespace Shared.Types
     {
       get
       {
-        return (m_DocumentModel.ExternalLink);
+        return (""/*m_DocumentModel.ExternalLink*/);
       }
 
       set
       {
-        m_DocumentModel.ExternalLink = value;
+        //m_DocumentModel.ExternalLink = value;
         RaisePropertyChanged ();
       }
     }
@@ -132,25 +132,6 @@ namespace Shared.Types
 
     #region Text
     [Category ("5 - Text")]
-    [DisplayName ("Caption")]
-    [MaxLength (40)]
-    [Description ("max length = 40")]
-    [RefreshProperties (RefreshProperties.All)]
-    [Browsable (true)]
-    public string CaptionProperty
-    {
-      get
-      {
-        return (m_TextModel.Caption);
-      }
-
-      set
-      {
-        m_TextModel.Caption = value;
-      }
-    }
-
-    [Category ("5 - Text")]
     [DisplayName ("Description")]
     [MaxLength (40)]
     [Description ("max length = 40")]
@@ -167,7 +148,45 @@ namespace Shared.Types
       {
         m_TextModel.Description = value;
       }
-    } 
+    }
+
+    [Category ("5 - Text")]
+    [DisplayName ("External Link")]
+    [Description ("link for external Url")]
+    [RefreshProperties (RefreshProperties.All)]
+    [Browsable (true)]
+    [Editor (typeof (TTextEditorH60), typeof (PropertyValueEditor))]
+    public string ExternalLinkProperty
+    {
+      get
+      {
+        return (m_TextModel.ExternalLink);
+      }
+
+      set
+      {
+        m_TextModel.ExternalLink = value;
+      }
+    }
+
+    [Category ("5 - Text")]
+    [DisplayName ("Text")]
+    [MaxLength (40)]
+    [Description ("max length = 40")]
+    [RefreshProperties (RefreshProperties.All)]
+    [Browsable (true)]
+    public string TextProperty
+    {
+      get
+      {
+        return (m_TextModel.Text);
+      }
+
+      set
+      {
+        m_TextModel.Text = value;
+      }
+    }
     #endregion
 
     #region ImageProperty
@@ -210,7 +229,7 @@ namespace Shared.Types
     {
       m_ImageModel = ExtensionImage.CreateDefault;
       m_LayoutModel = ExtensionLayout.CreateDefault;
-      m_DocumentModel = ExtensionDocument.CreateDefault;
+      //m_DocumentModel = ExtensionDocument.CreateDefault;
       m_GeometryModel = ExtensionGeometry.CreateDefault;
       m_TextModel = ExtensionText.CreateDefault;
 
@@ -244,58 +263,14 @@ namespace Shared.Types
 
         m_Names.Clear ();
 
+        // remove property not required
+
         switch (modelCategory) {
-          case Server.Models.Infrastructure.TCategory.Document: {
-              m_Names.Add ("CaptionProperty");
-              m_Names.Add ("DescriptionProperty");
-              m_Names.Add ("ColumnsProperty");
-              m_Names.Add ("RowsProperty");
-            }
-            break;
-
-          case Server.Models.Infrastructure.TCategory.Image: {
-              m_Names.Add ("ImagePositionProperty");
+          case Server.Models.Infrastructure.TCategory.Material: {
               m_Names.Add ("LinkProperty");
+              m_Names.Add ("ImagePositionProperty");
               m_Names.Add ("HeaderVisibilityProperty");
               m_Names.Add ("FooterVisibilityProperty");
-              m_Names.Add ("ColumnsProperty");
-              m_Names.Add ("RowsProperty");
-            }
-            break;
-
-          case Server.Models.Infrastructure.TCategory.Bag: {
-              m_Names.Add ("CaptionProperty");
-              m_Names.Add ("DescriptionProperty");
-              m_Names.Add ("ImagePositionProperty");
-              m_Names.Add ("LinkProperty");
-              m_Names.Add ("HeaderVisibilityProperty");
-              m_Names.Add ("FooterVisibilityProperty");
-              m_Names.Add ("ImageProperty");
-              m_Names.Add ("ColumnsProperty");
-              m_Names.Add ("RowsProperty");
-            }
-            break;
-
-          case Server.Models.Infrastructure.TCategory.Shelf: {
-              m_Names.Add ("CaptionProperty");
-              m_Names.Add ("DescriptionProperty");
-              m_Names.Add ("ImagePositionProperty");
-              m_Names.Add ("LinkProperty");
-              m_Names.Add ("HeaderVisibilityProperty");
-              m_Names.Add ("FooterVisibilityProperty");
-              m_Names.Add ("ImageProperty");
-              m_Names.Add ("StyleHorizontalProperty");
-              m_Names.Add ("StyleVerticalProperty");
-            }
-            break;
-
-          case Server.Models.Infrastructure.TCategory.Drawer: {
-              m_Names.Add ("DescriptionProperty");
-              m_Names.Add ("ImagePositionProperty");
-              m_Names.Add ("LinkProperty");
-              m_Names.Add ("HeaderVisibilityProperty");
-              m_Names.Add ("FooterVisibilityProperty");
-              m_Names.Add ("ImageProperty");
               m_Names.Add ("StyleHorizontalProperty");
               m_Names.Add ("StyleVerticalProperty");
               m_Names.Add ("ColumnsProperty");
@@ -303,20 +278,78 @@ namespace Shared.Types
             }
             break;
 
-          case Server.Models.Infrastructure.TCategory.Chest: {
-              m_Names.Add ("CaptionProperty");
-              m_Names.Add ("DescriptionProperty");
-              m_Names.Add ("ImagePositionProperty");
-              m_Names.Add ("LinkProperty");
-              m_Names.Add ("HeaderVisibilityProperty");
-              m_Names.Add ("FooterVisibilityProperty");
-              m_Names.Add ("ImageProperty");
-              m_Names.Add ("StyleHorizontalProperty");
-              m_Names.Add ("StyleVerticalProperty");
-              m_Names.Add ("ColumnsProperty");
-              m_Names.Add ("RowsProperty");
-            }
-            break;
+            //case Server.Models.Infrastructure.TCategory.Document: {
+            //    m_Names.Add ("CaptionProperty");
+            //    m_Names.Add ("DescriptionProperty");
+            //    m_Names.Add ("ColumnsProperty");
+            //    m_Names.Add ("RowsProperty");
+            //  }
+            //  break;
+
+            //case Server.Models.Infrastructure.TCategory.Image: {
+            //    m_Names.Add ("ImagePositionProperty");
+            //    m_Names.Add ("LinkProperty");
+            //    m_Names.Add ("HeaderVisibilityProperty");
+            //    m_Names.Add ("FooterVisibilityProperty");
+            //    m_Names.Add ("ColumnsProperty");
+            //    m_Names.Add ("RowsProperty");
+            //  }
+            //  break;
+
+            //case Server.Models.Infrastructure.TCategory.Bag: {
+            //    m_Names.Add ("CaptionProperty");
+            //    m_Names.Add ("DescriptionProperty");
+            //    m_Names.Add ("ImagePositionProperty");
+            //    m_Names.Add ("LinkProperty");
+            //    m_Names.Add ("HeaderVisibilityProperty");
+            //    m_Names.Add ("FooterVisibilityProperty");
+            //    m_Names.Add ("ImageProperty");
+            //    m_Names.Add ("ColumnsProperty");
+            //    m_Names.Add ("RowsProperty");
+            //  }
+            //  break;
+
+            //case Server.Models.Infrastructure.TCategory.Shelf: {
+            //    m_Names.Add ("CaptionProperty");
+            //    m_Names.Add ("DescriptionProperty");
+            //    m_Names.Add ("ImagePositionProperty");
+            //    m_Names.Add ("LinkProperty");
+            //    m_Names.Add ("HeaderVisibilityProperty");
+            //    m_Names.Add ("FooterVisibilityProperty");
+            //    m_Names.Add ("ImageProperty");
+            //    m_Names.Add ("StyleHorizontalProperty");
+            //    m_Names.Add ("StyleVerticalProperty");
+            //  }
+            //  break;
+
+            //case Server.Models.Infrastructure.TCategory.Drawer: {
+            //    m_Names.Add ("DescriptionProperty");
+            //    m_Names.Add ("ImagePositionProperty");
+            //    m_Names.Add ("LinkProperty");
+            //    m_Names.Add ("HeaderVisibilityProperty");
+            //    m_Names.Add ("FooterVisibilityProperty");
+            //    m_Names.Add ("ImageProperty");
+            //    m_Names.Add ("StyleHorizontalProperty");
+            //    m_Names.Add ("StyleVerticalProperty");
+            //    m_Names.Add ("ColumnsProperty");
+            //    m_Names.Add ("RowsProperty");
+            //  }
+            //  break;
+
+            //case Server.Models.Infrastructure.TCategory.Chest: {
+            //    m_Names.Add ("CaptionProperty");
+            //    m_Names.Add ("DescriptionProperty");
+            //    m_Names.Add ("ImagePositionProperty");
+            //    m_Names.Add ("LinkProperty");
+            //    m_Names.Add ("HeaderVisibilityProperty");
+            //    m_Names.Add ("FooterVisibilityProperty");
+            //    m_Names.Add ("ImageProperty");
+            //    m_Names.Add ("StyleHorizontalProperty");
+            //    m_Names.Add ("StyleVerticalProperty");
+            //    m_Names.Add ("ColumnsProperty");
+            //    m_Names.Add ("RowsProperty");
+            //  }
+            //  break;
         }
       }
     }
@@ -339,8 +372,8 @@ namespace Shared.Types
     public void SelectModel (TEntityAction action)
     {
       if (action.NotNull ()) {
-        HeaderVisibilityProperty.Select (action.ModelAction.ExtensionDocumentModel.HeaderVisibility, action.ModelAction.ExtensionDocumentModel.FooterVisibility);
-        FooterVisibilityProperty.Select (action.ModelAction.ExtensionDocumentModel.HeaderVisibility, action.ModelAction.ExtensionDocumentModel.FooterVisibility);
+        //HeaderVisibilityProperty.Select (action.ModelAction.ExtensionDocumentModel.HeaderVisibility, action.ModelAction.ExtensionDocumentModel.FooterVisibility);
+        //FooterVisibilityProperty.Select (action.ModelAction.ExtensionDocumentModel.HeaderVisibility, action.ModelAction.ExtensionDocumentModel.FooterVisibility);
 
         ColumnsProperty.Select (action.ModelAction.ExtensionGeometryModel.SizeCols);
         RowsProperty.Select (action.ModelAction.ExtensionGeometryModel.SizeRows);
@@ -371,7 +404,7 @@ namespace Shared.Types
 
         m_LayoutModel.CopyFrom (action.ModelAction.ExtensionLayoutModel);
         m_ImageModel.CopyFrom (action.ModelAction.ExtensionImageModel);
-        m_DocumentModel.CopyFrom (action.ModelAction.ExtensionDocumentModel);
+        //m_DocumentModel.CopyFrom (action.ModelAction.ExtensionDocumentModel);
         m_GeometryModel.CopyFrom (action.ModelAction.ExtensionGeometryModel);
         m_TextModel.CopyFrom (action.ModelAction.ExtensionTextModel);
       }
@@ -406,7 +439,7 @@ namespace Shared.Types
 
         action.ModelAction.ExtensionLayoutModel.CopyFrom (m_LayoutModel);
         action.ModelAction.ExtensionImageModel.CopyFrom (m_ImageModel);
-        action.ModelAction.ExtensionDocumentModel.CopyFrom (m_DocumentModel);
+        //action.ModelAction.ExtensionDocumentModel.CopyFrom (m_DocumentModel);
         action.ModelAction.ExtensionGeometryModel.CopyFrom (m_GeometryModel); 
       }
     }
@@ -427,7 +460,7 @@ namespace Shared.Types
     {
       m_ImageModel = ExtensionImage.CreateDefault;
       m_LayoutModel = ExtensionLayout.CreateDefault;
-      m_DocumentModel = ExtensionDocument.CreateDefault;
+      //m_DocumentModel = ExtensionDocument.CreateDefault;
       m_GeometryModel = ExtensionGeometry.CreateDefault;
       m_TextModel = ExtensionText.CreateDefault;
 
@@ -491,7 +524,7 @@ namespace Shared.Types
     ExtensionLayout                                   m_LayoutModel;
     ExtensionImage                                    m_ImageModel;
     ExtensionText                                     m_TextModel;
-    ExtensionDocument                                 m_DocumentModel;
+    //ExtensionDocument                                 m_DocumentModel;
     ExtensionGeometry                                 m_GeometryModel;
     readonly Collection<string>                       m_Names;
     bool                                              m_ImageCleanupCommit;
@@ -511,13 +544,13 @@ namespace Shared.Types
 
       var category = Server.Models.Infrastructure.TCategoryType.FromValue (m_ModelCategory);
 
-      if (category.Equals (Server.Models.Infrastructure.TCategory.Document)) {
-        m_ImageModel.Width = ImagePositionProperty.Current.Size.Width;
-        m_ImageModel.Height = ImagePositionProperty.Current.Size.Height;
-      }
+      //if (category.Equals (Server.Models.Infrastructure.TCategory.Document)) {
+      //  m_ImageModel.Width = ImagePositionProperty.Current.Size.Width;
+      //  m_ImageModel.Height = ImagePositionProperty.Current.Size.Height;
+      //}
 
-      m_DocumentModel.HeaderVisibility = HeaderVisibilityProperty.ToString ();
-      m_DocumentModel.FooterVisibility = FooterVisibilityProperty.ToString ();
+      //m_DocumentModel.HeaderVisibility = HeaderVisibilityProperty.ToString ();
+      //m_DocumentModel.FooterVisibility = FooterVisibilityProperty.ToString ();
 
       m_LayoutModel.StyleHorizontal = StyleHorizontalProperty.Current.StyleInfo.StyleString;
       m_LayoutModel.StyleVertical = StyleVerticalProperty.Current.StyleInfo.StyleString;

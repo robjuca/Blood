@@ -49,12 +49,6 @@ namespace Server.Models.Component
     #endregion
 
     #region Extension
-    public Collection<ExtensionDocument> ExtensionDocumentCollection
-    {
-      get;
-      private set;
-    }
-
     public Collection<ExtensionGeometry> ExtensionGeometryCollection
     {
       get;
@@ -84,6 +78,14 @@ namespace Server.Models.Component
       get;
       private set;
     }
+    #endregion
+
+    #region Gadget
+    public Collection<GadgetMaterial> GadgetMaterialCollection
+    {
+      get;
+      private set;
+    } 
     #endregion
 
     #region ById
@@ -120,12 +122,14 @@ namespace Server.Models.Component
       ComponentRelationCollection = new Collection<ComponentRelation> ();
 
       // Extension
-      ExtensionDocumentCollection = new Collection<ExtensionDocument> ();
       ExtensionGeometryCollection = new Collection<ExtensionGeometry> ();
       ExtensionImageCollection = new Collection<ExtensionImage> ();
       ExtensionLayoutCollection = new Collection<ExtensionLayout> ();
       ExtensionNodeCollection = new Collection<ExtensionNode> ();
       ExtensionTextCollection = new Collection<ExtensionText> ();
+
+      // Gadget
+      GadgetMaterialCollection = new Collection<GadgetMaterial> ();
 
       // ById
       ModelCollection = new Dictionary<Guid, TModelAction> ();
@@ -161,9 +165,9 @@ namespace Server.Models.Component
       ComponentRelationCollection = new Collection<ComponentRelation> (list);
     }
 
-    public void SetCollection (IList<ExtensionDocument> list)
+    public void SetCollection (IList<GadgetMaterial> list)
     {
-      ExtensionDocumentCollection = new Collection<ExtensionDocument> (list);
+      GadgetMaterialCollection = new Collection<GadgetMaterial> (list);
     }
 
     public void SetCollection (IList<ExtensionGeometry> list)

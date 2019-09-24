@@ -160,7 +160,7 @@ namespace Shared.ViewModel
     {
       get
       {
-        return (Category.Equals (Server.Models.Infrastructure.TCategory.Image));
+        return (false /*          Category.Equals (Server.Models.Infrastructure.TCategory.Image)*/);
       }
     }
 
@@ -168,7 +168,7 @@ namespace Shared.ViewModel
     {
       get
       {
-        return (NodeCategory.Equals (Server.Models.Infrastructure.TCategory.Image));
+        return (false /*NodeCategory.Equals (Server.Models.Infrastructure.TCategory.Image)*/);
       }
     }
 
@@ -176,7 +176,7 @@ namespace Shared.ViewModel
     {
       get
       {
-        return (Category.Equals (Server.Models.Infrastructure.TCategory.Document));
+        return (false /*Category.Equals (Server.Models.Infrastructure.TCategory.Document)*/);
       }
     }
 
@@ -184,7 +184,7 @@ namespace Shared.ViewModel
     {
       get
       {
-        return (NodeCategory.Equals (Server.Models.Infrastructure.TCategory.Document));
+        return (false /*NodeCategory.Equals (Server.Models.Infrastructure.TCategory.Document)*/);
       }
     }
 
@@ -269,10 +269,10 @@ namespace Shared.ViewModel
     {
       get
       {
-        return (
+        return (false /*
           Category.Equals (Server.Models.Infrastructure.TCategory.Shelf) ||
           Category.Equals (Server.Models.Infrastructure.TCategory.Drawer) ||
-          Category.Equals (Server.Models.Infrastructure.TCategory.Chest)
+          Category.Equals (Server.Models.Infrastructure.TCategory.Chest)*/
         );
       }
     }

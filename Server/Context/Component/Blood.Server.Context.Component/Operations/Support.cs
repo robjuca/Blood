@@ -248,17 +248,17 @@ namespace Server.Context.Component
         try {
           foreach (var extensionName in extension.ExtensionList) {
             switch (extensionName) {
-              case TComponentExtensionName.Document: {
-                  var list = context.ExtensionDocument
-                    .Where (p => p.Id.Equals (id))
-                    .ToList ()
-                  ;
+              //case TComponentExtensionName.Document: {
+              //    var list = context.ExtensionDocument
+              //      .Where (p => p.Id.Equals (id))
+              //      .ToList ()
+              //    ;
 
-                  if (list.Count.Equals (1)) {
-                    modelAction.ExtensionDocumentModel.CopyFrom (list [0]);
-                  }
-                }
-                break;
+              //    if (list.Count.Equals (1)) {
+              //      modelAction.ExtensionDocumentModel.CopyFrom (list [0]);
+              //    }
+              //  }
+              //  break;
 
               case TComponentExtensionName.Geometry: {
                   var list = context.ExtensionGeometry

@@ -153,14 +153,14 @@ namespace Server.Context.Component
               foreach (var extensionName in extension.ExtensionList) {
                 switch (extensionName) {
                   case TComponentExtensionName.Document: {
-                      var list = context.ExtensionDocument
-                        .Where (p => p.Id.Equals (id))
-                        .ToList ()
-                      ;
+                      //var list = context.ExtensionDocument
+                      //  .Where (p => p.Id.Equals (id))
+                      //  .ToList ()
+                      //;
 
-                      if (list.Count.Equals (1)) {
-                        action.CollectionAction.ExtensionDocumentCollection.Add (list [0]);
-                      }
+                      //if (list.Count.Equals (1)) {
+                      //  action.CollectionAction.ExtensionDocumentCollection.Add (list [0]);
+                      //}
                     }
                     break;
 
@@ -269,14 +269,14 @@ namespace Server.Context.Component
             foreach (var extensionName in componentExtension.ExtensionList) {
               switch (extensionName) {
                 case TComponentExtensionName.Document: {
-                    var list = action.CollectionAction.ExtensionDocumentCollection
-                      .Where (p => p.Id.Equals (id))
-                      .ToList ()
-                    ;
+                    //var list = action.CollectionAction.ExtensionDocumentCollection
+                    //  .Where (p => p.Id.Equals (id))
+                    //  .ToList ()
+                    //;
 
-                    if (list.Count.Equals (1)) {
-                      models.ExtensionDocumentModel.CopyFrom (list [0]);
-                    }
+                    //if (list.Count.Equals (1)) {
+                    //  models.ExtensionDocumentModel.CopyFrom (list [0]);
+                    //}
                   }
                   break;
 

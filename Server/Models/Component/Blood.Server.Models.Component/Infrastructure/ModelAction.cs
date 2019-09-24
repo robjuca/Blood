@@ -54,13 +54,15 @@ namespace Server.Models.Component
     }
     #endregion
 
-    #region Extension
-    public ExtensionDocument ExtensionDocumentModel
+    #region Gadget
+    public GadgetMaterial GadgetMaterialModel
     {
       get;
       private set;
-    }
+    } 
+    #endregion
 
+    #region Extension
     public ExtensionGeometry ExtensionGeometryModel
     {
       get;
@@ -109,12 +111,14 @@ namespace Server.Models.Component
       ComponentRelationModel = ComponentRelation.CreateDefault;
 
       // Extension
-      ExtensionDocumentModel = ExtensionDocument.CreateDefault;
       ExtensionGeometryModel = ExtensionGeometry.CreateDefault;
       ExtensionImageModel = ExtensionImage.CreateDefault;
       ExtensionLayoutModel = ExtensionLayout.CreateDefault;
       ExtensionNodeModel = ExtensionNode.CreateDefault;
       ExtensionTextModel = ExtensionText.CreateDefault;
+
+      // Gadget
+      GadgetMaterialModel = GadgetMaterial.CreateDefault;
     }
     #endregion
 
@@ -130,13 +134,14 @@ namespace Server.Models.Component
         ComponentInfoModel.CopyFrom (alias.ComponentInfoModel);
         ComponentStatusModel.CopyFrom (alias.ComponentStatusModel);
         ComponentRelationModel.CopyFrom (alias.ComponentRelationModel);
-
-        ExtensionDocumentModel.CopyFrom (alias.ExtensionDocumentModel);
+        
         ExtensionGeometryModel.CopyFrom (alias.ExtensionGeometryModel);
         ExtensionImageModel.CopyFrom (alias.ExtensionImageModel);
         ExtensionLayoutModel.CopyFrom (alias.ExtensionLayoutModel);
         ExtensionNodeModel.CopyFrom (alias.ExtensionNodeModel);
         ExtensionTextModel.CopyFrom (alias.ExtensionTextModel);
+
+        GadgetMaterialModel.CopyFrom (alias.GadgetMaterialModel);
       }
     }
     #endregion

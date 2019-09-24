@@ -232,19 +232,19 @@ namespace Server.Context.Component
 
                 foreach (var extensionName in extension.ExtensionList) {
                   switch (extensionName) {
-                    case TComponentExtensionName.Document: {
-                        var list = context.ExtensionDocument
-                          .Where (p => p.Id.Equals (id))
-                          .ToList ()
-                        ;
+                    //case TComponentExtensionName.Document: {
+                    //    var list = context.ExtensionDocument
+                    //      .Where (p => p.Id.Equals (id))
+                    //      .ToList ()
+                    //    ;
 
-                        if (list.Count.Equals (1)) {
-                          var model = list [0];
-                          model.Change (action.ModelAction.ExtensionDocumentModel);
-                          context.ExtensionDocument.Update (model); // change model
-                        }
-                      }
-                      break;
+                    //    if (list.Count.Equals (1)) {
+                    //      var model = list [0];
+                    //      model.Change (action.ModelAction.ExtensionDocumentModel);
+                    //      context.ExtensionDocument.Update (model); // change model
+                    //    }
+                    //  }
+                    //  break;
 
                     case TComponentExtensionName.Geometry: {
                         var list = context.ExtensionGeometry

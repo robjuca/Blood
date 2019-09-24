@@ -46,15 +46,9 @@ namespace Server.Models.Infrastructure
     None        = 0,
 
     // gadget
-    Document    = 200,
-    Image       = 210,
-    Video       = 220,
-
-    // layout
-    Bag         = 10,
-    Shelf       = 20,
-    Drawer      = 30,
-    Chest       = 40,
+    Material    = 200,
+    Target      = 210,
+    Test        = 220,
 
     Settings    = 300,
   };
@@ -68,6 +62,7 @@ namespace Server.Models.Infrastructure
   // |        |        |   text   |  node   | layout  |  image   | geometry | document |
   // ----------------------------------------------------------------------------------
 
+  // TODO: review
   //  Document = 00011111 binary -> 1F hex -> 31 decimal
   //  Image    = 00111100 binary -> 3C hex -> 60 decimal
   //  Bag      = 00011000 binary -> 18 hex -> 24 decimal
@@ -76,16 +71,18 @@ namespace Server.Models.Infrastructure
   //  Chest    = 00000000 binary -> 40 hex -> 00 decimal
 
 
+  // TODO: review
   [Flags]
   public enum TComponentExtensionName : short
   {
     None        = 0,
     Document    = 1,
     Geometry    = 2,
-    Image       = 4,
-    Layout      = 8,
+    Target      = 4,
+    Layout        = 8,
     Node        = 16,
-    Text        = 32,
+    Image       = 32,
+    Text        = 64,
   };
   //---------------------------//
 

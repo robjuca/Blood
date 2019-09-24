@@ -44,6 +44,7 @@ namespace Server.Models.Infrastructure
     }
     #endregion
 
+    // TODO: what for??
     #region Constructor
     TSummary ()
     {

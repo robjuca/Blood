@@ -62,6 +62,10 @@ CALL :error "Could not find Visual Studio directory."
 	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\ViewModel\Blood Shared ViewModel.sln" -t:rebuild -verbosity:minimal -nologo
 	
 	
+	echo Blood SHARED GADGET
+	echo --- Blood SHARED GADGET MATERIAL . . .
+	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\Material\Blood Shared Gadget Material.sln" -t:rebuild -verbosity:minimal -nologo
+	
 	
 	echo --- Blood SHARED SERVICES . . .
 	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\Services\Blood Shared Services.sln" -t:rebuild -verbosity:minimal -nologo

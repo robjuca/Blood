@@ -139,12 +139,12 @@ namespace Server.Context.Component
             foreach (var extensionName in extension.ExtensionList) {
               switch (extensionName) {
                 case TComponentExtensionName.Document: {
-                    action.ModelAction.ExtensionDocumentModel.Id = id;
+                    //action.ModelAction.ExtensionDocumentModel.Id = id;
 
-                    var extDocument = Server.Models.Component.ExtensionDocument.CreateDefault;
-                    extDocument.CopyFrom (action.ModelAction.ExtensionDocumentModel);
+                    //var extDocument = Server.Models.Component.ExtensionDocument.CreateDefault;
+                    //extDocument.CopyFrom (action.ModelAction.ExtensionDocumentModel);
 
-                    context.ExtensionDocument.Add (extDocument);
+                    //context.ExtensionDocument.Add (extDocument);
                   }
                   break;
 

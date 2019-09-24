@@ -25,7 +25,7 @@
                 <!--error box-->
                 <materialDesign:DrawerHost.TopDrawerContent>
                     <controls:TErrorBox ErrorBoxWidth="700"
-                                        ErrorBoxHeight="600"
+                                        ErrorBoxHeight="430"
                                         ErrorTitle="{Binding Model.ErrorBoxContent.Title}"
                                         ErrorCaption="{Binding Model.ErrorBoxContent.Caption}"
                                         ErrorMessage="{Binding Model.ErrorBoxContent.Message}" />

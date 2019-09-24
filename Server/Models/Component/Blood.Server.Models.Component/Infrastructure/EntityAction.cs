@@ -75,13 +75,14 @@ namespace Server.Models.Component
 
         ModelAction.ComponentInfoModel.CopyFrom (ComponentModel.InfoModel);
         ModelAction.ComponentStatusModel.CopyFrom (ComponentModel.StatusModel);
-
-        ModelAction.ExtensionDocumentModel.CopyFrom (ComponentModel.DocumentModel);
+        
         ModelAction.ExtensionImageModel.CopyFrom (ComponentModel.ImageModel);
         ModelAction.ExtensionGeometryModel.CopyFrom (ComponentModel.GeometryModel);
         ModelAction.ExtensionLayoutModel.CopyFrom (ComponentModel.LayoutModel);
         ModelAction.ExtensionTextModel.CopyFrom (ComponentModel.TextModel);
         ModelAction.ExtensionNodeModel.CopyFrom (ComponentModel.NodeModel);
+
+        ModelAction.GadgetMaterialModel.CopyFrom (ComponentModel.MaterialModel);
 
         CollectionAction.SetCollection (ComponentModel.NodeModelCollection);
       }

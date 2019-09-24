@@ -115,8 +115,6 @@ namespace Gadget.Material.Shell.Pattern.ViewModels
     void DatabaseSettingsErrorDispatcher ()
     {
       Model.ClearPanels ();
-      Model.DatabaseStatus (false);
-      Model.Lock ();
 
       RaiseChanged ();
     }

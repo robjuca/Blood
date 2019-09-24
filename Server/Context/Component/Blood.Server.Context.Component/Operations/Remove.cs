@@ -121,14 +121,14 @@ namespace Server.Context.Component
                 foreach (var extensionName in extension.ExtensionList) {
                   switch (extensionName) {
                     case TComponentExtensionName.Document: {
-                        var list = context.ExtensionDocument
-                          .Where (p => p.Id.Equals (id))
-                          .ToList ()
-                        ;
+                        //var list = context.ExtensionDocument
+                        //  .Where (p => p.Id.Equals (id))
+                        //  .ToList ()
+                        //;
 
-                        if (list.Count.Equals (1)) {
-                          context.ExtensionDocument.Remove (list [0]);
-                        }
+                        //if (list.Count.Equals (1)) {
+                        //  context.ExtensionDocument.Remove (list [0]);
+                        //}
                       }
                       break;
 

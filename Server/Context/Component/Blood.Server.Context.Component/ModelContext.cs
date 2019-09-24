@@ -51,10 +51,10 @@ namespace Server.Context.Component
     #endregion
 
     #region Extension
-    public virtual DbSet<ExtensionDocument> ExtensionDocument
-    {
-      get; set;
-    }
+    //public virtual DbSet<ExtensionDocument> ExtensionDocument
+    //{
+    //  get; set;
+    //}
 
     public virtual DbSet<ExtensionGeometry> ExtensionGeometry
     {

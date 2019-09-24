@@ -37,7 +37,7 @@ namespace Server.Models.Component
     #endregion
 
     #region Extension
-    public ExtensionDocument DocumentModel
+    public GadgetMaterial MaterialModel
     {
       get;
       private set;
@@ -121,7 +121,7 @@ namespace Server.Models.Component
       InfoModel = ComponentInfo.CreateDefault;
       StatusModel = ComponentStatus.CreateDefault;
 
-      DocumentModel = ExtensionDocument.CreateDefault;
+      MaterialModel = GadgetMaterial.CreateDefault;
       GeometryModel = ExtensionGeometry.CreateDefault;
       ImageModel = ExtensionImage.CreateDefault;
       LayoutModel = ExtensionLayout.CreateDefault;
@@ -148,9 +148,9 @@ namespace Server.Models.Component
       StatusModel.CopyFrom (status);
     }
 
-    public void Select (ExtensionDocument document)
+    public void Select (GadgetMaterial document)
     {
-      DocumentModel.CopyFrom (document);
+      MaterialModel.CopyFrom (document);
     }
 
     public void Select (ExtensionGeometry geometry)
@@ -199,7 +199,7 @@ namespace Server.Models.Component
       modelAction.ComponentInfoModel.CopyFrom (InfoModel);
       modelAction.ComponentStatusModel.CopyFrom (StatusModel);
 
-      modelAction.ExtensionDocumentModel.CopyFrom (DocumentModel);
+      modelAction.GadgetMaterialModel.CopyFrom (MaterialModel);
       modelAction.ExtensionImageModel.CopyFrom (ImageModel);
       modelAction.ExtensionGeometryModel.CopyFrom (GeometryModel);
       modelAction.ExtensionLayoutModel.CopyFrom (LayoutModel);
@@ -219,7 +219,7 @@ namespace Server.Models.Component
         InfoModel.CopyFrom (alias.InfoModel);
         StatusModel.CopyFrom (alias.StatusModel);
 
-        DocumentModel.CopyFrom (alias.DocumentModel);
+        MaterialModel.CopyFrom (alias.MaterialModel);
         ImageModel.CopyFrom (alias.ImageModel);
         GeometryModel.CopyFrom (alias.GeometryModel);
         LayoutModel.CopyFrom (alias.LayoutModel);
@@ -242,7 +242,7 @@ namespace Server.Models.Component
         model.InfoModel.CopyFrom (modelAction.ComponentInfoModel);
         model.StatusModel.CopyFrom (modelAction.ComponentStatusModel);
 
-        model.DocumentModel.CopyFrom (modelAction.ExtensionDocumentModel);
+        model.MaterialModel.CopyFrom (modelAction.GadgetMaterialModel);
         model.ImageModel.CopyFrom (modelAction.ExtensionImageModel);
         model.GeometryModel.CopyFrom (modelAction.ExtensionGeometryModel);
         model.LayoutModel.CopyFrom (modelAction.ExtensionLayoutModel);

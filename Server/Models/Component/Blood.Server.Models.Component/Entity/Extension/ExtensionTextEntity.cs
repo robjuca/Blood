@@ -15,7 +15,7 @@ namespace Server.Models.Component
     public ExtensionText ()
     {
       Id = Guid.Empty;
-      Caption = string.Empty;
+      Text = string.Empty;
       Description = string.Empty;
       ExternalLink = string.Empty;
       IsCommit = false;
@@ -33,7 +33,7 @@ namespace Server.Models.Component
     {
       if (alias.NotNull ()) {
         Id = alias.Id;
-        Caption = alias.Caption;
+        Text = alias.Text;
         Description = alias.Description;
         ExternalLink = alias.ExternalLink;
         IsCommit = alias.IsCommit;
@@ -43,7 +43,7 @@ namespace Server.Models.Component
     public void Change (ExtensionText alias)
     {
       if (alias.NotNull ()) {
-        Caption = alias.Caption;
+        Text = alias.Text;
         Description = alias.Description;
         ExternalLink = alias.ExternalLink;
         IsCommit = alias.IsCommit;
