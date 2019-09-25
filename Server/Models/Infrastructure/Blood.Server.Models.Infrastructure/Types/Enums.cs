@@ -63,12 +63,9 @@ namespace Server.Models.Infrastructure
   // ----------------------------------------------------------------------------------
 
   // TODO: review
-  //  Document = 00011111 binary -> 1F hex -> 31 decimal
-  //  Image    = 00111100 binary -> 3C hex -> 60 decimal
-  //  Bag      = 00011000 binary -> 18 hex -> 24 decimal
-  //  Shelf    = 00001010 binary -> 0A hex -> 10 decimal
-  //  Drawer   = 00101010 binary -> 2A hex -> 42 decimal
-  //  Chest    = 00000000 binary -> 40 hex -> 00 decimal
+  //  Material      = 00100100 binary -> 24 hex -> 36 decimal
+  //  Target        = 00000000 binary -> 00 hex -> 00 decimal
+  //  Test          = 00000000 binary -> 00 hex -> 00 decimal
 
 
   // TODO: review
@@ -78,11 +75,10 @@ namespace Server.Models.Infrastructure
     None        = 0,
     Document    = 1,
     Geometry    = 2,
-    Target      = 4,
-    Layout        = 8,
+    Image       = 4,
+    Layout      = 8,
     Node        = 16,
-    Image       = 32,
-    Text        = 64,
+    Text        = 32,
   };
   //---------------------------//
 

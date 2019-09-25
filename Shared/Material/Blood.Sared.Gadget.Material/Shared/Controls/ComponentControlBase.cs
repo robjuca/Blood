@@ -7,7 +7,6 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 
 using Shared.Types;
@@ -42,379 +41,117 @@ namespace Shared.Gadget.Material
     {
       Background = Brushes.White;
 
-      m_Image = new Image ()
+      m_Grid = new Grid () 
       {
-        Stretch = Stretch.Fill
+        HorizontalAlignment= HorizontalAlignment.Center,
+        VerticalAlignment=VerticalAlignment.Center,
       };
 
-      m_FullGrid = new Grid ();
+      m_Grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Auto) }); // row 0 image, material
+      m_Grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Auto) }); // row 1 description
+      m_Grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Auto) }); // row 2 external link
 
-      #region Content (header, paragraph, footer)
-      #region header
-      m_Header = new RichTextBox ()
-      {
-        Padding = new Thickness (3),
-        BorderThickness = new Thickness (.5, 0, .5, 0),
-        Background = Brushes.Transparent,
-      };
+      AddChild (m_Grid);
 
-      m_Header.SetValue (DockPanel.DockProperty, Dock.Top);
-      #endregion
-
-      #region footer
-      m_Footer = new RichTextBox ()
-      {
-        Padding = new Thickness (3),
-        BorderThickness = new Thickness (.5, 0, .5, 0),
-        Background = Brushes.Transparent,
-      };
-
-      m_Footer.SetValue (DockPanel.DockProperty, Dock.Bottom);
-      #endregion
-
-      #region paragraph
-      m_Paragraph = new RichTextBox ()
-      {
-        Padding = new Thickness (3),
-        BorderThickness = new Thickness (.5),
-        BorderBrush = Brushes.LightGray,
-        HorizontalAlignment = HorizontalAlignment.Stretch,
-        VerticalAlignment = VerticalAlignment.Stretch,
-        Background = Brushes.Transparent
-      };
-      #endregion
-
-      m_ContentPanel = new DockPanel ()
-      {
-        LastChildFill = true,
-        Background = Brushes.Transparent,
-      };
-
-      m_ContentPanel.Children.Add (m_Header);
-      m_ContentPanel.Children.Add (m_Footer);
-      m_ContentPanel.Children.Add (m_Paragraph);
-      #endregion
-
-      #region design info
-      m_DocumentInfo = new TextBlock ()
-      {
-        HorizontalAlignment = HorizontalAlignment.Center,
-        Margin = new Thickness (0, 0, 0, 5)
-      };
-
-      m_DocumentInfo.SetValue (Grid.RowProperty, 0);
-
-      m_ImageInfo = new TextBlock ()
-      {
-        HorizontalAlignment = HorizontalAlignment.Center,
-        Margin = new Thickness (0, 0, 0, 15)
-      };
-
-      m_ImageInfo.SetValue (Grid.RowProperty, 1);
-      #endregion
-
-      #region Document link
-      m_DocumentLinkButton = new Button ();
-      m_DocumentLinkButton.Click += OnDocumentLinkButtonClick;
-
-      m_DocumentLinkBorder = new Border () { Visibility = Visibility.Collapsed };
-      m_DocumentLinkBorder.Child = m_DocumentLinkButton;
-      #endregion
-
-      #region border panel
-      m_DocumentBorder = new Border ()
-      {
-        Margin = new Thickness (0),
-        Padding = new Thickness (0)
-      };
-
-      m_BorderPanel = new DockPanel ()
-      {
-        LastChildFill = true
-      };
-
-      m_DocumentBorder.Child = m_BorderPanel;
-
-      var DocumentGrid = new Grid ();
-      DocumentGrid.SetValue (Grid.RowProperty, 3);
-      DocumentGrid.Children.Add (m_DocumentBorder);
-      DocumentGrid.Children.Add (m_DocumentLinkBorder);
-      #endregion
-
-      #region preview
-      m_PreviewButton = new ToggleButton ()
-      {
-        Content = "preview",
-        Width = 60,
-        BorderThickness = new Thickness (0)
-      };
-
-      m_PreviewButton.SetValue (Grid.RowProperty, 2);
-      m_PreviewButton.Checked += OnPreviewButtonChecked;
-      m_PreviewButton.Unchecked += OnPreviewButtonUnchecked;
-      #endregion
-
-      var grid = new Grid ();
-      grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Auto) }); // row 0 Document info
-      grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Auto) }); // row 1 image info
-      grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Auto) }); // row 2 preview button
-      grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Star) }); // row 3 Document
-
-      grid.Children.Add (DocumentGrid);
-
-      AddChild (grid);
+      ControlMode = TControlMode.None;
     }
 
     protected TComponentControlBase (TControlMode mode)
       : this ()
     {
       ControlMode = mode;
-
-      m_Header.IsReadOnly = ControlMode.Equals (TControlMode.Display);
-
-      m_Footer.IsReadOnly = ControlMode.Equals (TControlMode.Display);
-
-      m_Paragraph.IsReadOnly = ControlMode.Equals (TControlMode.Display);
-      m_Paragraph.BorderBrush = ControlMode.Equals (TControlMode.Display) ? Brushes.White: m_Paragraph.BorderBrush;
     }
     #endregion
 
     #region Members
     public void RefreshDesign ()
     {
-      //Width = Model.Width;
+      m_Grid.Children.Clear ();
 
-      // apply Document style
-      //m_DocumentBorder.Width = Model.Width;
-      //m_DocumentBorder.Height = Model.Height;
+      // image, material (row 0)
 
-      //m_DocumentLinkBorder.Width = Model.Width;
-      //m_DocumentLinkBorder.Height = Model.Height;
+      var grid = new Grid () 
+      { 
+        HorizontalAlignment= HorizontalAlignment.Center
+      };
 
-      #region image
-      //m_Image.Width = Model.ImageGeometry.Size.Width;
-      //m_Image.Height = Model.ImageGeometry.Size.Height;
+      grid.ColumnDefinitions.Add (new ColumnDefinition () { Width = new GridLength (1, GridUnitType.Auto) }); // col 0 image
+      grid.ColumnDefinitions.Add (new ColumnDefinition () { Width = new GridLength (1, GridUnitType.Auto) }); // col 1 material
+      grid.SetValue (Grid.RowProperty, 0);
 
-      if (Model.Image.IsNull ()) {
-        m_Image.Source = null;
-      }
-
-      if (Model.Image.NotNull () && (Model.PropertyName.Equals ("ImageProperty") || Model.PropertyName.Equals ("all"))) {
-        var imageSource = rr.Library.Helper.THelper.ByteArrayToBitmapImage (Model.Image).Clone ();
-        m_CurrentImageWidth = imageSource.PixelWidth;
-        m_CurrentImageHeight = imageSource.PixelHeight;
-
-        m_Image.Source = imageSource;
-      }
-      #endregion
-
-      #region visibility
-      if (Model.PropertyName.Equals ("header visibility") || Model.PropertyName.Equals ("all")) {
-        //m_Header.Visibility = Model.HeaderVisibility.Equals ("visible") ? Visibility.Visible : Visibility.Collapsed;
-      }
-
-      if (Model.PropertyName.Equals ("footer visibility") || Model.PropertyName.Equals ("all")) {
-        //m_Footer.Visibility = Model.FooterVisibility.Equals ("visible") ? Visibility.Visible : Visibility.Collapsed;
-      }
-      #endregion
-
-      m_FullGrid.Children.Clear ();
-      m_BorderPanel.Children.Clear ();
-
-      //Document image position
-      //if (string.IsNullOrEmpty (Model.ImageGeometry.Position.Position).IsFalse ()) {
-      //  var position = Enum.Parse (typeof (Positions.Image), Model.ImageGeometry.Position.Position.ToLower ());
-
-      //  switch (position) {
-      //    case Positions.Image.left:
-      //      m_Image.SetValue (DockPanel.DockProperty, Dock.Left);
-
-      //      m_BorderPanel.Children.Add (m_Image);
-      //      m_BorderPanel.Children.Add (m_ContentPanel);
-      //      break;
-
-      //    case Positions.Image.right:
-      //      m_Image.SetValue (DockPanel.DockProperty, Dock.Right);
-
-      //      m_BorderPanel.Children.Add (m_Image);
-      //      m_BorderPanel.Children.Add (m_ContentPanel);
-      //      break;
-
-      //    case Positions.Image.top:
-      //      m_Image.SetValue (DockPanel.DockProperty, Dock.Top);
-
-      //      m_BorderPanel.Children.Add (m_Image);
-      //      m_BorderPanel.Children.Add (m_ContentPanel);
-      //      break;
-
-      //    case Positions.Image.bottom:
-      //      m_Image.SetValue (DockPanel.DockProperty, Dock.Bottom);
-
-      //      m_BorderPanel.Children.Add (m_Image);
-      //      m_BorderPanel.Children.Add (m_ContentPanel);
-      //      break;
-
-      //    case Positions.Image.full:
-      //      m_FullGrid.Children.Add (m_Image);
-      //      m_FullGrid.Children.Add (m_ContentPanel);
-
-      //      m_BorderPanel.Children.Add (m_FullGrid);
-      //      break;
-
-      //    case Positions.Image.none:
-      //      m_BorderPanel.Children.Add (m_ContentPanel);
-      //      break;
-      //  }
-      //}
+      m_Grid.Children.Add (grid); // row 0
 
       // image
-      //ImageInfoReport = $"image position: {Model.ImageGeometry.Position.Position} ({Model.ImageGeometry.Size.Width} x {Model.ImageGeometry.Size.Height})";
-      //Model.ImageDistorted = false;
+      if (Model.ControlModel.Image.NotNull ()) {
+        var imageSource = rr.Library.Helper.THelper.ByteArrayToBitmapImage (Model.ControlModel.Image).Clone ();
+        var width = imageSource.PixelWidth;
+        var height = imageSource.PixelHeight;
 
-      //if (Model.ImageGeometry.Size.Width.NotEquals (m_CurrentImageWidth) || Model.ImageGeometry.Size.Height.NotEquals (m_CurrentImageHeight)) {
-      //  if ((m_CurrentImageWidth > 0) || (m_CurrentImageHeight > 0)) {
-      //    Model.ImageDistorted = true;
-      //    ImageInfoReport += $" [ DISTORTED ({m_CurrentImageWidth} x {m_CurrentImageHeight}) ]";
-      //  }
-      //}
+        var image = new Image ()
+        {
+          Stretch = Stretch.Fill,
+          Width = width,
+          Height = height,
+          Source=imageSource,
+        };
 
-      ////info
-      //m_DocumentInfo.Text = InfoReport;
-      //m_ImageInfo.Text = ImageInfoReport;
+        image.SetValue (Grid.ColumnProperty, 0);
 
-      //Model.InfoReport = InfoReport;
-      //Model.ImageInfoReport = ImageInfoReport;
-
-      if (Model.PropertyName.Equals ("Document link") || Model.PropertyName.Equals ("all")) {
-        m_DocumentLinkButton.Tag = Model.ExternalLink;
+        grid.Children.Add (image);
       }
 
-      if (Model.PropertyName.Equals ("all")) {
-        SetRtf ();
-      }
-    }
+      // material
+      if (string.IsNullOrEmpty (Model.ControlModel.Material).IsFalse ()) {
+        var textBlock = new TextBlock ()
+        {
+          VerticalAlignment = VerticalAlignment.Center,
+          Text = Model.ControlModel.Material,
+        };
 
-    public string RequestHeader (bool clear = true)
-    {
-      var text = string.Empty;
+        textBlock.SetValue (Grid.ColumnProperty, 1);
 
-      var tr = new System.Windows.Documents.TextRange (m_Header.Document.ContentStart, m_Header.Document.ContentEnd);
-
-      using (System.IO.MemoryStream ms = new System.IO.MemoryStream ()) {
-        tr.Save (ms, DataFormats.Rtf);
-        text = System.Text.Encoding.UTF8.GetString (ms.ToArray ());
+        grid.Children.Add (textBlock);
       }
 
-      if (clear) {
-        m_Header.Document.Blocks.Clear ();
+      // description (row 1)
+
+      if (string.IsNullOrEmpty (Model.ControlModel.Description).IsFalse ()) {
+        var textBox = new TextBox ()
+        {
+          Margin = new Thickness (3),
+          Padding=new Thickness (3),
+          MaxWidth = 400,
+          MaxHeight = 100,
+          TextWrapping = TextWrapping.Wrap,
+          TextAlignment = TextAlignment.Center,
+          VerticalAlignment= VerticalAlignment.Top,
+          VerticalScrollBarVisibility= ScrollBarVisibility.Auto,
+          Text = Model.ControlModel.Description,
+        };
+
+        textBox.SetValue (Grid.RowProperty, 1);
+
+        m_Grid.Children.Add (textBox); // row 1
       }
 
-      return (text);
-    }
+      // external link (row 2)
 
-    public string RequestFooter (bool clear = true)
-    {
-      var text = string.Empty;
+      if (string.IsNullOrEmpty (Model.ControlModel.ExternalLink).IsFalse ()) {
+        var externalLink = new System.Windows.Documents.Hyperlink (new System.Windows.Documents.Run ("more info"))
+        {
+          NavigateUri = new Uri (Model.ControlModel.ExternalLink),
+          TargetName = "_blanc",
+        };
 
-      var tr = new System.Windows.Documents.TextRange (m_Footer.Document.ContentStart, m_Footer.Document.ContentEnd);
+        var textBoxLink = new TextBlock (externalLink)
+        {
+          HorizontalAlignment = HorizontalAlignment.Center,
+          Margin = new Thickness (3),
+        };
+        
+        textBoxLink.SetValue (Grid.RowProperty, 2);
 
-      using (System.IO.MemoryStream ms = new System.IO.MemoryStream ()) {
-        tr.Save (ms, DataFormats.Rtf);
-        text = System.Text.Encoding.UTF8.GetString (ms.ToArray ());
-      }
-
-      if (clear) {
-        m_Footer.Document.Blocks.Clear ();
-      }
-
-      return (text);
-    }
-
-    public string RequestParagraph (bool clear = true)
-    {
-      var text = string.Empty;
-
-      var tr = new System.Windows.Documents.TextRange (m_Paragraph.Document.ContentStart, m_Paragraph.Document.ContentEnd);
-
-      using (System.IO.MemoryStream ms = new System.IO.MemoryStream ()) {
-        tr.Save (ms, DataFormats.Rtf);
-        text = System.Text.Encoding.UTF8.GetString (ms.ToArray ());
-      }
-
-      if (clear) {
-        m_Paragraph.Document.Blocks.Clear ();
-      }
-
-      return (text);
-    }
-
-    //public bool RequestImageDistorted ()
-    //{
-    //  return (Model.ImageDistorted);
-    //}
-
-    public void ClearRtf ()
-    {
-      m_Header.Document.Blocks.Clear ();
-      m_Footer.Document.Blocks.Clear ();
-      m_Paragraph.Document.Blocks.Clear ();
-    }
-
-    public void Cleanup ()
-    {
-      Model = null;
-      Model = TComponentControlModel.CreateDefault;
-
-      m_CurrentImageHeight = 0;
-      m_CurrentImageWidth = 0;
-
-      ModelValidated = true;
-    }
-    #endregion
-
-    #region Event
-    void OnPreviewButtonUnchecked (object sender, RoutedEventArgs e)
-    {
-      m_Header.BorderThickness = new Thickness (.5, 0, .5, 0);
-      m_Header.IsReadOnly = false;
-
-      m_Footer.BorderThickness = new Thickness (.5, 0, .5, 0);
-      m_Footer.IsReadOnly = false;
-
-      m_Paragraph.BorderThickness = new Thickness (.5);
-      m_Paragraph.IsReadOnly = false;
-
-      m_DocumentLinkBorder.Visibility = Visibility.Collapsed;
-    }
-
-    void OnPreviewButtonChecked (object sender, RoutedEventArgs e)
-    {
-      m_Header.BorderThickness = new Thickness (0);
-      m_Header.IsReadOnly = true;
-
-      m_Footer.BorderThickness = new Thickness (0);
-      m_Footer.IsReadOnly = true;
-    
-      m_Paragraph.BorderThickness = new Thickness (0);
-      m_Paragraph.IsReadOnly = true;
-
-      if (m_DocumentLinkButton.Tag != null) {
-        var link = m_DocumentLinkButton.Tag as string;
-
-        if (string.IsNullOrEmpty (link) == false) {
-          m_DocumentLinkBorder.Visibility = Visibility.Visible;
-        }
-      }
-    }
-
-    void OnDocumentLinkButtonClick (object sender, RoutedEventArgs e)
-    {
-      var link = m_DocumentLinkButton.Tag as string;
-
-      if (string.IsNullOrEmpty (link) == false) {
-        var uri = string.Format ("http://www.{0}", link);
-        System.Diagnostics.Process.Start (new System.Diagnostics.ProcessStartInfo (uri));
-        e.Handled = true;
+        m_Grid.Children.Add (textBoxLink); // row 2
       }
     }
     #endregion
@@ -446,58 +183,7 @@ namespace Shared.Gadget.Material
     #endregion
 
     #region Fields
-    Border                                  m_DocumentBorder;
-    Border                                  m_DocumentLinkBorder;
-    Button                                  m_DocumentLinkButton;
-    DockPanel                               m_ContentPanel;
-    DockPanel                               m_BorderPanel;
-    Image                                   m_Image;
-    RichTextBox                             m_Header;
-    RichTextBox                             m_Footer;
-    RichTextBox                             m_Paragraph;
-    TextBlock                               m_DocumentInfo;
-    TextBlock                               m_ImageInfo;
-    Grid                                    m_FullGrid;
-    ToggleButton                            m_PreviewButton;
-    int                                     m_CurrentImageWidth;
-    int                                     m_CurrentImageHeight;
-    #endregion
-
-    #region Support
-    void SetRtf ()
-    {
-      ClearRtf ();
-
-      System.Windows.Documents.TextRange textRange = null;
-      System.IO.MemoryStream stream = null;
-
-      if (string.IsNullOrEmpty (Model.Material).IsFalse ()) {
-        stream = new System.IO.MemoryStream (System.Text.Encoding.Default.GetBytes (Model.Material));
-
-        textRange = new System.Windows.Documents.TextRange (m_Header.Document.ContentStart, m_Header.Document.ContentEnd);
-        textRange.Load (stream, DataFormats.Rtf);
-
-        stream.Close ();
-      }
-
-      if (string.IsNullOrEmpty (Model.Description).IsFalse ()) {
-        stream = new System.IO.MemoryStream (System.Text.Encoding.Default.GetBytes (Model.Description));
-
-        textRange = new System.Windows.Documents.TextRange (m_Footer.Document.ContentStart, m_Footer.Document.ContentEnd);
-        textRange.Load (stream, DataFormats.Rtf);
-
-        stream.Close ();
-      }
-
-      //if (string.IsNullOrEmpty (Model.RtfParagraph).IsFalse ()) {
-      //  stream = new System.IO.MemoryStream (System.Text.Encoding.Default.GetBytes (Model.RtfParagraph));
-
-      //  textRange = new System.Windows.Documents.TextRange (m_Paragraph.Document.ContentStart, m_Paragraph.Document.ContentEnd);
-      //  textRange.Load (stream, DataFormats.Rtf);
-
-      //  stream.Close ();
-      //}
-    } 
+    readonly Grid                                     m_Grid;
     #endregion
   };
   //---------------------------//

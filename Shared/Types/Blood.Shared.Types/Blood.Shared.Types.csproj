@@ -77,6 +77,8 @@
     <Compile Include="Types\Property\Position\ImagePositionInfo.cs" />
     <Compile Include="Types\Property\Position\Positions.cs" />
     <Compile Include="Types\Property\Position\TImagePositionItem.cs" />
+    <Compile Include="Types\Property\Selection\SelectionPropertyInfo.cs" />
+    <Compile Include="Types\Property\Selection\SelectionItem.cs" />
     <Compile Include="Types\Property\Style\ContentStyles.cs" />
     <Compile Include="Types\Property\Style\StyleInfo.cs" />
     <Compile Include="Types\Property\Style\StylePropertyInfo.cs" />

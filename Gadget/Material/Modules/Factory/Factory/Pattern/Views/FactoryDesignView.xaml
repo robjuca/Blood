@@ -12,40 +12,12 @@
         <materialDesign:Card Padding="2"
                              HorizontalAlignment="Stretch"
                              VerticalAlignment="Stretch">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-
-                <!--info-->
-                <Border Grid.Row="0"
-                        Padding="0 3 0 20">
-                    <StackPanel HorizontalAlignment="Center">
-                        <!--<TextBlock Margin="0 0 0 3"
-                                   HorizontalAlignment="Center"
-                                   Text="{Binding Model.ComponentControlModel.InfoReport}" />
-
-                        <TextBlock Text="{Binding Model.ComponentControlModel.ImageInfoReport}" />-->
-                    </StackPanel>
-                </Border>
-
-                <!--design-->
-                <Border Grid.Row="1"
-                        Padding="5">
-                    <ScrollViewer HorizontalScrollBarVisibility="Auto"
-                                  VerticalScrollBarVisibility="Auto"
-                                  Padding="5">
-                        <materialDesign:Card HorizontalAlignment="Center"
-                                             VerticalAlignment="Center"
-                                             Margin="5">
-                            <design:TComponentDesignControl x:Name="Design"
-                                                            Model="{Binding Model.ComponentControlModel}"
-                                                            caliburn:Message.Attach="[Event Loaded] = [OnDesignLoaded ($source)]" />
-                        </materialDesign:Card>
-                    </ScrollViewer>
-                </Border>
-            </Grid>
+            <!--design-->
+            <Border Padding="5">
+                <design:TComponentDesignControl x:Name="Design"
+                                                Model="{Binding Model.ComponentControlModel}"
+                                                caliburn:Message.Attach="[Event Loaded] = [OnDesignLoaded ($source)]" />
+            </Border>
         </materialDesign:Card>
     </Border>
 

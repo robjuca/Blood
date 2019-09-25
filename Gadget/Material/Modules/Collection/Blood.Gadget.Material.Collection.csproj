@@ -32,6 +32,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Blood.Server.Models.Component, Version=1.0.2019.10, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Bin\Blood.Server.Models.Component.dll</HintPath>
+    </Reference>
+    <Reference Include="Blood.Server.Models.Infrastructure, Version=1.0.2019.10, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Bin\Blood.Server.Models.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Blood.Shared.Gadget.Material, Version=1.0.2019.10, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Bin\Blood.Shared.Gadget.Material.dll</HintPath>
+    </Reference>
     <Reference Include="Blood.Shared.Message, Version=1.0.2019.10, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Bin\Blood.Shared.Message.dll</HintPath>
@@ -99,9 +111,21 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collection\Pattern\Models\CollectionDisplayModel.cs" />
+    <Compile Include="Collection\Pattern\Models\CollectionListModel.cs" />
     <Compile Include="Collection\Pattern\Models\CollectionModel.cs" />
+    <Compile Include="Collection\Pattern\ViewModels\CollectionDisplayViewModel.cs" />
+    <Compile Include="Collection\Pattern\ViewModels\CollectionListViewModel.cs" />
     <Compile Include="Collection\Pattern\ViewModels\CollectionViewModel.cs" />
+    <Compile Include="Collection\Pattern\ViewModels\Interfaces\ICollectionDisplayViewModel.cs" />
+    <Compile Include="Collection\Pattern\ViewModels\Interfaces\ICollectionListViewModel.cs" />
     <Compile Include="Collection\Pattern\ViewModels\Interfaces\ICollectionViewModel.cs" />
+    <Compile Include="Collection\Pattern\Views\CollectionDisplayView.xaml.cs">
+      <DependentUpon>CollectionDisplayView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Collection\Pattern\Views\CollectionListView.xaml.cs">
+      <DependentUpon>CollectionListView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Collection\Pattern\Views\CollectionView.xaml.cs">
       <DependentUpon>CollectionView.xaml</DependentUpon>
     </Compile>
@@ -118,6 +142,14 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Collection\Pattern\Views\CollectionDisplayView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Collection\Pattern\Views\CollectionListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Collection\Pattern\Views\CollectionView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

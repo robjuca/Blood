@@ -266,6 +266,8 @@ namespace Gadget.Factory.Pattern.ViewModels
       var action = Server.Models.Component.TEntityAction.CreateDefault;
       Model.ComponentModelProperty.RequestModel (action);
 
+      action.ModelAction.GadgetMaterialModel.CopyFrom (action); // set model
+
       // to Sibling
       var message = new TFactorySiblingMessageInternal (TInternalMessageAction.PropertySelect, TChild.Property, TypeInfo);
       message.Support.Argument.Types.Select (action);

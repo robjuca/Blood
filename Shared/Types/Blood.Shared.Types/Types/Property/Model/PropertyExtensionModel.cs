@@ -133,10 +133,10 @@ namespace Shared.Types
     #region Text
     [Category ("5 - Text")]
     [DisplayName ("Description")]
-    [MaxLength (40)]
-    [Description ("max length = 40")]
+    [Description ("description info")]
     [RefreshProperties (RefreshProperties.All)]
     [Browsable (true)]
+    [Editor (typeof (TTextEditorH60), typeof (PropertyValueEditor))]
     public string DescriptionProperty
     {
       get
@@ -147,6 +147,8 @@ namespace Shared.Types
       set
       {
         m_TextModel.Description = value;
+
+        RaisePropertyChanged ("DescriptionProperty");
       }
     }
 
@@ -166,6 +168,8 @@ namespace Shared.Types
       set
       {
         m_TextModel.ExternalLink = value;
+
+        RaisePropertyChanged ("ExternalLinkProperty");
       }
     }
 
@@ -185,6 +189,8 @@ namespace Shared.Types
       set
       {
         m_TextModel.Text = value;
+
+        RaisePropertyChanged ("TextProperty");
       }
     }
     #endregion
@@ -222,6 +228,20 @@ namespace Shared.Types
       }
     }
     #endregion
+
+    #region ComboBox
+    [Category ("7 - Selection")]
+    [DisplayName ("Selection")]
+    [Description ("Select an item from list")]
+    [RefreshProperties (RefreshProperties.All)]
+    [Browsable (true)]
+    [Editor (typeof (TTextEditorComboBox), typeof (PropertyValueEditor))]
+    public TSelectionPropertyInfo SelectionProperty
+    {
+      get;
+      set;
+    } 
+    #endregion
     #endregion
 
     #region Constructor
@@ -250,6 +270,8 @@ namespace Shared.Types
       ColumnsProperty = TInt4PropertyInfo.Create (4);
       RowsProperty = TInt4PropertyInfo.Create (4);
 
+      SelectionProperty = TSelectionPropertyInfo.CreateDefault;
+
       m_Names = new Collection<string> ();
       m_ModelCategory = Server.Models.Infrastructure.TCategoryType.ToValue (Server.Models.Infrastructure.TCategory.None);
     }
@@ -275,6 +297,7 @@ namespace Shared.Types
               m_Names.Add ("StyleVerticalProperty");
               m_Names.Add ("ColumnsProperty");
               m_Names.Add ("RowsProperty");
+              m_Names.Add ("SelectionProperty");
             }
             break;
 

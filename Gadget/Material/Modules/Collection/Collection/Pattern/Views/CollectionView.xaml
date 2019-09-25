@@ -42,12 +42,12 @@
 
                     <!--display-->
                     <Border Grid.Column="0">
-                        
+                        <views:TCollectionDisplayView />
                     </Border>
 
                     <!--list-->
                     <Border Grid.Column="1">
-                        
+                        <views:TCollectionListView />
                     </Border>
                 </Grid>
             </Border>

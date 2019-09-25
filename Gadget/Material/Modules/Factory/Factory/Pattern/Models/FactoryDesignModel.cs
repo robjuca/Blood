@@ -27,14 +27,9 @@ namespace Gadget.Factory.Pattern.Models
     #endregion
 
     #region Members
-    internal void SelectModel (string propertyName, Server.Models.Infrastructure.IEntityAction entityAction)
+    internal void SelectModel (Server.Models.Component.TEntityAction action)
     {
-      ComponentControlModel.SelectModel (propertyName, Server.Models.Component.TEntityAction.Request (entityAction));
-    }
-
-    internal void Cleanup ()
-    {
-      ComponentControlModel.Cleanup ();
+      ComponentControlModel.SelectModel (action);
     }
     #endregion
   };

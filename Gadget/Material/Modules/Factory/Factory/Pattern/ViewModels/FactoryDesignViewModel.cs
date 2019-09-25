@@ -45,7 +45,7 @@ namespace Gadget.Factory.Pattern.ViewModels
         if (message.Node.IsSiblingToMe (TChild.Design)) {
           // PropertySelect
           if (message.IsAction (TInternalMessageAction.PropertySelect)) {
-            Model.SelectModel (message.Support.Argument.Args.PropertyName, message.Support.Argument.Types.EntityAction);
+            Model.SelectModel (Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction));
             TDispatcher.Invoke (RefreshDesignDispatcher);
           }
 
@@ -56,9 +56,6 @@ namespace Gadget.Factory.Pattern.ViewModels
 
           // Cleanup
           if (message.IsAction (TInternalMessageAction.Cleanup)) {
-            Model.Cleanup ();
-            m_DesignControl.Cleanup ();
-
             TDispatcher.Invoke (RefreshDesignDispatcher);
           }
         }
@@ -86,9 +83,7 @@ namespace Gadget.Factory.Pattern.ViewModels
 
     void RequestDesignDispatcher (Server.Models.Component.TEntityAction action)
     {
-      var header = m_DesignControl.RequestHeader ();
-      var footer = m_DesignControl.RequestFooter ();
-      var paragraph = m_DesignControl.RequestParagraph ();
+      
 
       //action.ModelAction.ExtensionMaterialModel.Header = header;
       //action.ModelAction.ExtensionMaterialModel.Footer = footer;
