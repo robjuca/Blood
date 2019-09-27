@@ -54,14 +54,6 @@ namespace Server.Models.Component
     }
     #endregion
 
-    #region Gadget
-    public GadgetMaterial GadgetMaterialModel
-    {
-      get;
-      private set;
-    } 
-    #endregion
-
     #region Extension
     public ExtensionGeometry ExtensionGeometryModel
     {
@@ -93,6 +85,26 @@ namespace Server.Models.Component
       private set;
     }
     #endregion
+
+    #region Gadget
+    public GadgetMaterial GadgetMaterialModel
+    {
+      get;
+      private set;
+    }
+
+    public GadgetTarget GadgetTargetModel
+    {
+      get;
+      private set;
+    }
+
+    public GadgetTest GadgetTestModel
+    {
+      get;
+      private set;
+    }
+    #endregion
     #endregion
 
     #region Constructor
@@ -119,6 +131,8 @@ namespace Server.Models.Component
 
       // Gadget
       GadgetMaterialModel = GadgetMaterial.CreateDefault;
+      GadgetTargetModel = GadgetTarget.CreateDefault;
+      GadgetTestModel = GadgetTest.CreateDefault;
     }
     #endregion
 
@@ -142,6 +156,8 @@ namespace Server.Models.Component
         ExtensionTextModel.CopyFrom (alias.ExtensionTextModel);
 
         GadgetMaterialModel.CopyFrom (alias.GadgetMaterialModel);
+        GadgetTargetModel.CopyFrom (alias.GadgetTargetModel);
+        GadgetTestModel.CopyFrom (alias.GadgetTestModel);
       }
     }
     #endregion

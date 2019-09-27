@@ -37,7 +37,7 @@ namespace Shared.Gadget.Material
     #endregion
 
     #region Constructor
-    public TComponentControlBase ()
+    protected TComponentControlBase ()
     {
       Background = Brushes.White;
 

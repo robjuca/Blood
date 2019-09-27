@@ -85,7 +85,19 @@ namespace Server.Models.Component
     {
       get;
       private set;
-    } 
+    }
+
+    public Collection<GadgetTarget> GadgetTargetCollection
+    {
+      get;
+      private set;
+    }
+
+    public Collection<GadgetTest> GadgetTestCollection
+    {
+      get;
+      private set;
+    }
     #endregion
 
     #region ById
@@ -130,6 +142,8 @@ namespace Server.Models.Component
 
       // Gadget
       GadgetMaterialCollection = new Collection<GadgetMaterial> ();
+      GadgetTargetCollection = new Collection<GadgetTarget> ();
+      GadgetTestCollection = new Collection<GadgetTest> ();
 
       // ById
       ModelCollection = new Dictionary<Guid, TModelAction> ();
@@ -165,11 +179,6 @@ namespace Server.Models.Component
       ComponentRelationCollection = new Collection<ComponentRelation> (list);
     }
 
-    public void SetCollection (IList<GadgetMaterial> list)
-    {
-      GadgetMaterialCollection = new Collection<GadgetMaterial> (list);
-    }
-
     public void SetCollection (IList<ExtensionGeometry> list)
     {
       ExtensionGeometryCollection = new Collection<ExtensionGeometry> (list);
@@ -195,6 +204,20 @@ namespace Server.Models.Component
       ExtensionTextCollection = new Collection<ExtensionText> (list);
     }
 
+    public void SetCollection (IList<GadgetMaterial> list)
+    {
+      GadgetMaterialCollection = new Collection<GadgetMaterial> (list);
+    }
+
+    public void SetCollection (IList<GadgetTarget> list)
+    {
+      GadgetTargetCollection = new Collection<GadgetTarget> (list);
+    }
+
+    public void SetCollection (IList<GadgetTest> list)
+    {
+      GadgetTestCollection = new Collection<GadgetTest> (list);
+    }
     public bool IsComponentOperation (TComponentOperation.TInternalOperation componentOperation)
     {
       return (ComponentOperation.IsComponentOperation (componentOperation));
