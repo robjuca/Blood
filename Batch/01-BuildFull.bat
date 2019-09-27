@@ -69,6 +69,9 @@ CALL :error "Could not find Visual Studio directory."
 	echo --- Blood SHARED GADGET TARGET . . .
 	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\Target\Blood Shared Gadget Target.sln" -t:rebuild -verbosity:minimal -nologo
 	
+	echo --- Blood SHARED GADGET TEST . . .
+	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\Test\Blood Shared Gadget Test.sln" -t:rebuild -verbosity:minimal -nologo
+	
 	
 	echo --- Blood SHARED SERVICES . . .
 	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\Services\Blood Shared Services.sln" -t:rebuild -verbosity:minimal -nologo
@@ -90,6 +93,8 @@ CALL :error "Could not find Visual Studio directory."
 	echo --- Blood GATGET TARGET . . .
 	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Gadget\Target\Blood Gadget Target.sln" -t:rebuild -verbosity:minimal -nologo
 	
+	echo --- Blood GATGET TEST . . .
+	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Gadget\Test\Blood Gadget Test.sln" -t:rebuild -verbosity:minimal -nologo
 	
 
 	echo --- Blood BUILD DONE
