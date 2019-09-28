@@ -26,14 +26,14 @@
 
                     <!--busy-->
                     <Border Grid.Column="0"
-                            Padding="0 0 3 0">
+                                        Padding="0 0 3 0">
                         <ContentControl Visibility="{Binding BusyVisibility}"
                                         Style="{DynamicResource ContentBusyIcon}" />
                     </Border>
 
                     <!--name-->
                     <Border Grid.Column="1">
-                        <TextBlock Text="{Binding Material}"
+                        <TextBlock Text="{Binding Name}"
                                    FontWeight="Bold" />
                     </Border>
 

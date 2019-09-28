@@ -137,21 +137,28 @@ namespace Shared.Gadget.Material
       // external link (row 2)
 
       if (string.IsNullOrEmpty (Model.ControlModel.ExternalLink).IsFalse ()) {
-        var externalLink = new System.Windows.Documents.Hyperlink (new System.Windows.Documents.Run ("more info"))
-        {
-          NavigateUri = new Uri (Model.ControlModel.ExternalLink),
-          TargetName = "_blanc",
-        };
+        try {
+          var externalLink = new System.Windows.Documents.Hyperlink (new System.Windows.Documents.Run ("more info"))
+          {
+            NavigateUri = new Uri (Model.ControlModel.ExternalLink),
+            TargetName = "_blanc",
+          };
 
-        var textBoxLink = new TextBlock (externalLink)
-        {
-          HorizontalAlignment = HorizontalAlignment.Center,
-          Margin = new Thickness (3),
-        };
-        
-        textBoxLink.SetValue (Grid.RowProperty, 2);
+          var textBoxLink = new TextBlock (externalLink)
+          {
+            HorizontalAlignment = HorizontalAlignment.Center,
+            Margin = new Thickness (3),
+          };
 
-        m_Grid.Children.Add (textBoxLink); // row 2
+          textBoxLink.SetValue (Grid.RowProperty, 2);
+
+          m_Grid.Children.Add (textBoxLink); // row 2
+        }
+
+        //TODO: what for??
+        catch (Exception) {
+          // do nothing
+        }
       }
     }
     #endregion

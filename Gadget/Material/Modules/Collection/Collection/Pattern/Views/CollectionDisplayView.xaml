@@ -35,7 +35,8 @@
                 <!--edit Document name-->
                 <Border Grid.Row="1"
                         Padding="3">
-                    <materialDesign:Card  Margin="2" Padding="0"
+                    <materialDesign:Card  Margin="2"
+                                          Padding="3"
                                           HorizontalAlignment="Stretch">
                         <Grid>
                             <Grid.ColumnDefinitions>

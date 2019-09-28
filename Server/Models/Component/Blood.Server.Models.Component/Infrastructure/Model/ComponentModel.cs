@@ -37,12 +37,6 @@ namespace Server.Models.Component
     #endregion
 
     #region Extension
-    public GadgetMaterial MaterialModel
-    {
-      get;
-      private set;
-    }
-
     public ExtensionGeometry GeometryModel
     {
       get;
@@ -74,6 +68,26 @@ namespace Server.Models.Component
     }
 
     public ExtensionText TextModel
+    {
+      get;
+      private set;
+    }
+    #endregion
+
+    #region Gadget
+    public GadgetMaterial MaterialModel
+    {
+      get;
+      private set;
+    }
+
+    public GadgetTarget TargetModel
+    {
+      get;
+      private set;
+    }
+
+    public GadgetTest TestModel
     {
       get;
       private set;
@@ -120,8 +134,7 @@ namespace Server.Models.Component
 
       InfoModel = ComponentInfo.CreateDefault;
       StatusModel = ComponentStatus.CreateDefault;
-
-      MaterialModel = GadgetMaterial.CreateDefault;
+      
       GeometryModel = ExtensionGeometry.CreateDefault;
       ImageModel = ExtensionImage.CreateDefault;
       LayoutModel = ExtensionLayout.CreateDefault;
@@ -129,6 +142,10 @@ namespace Server.Models.Component
       TextModel = ExtensionText.CreateDefault;
 
       NodeModelCollection = new Collection<ExtensionNode> ();
+
+      MaterialModel = GadgetMaterial.CreateDefault;
+      TargetModel = GadgetTarget.CreateDefault;
+      TestModel = GadgetTest.CreateDefault;
     }
     #endregion
 
@@ -146,11 +163,6 @@ namespace Server.Models.Component
     public void Select (ComponentStatus status)
     {
       StatusModel.CopyFrom (status);
-    }
-
-    public void Select (GadgetMaterial document)
-    {
-      MaterialModel.CopyFrom (document);
     }
 
     public void Select (ExtensionGeometry geometry)
@@ -183,6 +195,21 @@ namespace Server.Models.Component
       TextModel.CopyFrom (text);
     }
 
+    public void Select (GadgetMaterial gadget)
+    {
+      MaterialModel.CopyFrom (gadget);
+    }
+
+    public void Select (GadgetTarget gadget)
+    {
+      TargetModel.CopyFrom (gadget);
+    }
+
+    public void Select (GadgetTest gadget)
+    {
+      TestModel.CopyFrom (gadget);
+    }
+
     public void Select (TEntityAction action)
     {
       if (action.NotNull ()) {
@@ -198,13 +225,16 @@ namespace Server.Models.Component
 
       modelAction.ComponentInfoModel.CopyFrom (InfoModel);
       modelAction.ComponentStatusModel.CopyFrom (StatusModel);
-
-      modelAction.GadgetMaterialModel.CopyFrom (MaterialModel);
+      
       modelAction.ExtensionImageModel.CopyFrom (ImageModel);
       modelAction.ExtensionGeometryModel.CopyFrom (GeometryModel);
       modelAction.ExtensionLayoutModel.CopyFrom (LayoutModel);
       modelAction.ExtensionTextModel.CopyFrom (TextModel);
       modelAction.ExtensionNodeModel.CopyFrom (NodeModel);
+
+      modelAction.GadgetMaterialModel.CopyFrom (MaterialModel);
+      modelAction.GadgetTargetModel.CopyFrom (TargetModel);
+      modelAction.GadgetTestModel.CopyFrom (TestModel);
 
       return (modelAction);
     }
@@ -218,8 +248,7 @@ namespace Server.Models.Component
 
         InfoModel.CopyFrom (alias.InfoModel);
         StatusModel.CopyFrom (alias.StatusModel);
-
-        MaterialModel.CopyFrom (alias.MaterialModel);
+                
         ImageModel.CopyFrom (alias.ImageModel);
         GeometryModel.CopyFrom (alias.GeometryModel);
         LayoutModel.CopyFrom (alias.LayoutModel);
@@ -227,6 +256,10 @@ namespace Server.Models.Component
         NodeModel.CopyFrom (alias.NodeModel);
 
         NodeModelCollection = new Collection<ExtensionNode> (alias.NodeModelCollection);
+
+        MaterialModel.CopyFrom (alias.MaterialModel);
+        TargetModel.CopyFrom (alias.TargetModel);
+        TestModel.CopyFrom (alias.TestModel);
       }
     }
     #endregion
@@ -242,12 +275,15 @@ namespace Server.Models.Component
         model.InfoModel.CopyFrom (modelAction.ComponentInfoModel);
         model.StatusModel.CopyFrom (modelAction.ComponentStatusModel);
 
-        model.MaterialModel.CopyFrom (modelAction.GadgetMaterialModel);
         model.ImageModel.CopyFrom (modelAction.ExtensionImageModel);
         model.GeometryModel.CopyFrom (modelAction.ExtensionGeometryModel);
         model.LayoutModel.CopyFrom (modelAction.ExtensionLayoutModel);
         model.TextModel.CopyFrom (modelAction.ExtensionTextModel);
         model.NodeModel.CopyFrom (modelAction.ExtensionNodeModel);
+
+        model.MaterialModel.CopyFrom (modelAction.GadgetMaterialModel);
+        model.TargetModel.CopyFrom (modelAction.GadgetTargetModel);
+        model.TestModel.CopyFrom (modelAction.GadgetTestModel);
       }
 
       return (model);

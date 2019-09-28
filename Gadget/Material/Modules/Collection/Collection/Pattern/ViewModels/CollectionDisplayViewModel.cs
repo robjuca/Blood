@@ -4,6 +4,7 @@
 ----------------------------------------------------------------*/
 
 //----- Include
+using System;
 using System.ComponentModel.Composition;
 
 using rr.Library.Infrastructure;
@@ -66,18 +67,6 @@ namespace Gadget.Collection.Pattern.ViewModels
           if (message.IsAction (TInternalMessageAction.Cleanup)) {
             TDispatcher.Invoke (CleanupDispatcher);
           }
-
-          // FilterEnter
-          if (message.IsAction (TInternalMessageAction.FilterEnter)) {
-            Model.IsViewEnabled = false;
-            RaiseChanged ();
-          }
-
-          // FilterLeave
-          if (message.IsAction (TInternalMessageAction.FilterLeave)) {
-            Model.IsViewEnabled = true;
-            RaiseChanged ();
-          }
         }
       }
     }
@@ -98,6 +87,8 @@ namespace Gadget.Collection.Pattern.ViewModels
     #region Dispatcher
     void SelectDispatcher (TComponentModelItem item)
     {
+      item.ThrowNull ();
+
       Model.Select (item);
 
       if (FrameworkElementView.FindName ("DisplayControl") is Shared.Gadget.Material.TComponentDisplayControl control) {

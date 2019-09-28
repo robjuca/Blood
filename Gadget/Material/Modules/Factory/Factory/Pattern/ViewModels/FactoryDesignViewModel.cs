@@ -43,6 +43,14 @@ namespace Gadget.Factory.Pattern.ViewModels
       if (message.IsModule (TResource.TModule.Factory)) {
         // from Sibling
         if (message.Node.IsSiblingToMe (TChild.Design)) {
+          // Edit
+          if (message.IsAction (TInternalMessageAction.Edit)) {
+            var action = Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction);
+            Model.SelectModel (action);
+
+            TDispatcher.Invoke (RefreshDesignDispatcher);
+          }
+
           // PropertySelect
           if (message.IsAction (TInternalMessageAction.PropertySelect)) {
             Model.SelectModel (Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction));

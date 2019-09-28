@@ -43,11 +43,18 @@ namespace Gadget.Factory.Pattern.ViewModels
     public void Handle (TMessageInternal message)
     {
       if (message.IsModule (TResource.TModule.Factory)) {
+        var action = Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction);
+
         // from parent
         if (message.Node.IsParentToMe (TChild.Property)) {
+          // RefreshModel
+          if (message.IsAction (TInternalMessageAction.RefreshModel)) {
+            TDispatcher.BeginInvoke (RefreshCollectionDispatcher, action);
+          }
+
           // Edit
           if (message.IsAction (TInternalMessageAction.Edit)) {
-            TDispatcher.BeginInvoke (EditDispatcher, Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction));
+            TDispatcher.BeginInvoke (EditDispatcher, action);
           }
 
           // EditLeave
@@ -75,7 +82,7 @@ namespace Gadget.Factory.Pattern.ViewModels
         if (message.Node.IsSiblingToMe (TChild.Property)) {
           // Response
           if (message.IsAction (TInternalMessageAction.Response)) {
-            TDispatcher.BeginInvoke (ResponseModelDispatcher, Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction));
+            TDispatcher.BeginInvoke (ResponseModelDispatcher, action);
           }
         }
       }
@@ -229,12 +236,16 @@ namespace Gadget.Factory.Pattern.ViewModels
         TDispatcher.Invoke (EditEnterDispatcher);
 
         // to Sibling
-        var message = new TFactorySiblingMessageInternal (TInternalMessageAction.PropertySelect, TChild.Property, TypeInfo);
+        var message = new TFactorySiblingMessageInternal (TInternalMessageAction.Edit, TChild.Property, TypeInfo);
         message.Support.Argument.Types.Select (action);
-        message.Support.Argument.Args.Select ("all");
 
         DelegateCommand.PublishInternalMessage.Execute (message);
       }
+    }
+
+    void RefreshCollectionDispatcher (Server.Models.Component.TEntityAction action)
+    {
+      Model.RefreshModel (action);
     }
     #endregion
 

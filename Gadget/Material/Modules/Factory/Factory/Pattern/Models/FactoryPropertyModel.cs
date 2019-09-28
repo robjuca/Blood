@@ -5,8 +5,11 @@
 
 //----- Include
 using System;
+using System.Collections.Generic;
 
 using rr.Library.Types;
+
+using Server.Models.Component;
 
 using Shared.Types;
 //---------------------------//
@@ -28,17 +31,34 @@ namespace Gadget.Factory.Pattern.Models
     {
       ComponentModelProperty = TModelProperty.Create (Server.Models.Infrastructure.TCategory.Material);
       ComponentModelProperty.PropertyChanged += OnModelPropertyChanged;
+
+      m_Gadgets = new Dictionary<Guid, GadgetMaterial> ();
     }
     #endregion
 
     #region Members
+    internal void RefreshModel (TEntityAction action)
+    {
+      action.ThrowNull ();
+
+      m_Gadgets.Clear ();
+
+      foreach (var model in action.CollectionAction.GadgetMaterialCollection) {
+        m_Gadgets.Add (model.Id, model);
+      }
+    }
+
     internal void SelectModel (Server.Models.Component.TEntityAction action)
     {
+      action.ThrowNull ();
+
       ComponentModelProperty.SelectModel (action);
     }
 
     internal void RequestModel (Server.Models.Component.TEntityAction action)
     {
+      action.ThrowNull ();
+
       ComponentModelProperty.RequestModel (action);
 
       // update model
@@ -61,7 +81,11 @@ namespace Gadget.Factory.Pattern.Models
     {
       RaisePropertyChanged (e.PropertyName);
     }
-    #endregion    
+    #endregion
+
+    #region Fields
+    readonly Dictionary<Guid, Server.Models.Component.GadgetMaterial>                         m_Gadgets; 
+    #endregion
   };
   //---------------------------//
 
