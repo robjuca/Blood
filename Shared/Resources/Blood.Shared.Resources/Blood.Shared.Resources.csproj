@@ -52,11 +52,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Shared\Controls\Alerts.cs" />
     <Compile Include="Shared\Controls\ApplyCommand.cs" />
     <Compile Include="Shared\Controls\ErrorBox.cs" />
     <Compile Include="Shared\Controls\Footer.cs" />
     <Compile Include="Shared\Controls\ShellStatusBar.cs" />
     <Compile Include="Shared\Controls\StyleSelector.cs" />
+    <Compile Include="Types\Enums.cs" />
     <Compile Include="Types\Process.cs" />
     <Compile Include="Types\Types.cs" />
   </ItemGroup>

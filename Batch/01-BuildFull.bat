@@ -87,13 +87,13 @@ CALL :error "Could not find Visual Studio directory."
 
 	
 	echo  -- Blood GADGET
-	echo --- Blood GATGET MATERIAL . . .
+	echo --- Blood GADGET MATERIAL . . .
 	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Gadget\Material\Blood Gadget Material.sln" -t:rebuild -verbosity:minimal -nologo
 	
-	echo --- Blood GATGET TARGET . . .
+	echo --- Blood GADGET TARGET . . .
 	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Gadget\Target\Blood Gadget Target.sln" -t:rebuild -verbosity:minimal -nologo
 	
-	echo --- Blood GATGET TEST . . .
+	echo --- Blood GADGET TEST . . .
 	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Gadget\Test\Blood Gadget Test.sln" -t:rebuild -verbosity:minimal -nologo
 	
 

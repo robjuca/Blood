@@ -253,6 +253,8 @@ namespace Gadget.Factory.Pattern.ViewModels
     protected override void Initialize ()
     {
       Model.Cleanup ();
+
+      ShowViewAnimation ();
     } 
     #endregion
 
@@ -274,6 +276,9 @@ namespace Gadget.Factory.Pattern.ViewModels
     #region Support
     void PropertySelect (string propertyName)
     {
+      Model.ValidateProperty (propertyName);
+      RaiseChanged ();
+
       var action = Server.Models.Component.TEntityAction.CreateDefault;
       Model.ComponentModelProperty.RequestModel (action);
 

@@ -10,27 +10,44 @@
 
     <Border Margin="2"
             Width="240">
-        <StackPanel>
-            <!--component-->
-            <controls:TPropertyGrid VerticalAlignment="Stretch"
-                                    IsEnabled="{Binding Model.ComponentModelProperty.IsInfoEnabled}"
-                                    SelectedObject="{Binding Model.ComponentModelProperty.ComponentModel}"
-                                    caliburn:Message.Attach="[Event Loaded] = [OnPropertyGridComponentLoaded ($source)]" />
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
 
-            <!--message, progress, busy, apply, cancel-->
-            <resources:TApplyCommand ShowPanel="{Binding Model.ComponentModelProperty.ShowPanel}"
-                                     ProgressBarActive="{Binding Model.ComponentModelProperty.IsActiveProgress}"
-                                     MessageText="{Binding Model.ComponentModelProperty.MessagePanel}"
-                                     ContentBusyVisibility="{Binding Model.ComponentModelProperty.BusyVisibility}"
-                                     ApplyEnabled="{Binding Model.ComponentModelProperty.IsEnabledApply}"
-                                     CancelEnabled="{Binding Model.ComponentModelProperty.IsEnabledCancel}"
-                                     caliburn:Message.Attach="[Event Apply] = [OnApplyCommadClicked ()]; [Event Cancel] = [OnCancelCommadClicked ()]" />
+            <!--alerts-->
+            <Border Grid.Row="0">
+                <resources:TAlerts Kind="Warning"
+                                Caption="error"
+                                Message="item 'Material' duplicado!" />
+            </Border>
 
-            <!--extension-->
-            <controls:TPropertyGrid VerticalAlignment="Stretch"
-                                    SelectedObject="{Binding Model.ComponentModelProperty.ExtensionModel}"
-                                    caliburn:Message.Attach="[Event Loaded] = [OnPropertyGridExtensionLoaded ($source)]" />
-        </StackPanel>
+            <!--property grid-->
+            <Border Grid.Row="1">
+                <StackPanel>
+                    <!--component-->
+                    <controls:TPropertyGrid VerticalAlignment="Stretch"
+                                            IsEnabled="{Binding Model.ComponentModelProperty.IsInfoEnabled}"
+                                            SelectedObject="{Binding Model.ComponentModelProperty.ComponentModel}"
+                                            caliburn:Message.Attach="[Event Loaded] = [OnPropertyGridComponentLoaded ($source)]" />
+
+                    <!--message, progress, busy, apply, cancel-->
+                    <resources:TApplyCommand ShowPanel="{Binding Model.ComponentModelProperty.ShowPanel}"
+                                             ProgressBarActive="{Binding Model.ComponentModelProperty.IsActiveProgress}"
+                                             MessageText="{Binding Model.ComponentModelProperty.MessagePanel}"
+                                             ContentBusyVisibility="{Binding Model.ComponentModelProperty.BusyVisibility}"
+                                             ApplyEnabled="{Binding Model.ComponentModelProperty.IsEnabledApply}"
+                                             CancelEnabled="{Binding Model.ComponentModelProperty.IsEnabledCancel}"
+                                             caliburn:Message.Attach="[Event Apply] = [OnApplyCommadClicked ()]; [Event Cancel] = [OnCancelCommadClicked ()]" />
+
+                    <!--extension-->
+                    <controls:TPropertyGrid VerticalAlignment="Stretch"
+                                            SelectedObject="{Binding Model.ComponentModelProperty.ExtensionModel}"
+                                            caliburn:Message.Attach="[Event Loaded] = [OnPropertyGridExtensionLoaded ($source)]" />
+                </StackPanel>
+            </Border>
+        </Grid>
     </Border>
 
 </base:ViewChildBase>

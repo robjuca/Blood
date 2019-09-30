@@ -24,6 +24,24 @@ namespace Gadget.Factory.Pattern.Models
       get;
       set;
     }
+
+    public bool ErrorTitle
+    {
+      get; 
+      set;
+    }
+
+    public bool ErrorCaption
+    {
+      get;
+      set;
+    }
+
+    public bool ErrorMessage
+    {
+      get;
+      set;
+    }
     #endregion
 
     #region Constructor
@@ -70,6 +88,20 @@ namespace Gadget.Factory.Pattern.Models
       ComponentModelProperty.ShowPanels ();
     }
 
+    internal void ValidateProperty (string propertyName)
+    {
+      if (propertyName.Equals ("TextProperty")) {
+        foreach (var gadget in m_Gadgets) {
+          var material = gadget.Value.Material;
+          var item = ComponentModelProperty.ExtensionModel.TextProperty;
+
+          bool validateModel = string.Compare (material, item, true).Equals (0).IsFalse ();
+
+          ComponentModelProperty.ValidateModel (validateModel);
+        }
+      }
+    }
+
     internal void Cleanup ()
     {
       ComponentModelProperty.Cleanup ();
@@ -84,7 +116,7 @@ namespace Gadget.Factory.Pattern.Models
     #endregion
 
     #region Fields
-    readonly Dictionary<Guid, Server.Models.Component.GadgetMaterial>                         m_Gadgets; 
+    readonly Dictionary<Guid, Server.Models.Component.GadgetMaterial>                         m_Gadgets;
     #endregion
   };
   //---------------------------//

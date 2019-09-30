@@ -51,8 +51,14 @@ namespace Shared.Types
 
     public bool IsEnabledApply
     {
-      get;
-      set;
+      get
+      {
+        return (m_EnabledApply & m_ValidateModel);
+      }
+
+      set {
+        m_EnabledApply = value;
+      }
     }
 
     public bool IsEnabledCancel
@@ -129,6 +135,8 @@ namespace Shared.Types
       IsInfoEnabled = true;
       IsBusy = false;
       ShowPanel = false;
+
+      m_ValidateModel = true;
     }
     #endregion
 
@@ -183,8 +191,15 @@ namespace Shared.Types
       }
     }
 
+    public void ValidateModel (bool validated)
+    {
+      m_ValidateModel = validated;
+    }
+
     public void Cleanup ()
     {
+      m_ValidateModel = true;
+
       ComponentModel.Cleanup ();
       ExtensionModel.Cleanup ();
 
@@ -241,6 +256,11 @@ namespace Shared.Types
 
       RaisePropertyChanged (e.PropertyName);
     }
+    #endregion
+
+    #region Fields
+    bool                                    m_ValidateModel;
+    bool                                    m_EnabledApply;
     #endregion
 
     #region Static
