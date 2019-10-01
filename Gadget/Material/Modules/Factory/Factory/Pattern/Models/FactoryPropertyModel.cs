@@ -11,6 +11,7 @@ using rr.Library.Types;
 
 using Server.Models.Component;
 
+using Shared.Resources;
 using Shared.Types;
 //---------------------------//
 
@@ -25,22 +26,9 @@ namespace Gadget.Factory.Pattern.Models
       set;
     }
 
-    public bool ErrorTitle
-    {
-      get; 
-      set;
-    }
-
-    public bool ErrorCaption
+    public TAlertsModel AlertsModel
     {
       get;
-      set;
-    }
-
-    public bool ErrorMessage
-    {
-      get;
-      set;
     }
     #endregion
 
@@ -49,6 +37,8 @@ namespace Gadget.Factory.Pattern.Models
     {
       ComponentModelProperty = TModelProperty.Create (Server.Models.Infrastructure.TCategory.Material);
       ComponentModelProperty.PropertyChanged += OnModelPropertyChanged;
+
+      AlertsModel = TAlertsModel.CreateDefault;
 
       m_Gadgets = new Dictionary<Guid, GadgetMaterial> ();
     }
@@ -91,6 +81,8 @@ namespace Gadget.Factory.Pattern.Models
     internal void ValidateProperty (string propertyName)
     {
       if (propertyName.Equals ("TextProperty")) {
+        AlertsModel.Select (isOpen: false); // default
+
         foreach (var gadget in m_Gadgets) {
           var material = gadget.Value.Material;
           var item = ComponentModelProperty.ExtensionModel.TextProperty;
@@ -98,6 +90,15 @@ namespace Gadget.Factory.Pattern.Models
           bool validateModel = string.Compare (material, item, true).Equals (0).IsFalse ();
 
           ComponentModelProperty.ValidateModel (validateModel);
+
+          // show alerts
+          if (validateModel.IsFalse ()) {
+            var message = $"DUPLICATED ENTRY{Environment.NewLine} Material (Text = {material})";
+
+            AlertsModel.Select (TAlertsModel.TKind.Warning);
+            AlertsModel.Select ("warning", message);
+            AlertsModel.Select (isOpen: true); 
+          }
         }
       }
     }

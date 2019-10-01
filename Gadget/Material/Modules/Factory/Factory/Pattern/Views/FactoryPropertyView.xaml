@@ -18,9 +18,8 @@
 
             <!--alerts-->
             <Border Grid.Row="0">
-                <resources:TAlerts Kind="Warning"
-                                Caption="error"
-                                Message="item 'Material' duplicado!" />
+                <resources:TAlerts  Model="{Binding Model.AlertsModel}"
+                                    caliburn:Message.Attach="[Event Loaded] = [OnAlertsLoaded ($source)]" />
             </Border>
 
             <!--property grid-->

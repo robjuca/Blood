@@ -578,7 +578,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:TAlerts}">
-                    <Border Padding="3">
+                    <Border x:Name="PART_Alerts" Padding="3">
                         <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth2">
                             <Grid>
                                 <Grid.RowDefinitions>
