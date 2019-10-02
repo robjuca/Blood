@@ -126,13 +126,13 @@ namespace Gadget.Collection.Pattern.ViewModels
     void ItemSelectedDispatcher (TComponentModelItem item)
     {
       if (item.IsNull ()) {
-        // to Sibling
+        // to Sibling (Cleanup)
         var message = new TCollectionSiblingMessageInternal (TInternalMessageAction.Cleanup, TChild.List, TypeInfo);
         DelegateCommand.PublishInternalMessage.Execute (message);
       }
 
       else {
-        // to Sibling
+        // to Sibling (Select)
         var message = new TCollectionSiblingMessageInternal (TInternalMessageAction.Select, TChild.List, TypeInfo);
         message.Support.Argument.Types.Item.CopyFrom (item);
 

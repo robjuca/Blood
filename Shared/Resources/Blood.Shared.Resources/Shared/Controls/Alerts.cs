@@ -150,11 +150,18 @@ namespace Shared.Resources
     {
       base.OnApplyTemplate ();
 
+      Model.PropertyChanged += OnModelPropertyChanged;
+
       RefreshModel ();
     }
     #endregion
 
     #region Event
+    void OnModelPropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+      RefreshModel ();
+    }
+
     static void ModelPropertyChanged (DependencyObject source, DependencyPropertyChangedEventArgs e)
     {
       if (source is TAlerts control) {

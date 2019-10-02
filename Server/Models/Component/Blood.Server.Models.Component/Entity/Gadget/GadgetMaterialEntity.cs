@@ -65,6 +65,14 @@ namespace Server.Models.Component
         Enabled = alias.Enabled;
       }
     }
+
+    public GadgetMaterial Clone ()
+    {
+      var model = CreateDefault;
+      model.CopyFrom (this);
+
+      return (model);
+    }
     #endregion
 
     #region Static

@@ -4,6 +4,7 @@
 ----------------------------------------------------------------*/
 
 //----- Include
+using rr.Library.Types;
 //---------------------------//
 
 namespace Shared.Resources
@@ -31,7 +32,7 @@ namespace Shared.Resources
   //---------------------------//
 
     //----- TAlertsModel
-  public class TAlertsModel
+  public class TAlertsModel : NotificationObject
   {
     #region Data
     public enum TKind
@@ -97,6 +98,11 @@ namespace Shared.Resources
     {
       Caption = caption;
       Message = message;
+    }
+
+    public void Refresh ()
+    {
+      RaisePropertyChanged (typeof (TAlertsModel).Name);
     }
 
     public void CopyFrom (TAlertsModel alias)

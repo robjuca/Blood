@@ -63,7 +63,7 @@ namespace Gadget.Collection.Pattern.Models
         ItemsSource.Add (TComponentModelItem.Create (action));
 
         // update list
-        action.CollectionAction.GadgetMaterialCollection.Add (model);
+        action.CollectionAction.GadgetMaterialCollection.Add (model.Clone ());
       }
 
       if (ItemsSource.Count > 0) {

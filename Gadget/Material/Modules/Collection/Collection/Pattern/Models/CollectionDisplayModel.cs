@@ -82,6 +82,11 @@ namespace Gadget.Collection.Pattern.Models
     {
       ComponentModelItem = item ?? throw new System.ArgumentNullException (nameof (item));
 
+      var action = Server.Models.Component.TEntityAction.CreateDefault;
+      action.ModelAction.GadgetMaterialModel.CopyFrom (item.GadgetMaterialModel);
+
+      ComponentControlModel.SelectModel (action);
+
       BusyVisibility = ComponentModelItem.BusyVisibility;
     }
 

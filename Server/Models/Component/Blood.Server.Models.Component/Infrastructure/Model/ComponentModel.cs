@@ -75,19 +75,19 @@ namespace Server.Models.Component
     #endregion
 
     #region Gadget
-    public GadgetMaterial MaterialModel
+    public GadgetMaterial GadgetMaterialModel
     {
       get;
       private set;
     }
 
-    public GadgetTarget TargetModel
+    public GadgetTarget GadgetTargetModel
     {
       get;
       private set;
     }
 
-    public GadgetTest TestModel
+    public GadgetTest GadgetTestModel
     {
       get;
       private set;
@@ -143,9 +143,9 @@ namespace Server.Models.Component
 
       NodeModelCollection = new Collection<ExtensionNode> ();
 
-      MaterialModel = GadgetMaterial.CreateDefault;
-      TargetModel = GadgetTarget.CreateDefault;
-      TestModel = GadgetTest.CreateDefault;
+      GadgetMaterialModel = GadgetMaterial.CreateDefault;
+      GadgetTargetModel = GadgetTarget.CreateDefault;
+      GadgetTestModel = GadgetTest.CreateDefault;
     }
     #endregion
 
@@ -197,17 +197,17 @@ namespace Server.Models.Component
 
     public void Select (GadgetMaterial gadget)
     {
-      MaterialModel.CopyFrom (gadget);
+      GadgetMaterialModel.CopyFrom (gadget);
     }
 
     public void Select (GadgetTarget gadget)
     {
-      TargetModel.CopyFrom (gadget);
+      GadgetTargetModel.CopyFrom (gadget);
     }
 
     public void Select (GadgetTest gadget)
     {
-      TestModel.CopyFrom (gadget);
+      GadgetTestModel.CopyFrom (gadget);
     }
 
     public void Select (TEntityAction action)
@@ -232,9 +232,9 @@ namespace Server.Models.Component
       modelAction.ExtensionTextModel.CopyFrom (TextModel);
       modelAction.ExtensionNodeModel.CopyFrom (NodeModel);
 
-      modelAction.GadgetMaterialModel.CopyFrom (MaterialModel);
-      modelAction.GadgetTargetModel.CopyFrom (TargetModel);
-      modelAction.GadgetTestModel.CopyFrom (TestModel);
+      modelAction.GadgetMaterialModel.CopyFrom (GadgetMaterialModel);
+      modelAction.GadgetTargetModel.CopyFrom (GadgetTargetModel);
+      modelAction.GadgetTestModel.CopyFrom (GadgetTestModel);
 
       return (modelAction);
     }
@@ -257,9 +257,9 @@ namespace Server.Models.Component
 
         NodeModelCollection = new Collection<ExtensionNode> (alias.NodeModelCollection);
 
-        MaterialModel.CopyFrom (alias.MaterialModel);
-        TargetModel.CopyFrom (alias.TargetModel);
-        TestModel.CopyFrom (alias.TestModel);
+        GadgetMaterialModel.CopyFrom (alias.GadgetMaterialModel);
+        GadgetTargetModel.CopyFrom (alias.GadgetTargetModel);
+        GadgetTestModel.CopyFrom (alias.GadgetTestModel);
       }
     }
     #endregion
@@ -281,9 +281,9 @@ namespace Server.Models.Component
         model.TextModel.CopyFrom (modelAction.ExtensionTextModel);
         model.NodeModel.CopyFrom (modelAction.ExtensionNodeModel);
 
-        model.MaterialModel.CopyFrom (modelAction.GadgetMaterialModel);
-        model.TargetModel.CopyFrom (modelAction.GadgetTargetModel);
-        model.TestModel.CopyFrom (modelAction.GadgetTestModel);
+        model.GadgetMaterialModel.CopyFrom (modelAction.GadgetMaterialModel);
+        model.GadgetTargetModel.CopyFrom (modelAction.GadgetTargetModel);
+        model.GadgetTestModel.CopyFrom (modelAction.GadgetTestModel);
       }
 
       return (model);

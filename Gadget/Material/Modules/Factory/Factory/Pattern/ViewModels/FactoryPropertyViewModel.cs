@@ -90,13 +90,6 @@ namespace Gadget.Factory.Pattern.ViewModels
     #endregion
 
     #region Event
-    public void OnAlertsLoaded (object control)
-    {
-      if (control is TAlerts) {
-        m_Alerts = m_Alerts ?? (TAlerts) control;
-      }
-    }
-
     public void OnPropertyGridComponentLoaded (object control)
     {
       if (control is TPropertyGrid) {
@@ -274,7 +267,6 @@ namespace Gadget.Factory.Pattern.ViewModels
     #endregion
 
     #region Fields
-    TAlerts                                 m_Alerts;
     TPropertyGrid                           m_PropertyGridComponent;
     TPropertyGrid                           m_PropertyGridExtension;
     #endregion
@@ -283,10 +275,6 @@ namespace Gadget.Factory.Pattern.ViewModels
     void PropertySelect (string propertyName)
     {
       Model.ValidateProperty (propertyName);
-
-      if (m_Alerts.NotNull ()) {
-        m_Alerts.RefreshModel ();
-      }
 
       var action = Server.Models.Component.TEntityAction.CreateDefault;
       Model.ComponentModelProperty.RequestModel (action);

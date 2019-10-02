@@ -89,23 +89,33 @@ namespace Gadget.Factory.Pattern.Models
 
           bool validateModel = string.Compare (material, item, true).Equals (0).IsFalse ();
 
-          ComponentModelProperty.ValidateModel (validateModel);
+          // check same gadget (change)
+          if (gadget.Value.Id.Equals (ComponentModelProperty.Id).IsFalse ()) {
+            ComponentModelProperty.ValidateModel (validateModel);
 
-          // show alerts
-          if (validateModel.IsFalse ()) {
-            var message = $"DUPLICATED ENTRY{Environment.NewLine} Material (Text = {material})";
+            // show alerts
+            if (validateModel.IsFalse ()) {
+              var message = $"Material (Text = {material})";
 
-            AlertsModel.Select (TAlertsModel.TKind.Warning);
-            AlertsModel.Select ("warning", message);
-            AlertsModel.Select (isOpen: true); 
+              AlertsModel.Select (TAlertsModel.TKind.Warning);
+              AlertsModel.Select ("DUPLICATED ENTRY", message);
+              AlertsModel.Select (isOpen: true);
+
+              break;
+            }
           }
         }
+
+        AlertsModel.Refresh ();
       }
     }
 
     internal void Cleanup ()
     {
       ComponentModelProperty.Cleanup ();
+
+      AlertsModel.Select (isOpen: false); // default
+      AlertsModel.Refresh ();
     }
     #endregion
 

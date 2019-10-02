@@ -82,7 +82,7 @@ namespace Server.Models.Component
         ModelAction.ExtensionTextModel.CopyFrom (ComponentModel.TextModel);
         ModelAction.ExtensionNodeModel.CopyFrom (ComponentModel.NodeModel);
 
-        ModelAction.GadgetMaterialModel.CopyFrom (ComponentModel.MaterialModel);
+        ModelAction.GadgetMaterialModel.CopyFrom (ComponentModel.GadgetMaterialModel);
 
         CollectionAction.SetCollection (ComponentModel.NodeModelCollection);
       }
