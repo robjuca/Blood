@@ -24,11 +24,8 @@
                     <ScrollViewer HorizontalScrollBarVisibility="Auto"
                                   VerticalScrollBarVisibility="Auto"
                                   Padding="5">
-                        <materialDesign:Card HorizontalAlignment="Center"
-                                             VerticalAlignment="Center">
-                            <control:TComponentDisplayControl x:Name="DisplayControl"
-                                                              Model="{Binding Model.ComponentControlModel}" />
-                        </materialDesign:Card>
+                        <control:TComponentDisplayControl x:Name="DisplayControl"
+                                                          Model="{Binding Model.ComponentControlModel}" />
                     </ScrollViewer>
                 </Border>
 

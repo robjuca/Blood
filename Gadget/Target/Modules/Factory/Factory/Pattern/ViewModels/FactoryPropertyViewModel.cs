@@ -45,6 +45,11 @@ namespace Gadget.Factory.Pattern.ViewModels
       if (message.IsModule (TResource.TModule.Factory)) {
         // from parent
         if (message.Node.IsParentToMe (TChild.Property)) {
+          // RefreshModel
+          if (message.IsAction (TInternalMessageAction.RefreshModel)) {
+            TDispatcher.BeginInvoke (RefreshModelDispatcher, Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction));
+          }
+
           // Edit
           if (message.IsAction (TInternalMessageAction.Edit)) {
             TDispatcher.BeginInvoke (EditDispatcher, Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction));
@@ -235,6 +240,14 @@ namespace Gadget.Factory.Pattern.ViewModels
 
         DelegateCommand.PublishInternalMessage.Execute (message);
       }
+    }
+
+    void RefreshModelDispatcher (Server.Models.Component.TEntityAction action)
+    {
+      action.ThrowNull ();
+
+      Model.RefreshModel (action);
+      RaiseChanged ();
     }
     #endregion
 

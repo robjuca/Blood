@@ -51,19 +51,17 @@ namespace Gadget.Collection.Pattern.ViewModels
             // Collection - Full
             if (message.Support.Argument.Types.IsOperation (Server.Models.Infrastructure.TOperation.Collection, Server.Models.Infrastructure.TExtension.Full)) {
               if (message.Result.IsValid) {
-                // Gadget
+                // Gadget Target
                 if (message.Support.Argument.Types.IsOperationCategory (Server.Models.Infrastructure.TCategory.Target)) {
                   var action = Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction);
                   TDispatcher.BeginInvoke (ResponseDataDispatcher, action);
                 }
-              }
-            }
 
-            // Select - ById
-            if (message.Support.Argument.Types.IsOperation (Server.Models.Infrastructure.TOperation.Select, Server.Models.Infrastructure.TExtension.ById)) {
-              if (message.Result.IsValid) {
-                var action = Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction);
-                TDispatcher.BeginInvoke (ResponseModelDispatcher, action);
+                // Gadget Material
+                if (message.Support.Argument.Types.IsOperationCategory (Server.Models.Infrastructure.TCategory.Material)) {
+                  var action = Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction);
+                  TDispatcher.BeginInvoke (RefreshModelDispatcher, action);
+                }
               }
             }
           }
@@ -82,110 +80,15 @@ namespace Gadget.Collection.Pattern.ViewModels
             TDispatcher.Invoke (RefreshAllDispatcher);
             TDispatcher.Invoke (RequestDataDispatcher);
           }
-
-          // Style
-          if (message.IsAction (TInternalMessageAction.Style)) {
-            TDispatcher.BeginInvoke (StyleHorizontalChangedDispatcher, message.Support.Argument.Types.HorizontalStyle.StyleString);
-            TDispatcher.BeginInvoke (StyleVerticalChangedDispatcher, message.Support.Argument.Types.VerticalStyle.StyleString);
-          }
-
-          // Back
-          if (message.IsAction (TInternalMessageAction.Back)) {
-            TDispatcher.Invoke (RefreshAllDispatcher);
-          }
         }
       }
     }
     #endregion
 
     #region View Event
-    public void OnStyleHorizontalSelected (string style)
-    {
-      Enum.TryParse (style, out TContentStyle.Style selectedStyle);
-
-
-      TDispatcher.Invoke (RefreshAllDispatcher);
-    }
-
-    public void OnStyleVerticalSelected (string style)
-    {
-      Enum.TryParse (style, out TContentStyle.Style selectedStyle);
-
-
-      TDispatcher.Invoke (RefreshAllDispatcher);
-    }
-
     public void OnSelectionChanged (TComponentModelItem item)
     {
       TDispatcher.BeginInvoke (ItemSelectedDispatcher, item);
-    }
-
-    public void OnFilterCanRemoveClicked ()
-    {
-      TDispatcher.Invoke (RefreshAllDispatcher);
-
-      //to Sibling
-      var message = new TCollectionSiblingMessageInternal (TInternalMessageAction.Filter, TChild.List, TypeInfo);
-      DelegateCommand.PublishInternalMessage.Execute (message);
-    }
-
-    public void OnDashBoardClicked ()
-    {
-      TDispatcher.Invoke (RefreshAllDispatcher);
-
-      //to Sibling
-      var action = Server.Models.Component.TEntityAction.CreateDefault;
-      action.Summary.Select (Server.Models.Infrastructure.TCategory.Target);
-
-      var message = new TCollectionSiblingMessageInternal (TInternalMessageAction.Summary, TChild.List, TypeInfo);
-      message.Support.Argument.Types.Select (action);
-
-      DelegateCommand.PublishInternalMessage.Execute (message);
-    }
-
-    public void OnFilterEnabledChanged (string filter)
-    {
-      // TODO:filter
-      //var message = new TDocumentModuleInternalMessage ();
-      //message.SelectSender (new TTypeInfo (TypeName));
-      //message.Action.Select (TMessageActionInternals.Cleanup);
-      //DelegateCommand.PublishModuleInternalMessage.Execute (message);
-
-      //Model.DocumentFilter.SelectFilterEnabled (filter);
-      //THelper.DispatcherLater (PrepareToApplyFilterDispatcher);
-    }
-
-    public void OnFilterPictureChanged (string filter)
-    {
-      // TODO:filter
-      //var message = new TDocumentModuleInternalMessage ();
-      //message.SelectSender (new TTypeInfo (TypeName));
-      //message.Action.Select (TMessageActionInternals.Cleanup);
-      //DelegateCommand.PublishModuleInternalMessage.Execute (message);
-
-      //Model.DocumentFilter.SelectFilterPicture (filter);
-      //THelper.DispatcherLater (PrepareToApplyFilterDispatcher);
-    }
-
-    public void OnFilterSearchCommadClicked ()
-    {
-      // TODO:filter
-      //if (Model.DocumentFilter.ValidateSearch ()) {
-      //  var message = new TDocumentModuleInternalMessage ();
-      //  message.SelectSender (new TTypeInfo (TypeName));
-      //  message.Action.Select (TMessageActionInternals.Cleanup);
-      //  DelegateCommand.PublishModuleInternalMessage.Execute (message);
-
-      //  THelper.DispatcherLater (PrepareToApplyFilterDispatcher);
-      //}
-    }
-
-    public void OnFilterCleanCommadClicked ()
-    {
-      // TODO:filter
-      //Model.CleanSearch ();
-
-      //THelper.DispatcherLater (PrepareToApplyFilterDispatcher);
     }
     #endregion
 
@@ -200,7 +103,7 @@ namespace Gadget.Collection.Pattern.ViewModels
     void RequestDataDispatcher ()
     {
       // to parent
-      // Collection - Full
+      // Collection - Full 
       var action = Server.Models.Component.TEntityAction.Create (
         Server.Models.Infrastructure.TCategory.Target,
         Server.Models.Infrastructure.TOperation.Collection,
@@ -218,6 +121,19 @@ namespace Gadget.Collection.Pattern.ViewModels
       Model.Select (action);
 
       TDispatcher.Invoke (RefreshAllDispatcher);
+
+      // to parent
+      // Collection - Full (Material list - used to send RefreshModel)
+      var entityAction = Server.Models.Component.TEntityAction.Create (
+        Server.Models.Infrastructure.TCategory.Material,
+        Server.Models.Infrastructure.TOperation.Collection,
+        Server.Models.Infrastructure.TExtension.Full
+      );
+
+      var message = new TCollectionMessageInternal (TInternalMessageAction.Request, TChild.List, TypeInfo);
+      message.Support.Argument.Types.Select (entityAction);
+
+      DelegateCommand.PublishInternalMessage.Execute (message);
     }
 
     void RequestModelDispatcher ()
@@ -239,16 +155,25 @@ namespace Gadget.Collection.Pattern.ViewModels
       }
     }
 
-    void ResponseModelDispatcher (Server.Models.Component.TEntityAction action)
+    void RefreshModelDispatcher (Server.Models.Component.TEntityAction action)
     {
+      // update model collection
+      foreach (var modelAction in action.CollectionAction.ModelCollection) {
+        var entityAction = Server.Models.Component.TEntityAction.CreateDefault;
+        entityAction.ModelAction.CopyFrom (modelAction.Value);
 
-      // to Sibling
-      //var message = new TCollectionSiblingMessageInternal (TInternalMessageAction.Select, TChild.List, TypeInfo);
-      //message.Support.Argument.Types.Item.CopyFrom (Model.Current);
+        var gadget = Server.Models.Component.GadgetMaterial.CreateDefault;
+        gadget.CopyFrom (entityAction);
 
-      //DelegateCommand.PublishInternalMessage.Execute (message);
+        action.CollectionAction.GadgetMaterialCollection.Add (gadget);
+      }
 
-      //TDispatcher.Invoke (RefreshAllDispatcher);
+
+      // to parent (RefreshModel)
+      var message = new TCollectionMessageInternal (TInternalMessageAction.RefreshModel, TChild.List, TypeInfo);
+      message.Support.Argument.Types.Select (action);
+
+      DelegateCommand.PublishInternalMessage.Execute (message);
     }
 
     void ItemSelectedDispatcher (TComponentModelItem item)
@@ -262,22 +187,6 @@ namespace Gadget.Collection.Pattern.ViewModels
       else {
         TDispatcher.Invoke (RequestModelDispatcher);
       }
-    }
-
-    void TryToSelectDispatcher ()
-    {
-
-      TDispatcher.Invoke (RefreshAllDispatcher);
-    }
-
-    void StyleHorizontalChangedDispatcher (string style)
-    {
-      OnStyleHorizontalSelected (style);
-    }
-
-    void StyleVerticalChangedDispatcher (string style)
-    {
-      OnStyleVerticalSelected (style);
     }
     #endregion
 

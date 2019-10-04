@@ -51,10 +51,28 @@ namespace Shared.Types
     TSelectionPropertyInfo ()
     {
       m_SelectedIndex = -1;
+
+      ItemsSource = new Collection<TSelectionItem> ();
     }
     #endregion
 
     #region Members
+    public void Select (Server.Models.Component.TEntityAction action)
+    {
+      ItemsSource.Clear ();
+
+      if (action.NotNull ()) {
+        foreach (var item in action.CollectionAction.GadgetMaterialCollection) {
+          var selectionItem = TSelectionItem.Create (item.Material, item.Id);
+          ItemsSource.Add (selectionItem);
+        }
+      }
+
+      if (ItemsSource.Count > 0) {
+        SelectedIndex = 0;
+      }
+    }
+
     public void Select (TSelectionItem item)
     {
       for (int index = 0; index < ItemsSource.Count; index++) {

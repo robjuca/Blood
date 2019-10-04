@@ -148,7 +148,7 @@ namespace Shared.Types
       {
         m_TextModel.Description = value;
 
-        RaisePropertyChanged ("DescriptionProperty");
+        RaisePropertyChanged (nameof (DescriptionProperty));
       }
     }
 
@@ -169,7 +169,7 @@ namespace Shared.Types
       {
         m_TextModel.ExternalLink = value;
 
-        RaisePropertyChanged ("ExternalLinkProperty");
+        RaisePropertyChanged (nameof (ExternalLinkProperty));
       }
     }
 
@@ -190,7 +190,7 @@ namespace Shared.Types
       {
         m_TextModel.Text = value;
 
-        RaisePropertyChanged ("TextProperty");
+        RaisePropertyChanged (nameof (TextProperty));
       }
     }
     #endregion
@@ -222,7 +222,7 @@ namespace Shared.Types
           m_ImageModel.Image = THelper.BitmapImageToByteArray (value);
 
           if (m_ImageModel.Image.NotNull ()) {
-            RaisePropertyChanged ("ImageProperty");
+            RaisePropertyChanged (nameof (ImageProperty));
           }
         }
       }
@@ -298,6 +298,19 @@ namespace Shared.Types
               m_Names.Add ("ColumnsProperty");
               m_Names.Add ("RowsProperty");
               m_Names.Add ("SelectionProperty");
+            }
+            break;
+
+          case Server.Models.Infrastructure.TCategory.Target: {
+              m_Names.Add ("LinkProperty");
+              m_Names.Add ("ImagePositionProperty");
+              m_Names.Add ("HeaderVisibilityProperty");
+              m_Names.Add ("FooterVisibilityProperty");
+              m_Names.Add ("StyleHorizontalProperty");
+              m_Names.Add ("StyleVerticalProperty");
+              m_Names.Add ("ColumnsProperty");
+              m_Names.Add ("RowsProperty");
+              m_Names.Add ("ImageProperty");
             }
             break;
 
@@ -390,6 +403,17 @@ namespace Shared.Types
       RowsProperty.PropertyChanged += Int4PropertyChanged;
 
       ImagePositionProperty.SetupCollection (StyleHorizontalProperty.Current.StyleInfo, StyleVerticalProperty.Current.StyleInfo);
+    }
+
+    public void SelectModel (Server.Models.Infrastructure.TCategory category, TEntityAction action)
+    {
+      if (action.NotNull ()) {
+        switch (category) {
+          case Server.Models.Infrastructure.TCategory.Target:
+            SelectionProperty.Select (action);
+            break;
+        }
+      }
     }
 
     public void SelectModel (TEntityAction action)

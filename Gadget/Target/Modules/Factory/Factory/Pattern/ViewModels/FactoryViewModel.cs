@@ -73,6 +73,16 @@ namespace Gadget.Factory.Pattern.ViewModels
 
           DelegateCommand.PublishInternalMessage.Execute (messageInternal);
         }
+
+        // RefreshModel
+        if (message.IsAction (TMessageAction.RefreshModel)) {
+          // to child 
+          var messageInternal = new TFactoryMessageInternal (TInternalMessageAction.RefreshModel, TypeInfo);
+          messageInternal.Node.SelectRelationParent (TChild.Property);
+          messageInternal.Support.Argument.Types.CopyFrom (message.Support.Argument.Types);
+
+          DelegateCommand.PublishInternalMessage.Execute (messageInternal);
+        }
       }
     }
 

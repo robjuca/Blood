@@ -32,6 +32,13 @@ namespace Gadget.Factory.Pattern.Models
     #endregion
 
     #region Members
+    internal void RefreshModel (Server.Models.Component.TEntityAction action)
+    {
+      if (action.NotNull ()) {
+        ComponentModelProperty.ExtensionModel.SelectModel (Server.Models.Infrastructure.TCategory.Target, action); // update Selection Property (Material list)
+      }
+    }
+
     internal void SelectModel (Server.Models.Component.TEntityAction action)
     {
       ComponentModelProperty.SelectModel (action);
@@ -39,10 +46,12 @@ namespace Gadget.Factory.Pattern.Models
 
     internal void RequestModel (Server.Models.Component.TEntityAction action)
     {
-      ComponentModelProperty.RequestModel (action);
+      if (action.NotNull ()) {
+        ComponentModelProperty.RequestModel (action);
 
-      // update model
-      action.ModelAction.GadgetTargetModel.CopyFrom (action);
+        // update model
+        action.ModelAction.GadgetTargetModel.CopyFrom (action);
+      }
     }
 
     internal void ShowPanels ()
@@ -61,7 +70,7 @@ namespace Gadget.Factory.Pattern.Models
     {
       RaisePropertyChanged (e.PropertyName);
     }
-    #endregion    
+    #endregion
   };
   //---------------------------//
 
