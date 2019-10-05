@@ -157,18 +157,6 @@ namespace Gadget.Collection.Pattern.ViewModels
 
     void RefreshModelDispatcher (Server.Models.Component.TEntityAction action)
     {
-      // update model collection
-      foreach (var modelAction in action.CollectionAction.ModelCollection) {
-        var entityAction = Server.Models.Component.TEntityAction.CreateDefault;
-        entityAction.ModelAction.CopyFrom (modelAction.Value);
-
-        var gadget = Server.Models.Component.GadgetMaterial.CreateDefault;
-        gadget.CopyFrom (entityAction);
-
-        action.CollectionAction.GadgetMaterialCollection.Add (gadget);
-      }
-
-
       // to parent (RefreshModel)
       var message = new TCollectionMessageInternal (TInternalMessageAction.RefreshModel, TChild.List, TypeInfo);
       message.Support.Argument.Types.Select (action);

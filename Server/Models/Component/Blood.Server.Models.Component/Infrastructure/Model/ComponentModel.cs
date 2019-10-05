@@ -218,6 +218,70 @@ namespace Server.Models.Component
       }
     }
 
+    public static void SelectModel (TEntityAction action)
+    {
+      if (action.NotNull ()) {
+        // update model 
+        TModelAction.SelectModel (action);
+
+        switch (action.CategoryType.Category) {
+          case Infrastructure.TCategory.Material: {
+              // update model collection
+              action.CollectionAction.GadgetMaterialCollection.Clear ();
+              
+              foreach (var modelAction in action.CollectionAction.ModelCollection) {
+                var entityAction = TEntityAction.CreateDefault;
+                entityAction.ModelAction.CopyFrom (modelAction.Value);
+
+                var gadget = GadgetMaterial.CreateDefault;
+                gadget.CopyFrom (entityAction);
+
+                modelAction.Value.GadgetMaterialModel.CopyFrom (gadget); // update colection
+
+                action.CollectionAction.GadgetMaterialCollection.Add (gadget);
+              }
+            }
+            break;
+         
+          case Infrastructure.TCategory.Target: {
+              action.CollectionAction.GadgetTargetCollection.Clear ();
+
+              // update model collection
+              foreach (var modelAction in action.CollectionAction.ModelCollection) {
+                var entityAction = TEntityAction.CreateDefault;
+                entityAction.ModelAction.CopyFrom (modelAction.Value);
+
+                var gadget = GadgetTarget.CreateDefault;
+                gadget.CopyFrom (entityAction);
+
+                modelAction.Value.GadgetTargetModel.CopyFrom (gadget); // update colection
+
+                action.CollectionAction.GadgetTargetCollection.Add (gadget);
+              }
+            }
+            break;
+          
+          case Infrastructure.TCategory.Test: {
+              action.CollectionAction.GadgetTestCollection.Clear ();
+
+              // update model collection
+              foreach (var modelAction in action.CollectionAction.ModelCollection) {
+                var entityAction = TEntityAction.CreateDefault;
+                entityAction.ModelAction.CopyFrom (modelAction.Value);
+
+                var gadget = GadgetTest.CreateDefault;
+                gadget.CopyFrom (entityAction);
+
+                modelAction.Value.GadgetTestModel.CopyFrom (gadget); // update colection
+
+                action.CollectionAction.GadgetTestCollection.Add (gadget);
+              }
+            }
+            break;
+        }
+      }
+    }
+
     public TModelAction RequestModel ()
     {
       var modelAction = TModelAction.CreateDefault;

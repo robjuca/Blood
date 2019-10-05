@@ -121,6 +121,11 @@ namespace Server.Models.Component
       }
     }
 
+    public void SelectModel ()
+    {
+      TComponentModel.SelectModel (this);
+    }
+
     public static TEntityAction Request (IEntityAction action)
     {
       return (action as TEntityAction);

@@ -245,7 +245,6 @@ namespace Server.Context.Component
           var componentExtension = TComponentExtension.CreateDefault;
           action.RequestExtension (componentExtension);
 
-
           foreach (var item in action.CollectionAction.ComponentInfoCollection) {
             // component
             // Info
@@ -345,6 +344,8 @@ namespace Server.Context.Component
             action.CollectionAction.ModelCollection.Add (id, models);
           }
         }
+
+        action.SelectModel (); // refresh model
 
         action.Result = TValidationResult.Success;
       }
@@ -484,6 +485,8 @@ namespace Server.Context.Component
             action.CollectionAction.ModelCollection.Add (id, models);
           }
         }
+
+        action.SelectModel (); // refresh model
 
         action.Result = TValidationResult.Success;
       }

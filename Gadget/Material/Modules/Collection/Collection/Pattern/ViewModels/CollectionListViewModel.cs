@@ -112,6 +112,7 @@ namespace Gadget.Collection.Pattern.ViewModels
 
     void ResponseDataDispatcher (Server.Models.Component.TEntityAction action)
     {
+      // operation: [Collection-Full], Gadget: Material
       Model.Select (action);
 
       // to parent (RefreshModel)

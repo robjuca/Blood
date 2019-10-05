@@ -50,20 +50,13 @@ namespace Gadget.Collection.Pattern.Models
 
       action.ThrowNull ();
 
-      action.CollectionAction.GadgetMaterialCollection.Clear ();
-
       ItemsSource.Clear ();
 
-      foreach (var modelAction in action.CollectionAction.ModelCollection) {
-        action.ModelAction.CopyFrom (modelAction.Value);
-        
-        var model = action.ModelAction.GadgetMaterialModel;
-        model.CopyFrom (action); // set gadget model
+      foreach (var gadget in action.CollectionAction.GadgetMaterialCollection) {
+        var modelAction = action.CollectionAction.ModelCollection [gadget.Id];
+        action.ModelAction.CopyFrom (modelAction);
 
         ItemsSource.Add (TComponentModelItem.Create (action));
-
-        // update list
-        action.CollectionAction.GadgetMaterialCollection.Add (model.Clone ());
       }
 
       if (ItemsSource.Count > 0) {

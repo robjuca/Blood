@@ -91,24 +91,7 @@ namespace Gadget.Factory.Pattern.ViewModels
 
     void RequestDesignDispatcher (Server.Models.Component.TEntityAction action)
     {
-      
-
-      //action.ModelAction.ExtensionMaterialModel.Header = header;
-      //action.ModelAction.ExtensionMaterialModel.Footer = footer;
-      //action.ModelAction.ExtensionMaterialModel.Paragraph = paragraph;
-      //action.ModelAction.ExtensionImageModel.Distorted = m_DesignControl.Model.ImageDistorted;
-
-      //// RTF to HTML Converter
-      //MarkupConverter.IMarkupConverter markupConverter = new MarkupConverter.MarkupConverter ();
-
-      //action.ModelAction.ExtensionMaterialModel.HtmlHeader = markupConverter.ConvertRtfToHtml (header);
-      //action.ModelAction.ExtensionMaterialModel.HtmlFooter = markupConverter.ConvertRtfToHtml (footer);
-      //action.ModelAction.ExtensionMaterialModel.HtmlParagraph = markupConverter.ConvertRtfToHtml (paragraph);
-
-      // Problem : font-size attribute must be in pixel like fonte-size:12px
-      CorrectFontSize (action);
-
-      // to Sibling
+      // to sibling
       var message = new TFactorySiblingMessageInternal (TInternalMessageAction.Response, TChild.Design, TypeInfo);
       message.Support.Argument.Types.Select (action);
 
@@ -128,50 +111,6 @@ namespace Gadget.Factory.Pattern.ViewModels
 
     #region Fields
     TComponentDesignControl                                     m_DesignControl;
-    #endregion
-
-    #region Support
-    void CorrectFontSize (Server.Models.Component.TEntityAction action)
-    {
-      // header
-      //string s = action.ModelAction.ExtensionMaterialModel.HtmlHeader;
-      //action.ModelAction.ExtensionMaterialModel.HtmlHeader = ReplaceAction (s);
-
-      // footer
-      //s = action.ModelAction.ExtensionMaterialModel.HtmlFooter;
-      //action.ModelAction.ExtensionMaterialModel.HtmlFooter = ReplaceAction (s);
-
-      // paragrapf
-      //s = action.ModelAction.ExtensionMaterialModel.HtmlParagraph;
-      //action.ModelAction.ExtensionMaterialModel.HtmlParagraph = ReplaceAction (s);
-    }
-
-    string ReplaceAction (string html)
-    {
-      // replace: font-size:??; for font-size:??px;
-      string towatch = "font-size:";
-
-      string s = html;
-      int index = s.IndexOf (towatch);
-
-      while (index > -1) {
-        int pos = index + towatch.Length + 2;
-        s = s.Insert (pos, "px");
-
-        index = s.IndexOf (towatch, pos);
-
-        // ;font-size:10px.666666666666666;margin zap this
-        var toRemove = pos + 2;
-        var ss = s [toRemove];
-
-        while (ss.Equals (';').IsFalse ()) {
-          s = s.Remove (toRemove, 1);
-          ss = s [toRemove];
-        }
-      }
-
-      return (s);
-    }
     #endregion
   };
   //---------------------------//

@@ -160,6 +160,41 @@ namespace Server.Models.Component
         GadgetTestModel.CopyFrom (alias.GadgetTestModel);
       }
     }
+
+    public static void SelectModel (TEntityAction action)
+    {
+      if (action.NotNull ()) {
+        if (action.ModelAction.ComponentInfoModel.Id.NotEmpty ()) {
+          // update model action
+
+          switch (action.CategoryType.Category) {
+            case Infrastructure.TCategory.Material: {
+                var entityAction = TEntityAction.CreateDefault;
+                entityAction.ModelAction.CopyFrom (action.ModelAction);
+
+                action.ModelAction.GadgetMaterialModel.CopyFrom (entityAction);
+              }
+              break;
+
+            case Infrastructure.TCategory.Target: {
+                var entityAction = TEntityAction.CreateDefault;
+                entityAction.ModelAction.CopyFrom (action.ModelAction);
+
+                action.ModelAction.GadgetTargetModel.CopyFrom (entityAction);
+              }
+              break;
+
+            case Infrastructure.TCategory.Test: {
+                var entityAction = TEntityAction.CreateDefault;
+                entityAction.ModelAction.CopyFrom (action.ModelAction);
+
+                action.ModelAction.GadgetTestModel.CopyFrom (entityAction);
+              }
+              break;
+          }
+        }
+      }
+    }
     #endregion
 
     #region Static
