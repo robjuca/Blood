@@ -12,7 +12,7 @@ namespace Shared.Gadget.Target
   public class TComponentControlModel
   {
     #region Property
-    public Server.Models.Component.GadgetMaterial ControlModel
+    public Server.Models.Component.GadgetTarget ControlModel
     {
       get;
     }
@@ -21,7 +21,7 @@ namespace Shared.Gadget.Target
     #region Constructor
     TComponentControlModel ()
     {
-      ControlModel = Server.Models.Component.GadgetMaterial.CreateDefault;
+      ControlModel = Server.Models.Component.GadgetTarget.CreateDefault;
     }
     #endregion
 
@@ -29,7 +29,7 @@ namespace Shared.Gadget.Target
     public void SelectModel (Server.Models.Component.TEntityAction action)
     {
       if (action.NotNull ()) {
-        ControlModel.CopyFrom (action.ModelAction.GadgetMaterialModel);
+        ControlModel.CopyFrom (action.ModelAction.GadgetTargetModel);
       }
     }
     #endregion

@@ -118,6 +118,7 @@ namespace Gadget.Collection.Pattern.ViewModels
 
     void ResponseDataDispatcher (Server.Models.Component.TEntityAction action)
     {
+      // Collection - Full (Target list)
       Model.Select (action);
 
       TDispatcher.Invoke (RefreshAllDispatcher);
@@ -167,13 +168,17 @@ namespace Gadget.Collection.Pattern.ViewModels
     void ItemSelectedDispatcher (TComponentModelItem item)
     {
       if (item.IsNull ()) {
-        // to Sibling
+        // to Sibling (Cleanup)
         var message = new TCollectionSiblingMessageInternal (TInternalMessageAction.Cleanup, TChild.List, TypeInfo);
         DelegateCommand.PublishInternalMessage.Execute (message);
       }
 
       else {
-        TDispatcher.Invoke (RequestModelDispatcher);
+        // to Sibling (Select)
+        var message = new TCollectionSiblingMessageInternal (TInternalMessageAction.Select, TChild.List, TypeInfo);
+        message.Support.Argument.Types.Item.CopyFrom (item);
+
+        DelegateCommand.PublishInternalMessage.Execute (message);
       }
     }
     #endregion

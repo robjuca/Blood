@@ -6,6 +6,8 @@
 //----- Include
 using System;
 using System.Collections.ObjectModel;
+
+using Shared.ViewModel;
 //---------------------------//
 
 namespace Gadget.Collection.Pattern.Models
@@ -13,7 +15,7 @@ namespace Gadget.Collection.Pattern.Models
   public sealed class TCollectionListModel
   {
     #region Property
-    public ObservableCollection<Server.Models.Component.GadgetTarget> ItemsSource
+    public ObservableCollection<TComponentModelItem> ItemsSource
     {
       get; 
     }
@@ -24,7 +26,7 @@ namespace Gadget.Collection.Pattern.Models
       set;
     }
 
-    public Server.Models.Component.GadgetTarget Current
+    public TComponentModelItem Current
     {
       get;
     }
@@ -35,8 +37,8 @@ namespace Gadget.Collection.Pattern.Models
     {
       SelectedIndex = -1;
 
-      ItemsSource = new ObservableCollection<Server.Models.Component.GadgetTarget> ();
-      Current = Server.Models.Component.GadgetTarget.CreateDefault;
+      ItemsSource = new ObservableCollection<TComponentModelItem> ();
+      Current = TComponentModelItem.CreateDefault;
     }
     #endregion
 
@@ -48,13 +50,13 @@ namespace Gadget.Collection.Pattern.Models
 
       action.ThrowNull ();
 
-      foreach (var modelAction in action.CollectionAction.ModelCollection) {
-        action.ModelAction.CopyFrom (modelAction.Value);
-        
-        var model = action.ModelAction.GadgetTargetModel;
-        model.CopyFrom (action); // set gadget model
+      ItemsSource.Clear ();
 
-        ItemsSource.Add (model);
+      foreach (var gadget in action.CollectionAction.GadgetTargetCollection) {
+        var modelAction = action.CollectionAction.ModelCollection [gadget.Id];
+        action.ModelAction.CopyFrom (modelAction);
+
+        ItemsSource.Add (TComponentModelItem.Create (action));
       }
 
       if (ItemsSource.Count > 0) {

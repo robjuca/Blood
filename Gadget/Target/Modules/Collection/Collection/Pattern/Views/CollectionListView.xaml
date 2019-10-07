@@ -33,7 +33,7 @@
 
                     <!--name-->
                     <Border Grid.Column="1">
-                        <TextBlock Text="{Binding Target}"
+                        <TextBlock Text="{Binding Name}"
                                    FontWeight="Bold" />
                     </Border>
 

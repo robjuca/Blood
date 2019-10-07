@@ -51,24 +51,10 @@ namespace Gadget.Collection.Pattern.Models
       }
     }
 
-    public Visibility DistortedVisibility
-    {
-      get;
-      set;
-    }
-
     public Visibility BusyVisibility
     {
       get;
       set;
-    }
-
-    public bool Distorted
-    {
-      get
-      {
-        return (false);
-      }
     }
 
     public Guid Id
@@ -86,7 +72,6 @@ namespace Gadget.Collection.Pattern.Models
       ComponentControlModel = TComponentControlModel.CreateDefault;
 
       BusyVisibility = Visibility.Hidden;
-      DistortedVisibility = Visibility.Hidden;
 
       IsViewEnabled = true;
     }
@@ -97,10 +82,12 @@ namespace Gadget.Collection.Pattern.Models
     {
       ComponentModelItem = item ?? throw new System.ArgumentNullException (nameof (item));
 
-      SelectModel ();
+      var action = Server.Models.Component.TEntityAction.CreateDefault;
+      action.ModelAction.GadgetTargetModel.CopyFrom (item.GadgetTargetModel);
+
+      ComponentControlModel.SelectModel (action);
 
       BusyVisibility = ComponentModelItem.BusyVisibility;
-      DistortedVisibility = Distorted ? Visibility.Visible : Visibility.Hidden;
     }
 
     internal void RequestModel (Server.Models.Component.TEntityAction action)
@@ -112,8 +99,6 @@ namespace Gadget.Collection.Pattern.Models
 
       action.Id = Id;
       action.CategoryType.Select (ComponentModelItem.Category);
-
-      action.ModelAction.ComponentStatusModel.Locked = true;  // Style always locked
     }
 
     internal void Cleanup ()
@@ -122,15 +107,6 @@ namespace Gadget.Collection.Pattern.Models
       ComponentControlModel = TComponentControlModel.CreateDefault;
 
       BusyVisibility = Visibility.Hidden;
-      DistortedVisibility = Visibility.Hidden;
-    }
-    #endregion
-
-    #region Support
-    void SelectModel ()
-    {
-      //ComponentControlModel.SelectModel (ComponentModelItem);
-      //ComponentControlModel.PropertyName = "all";
     }
     #endregion
   };

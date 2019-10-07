@@ -24,18 +24,16 @@
                     <ScrollViewer HorizontalScrollBarVisibility="Auto"
                                   VerticalScrollBarVisibility="Auto"
                                   Padding="5">
-                        <materialDesign:Card HorizontalAlignment="Center"
-                                             VerticalAlignment="Center">
-                            <control:TComponentDisplayControl x:Name="DisplayControl"
-                                                              Model="{Binding Model.ComponentControlModel}" />
-                        </materialDesign:Card>
+                        <control:TComponentDisplayControl x:Name="DisplayControl"
+                                                          Model="{Binding Model.ComponentControlModel}" />
                     </ScrollViewer>
                 </Border>
 
                 <!--edit Document name-->
                 <Border Grid.Row="1"
                         Padding="3">
-                    <materialDesign:Card  Margin="2" Padding="0"
+                    <materialDesign:Card  Margin="2"
+                                          Padding="3"
                                           HorizontalAlignment="Stretch">
                         <Grid>
                             <Grid.ColumnDefinitions>

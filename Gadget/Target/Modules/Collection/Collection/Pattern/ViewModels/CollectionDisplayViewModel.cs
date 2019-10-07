@@ -66,18 +66,6 @@ namespace Gadget.Collection.Pattern.ViewModels
           if (message.IsAction (TInternalMessageAction.Cleanup)) {
             TDispatcher.Invoke (CleanupDispatcher);
           }
-
-          // FilterEnter
-          if (message.IsAction (TInternalMessageAction.FilterEnter)) {
-            Model.IsViewEnabled = false;
-            RaiseChanged ();
-          }
-
-          // FilterLeave
-          if (message.IsAction (TInternalMessageAction.FilterLeave)) {
-            Model.IsViewEnabled = true;
-            RaiseChanged ();
-          }
         }
       }
     }
@@ -121,13 +109,13 @@ namespace Gadget.Collection.Pattern.ViewModels
 
     void RemoveDispatcher ()
     {
+      // Remove
       var action = Server.Models.Component.TEntityAction.Create (Server.Models.Infrastructure.TCategory.Target, Server.Models.Infrastructure.TOperation.Remove);
       Model.RequestModel (action);
 
       // to parent
       var message = new TCollectionMessageInternal (TInternalMessageAction.Request, TChild.Display, TypeInfo);
       message.Support.Argument.Types.Select (action);
-      //message.Support.Argument.Types.Item.ContentLocked = Model.ComponentModelItem.ContentLocked;
 
       DelegateCommand.PublishInternalMessage.Execute (message);
     }

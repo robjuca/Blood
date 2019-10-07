@@ -64,8 +64,8 @@ namespace Server.Models.Infrastructure
 
   // TODO: review
   //  Material      = 00100100 binary -> 24 hex -> 36 decimal
-  //  Target        = 00000000 binary -> 00 hex -> 00 decimal
-  //  Test          = 00000000 binary -> 00 hex -> 00 decimal
+  //  Target        = 00110000 binary -> 30 hex -> 48 decimal
+  //  Test          = 00110100 binary -> 34 hex -> 52 decimal
 
 
   // TODO: review

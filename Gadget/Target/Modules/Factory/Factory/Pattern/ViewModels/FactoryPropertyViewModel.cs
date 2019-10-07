@@ -112,9 +112,11 @@ namespace Gadget.Factory.Pattern.ViewModels
       Model.ShowPanels ();
       RaiseChanged ();
 
+      // Insert
       var action = Server.Models.Component.TEntityAction.Create (Server.Models.Infrastructure.TCategory.Target, Server.Models.Infrastructure.TOperation.Insert);
 
       if (IsViewModeEdit) {
+        // Change-Full
         action = Server.Models.Component.TEntityAction.Create (Server.Models.Infrastructure.TCategory.Target, Server.Models.Infrastructure.TOperation.Change, Server.Models.Infrastructure.TExtension.Full);
       }
 
