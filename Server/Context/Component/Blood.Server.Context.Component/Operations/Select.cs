@@ -163,6 +163,8 @@ namespace Server.Context.Component
               action.CollectionAction.EntityCollection.Add (relation.ChildId, entityAction);
             }
           }
+
+          action.SelectModel ();
         }
       }
 
@@ -551,7 +553,7 @@ namespace Server.Context.Component
         action.CollectionAction.ComponentInfoCollection.Clear ();
         action.CollectionAction.ComponentStatusCollection.Clear ();
 
-        var categoryValue = TCategoryType.ToValue (action.Summary.Category);
+        var categoryValue = TCategoryType.ToValue (action.SupportAction.SummaryInfo.Category);
 
         // search Id by category
         var descriptors = context.ComponentDescriptor
@@ -590,7 +592,7 @@ namespace Server.Context.Component
         var busyZap = new Collection<Guid> ();
 
         // zap Enabled = false (disable)
-        if (action.Summary.ZapDisable) {
+        if (action.SupportAction.SummaryInfo.ZapDisable) {
           foreach (var itemInfo in action.CollectionAction.ComponentInfoCollection) {
             // only Enabled
             if (itemInfo.Enabled.IsFalse ()) {
@@ -600,7 +602,7 @@ namespace Server.Context.Component
         }
 
         // zap Busy = true
-        if (action.Summary.ZapBusy) {
+        if (action.SupportAction.SummaryInfo.ZapBusy) {
           foreach (var itemStatus in action.CollectionAction.ComponentStatusCollection) {
             // only not busy
             if (itemStatus.Busy) {
@@ -666,7 +668,7 @@ namespace Server.Context.Component
             }
 
             foreach (var layout in action.CollectionAction.ExtensionLayoutCollection) {
-              action.Summary.Select (layout.StyleHorizontal, layout.StyleVertical);
+              action.SupportAction.SummaryInfo.Select (layout.StyleHorizontal, layout.StyleVertical);
             }
           }
         }

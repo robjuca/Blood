@@ -42,7 +42,7 @@ namespace Shared.Types
     {
       get
       {
-        return (m_SelectedIndex.Equals (-1) ? TSelectionItem.CreateDefault : ItemsSource [m_SelectedIndex]);
+        return (HasSelection ? ItemsSource [m_SelectedIndex] : TSelectionItem.CreateDefault);
       }
     }
     #endregion
@@ -62,8 +62,9 @@ namespace Shared.Types
       ItemsSource.Clear ();
 
       if (action.NotNull ()) {
-        foreach (var item in action.CollectionAction.GadgetMaterialCollection) {
-          var selectionItem = TSelectionItem.Create (item.Material, item.Id);
+        foreach (var item in action.SupportAction.SelectionCollection) {
+          var selectionItem = TSelectionItem.Create (item.Name, item.Tag, item.Image);
+
           ItemsSource.Add (selectionItem);
         }
       }
@@ -84,10 +85,42 @@ namespace Shared.Types
         }
       }
     }
+
+    public void SelectModel (Server.Models.Component.TEntityAction action)
+    {
+      if (action.NotNull ()) {
+        var name = action.SupportAction.SelectionInfo.Name;
+        var tag = action.SupportAction.SelectionInfo.Tag;
+        var image = action.SupportAction.SelectionInfo.Image;
+
+        var selection = TSelectionItem.Create (name, tag, image);
+
+        Select (selection);
+      }
+    }
+
+    public void Request (Server.Models.Component.TEntityAction action)
+    {
+      if (action.NotNull ()) {
+        if (HasSelection) {
+          action.SupportAction.SelectionInfo.Select (Selection.ValueString, Selection.Tag, Selection.Image);
+        }
+      }
+    }
     #endregion
 
     #region Overrides
     public override string ToString () => (Selection.ValueString);
+    #endregion
+
+    #region Property
+    bool HasSelection
+    {
+      get
+      {
+        return (SelectedIndex > -1);
+      }
+    } 
     #endregion
 
     #region Fields

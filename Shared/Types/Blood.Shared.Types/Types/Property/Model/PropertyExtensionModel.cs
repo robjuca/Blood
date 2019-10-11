@@ -403,6 +403,8 @@ namespace Shared.Types
       RowsProperty.PropertyChanged += Int4PropertyChanged;
 
       ImagePositionProperty.SetupCollection (StyleHorizontalProperty.Current.StyleInfo, StyleVerticalProperty.Current.StyleInfo);
+
+      SelectionProperty.PropertyChanged += OnPropertyChanged;
     }
 
     public void SelectModel (Server.Models.Infrastructure.TCategory category, TEntityAction action)
@@ -454,6 +456,8 @@ namespace Shared.Types
         //m_DocumentModel.CopyFrom (action.ModelAction.ExtensionDocumentModel);
         m_GeometryModel.CopyFrom (action.ModelAction.ExtensionGeometryModel);
         m_TextModel.CopyFrom (action.ModelAction.ExtensionTextModel);
+
+        SelectionProperty.SelectModel (action);
       }
     }
 
@@ -487,7 +491,9 @@ namespace Shared.Types
         action.ModelAction.ExtensionLayoutModel.CopyFrom (m_LayoutModel);
         action.ModelAction.ExtensionImageModel.CopyFrom (m_ImageModel);
         //action.ModelAction.ExtensionDocumentModel.CopyFrom (m_DocumentModel);
-        action.ModelAction.ExtensionGeometryModel.CopyFrom (m_GeometryModel); 
+        action.ModelAction.ExtensionGeometryModel.CopyFrom (m_GeometryModel);
+
+        SelectionProperty.Request (action);
       }
     }
 

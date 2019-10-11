@@ -21,19 +21,26 @@ namespace Shared.Types
     {
       get;
     }
+
+    public byte [] Image
+    {
+      get;
+    }
     #endregion
 
     #region Constructor
-    TSelectionItem (string valueString, object tag)
+    TSelectionItem (string valueString, object tag, byte [] image)
     {
       ValueString = valueString;
       Tag = tag;
+      Image = image;
     }
 
     TSelectionItem ()
     {
       ValueString = "empty";
       Tag = null;
+      Image = null;
     }
     #endregion
 
@@ -41,7 +48,18 @@ namespace Shared.Types
     public bool Contains (TSelectionItem alias)
     {
       if (alias.NotNull ()) {
-        return (ValueString.Equals (alias.ValueString));
+        // Tag
+        if (string.IsNullOrEmpty (alias.ValueString)) {
+          return (Tag.Equals (alias.Tag));
+        }
+
+        // ValueString
+        if (alias.Tag.IsNull ()) {
+          return (ValueString.Equals (alias.ValueString));
+        }
+
+        // both
+        return (ValueString.Equals (alias.ValueString) && Tag.Equals (alias.Tag));
       }
 
       return (false);
@@ -54,7 +72,7 @@ namespace Shared.Types
     #endregion
 
     #region Static
-    public static TSelectionItem Create (string valueString, object tag) => new TSelectionItem (valueString, tag);
+    public static TSelectionItem Create (string valueString, object tag, byte [] image) => new TSelectionItem (valueString, tag, image);
 
     public static TSelectionItem CreateDefault => new TSelectionItem (); 
     #endregion

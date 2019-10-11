@@ -83,6 +83,7 @@ namespace Gadget.Collection.Pattern.Models
       ComponentModelItem = item ?? throw new System.ArgumentNullException (nameof (item));
 
       var action = Server.Models.Component.TEntityAction.CreateDefault;
+      action.ModelAction.GadgetMaterialModel.CopyFrom (item.GadgetMaterialModel);
       action.ModelAction.GadgetTargetModel.CopyFrom (item.GadgetTargetModel);
 
       ComponentControlModel.SelectModel (action);

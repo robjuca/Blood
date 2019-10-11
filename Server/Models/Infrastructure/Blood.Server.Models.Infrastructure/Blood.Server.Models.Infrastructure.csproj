@@ -52,6 +52,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Infrastructure\SupportAction.cs" />
     <Compile Include="Infrastructure\EntityAction.cs" />
     <Compile Include="Infrastructure\EntityActionBase.cs" />
     <Compile Include="Infrastructure\EntityDataContextBase.cs" />
@@ -67,7 +68,8 @@
     <Compile Include="Types\ComponentExtension.cs" />
     <Compile Include="Types\Enums.cs" />
     <Compile Include="Types\Helper.cs" />
-    <Compile Include="Types\Summary.cs" />
+    <Compile Include="Types\SelectionInfo.cs" />
+    <Compile Include="Types\SummaryInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

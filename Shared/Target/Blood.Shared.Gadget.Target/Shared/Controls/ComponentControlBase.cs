@@ -69,16 +69,24 @@ namespace Shared.Gadget.Target
       m_Grid.Children.Clear ();
 
       // target (row 0)
-
       var grid = new Grid () 
       { 
         HorizontalAlignment= HorizontalAlignment.Center
       };
 
       grid.ColumnDefinitions.Add (new ColumnDefinition () { Width = new GridLength (1, GridUnitType.Auto) }); // col 0 material
-      grid.SetValue (Grid.RowProperty, 0);
+      grid.ColumnDefinitions.Add (new ColumnDefinition () { Width = new GridLength (1, GridUnitType.Auto) }); // col 1 target
+      grid.SetValue (Grid.RowProperty, 0); // row 0
 
-      m_Grid.Children.Add (grid); // row 0
+      // material image
+      var materialImage = new Image
+      {
+        Source = rr.Library.Helper.THelper.ByteArrayToBitmapImage (Model.ChildControlModel.Image)
+      };
+
+      materialImage.SetValue (Grid.ColumnProperty, 0);
+
+      grid.Children.Add (materialImage);
 
       // target
       if (string.IsNullOrEmpty (Model.ControlModel.Target).IsFalse ()) {
@@ -88,10 +96,12 @@ namespace Shared.Gadget.Target
           Text = Model.ControlModel.Target,
         };
 
-        textBlock.SetValue (Grid.ColumnProperty, 0);
+        textBlock.SetValue (Grid.ColumnProperty, 1);  // col 1
 
         grid.Children.Add (textBlock);
       }
+
+      m_Grid.Children.Add (grid); // row 0
 
       // description (row 1)
 

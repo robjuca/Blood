@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace Server.Models.Infrastructure
 {
-  public class TSummary
+  public class TSummaryInfo
   {
     #region Property
     public TCategory Category
@@ -46,7 +46,7 @@ namespace Server.Models.Infrastructure
 
     // TODO: what for??
     #region Constructor
-    TSummary ()
+    TSummaryInfo ()
     {
       Category = TCategory.None;
 
@@ -94,7 +94,7 @@ namespace Server.Models.Infrastructure
       }
     }
 
-    public void CopyFrom (TSummary alias)
+    public void CopyFrom (TSummaryInfo alias)
     {
       if (alias.NotNull ()) {
         Category = alias.Category;
@@ -110,7 +110,7 @@ namespace Server.Models.Infrastructure
     #endregion
 
     #region Static
-    public static TSummary CreateDefault => new TSummary ();
+    public static TSummaryInfo CreateDefault => new TSummaryInfo ();
     #endregion
   };
   //---------------------------//

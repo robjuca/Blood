@@ -35,12 +35,21 @@ namespace Gadget.Factory.Pattern.Models
     internal void RefreshModel (Server.Models.Component.TEntityAction action)
     {
       if (action.NotNull ()) {
+        foreach (var item in action.CollectionAction.GadgetMaterialCollection) {
+          action.SupportAction.SelectionCollection.Add (Server.Models.Infrastructure.TSelectionInfo.Create (item.Material, item.Id, item.Image));
+        }
+
         ComponentModelProperty.ExtensionModel.SelectModel (Server.Models.Infrastructure.TCategory.Target, action); // update Selection Property (Material list)
       }
     }
 
     internal void SelectModel (Server.Models.Component.TEntityAction action)
     {
+      // update Material selection
+      var tag = action.ModelAction.GadgetTargetModel.MaterialId;
+
+      action.SupportAction.SelectionInfo.Select (string.Empty, tag);
+
       ComponentModelProperty.SelectModel (action);
     }
 
@@ -48,6 +57,13 @@ namespace Gadget.Factory.Pattern.Models
     {
       if (action.NotNull ()) {
         ComponentModelProperty.RequestModel (action);
+
+        if (action.SupportAction.SelectionInfo.Tag is Guid materialId) {
+          action.ModelAction.ExtensionNodeModel.ChildId = materialId;
+          action.ModelAction.ExtensionNodeModel.ChildCategory = Server.Models.Infrastructure.TCategoryType.ToValue (Server.Models.Infrastructure.TCategory.Material);
+          action.ModelAction.ExtensionNodeModel.ParentId = ComponentModelProperty.Id;
+          action.ModelAction.ExtensionNodeModel.ParentCategory = Server.Models.Infrastructure.TCategoryType.ToValue (Server.Models.Infrastructure.TCategory.Target);
+        }
 
         // update model
         action.ModelAction.GadgetTargetModel.CopyFrom (action);

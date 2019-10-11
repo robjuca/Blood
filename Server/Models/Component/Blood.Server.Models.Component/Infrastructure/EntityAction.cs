@@ -83,6 +83,8 @@ namespace Server.Models.Component
         ModelAction.ExtensionNodeModel.CopyFrom (ComponentModel.NodeModel);
 
         ModelAction.GadgetMaterialModel.CopyFrom (ComponentModel.GadgetMaterialModel);
+        ModelAction.GadgetTargetModel.CopyFrom (ComponentModel.GadgetTargetModel);
+        ModelAction.GadgetTestModel.CopyFrom (ComponentModel.GadgetTestModel);
 
         CollectionAction.SetCollection (ComponentModel.NodeModelCollection);
       }

@@ -41,6 +41,19 @@ namespace Server.Models.Component
         Description = action.ModelAction.ExtensionTextModel.Description;
         ExternalLink = action.ModelAction.ExtensionTextModel.ExternalLink;
         Enabled = action.ModelAction.ComponentInfoModel.Enabled;
+
+        foreach (var node in action.CollectionAction.ExtensionNodeCollection) {
+          if (node.ParentId.Equals (Id)) {
+            action.ModelAction.ExtensionNodeModel.ChildId = node.ChildId;
+            action.ModelAction.ExtensionNodeModel.ChildCategory = node.ChildCategory;
+            action.ModelAction.ExtensionNodeModel.ParentId = node.ParentId;
+            action.ModelAction.ExtensionNodeModel.ParentCategory = node.ParentCategory;
+
+            MaterialId = node.ChildId;
+
+            break;
+          }
+        }
       }
     }
 

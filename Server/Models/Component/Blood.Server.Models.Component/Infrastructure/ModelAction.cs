@@ -169,26 +169,17 @@ namespace Server.Models.Component
 
           switch (action.CategoryType.Category) {
             case Infrastructure.TCategory.Material: {
-                var entityAction = TEntityAction.CreateDefault;
-                entityAction.ModelAction.CopyFrom (action.ModelAction);
-
-                action.ModelAction.GadgetMaterialModel.CopyFrom (entityAction);
+                action.ModelAction.GadgetMaterialModel.CopyFrom (action);
               }
               break;
 
             case Infrastructure.TCategory.Target: {
-                var entityAction = TEntityAction.CreateDefault;
-                entityAction.ModelAction.CopyFrom (action.ModelAction);
-
-                action.ModelAction.GadgetTargetModel.CopyFrom (entityAction);
+                action.ModelAction.GadgetTargetModel.CopyFrom (action);
               }
               break;
 
             case Infrastructure.TCategory.Test: {
-                var entityAction = TEntityAction.CreateDefault;
-                entityAction.ModelAction.CopyFrom (action.ModelAction);
-
-                action.ModelAction.GadgetTestModel.CopyFrom (entityAction);
+                action.ModelAction.GadgetTestModel.CopyFrom (action);
               }
               break;
           }

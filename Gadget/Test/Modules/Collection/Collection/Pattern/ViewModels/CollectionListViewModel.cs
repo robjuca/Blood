@@ -129,19 +129,7 @@ namespace Gadget.Collection.Pattern.ViewModels
       DelegateCommand.PublishInternalMessage.Execute (message);
     }
 
-    public void OnDashBoardClicked ()
-    {
-      TDispatcher.Invoke (RefreshAllDispatcher);
-
-      //to Sibling
-      var action = Server.Models.Component.TEntityAction.CreateDefault;
-      action.Summary.Select (Server.Models.Infrastructure.TCategory.Target);
-
-      var message = new TCollectionSiblingMessageInternal (TInternalMessageAction.Summary, TChild.List, TypeInfo);
-      message.Support.Argument.Types.Select (action);
-
-      DelegateCommand.PublishInternalMessage.Execute (message);
-    }
+    
 
     public void OnFilterEnabledChanged (string filter)
     {

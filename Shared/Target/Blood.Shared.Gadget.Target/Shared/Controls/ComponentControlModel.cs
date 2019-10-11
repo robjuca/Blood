@@ -16,12 +16,18 @@ namespace Shared.Gadget.Target
     {
       get;
     }
+
+    public Server.Models.Component.GadgetMaterial ChildControlModel
+    {
+      get;
+    }
     #endregion
 
     #region Constructor
     TComponentControlModel ()
     {
       ControlModel = Server.Models.Component.GadgetTarget.CreateDefault;
+      ChildControlModel= Server.Models.Component.GadgetMaterial.CreateDefault;
     }
     #endregion
 
@@ -30,6 +36,13 @@ namespace Shared.Gadget.Target
     {
       if (action.NotNull ()) {
         ControlModel.CopyFrom (action.ModelAction.GadgetTargetModel);
+        ChildControlModel.CopyFrom (action.ModelAction.GadgetMaterialModel);
+
+        if (ControlModel.Id.IsEmpty ()) {
+          ChildControlModel.Id = (Guid) action.SupportAction.SelectionInfo.Tag;
+          ChildControlModel.Material = action.SupportAction.SelectionInfo.Name;
+          ChildControlModel.Image = action.SupportAction.SelectionInfo.Image;
+        }
       }
     }
     #endregion

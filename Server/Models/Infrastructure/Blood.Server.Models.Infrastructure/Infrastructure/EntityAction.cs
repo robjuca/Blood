@@ -25,14 +25,14 @@ namespace Server.Models.Infrastructure
     #endregion
 
     #region Constructor
-    public TEntityAction (M model, C collection, TCategory category, string connectionString)
+    protected TEntityAction (M model, C collection, TCategory category, string connectionString)
       : base (TCategoryType.Create (category), connectionString)
     {
       ModelAction = model;
       CollectionAction = collection;
     }
 
-    public TEntityAction (M model, C collection, TCategory category, string connectionString, object param1, object param2)
+    protected TEntityAction (M model, C collection, TCategory category, string connectionString, object param1, object param2)
       : base (TCategoryType.Create (category), connectionString, param1, param2)
     {
       ModelAction = model;

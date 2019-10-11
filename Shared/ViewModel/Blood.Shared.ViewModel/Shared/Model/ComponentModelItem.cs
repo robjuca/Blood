@@ -460,6 +460,22 @@ namespace Shared.ViewModel
 
         modelItem.CopyFrom (model);
         modelItem.Select (action.CategoryType.Category);
+
+        switch (modelItem.Category) {
+          case Server.Models.Infrastructure.TCategory.Target: {
+              foreach (var item in action.CollectionAction.GadgetMaterialCollection) {
+                if (item.Id.Equals(modelItem.GadgetTargetModel.MaterialId)) {
+                  modelItem.GadgetMaterialModel.CopyFrom (item);
+                  break;
+                }
+              }
+            }
+            break;
+
+          case Server.Models.Infrastructure.TCategory.Test: {
+            }
+            break;
+        }
       }
 
       return (modelItem);

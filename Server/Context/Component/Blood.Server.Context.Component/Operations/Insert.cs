@@ -179,9 +179,16 @@ namespace Server.Context.Component
                   break;
 
                 case TComponentExtensionName.Node: {
+                    // use Node from ModelAction
+                    if (action.ModelAction.ExtensionNodeModel.ChildId.NotEmpty ()) {
+                      action.ModelAction.ExtensionNodeModel.ParentId = id; // for sure
+
+                      context.ExtensionNode.Add (action.ModelAction.ExtensionNodeModel);
+                    }
+
                     // Use Node Collection
                     foreach (var nodeModel in action.CollectionAction.ExtensionNodeCollection) {
-                      nodeModel.ParentId = id;
+                      nodeModel.ParentId = id; // for sure
 
                       context.ExtensionNode.Add (nodeModel);
                     }

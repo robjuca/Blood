@@ -64,7 +64,7 @@ namespace Server.Models.Infrastructure
       get;
     }
 
-    public TSummary Summary
+    public TSupportAction SupportAction
     {
       get;
     }
@@ -78,7 +78,7 @@ namespace Server.Models.Infrastructure
       Result = TValidationResult.CreateDefault;
       Operation = TEntityOperation<TCategoryType>.Create (TCategoryType.Create (TCategory.None));
 
-      Summary = TSummary.CreateDefault;
+      SupportAction = TSupportAction.CreateDefault;
     }
 
     public TEntityActionBase (T categoryType, string connectionString)
