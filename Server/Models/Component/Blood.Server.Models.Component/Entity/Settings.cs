@@ -35,6 +35,7 @@ namespace Server.Models.Component
     public void Change (Settings alias)
     {
       if (alias.NotNull ()) {
+        MyName = alias.MyName;
       }
     }
     #endregion

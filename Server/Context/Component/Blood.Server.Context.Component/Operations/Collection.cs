@@ -345,7 +345,7 @@ namespace Server.Context.Component
           }
         }
 
-        action.SelectModel (); // refresh model
+        action.RefreshComponentModel (); // refresh model
 
         action.Result = TValidationResult.Success;
       }
@@ -486,7 +486,7 @@ namespace Server.Context.Component
           }
         }
 
-        action.SelectModel (); // refresh model
+        action.RefreshComponentModel (); // refresh model
 
         action.Result = TValidationResult.Success;
       }

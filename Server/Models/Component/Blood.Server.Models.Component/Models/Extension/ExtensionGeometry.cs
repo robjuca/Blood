@@ -15,7 +15,6 @@ namespace Server.Models.Component
     [Key]
     public Guid         Id { get; set; }
 
-
     public int          PositionCol { get; set; }
     public int          PositionRow { get; set; }
     public int          SizeCols { get; set; }

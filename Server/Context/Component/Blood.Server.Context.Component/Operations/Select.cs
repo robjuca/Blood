@@ -164,7 +164,7 @@ namespace Server.Context.Component
             }
           }
 
-          action.SelectModel ();
+          action.RefreshComponentModel (); // refresh model
         }
       }
 

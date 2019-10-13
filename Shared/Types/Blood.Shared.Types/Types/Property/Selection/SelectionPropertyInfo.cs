@@ -63,7 +63,7 @@ namespace Shared.Types
 
       if (action.NotNull ()) {
         foreach (var item in action.SupportAction.SelectionCollection) {
-          var selectionItem = TSelectionItem.Create (item.Name, item.Tag, item.Image);
+          var selectionItem = TSelectionItem.Create (item.Name, item.Tag, item.GetImage ());
 
           ItemsSource.Add (selectionItem);
         }
@@ -91,7 +91,7 @@ namespace Shared.Types
       if (action.NotNull ()) {
         var name = action.SupportAction.SelectionInfo.Name;
         var tag = action.SupportAction.SelectionInfo.Tag;
-        var image = action.SupportAction.SelectionInfo.Image;
+        var image = action.SupportAction.SelectionInfo.GetImage ();
 
         var selection = TSelectionItem.Create (name, tag, image);
 

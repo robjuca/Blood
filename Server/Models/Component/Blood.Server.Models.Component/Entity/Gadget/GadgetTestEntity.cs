@@ -29,8 +29,7 @@ namespace Server.Models.Component
     public void CopyFrom (TEntityAction action)
     {
       if (action.NotNull ()) {
-        Id = action.ModelAction.ComponentInfoModel.Id;
-        Enabled = action.ModelAction.ComponentInfoModel.Enabled;
+        CopyFrom (action.ModelAction);
       }
     }
 
@@ -48,10 +47,44 @@ namespace Server.Models.Component
         Enabled = alias.Enabled;
       }
     }
+
+    public void RefreshModel (TEntityAction action)
+    {
+      // TODO: review
+      if (action.NotNull ()) {
+        if (action.CategoryType.IsCategory (Infrastructure.TCategory.Test)) {
+          // update model action
+          CopyFrom (action.ModelAction); // my self
+          action.ModelAction.GadgetTestModel.CopyFrom (this);
+
+          action.CollectionAction.GadgetTestCollection.Clear ();
+
+          // update model collection
+          foreach (var modelAction in action.CollectionAction.ModelCollection) {
+            action.ModelAction.CopyFrom (modelAction.Value);
+
+            var gadget = GadgetTest.CreateDefault;
+            gadget.CopyFrom (action);
+
+            modelAction.Value.GadgetTestModel.CopyFrom (gadget); // update colection
+
+            action.CollectionAction.GadgetTestCollection.Add (gadget);
+          }
+        }
+      }
+    }
     #endregion
 
     #region Static
     public static GadgetTest CreateDefault => (new GadgetTest ());
+    #endregion
+
+    #region Support
+    void CopyFrom (TModelAction modelAction)
+    {
+      Id = modelAction.ComponentInfoModel.Id;
+      Enabled = modelAction.ComponentInfoModel.Enabled;
+    } 
     #endregion
   };
   //---------------------------//

@@ -218,6 +218,7 @@ namespace Server.Models.Component
     {
       GadgetTestCollection = new Collection<GadgetTest> (list);
     }
+
     public bool IsComponentOperation (TComponentOperation.TInternalOperation componentOperation)
     {
       return (ComponentOperation.IsComponentOperation (componentOperation));

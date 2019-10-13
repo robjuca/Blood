@@ -5,19 +5,20 @@
 
 //----- Include
 using System;
+using System.Collections.ObjectModel;
 //---------------------------//
 
 namespace Server.Models.Component
 {
   public partial class GadgetMaterial
   {
-    public Guid         Id { get; set; }
+    public Guid                   Id { get; set; }
 
-    public string       Material { get; set; }
-    public string       Description { get; set; }
-    public string       ExternalLink { get; set; }
-    public byte []      Image    { get; set; }
-    public bool         Enabled { get; set; }
+    public string                 Material { get; set; }
+    public string                 Description { get; set; }
+    public string                 ExternalLink { get; set; }
+    public Collection<byte>       Image { get; private set; }
+    public bool                   Enabled { get; set; }
   }
   //---------------------------//
 

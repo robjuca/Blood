@@ -123,9 +123,9 @@ namespace Server.Models.Component
       }
     }
 
-    public void SelectModel ()
+    public void RefreshComponentModel ()
     {
-      TComponentModel.SelectModel (this);
+      ComponentModel.RefreshModel (this);
     }
 
     public static TEntityAction Request (IEntityAction action)

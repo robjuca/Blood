@@ -17,14 +17,6 @@ namespace Server.Models.Infrastructure
       get;
       private set;
     }
-
-    public static string [] Names 
-    {
-      get
-      {
-        return (Enum.GetNames (typeof (TCategory)));
-      }
-    }
     #endregion
 
     #region Constructor
@@ -40,11 +32,6 @@ namespace Server.Models.Infrastructure
       return (Category.Equals (category));
     }
 
-    public bool IsCategory (TCategoryType alias)
-    {
-      return (alias.IsNull () ? false : alias.Equals (alias.Category));
-    }
-
     public void Select (TCategory category)
     {
       Category = category;
@@ -55,6 +42,16 @@ namespace Server.Models.Infrastructure
       if (alias.NotNull ()) {
         Category = alias.Category;
       }
+    }
+
+    public static bool IsCategory (TCategoryType alias)
+    {
+      return (alias.IsNull () ? false : alias.Equals (alias.Category));
+    }
+
+    public static string [] GetNames ()
+    {
+      return (Enum.GetNames (typeof (TCategory)));
     }
 
     public static int ToValue (TCategory category)

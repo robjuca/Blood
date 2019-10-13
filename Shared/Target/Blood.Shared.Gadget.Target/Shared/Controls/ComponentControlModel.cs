@@ -41,7 +41,7 @@ namespace Shared.Gadget.Target
         if (ControlModel.Id.IsEmpty ()) {
           ChildControlModel.Id = (Guid) action.SupportAction.SelectionInfo.Tag;
           ChildControlModel.Material = action.SupportAction.SelectionInfo.Name;
-          ChildControlModel.Image = action.SupportAction.SelectionInfo.Image;
+          ChildControlModel.SetImage (action.SupportAction.SelectionInfo.GetImage ());
         }
       }
     }

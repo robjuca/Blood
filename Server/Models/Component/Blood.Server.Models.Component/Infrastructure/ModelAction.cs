@@ -160,32 +160,6 @@ namespace Server.Models.Component
         GadgetTestModel.CopyFrom (alias.GadgetTestModel);
       }
     }
-
-    public static void SelectModel (TEntityAction action)
-    {
-      if (action.NotNull ()) {
-        if (action.ModelAction.ComponentInfoModel.Id.NotEmpty ()) {
-          // update model action
-
-          switch (action.CategoryType.Category) {
-            case Infrastructure.TCategory.Material: {
-                action.ModelAction.GadgetMaterialModel.CopyFrom (action);
-              }
-              break;
-
-            case Infrastructure.TCategory.Target: {
-                action.ModelAction.GadgetTargetModel.CopyFrom (action);
-              }
-              break;
-
-            case Infrastructure.TCategory.Test: {
-                action.ModelAction.GadgetTestModel.CopyFrom (action);
-              }
-              break;
-          }
-        }
-      }
-    }
     #endregion
 
     #region Static

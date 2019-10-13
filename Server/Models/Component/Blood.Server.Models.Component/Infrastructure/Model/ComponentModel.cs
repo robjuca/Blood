@@ -218,97 +218,6 @@ namespace Server.Models.Component
       }
     }
 
-    // TODO: WRONG try again
-    public static void SelectModel (TEntityAction action)
-    {
-      if (action.NotNull ()) {
-        // update model 
-        TModelAction.SelectModel (action);
-
-        switch (action.CategoryType.Category) {
-          // Material
-          case Infrastructure.TCategory.Material: {
-              // update model collection
-              action.CollectionAction.GadgetMaterialCollection.Clear ();
-              
-              foreach (var modelAction in action.CollectionAction.ModelCollection) {
-                action.ModelAction.CopyFrom (modelAction.Value);
-
-                var gadget = GadgetMaterial.CreateDefault;
-                gadget.CopyFrom (action);
-
-                action.CollectionAction.GadgetMaterialCollection.Add (gadget);
-              }
-            }
-            break;
-         
-            // Target
-          case Infrastructure.TCategory.Target: {
-              action.CollectionAction.GadgetTargetCollection.Clear ();
-
-              var gadgetId = action.ModelAction.GadgetTargetModel.Id;
-
-              // update model collection
-              foreach (var modelAction in action.CollectionAction.ModelCollection) {
-                // check if gadget exist
-                if (gadgetId.IsEmpty ()) {
-                  var entityAction = TEntityAction.CreateDefault;
-                  entityAction.ModelAction.CopyFrom (modelAction.Value);
-
-                  // child node
-                  foreach (var item in action.CollectionAction.ExtensionNodeCollection) {
-                    entityAction.CollectionAction.ExtensionNodeCollection.Add (item);
-                  }
-
-                  var gadget = GadgetTarget.CreateDefault;
-                  gadget.CopyFrom (entityAction);
-
-                  action.CollectionAction.GadgetTargetCollection.Add (gadget);
-                }
-
-                // has node
-                else {
-                  if (action.ModelAction.ExtensionNodeModel.ParentId.Equals (gadgetId)) {
-                    // only GadgetMaterial as node
-                    var childGadgetId = action.ModelAction.ExtensionNodeModel.ChildId;
-
-                    if (action.CollectionAction.ModelCollection.ContainsKey (childGadgetId)) {
-                      var childModelAction = action.CollectionAction.ModelCollection [childGadgetId];
-                      var entityAction = TEntityAction.CreateDefault;
-                      entityAction.ModelAction.CopyFrom (childModelAction);
-
-                      var gadget = GadgetMaterial.CreateDefault;
-                      gadget.CopyFrom (entityAction);
-
-                      action.CollectionAction.GadgetMaterialCollection.Add (gadget);
-                    }
-                  }
-                }
-              }
-            }
-            break;
-          
-            // Test
-          case Infrastructure.TCategory.Test: {
-              action.CollectionAction.GadgetTestCollection.Clear ();
-
-              // update model collection
-              foreach (var modelAction in action.CollectionAction.ModelCollection) {
-                action.ModelAction.CopyFrom (modelAction.Value);
-
-                var gadget = GadgetTest.CreateDefault;
-                gadget.CopyFrom (action);
-
-                modelAction.Value.GadgetTestModel.CopyFrom (gadget); // update colection
-
-                action.CollectionAction.GadgetTestCollection.Add (gadget);
-              }
-            }
-            break;
-        }
-      }
-    }
-
     public TModelAction RequestModel ()
     {
       var modelAction = TModelAction.CreateDefault;
@@ -328,6 +237,15 @@ namespace Server.Models.Component
       modelAction.GadgetTestModel.CopyFrom (GadgetTestModel);
 
       return (modelAction);
+    }
+
+    public void RefreshModel (TEntityAction action)
+    {
+      if (action.NotNull ()) {
+        GadgetMaterialModel.RefreshModel (action);
+        GadgetTargetModel.RefreshModel (action);
+        GadgetTestModel.RefreshModel (action);
+      }
     }
     #endregion
 

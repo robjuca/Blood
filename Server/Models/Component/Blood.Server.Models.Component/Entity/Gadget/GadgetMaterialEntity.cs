@@ -5,12 +5,17 @@
 
 //----- Include
 using System;
+using System.Collections.ObjectModel;
 //---------------------------//
 
 namespace Server.Models.Component
 {
   public partial class GadgetMaterial
   {
+    #region Property
+     
+    #endregion
+
     #region Constructor
     public GadgetMaterial ()
     {
@@ -19,7 +24,7 @@ namespace Server.Models.Component
       Material = string.Empty;
       Description = string.Empty;
       ExternalLink = string.Empty;
-      Image = null;
+      Image = new Collection<byte>();
       Enabled = false;
     }
 
@@ -34,12 +39,7 @@ namespace Server.Models.Component
     public void CopyFrom (TEntityAction action)
     {
       if (action.NotNull ()) {
-        Id = action.ModelAction.ComponentInfoModel.Id;
-        Material = action.ModelAction.ExtensionTextModel.Text;
-        Description = action.ModelAction.ExtensionTextModel.Description;
-        ExternalLink = action.ModelAction.ExtensionTextModel.ExternalLink;
-        Image = action.ModelAction.ExtensionImageModel.Image;
-        Enabled = action.ModelAction.ComponentInfoModel.Enabled;
+        CopyFrom (action.ModelAction);
       }
     }
 
@@ -50,7 +50,7 @@ namespace Server.Models.Component
         Material = alias.Material;
         Description = alias.Description;
         ExternalLink = alias.ExternalLink;
-        Image = alias.Image;
+        SetImage (alias.Image);
         Enabled = alias.Enabled;
       }
     }
@@ -61,8 +61,22 @@ namespace Server.Models.Component
         Material = alias.Material;
         Description = alias.Description;
         ExternalLink = alias.ExternalLink;
-        Image = alias.Image;
+        SetImage (alias.Image);
         Enabled = alias.Enabled;
+      }
+    }
+
+    public void SetImage (Collection<byte> image)
+    {
+      if (image.NotNull ()) {
+        Image = new Collection<byte> (image);
+      }
+    }
+
+    public void SetImage (byte [] image)
+    {
+      if (image.NotNull ()) {
+        Image = new Collection<byte> (image);
       }
     }
 
@@ -73,10 +87,43 @@ namespace Server.Models.Component
 
       return (model);
     }
+
+    public void RefreshModel (TEntityAction action)
+    {
+      if (action.NotNull ()) {
+        if (action.CategoryType.IsCategory (Infrastructure.TCategory.Material)) {
+          // update model action
+          CopyFrom (action.ModelAction); // my self
+          action.ModelAction.GadgetMaterialModel.CopyFrom (this); 
+
+          // update model collection
+          action.CollectionAction.GadgetMaterialCollection.Clear ();
+
+          foreach (var modelAction in action.CollectionAction.ModelCollection) {
+            var gadget = GadgetMaterial.CreateDefault;
+            gadget.CopyFrom (modelAction.Value);
+
+            action.CollectionAction.GadgetMaterialCollection.Add (gadget);
+          }
+        }
+      }
+    }
     #endregion
 
     #region Static
     public static GadgetMaterial CreateDefault => (new GadgetMaterial ());
+    #endregion
+
+    #region Support
+    void CopyFrom (TModelAction modelAction)
+    {
+      Id = modelAction.ComponentInfoModel.Id;
+      Material = modelAction.ExtensionTextModel.Text;
+      Description = modelAction.ExtensionTextModel.Description;
+      ExternalLink = modelAction.ExtensionTextModel.ExternalLink;
+      SetImage (modelAction.ExtensionImageModel.Image);
+      Enabled = modelAction.ComponentInfoModel.Enabled;
+    } 
     #endregion
   };
   //---------------------------//
