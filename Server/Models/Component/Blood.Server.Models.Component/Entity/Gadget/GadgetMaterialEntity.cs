@@ -116,6 +116,17 @@ namespace Server.Models.Component
         }
       }
     }
+
+    public void Refresh (TEntityAction action)
+    {
+      if (action.NotNull ()) {
+        if (action.CategoryType.IsCategory (Infrastructure.TCategory.Material)) {
+          // update model action
+          CopyFrom (action.ModelAction); // my self
+          action.ModelAction.GadgetMaterialModel.CopyFrom (this);
+        }
+      }
+    }
     #endregion
 
     #region Static

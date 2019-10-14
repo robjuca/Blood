@@ -462,6 +462,10 @@ namespace Shared.ViewModel
         modelItem.Select (action.CategoryType.Category);
 
         switch (modelItem.Category) {
+          case Server.Models.Infrastructure.TCategory.Material: {
+            }
+            break;
+
           case Server.Models.Infrastructure.TCategory.Target: {
               foreach (var item in action.CollectionAction.GadgetMaterialCollection) {
                 if (item.Id.Equals(modelItem.GadgetTargetModel.MaterialId)) {

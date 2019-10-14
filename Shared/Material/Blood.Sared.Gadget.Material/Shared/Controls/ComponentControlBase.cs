@@ -83,21 +83,24 @@ namespace Shared.Gadget.Material
 
       // image
       if (Model.ControlModel.Image.NotNull ()) {
-        var imageSource = rr.Library.Helper.THelper.ByteArrayToBitmapImage (Model.ControlModel.Image).Clone ();
-        var width = imageSource.PixelWidth;
-        var height = imageSource.PixelHeight;
+        var imageSource = rr.Library.Helper.THelper.ByteArrayToBitmapImage (Model.ControlModel.Image);
 
-        var image = new Image ()
-        {
-          Stretch = Stretch.Fill,
-          Width = width,
-          Height = height,
-          Source=imageSource,
-        };
+        if (imageSource.NotNull ()) {
+          var width = imageSource.PixelWidth;
+          var height = imageSource.PixelHeight;
 
-        image.SetValue (Grid.ColumnProperty, 0);
+          var image = new Image ()
+          {
+            Stretch = Stretch.Fill,
+            Width = width,
+            Height = height,
+            Source = imageSource.Clone (),
+          };
 
-        grid.Children.Add (image);
+          image.SetValue (Grid.ColumnProperty, 0);
+
+          grid.Children.Add (image);
+        }
       }
 
       // material

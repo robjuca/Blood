@@ -158,15 +158,6 @@ namespace Gadget.Factory.Pattern.ViewModels
       PropertySelect ("all");
     }
 
-    void RequestModelDispatcher (Server.Models.Component.TEntityAction action)
-    {
-      // request from Sibling
-      var message = new TFactorySiblingMessageInternal (TInternalMessageAction.Request, TChild.Property, TypeInfo);
-      message.Support.Argument.Types.Select (action);
-
-      DelegateCommand.PublishInternalMessage.Execute (message);
-    }
-
     void ResponseModelDispatcher (Server.Models.Component.TEntityAction action)
     {
       TDispatcher.BeginInvoke (ApplyDispatcher, action);  

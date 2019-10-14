@@ -56,7 +56,10 @@ namespace Gadget.Collection.Pattern.Models
         var modelAction = action.CollectionAction.ModelCollection [gadget.Id];
         action.ModelAction.CopyFrom (modelAction);
 
-        ItemsSource.Add (TComponentModelItem.Create (action));
+        var item = TComponentModelItem.Create (action);
+        item.GadgetMaterialModel.Refresh (action);
+
+        ItemsSource.Add (item);
       }
 
       if (ItemsSource.Count > 0) {
