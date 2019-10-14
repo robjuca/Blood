@@ -66,6 +66,14 @@ namespace Server.Models.Component
       }
     }
 
+    public byte [] GetImage ()
+    {
+      var image = new byte [Image.Count];
+      Image.CopyTo (image, 0);
+
+      return (image);
+    }
+
     public void SetImage (Collection<byte> image)
     {
       if (image.NotNull ()) {

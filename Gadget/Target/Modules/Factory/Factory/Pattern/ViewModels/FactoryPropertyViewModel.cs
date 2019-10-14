@@ -122,7 +122,8 @@ namespace Gadget.Factory.Pattern.ViewModels
 
       Model.RequestModel (action);
 
-      TDispatcher.BeginInvoke (RequestModelDispatcher, action);
+      TDispatcher.BeginInvoke (ApplyDispatcher, action);
+      //TDispatcher.BeginInvoke (RequestModelDispatcher, action);
     }
 
     public void OnCancelCommadClicked ()
@@ -279,9 +280,7 @@ namespace Gadget.Factory.Pattern.ViewModels
     void PropertySelect (string propertyName)
     {
       var action = Server.Models.Component.TEntityAction.CreateDefault;
-      Model.ComponentModelProperty.RequestModel (action);
-
-      action.ModelAction.GadgetTargetModel.CopyFrom (action); // set model
+      Model.RequestModel (action);
 
       // to Sibling
       var message = new TFactorySiblingMessageInternal (TInternalMessageAction.PropertySelect, TChild.Property, TypeInfo);

@@ -36,7 +36,10 @@ namespace Gadget.Factory.Pattern.Models
     {
       if (action.NotNull ()) {
         foreach (var item in action.CollectionAction.GadgetMaterialCollection) {
-          action.SupportAction.SelectionCollection.Add (Server.Models.Infrastructure.TSelectionInfo.Create (item.Material, item.Id, item.Image));
+          var selection = Server.Models.Infrastructure.TSelectionInfo.Create (item.Material, item.Id);
+          selection.SetImage (item.GetImage ());
+
+          action.SupportAction.SelectionCollection.Add (selection);
         }
 
         ComponentModelProperty.ExtensionModel.SelectModel (Server.Models.Infrastructure.TCategory.Target, action); // update Selection Property (Material list)
@@ -56,6 +59,8 @@ namespace Gadget.Factory.Pattern.Models
     internal void RequestModel (Server.Models.Component.TEntityAction action)
     {
       if (action.NotNull ()) {
+        action.CollectionAction.ExtensionNodeCollection.Clear ();
+
         ComponentModelProperty.RequestModel (action);
 
         if (action.SupportAction.SelectionInfo.Tag is Guid materialId) {
@@ -63,6 +68,9 @@ namespace Gadget.Factory.Pattern.Models
           action.ModelAction.ExtensionNodeModel.ChildCategory = Server.Models.Infrastructure.TCategoryType.ToValue (Server.Models.Infrastructure.TCategory.Material);
           action.ModelAction.ExtensionNodeModel.ParentId = ComponentModelProperty.Id;
           action.ModelAction.ExtensionNodeModel.ParentCategory = Server.Models.Infrastructure.TCategoryType.ToValue (Server.Models.Infrastructure.TCategory.Target);
+
+          // update collection
+          action.CollectionAction.ExtensionNodeCollection.Add (action.ModelAction.ExtensionNodeModel);
         }
 
         // update model

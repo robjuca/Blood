@@ -5,7 +5,6 @@
 
 //----- Include
 using System;
-using System.Collections.ObjectModel;
 //---------------------------//
 
 namespace Server.Models.Infrastructure
@@ -41,22 +40,6 @@ namespace Server.Models.Infrastructure
       Name = name;
       Tag = tag;
     }
-
-    TSelectionInfo (string name, object tag, byte [] image)
-    {
-      Name = name;
-      Tag = tag;
-
-      SetImage (image);
-    }
-
-    TSelectionInfo (string name, object tag, Collection<byte> image)
-    {
-      Name = name;
-      Tag = tag;
-
-      SetImage (image);
-    }
     #endregion
 
     #region Members
@@ -65,26 +48,15 @@ namespace Server.Models.Infrastructure
       return (m_Image);
     }
 
+    public void SetImage (byte [] image)
+    {
+      m_Image = image;
+    }
+
     public void Select (string name, object tag)
     {
       Name = name;
       Tag = tag;
-    }
-
-    public void Select (string name, object tag, byte [] image)
-    {
-      Name = name;
-      Tag = tag;
-
-      SetImage (image);
-    }
-
-    public void Select (string name, object tag, Collection<byte> image)
-    {
-      Name = name;
-      Tag = tag;
-
-      SetImage (image);
     }
 
     public void CopyFrom (TSelectionInfo alias)
@@ -104,22 +76,7 @@ namespace Server.Models.Infrastructure
 
     #region Static
     public static TSelectionInfo Create (string name, object tag) => new TSelectionInfo (name, tag);
-    public static TSelectionInfo Create (string name, object tag, byte [] image) => new TSelectionInfo (name, tag, image);
-    public static TSelectionInfo Create (string name, object tag, Collection<byte> image) => new TSelectionInfo (name, tag, image);
     public static TSelectionInfo CreateDefault => new TSelectionInfo ();
-    #endregion
-
-    #region Support
-    void SetImage (byte [] image)
-    {
-      m_Image = image;
-    }
-
-    void SetImage (Collection<byte> image)
-    {
-      m_Image = new byte [image.Count];
-      image.CopyTo (m_Image, 0);
-    }
     #endregion
   };
   //---------------------------//

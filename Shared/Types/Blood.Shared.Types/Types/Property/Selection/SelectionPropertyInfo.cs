@@ -103,7 +103,8 @@ namespace Shared.Types
     {
       if (action.NotNull ()) {
         if (HasSelection) {
-          action.SupportAction.SelectionInfo.Select (Selection.ValueString, Selection.Tag, Selection.Image);
+          action.SupportAction.SelectionInfo.Select (Selection.ValueString, Selection.Tag);
+          action.SupportAction.SelectionInfo.SetImage (Selection.Image);
         }
       }
     }

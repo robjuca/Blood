@@ -74,7 +74,6 @@ namespace Server.Models.Component
 
     public void RefreshModel (TEntityAction action)
     {
-      // TODO: review
       if (action.NotNull ()) {
         if (action.CategoryType.IsCategory (Infrastructure.TCategory.Target)) {
           // update model action
@@ -82,7 +81,8 @@ namespace Server.Models.Component
           CopyNode (action);
           action.ModelAction.GadgetTargetModel.CopyFrom (this);
 
-          action.CollectionAction.GadgetTargetCollection.Clear ();
+          action.CollectionAction.GadgetTargetCollection.Clear (); // gadget
+          action.CollectionAction.GadgetMaterialCollection.Clear ();  // child node
 
           switch (action.Operation.Operation) {
             // Collection
@@ -161,19 +161,21 @@ namespace Server.Models.Component
     {
       var gadgetId = action.ModelAction.GadgetTargetModel.Id;
 
-      if (action.ModelAction.ExtensionNodeModel.ParentId.Equals (gadgetId)) {
-        // only GadgetMaterial as node
-        var childGadgetId = action.ModelAction.ExtensionNodeModel.ChildId;
+      if (gadgetId.NotEmpty ()) {
+        if (action.ModelAction.ExtensionNodeModel.ParentId.Equals (gadgetId)) {
+          // only GadgetMaterial as node
+          var childGadgetId = action.ModelAction.ExtensionNodeModel.ChildId;
 
-        if (action.CollectionAction.ModelCollection.ContainsKey (childGadgetId)) {
-          var childModelAction = action.CollectionAction.ModelCollection [childGadgetId];
-          var entityAction = TEntityAction.CreateDefault;
-          entityAction.ModelAction.CopyFrom (childModelAction);
+          if (action.CollectionAction.ModelCollection.ContainsKey (childGadgetId)) {
+            var childModelAction = action.CollectionAction.ModelCollection [childGadgetId];
+            var entityAction = TEntityAction.CreateDefault;
+            entityAction.ModelAction.CopyFrom (childModelAction);
 
-          var gadget = GadgetMaterial.CreateDefault;
-          gadget.CopyFrom (entityAction);
+            var gadget = GadgetMaterial.CreateDefault;
+            gadget.CopyFrom (entityAction);
 
-          action.CollectionAction.GadgetMaterialCollection.Add (gadget);
+            action.CollectionAction.GadgetMaterialCollection.Add (gadget); // child node
+          }
         }
       }
     }
