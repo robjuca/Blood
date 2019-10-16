@@ -63,9 +63,11 @@ namespace Shared.Types
 
       if (action.NotNull ()) {
         foreach (var item in action.SupportAction.SelectionCollection) {
-          var selectionItem = TSelectionItem.Create (item.Name, item.Tag, item.GetImage ());
+          if (item.Enabled) {
+            var selectionItem = TSelectionItem.Create (item.Name, item.Tag, item.GetImage (), item.Enabled);
 
-          ItemsSource.Add (selectionItem);
+            ItemsSource.Add (selectionItem);
+          }
         }
       }
 
@@ -92,10 +94,13 @@ namespace Shared.Types
         var name = action.SupportAction.SelectionInfo.Name;
         var tag = action.SupportAction.SelectionInfo.Tag;
         var image = action.SupportAction.SelectionInfo.GetImage ();
+        var enabled = action.SupportAction.SelectionInfo.Enabled;
 
-        var selection = TSelectionItem.Create (name, tag, image);
+        if (enabled) {
+          var selection = TSelectionItem.Create (name, tag, image, enabled);
 
-        Select (selection);
+          Select (selection);
+        }
       }
     }
 
@@ -103,8 +108,8 @@ namespace Shared.Types
     {
       if (action.NotNull ()) {
         if (HasSelection) {
-          action.SupportAction.SelectionInfo.Select (Selection.ValueString, Selection.Tag);
-          action.SupportAction.SelectionInfo.SetImage (Selection.Image);
+          action.SupportAction.SelectionInfo.Select (Selection.ValueString, Selection.Tag, Selection.Enabled);
+          action.SupportAction.SelectionInfo.SetImage (Selection.GetImage ());
         }
       }
     }

@@ -23,6 +23,12 @@ namespace Server.Models.Infrastructure
       get;
       private set;
     }
+
+    public bool Enabled
+    {
+      get;
+      private set;
+    }
     #endregion
 
     #region Constructor
@@ -30,15 +36,17 @@ namespace Server.Models.Infrastructure
     {
       Name = string.Empty;
       Tag = null;
+      Enabled = false;
 
       m_Image = null;
     }
 
-    TSelectionInfo (string name, object tag)
+    TSelectionInfo (string name, object tag, bool enabled)
       : this ()
     {
       Name = name;
       Tag = tag;
+      Enabled = enabled;
     }
     #endregion
 
@@ -53,10 +61,11 @@ namespace Server.Models.Infrastructure
       m_Image = image;
     }
 
-    public void Select (string name, object tag)
+    public void Select (string name, object tag, bool enabled)
     {
       Name = name;
       Tag = tag;
+      Enabled = enabled;
     }
 
     public void CopyFrom (TSelectionInfo alias)
@@ -64,6 +73,7 @@ namespace Server.Models.Infrastructure
       if (alias.NotNull ()) {
         Name = alias.Name;
         Tag = alias.Tag;
+        Enabled = alias.Enabled;
 
         SetImage (alias.GetImage ());
       }
@@ -75,7 +85,7 @@ namespace Server.Models.Infrastructure
     #endregion
 
     #region Static
-    public static TSelectionInfo Create (string name, object tag) => new TSelectionInfo (name, tag);
+    public static TSelectionInfo Create (string name, object tag, bool enabled) => new TSelectionInfo (name, tag, enabled);
     public static TSelectionInfo CreateDefault => new TSelectionInfo ();
     #endregion
   };

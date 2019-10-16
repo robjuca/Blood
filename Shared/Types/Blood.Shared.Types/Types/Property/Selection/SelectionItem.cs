@@ -22,25 +22,27 @@ namespace Shared.Types
       get;
     }
 
-    public byte [] Image
+    public bool Enabled
     {
       get;
     }
     #endregion
 
     #region Constructor
-    TSelectionItem (string valueString, object tag, byte [] image)
+    TSelectionItem (string valueString, object tag, byte [] image, bool enabled)
     {
       ValueString = valueString;
       Tag = tag;
-      Image = image;
+      SetImage (image);
+      Enabled = enabled;
     }
 
     TSelectionItem ()
     {
       ValueString = "empty";
       Tag = null;
-      Image = null;
+      SetImage (null);
+      Enabled = false;
     }
     #endregion
 
@@ -69,10 +71,24 @@ namespace Shared.Types
     {
       return (ValueString.Equals (valueString));
     }
+
+    public byte [] GetImage ()
+    {
+      return (m_Image);
+    }
+
+    public void SetImage (byte [] image)
+    {
+      m_Image = image;
+    }
+    #endregion
+
+    #region Fields
+    byte []                                 m_Image; 
     #endregion
 
     #region Static
-    public static TSelectionItem Create (string valueString, object tag, byte [] image) => new TSelectionItem (valueString, tag, image);
+    public static TSelectionItem Create (string valueString, object tag, byte [] image, bool enabled) => new TSelectionItem (valueString, tag, image, enabled);
 
     public static TSelectionItem CreateDefault => new TSelectionItem (); 
     #endregion

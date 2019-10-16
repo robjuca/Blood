@@ -36,13 +36,10 @@ namespace Gadget.Factory.Pattern.Models
     {
       if (action.NotNull ()) {
         foreach (var item in action.CollectionAction.GadgetMaterialCollection) {
-          // only enable item
-          if (item.Enabled) {
-            var selection = Server.Models.Infrastructure.TSelectionInfo.Create (item.Material, item.Id);
-            selection.SetImage (item.GetImage ());
+          var selection = Server.Models.Infrastructure.TSelectionInfo.Create (item.Material, item.Id, item.Enabled);
+          selection.SetImage (item.GetImage ());
 
-            action.SupportAction.SelectionCollection.Add (selection);
-          }
+          action.SupportAction.SelectionCollection.Add (selection);
         }
 
         ComponentModelProperty.ExtensionModel.SelectModel (Server.Models.Infrastructure.TCategory.Target, action); // update Selection Property (Material list)
@@ -54,7 +51,7 @@ namespace Gadget.Factory.Pattern.Models
       // update Material selection
       var tag = action.ModelAction.GadgetTargetModel.MaterialId;
 
-      action.SupportAction.SelectionInfo.Select (string.Empty, tag);
+      action.SupportAction.SelectionInfo.Select (string.Empty, tag, enabled: true);
 
       ComponentModelProperty.SelectModel (action);
     }
