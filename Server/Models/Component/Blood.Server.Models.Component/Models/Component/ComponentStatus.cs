@@ -18,6 +18,9 @@ namespace Server.Models.Component
     public bool         Locked { get; set; }
     public bool         Busy { get; set; }
     public bool         Active { get; set; }
+    public bool         UseNodeModel { get; set; }
+    public bool         UseNodeCollection { get; set; }
+    public bool         NodeReverse { get; set; }
   };
   //---------------------------//
 

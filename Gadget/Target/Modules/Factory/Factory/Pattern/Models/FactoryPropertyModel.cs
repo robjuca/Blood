@@ -64,10 +64,14 @@ namespace Gadget.Factory.Pattern.Models
         ComponentModelProperty.RequestModel (action);
 
         if (action.SupportAction.SelectionInfo.Tag is Guid materialId) {
-          action.ModelAction.ExtensionNodeModel.ChildId = materialId;
-          action.ModelAction.ExtensionNodeModel.ChildCategory = Server.Models.Infrastructure.TCategoryType.ToValue (Server.Models.Infrastructure.TCategory.Material);
-          action.ModelAction.ExtensionNodeModel.ParentId = ComponentModelProperty.Id;
-          action.ModelAction.ExtensionNodeModel.ParentCategory = Server.Models.Infrastructure.TCategoryType.ToValue (Server.Models.Infrastructure.TCategory.Target);
+          action.ModelAction.ComponentStatusModel.UseNodeModel = true;
+          action.ModelAction.ComponentStatusModel.NodeReverse = true;
+
+          //  Here gadget Material must be Parent
+          action.ModelAction.ExtensionNodeModel.ChildId = ComponentModelProperty.Id;
+          action.ModelAction.ExtensionNodeModel.ChildCategory = Server.Models.Infrastructure.TCategoryType.ToValue (Server.Models.Infrastructure.TCategory.Target);
+          action.ModelAction.ExtensionNodeModel.ParentId = materialId;
+          action.ModelAction.ExtensionNodeModel.ParentCategory = Server.Models.Infrastructure.TCategoryType.ToValue (Server.Models.Infrastructure.TCategory.Material);
 
           // update collection
           action.CollectionAction.ExtensionNodeCollection.Add (action.ModelAction.ExtensionNodeModel);

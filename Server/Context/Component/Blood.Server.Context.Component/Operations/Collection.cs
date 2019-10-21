@@ -150,6 +150,18 @@ namespace Server.Context.Component
             foreach (var item in action.CollectionAction.ComponentInfoCollection) {
               var id = item.Id;
 
+              // Status
+              var compStatus = Models.Component.ComponentStatus.CreateDefault;
+
+              var statusList = action.CollectionAction.ComponentStatusCollection
+                .Where (p => p.Id.Equals (id))
+                .ToList ()
+              ;
+
+              if (statusList.Count.Equals (1)) {
+                compStatus.CopyFrom (statusList [0]);
+              }
+
               foreach (var extensionName in extension.ExtensionList) {
                 switch (extensionName) {
                   case TComponentExtensionName.Document: {
@@ -198,26 +210,31 @@ namespace Server.Context.Component
                     break;
 
                   case TComponentExtensionName.Node: {
-                      // child first
-                      var childList = context.ExtensionNode
-                        .Where (p => p.ChildId.Equals (id))
+                      var nodeModeldList = context.ExtensionNode
+                        .Where (p => p.ParentId.Equals (id))
                         .ToList ()
                       ;
 
-                      if (childList.Count.Equals (1)) {
-                        action.ModelAction.ExtensionNodeModel.CopyFrom (childList [0]);
-                        action.CollectionAction.ExtensionNodeCollection.Add (childList [0]);
-                      }
-
-                      else {
-                        // parent next
-                        var parentList = context.ExtensionNode
-                          .Where (p => p.ParentId.Equals (id))
+                      // Node Reverse
+                      if (compStatus.NodeReverse) {
+                        nodeModeldList = context.ExtensionNode
+                          .Where (p => p.ChildId.Equals (id))
                           .ToList ()
                         ;
+                      }
 
-                        foreach (var model in parentList) {
-                          action.CollectionAction.ExtensionNodeCollection.Add (model);
+                      // Node Model
+                      if (compStatus.UseNodeModel) {
+                        if (nodeModeldList.Count.Equals (1)) {
+                          action.ModelAction.ExtensionNodeModel.CopyFrom (nodeModeldList [0]);
+                          action.CollectionAction.ExtensionNodeCollection.Add (nodeModeldList [0]);
+                        }
+                      }
+
+                      // Node Collection
+                      if (compStatus.UseNodeCollection) {
+                        foreach (var nodeModel in nodeModeldList) {
+                          action.CollectionAction.ExtensionNodeCollection.Add (nodeModel);
                         }
                       }
                     }
@@ -254,6 +271,8 @@ namespace Server.Context.Component
             models.ComponentInfoModel.CopyFrom (item);
 
             // Status
+            var compStatus = Server.Models.Component.ComponentStatus.CreateDefault;
+
             var statusList = action.CollectionAction.ComponentStatusCollection
               .Where (p => p.Id.Equals (id))
               .ToList ()
@@ -262,6 +281,7 @@ namespace Server.Context.Component
             // found
             if (statusList.Count.Equals (1)) {
               models.ComponentStatusModel.CopyFrom (statusList [0]);
+              compStatus.CopyFrom (statusList [0]);
             }
 
             // extension
@@ -316,13 +336,22 @@ namespace Server.Context.Component
                   break;
 
                 case TComponentExtensionName.Node: {
-                    var list = action.CollectionAction.ExtensionNodeCollection
-                      .Where (p => p.ChildId.Equals (id))
+                    var nodeModellist = action.CollectionAction.ExtensionNodeCollection
+                      .Where (p => p.ParentId.Equals (id))
                       .ToList ()
                     ;
 
-                    if (list.Count.Equals (1)) {
-                      models.ExtensionNodeModel.CopyFrom (list [0]);
+                    if (compStatus.NodeReverse) {
+                      nodeModellist = action.CollectionAction.ExtensionNodeCollection
+                        .Where (p => p.ChildId.Equals (id))
+                        .ToList ()
+                      ;
+                    }
+
+                    if (compStatus.UseNodeModel) {
+                      if (nodeModellist.Count.Equals (1)) {
+                        models.ExtensionNodeModel.CopyFrom (nodeModellist [0]);
+                      }
                     }
                   }
                   break;

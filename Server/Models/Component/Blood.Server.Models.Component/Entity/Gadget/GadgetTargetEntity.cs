@@ -108,7 +108,7 @@ namespace Server.Models.Component
     void CopyFrom (TModelAction modelAction)
     {
       Id = modelAction.ComponentInfoModel.Id;
-      MaterialId = modelAction.ExtensionNodeModel.ChildId;
+      MaterialId = modelAction.ExtensionNodeModel.ParentId;
 
       Target = modelAction.ExtensionTextModel.Text;
       Description = modelAction.ExtensionTextModel.Description;
@@ -120,13 +120,14 @@ namespace Server.Models.Component
     {
       // Has only one child node (GadgetMaterial)
       foreach (var node in action.CollectionAction.ExtensionNodeCollection) {
-        if (node.ParentId.Equals (Id)) {
+        // gadget Target must be child here
+        if (node.ChildId.Equals (Id)) {
           action.ModelAction.ExtensionNodeModel.ChildId = node.ChildId;
           action.ModelAction.ExtensionNodeModel.ChildCategory = node.ChildCategory;
           action.ModelAction.ExtensionNodeModel.ParentId = node.ParentId;
           action.ModelAction.ExtensionNodeModel.ParentCategory = node.ParentCategory;
 
-          MaterialId = node.ChildId;
+          MaterialId = MaterialId.IsEmpty () ? node.ParentId : MaterialId;  // must be child
 
           break;
         }

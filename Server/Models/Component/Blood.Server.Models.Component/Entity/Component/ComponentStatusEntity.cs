@@ -19,6 +19,9 @@ namespace Server.Models.Component
       Locked = false;
       Busy = false;
       Active = false;
+      UseNodeModel = false;
+      UseNodeCollection = false;
+      NodeReverse = false;
     }
 
     public ComponentStatus (ComponentStatus alias)
@@ -37,6 +40,9 @@ namespace Server.Models.Component
         Locked = alias.Locked;
         Busy = alias.Busy;
         Active = alias.Active;
+        UseNodeModel = alias.UseNodeModel;
+        UseNodeCollection = alias.UseNodeCollection;
+        NodeReverse = alias.NodeReverse;
       }
     }
 
@@ -46,6 +52,9 @@ namespace Server.Models.Component
         Locked = alias.Locked;
         Busy = alias.Busy;
         Active = alias.Active;
+        UseNodeModel = alias.UseNodeModel;
+        UseNodeCollection = alias.UseNodeCollection;
+        NodeReverse = alias.NodeReverse;
       }
     }
     #endregion

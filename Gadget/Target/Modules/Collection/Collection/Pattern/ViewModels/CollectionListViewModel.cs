@@ -145,24 +145,24 @@ namespace Gadget.Collection.Pattern.ViewModels
       DelegateCommand.PublishInternalMessage.Execute (message);
     }
 
-    void RequestModelDispatcher (TComponentModelItem item)
-    {
-      if (item.Id.NotEmpty ()) {
-        // Select - ById
-        var action = Server.Models.Component.TEntityAction.Create (
-          Server.Models.Infrastructure.TCategory.Target,
-          Server.Models.Infrastructure.TOperation.Select,
-          Server.Models.Infrastructure.TExtension.ById);
+    //void RequestModelDispatcher (TComponentModelItem item)
+    //{
+    //  if (item.Id.NotEmpty ()) {
+    //    // Select - ById
+    //    var action = Server.Models.Component.TEntityAction.Create (
+    //      Server.Models.Infrastructure.TCategory.Target,
+    //      Server.Models.Infrastructure.TOperation.Select,
+    //      Server.Models.Infrastructure.TExtension.ById);
 
-        action.Id = item.Id;
+    //    action.Id = item.Id;
 
-        // to parent
-        var message = new TCollectionMessageInternal (TInternalMessageAction.Request, TChild.List, TypeInfo);
-        message.Support.Argument.Types.Select (action);
+    //    // to parent
+    //    var message = new TCollectionMessageInternal (TInternalMessageAction.Request, TChild.List, TypeInfo);
+    //    message.Support.Argument.Types.Select (action);
 
-        DelegateCommand.PublishInternalMessage.Execute (message);
-      }
-    }
+    //    DelegateCommand.PublishInternalMessage.Execute (message);
+    //  }
+    //}
 
     void ResponseModelDispatcher (Server.Models.Component.TEntityAction action)
     {
@@ -175,6 +175,10 @@ namespace Gadget.Collection.Pattern.ViewModels
 
     void RefreshModelDispatcher (Server.Models.Component.TEntityAction action)
     {
+      // refresh model
+      Model.RefreshModel (action);
+      TDispatcher.Invoke (RefreshAllDispatcher);
+
       // to parent (RefreshModel)
       var message = new TCollectionMessageInternal (TInternalMessageAction.RefreshModel, TChild.List, TypeInfo);
       message.Support.Argument.Types.Select (action);
@@ -191,7 +195,11 @@ namespace Gadget.Collection.Pattern.ViewModels
       }
 
       else {
-        TDispatcher.BeginInvoke (RequestModelDispatcher, item);
+        // to Sibling (Select)
+        var message = new TCollectionSiblingMessageInternal (TInternalMessageAction.Select, TChild.List, TypeInfo);
+        message.Support.Argument.Types.Item.CopyFrom (item);
+
+        DelegateCommand.PublishInternalMessage.Execute (message);
       }
     }
     #endregion

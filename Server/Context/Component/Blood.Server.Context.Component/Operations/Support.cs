@@ -87,13 +87,23 @@ namespace Server.Context.Component
         .ToList ()
       ;
 
+      var nodeReverse = action.ModelAction.ComponentStatusModel.NodeReverse;
+
+      if (nodeReverse) {
+        nodesCollection = context.ExtensionNode
+          .Where (p => p.ChildId.Equals (action.Id))
+          .ToList ()
+        ;
+      }
+
       try {
         // node (child)
         foreach (var node in nodesCollection) {
           action.CollectionAction.ExtensionNodeCollection.Add (node);
 
-          var id = node.ChildId;
-          var categoryValue = node.ChildCategory;
+          var id = nodeReverse ? node.ParentId : node.ChildId;
+          var categoryValue = nodeReverse ? node.ParentCategory : node.ChildCategory;
+
           var modelAction = Server.Models.Component.TModelAction.CreateDefault;
 
           if (RequestComponent (id, context, action, modelAction)) {

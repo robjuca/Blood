@@ -46,6 +46,7 @@ namespace Server.Context.Component
        - action.Operation.CategoryType.Category
        - action.CollectionAction.CategoryRelationCollection
        - action.ModelAction 
+       - action.CollectionAction.ExtensionNodeCollection
        */
 
       try {
@@ -179,18 +180,40 @@ namespace Server.Context.Component
                   break;
 
                 case TComponentExtensionName.Node: {
-                    // use Node from ModelAction
-                    if (action.ModelAction.ExtensionNodeModel.ChildId.NotEmpty ()) {
-                      action.ModelAction.ExtensionNodeModel.ParentId = id; // for sure
+                    // use Node from ModelAction 
+                    if (compStatus.UseNodeModel) {
+                      var childId = action.ModelAction.ExtensionNodeModel.ChildId;
+                      var parentId = action.ModelAction.ExtensionNodeModel.ParentId;
+
+                      // Node Reverse
+                      if (compStatus.NodeReverse) {
+                        action.ModelAction.ExtensionNodeModel.ChildId = childId.IsEmpty () ? id : childId; // update
+                      }
+
+                      else {
+                        action.ModelAction.ExtensionNodeModel.ParentId = parentId.IsEmpty () ? id : parentId; // update
+                      }
 
                       context.ExtensionNode.Add (action.ModelAction.ExtensionNodeModel);
                     }
 
                     // Use Node Collection
-                    foreach (var nodeModel in action.CollectionAction.ExtensionNodeCollection) {
-                      nodeModel.ParentId = id; // for sure
+                    if (compStatus.UseNodeCollection) {
+                      foreach (var nodeModel in action.CollectionAction.ExtensionNodeCollection) {
+                        var childId = nodeModel.ChildId;
+                        var parentId = nodeModel.ParentId;
 
-                      context.ExtensionNode.Add (nodeModel);
+                        // Node Reverse
+                        if (compStatus.NodeReverse) {
+                          nodeModel.ChildId = childId.IsEmpty () ? id : childId; // update
+                        }
+
+                        else {
+                          nodeModel.ParentId = parentId.IsEmpty () ? id : parentId; // for sure
+                        }
+
+                        context.ExtensionNode.Add (nodeModel);
+                      }
                     }
                   }
                   break;

@@ -468,7 +468,7 @@ namespace Shared.ViewModel
 
           case Server.Models.Infrastructure.TCategory.Target: {
               foreach (var item in action.CollectionAction.GadgetMaterialCollection) {
-                if (item.Id.Equals(modelItem.GadgetTargetModel.MaterialId)) {
+                if (item.Id.Equals (modelItem.GadgetTargetModel.MaterialId)) {
                   modelItem.GadgetMaterialModel.CopyFrom (item);
                   break;
                 }

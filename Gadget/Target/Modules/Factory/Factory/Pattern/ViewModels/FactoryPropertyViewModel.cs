@@ -123,7 +123,6 @@ namespace Gadget.Factory.Pattern.ViewModels
       Model.RequestModel (action);
 
       TDispatcher.BeginInvoke (ApplyDispatcher, action);
-      //TDispatcher.BeginInvoke (RequestModelDispatcher, action);
     }
 
     public void OnCancelCommadClicked ()

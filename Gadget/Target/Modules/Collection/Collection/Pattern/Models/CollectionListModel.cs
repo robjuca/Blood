@@ -54,9 +54,25 @@ namespace Gadget.Collection.Pattern.Models
 
       foreach (var gadget in action.CollectionAction.GadgetTargetCollection) {
         var modelAction = action.CollectionAction.ModelCollection [gadget.Id];
+        modelAction.GadgetTargetModel.CopyFrom (gadget);
+
         action.ModelAction.CopyFrom (modelAction);
 
         ItemsSource.Add (TComponentModelItem.Create (action));
+      }
+    }
+
+    internal void RefreshModel (Server.Models.Component.TEntityAction action)
+    {
+      // for gadget Material
+      foreach (var gadget in action.CollectionAction.GadgetMaterialCollection) {
+        foreach (var item in ItemsSource) {
+          // Node reverse here
+          if (item.NodeModel.ParentId.Equals (gadget.Id)) {
+            item.GadgetMaterialModel.CopyFrom (gadget);
+            break; // only one node
+          }
+        }
       }
 
       if (ItemsSource.Count > 0) {
