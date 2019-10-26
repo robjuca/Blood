@@ -70,7 +70,6 @@ namespace Gadget.Collection.Pattern.Models
           // Node reverse here
           if (item.NodeModel.ParentId.Equals (gadget.Id)) {
             item.GadgetMaterialModel.CopyFrom (gadget);
-            break; // only one node
           }
         }
       }

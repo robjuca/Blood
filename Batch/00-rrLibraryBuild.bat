@@ -20,6 +20,9 @@
 	echo ---- Controls...
 	copy "D:\Documents\Visual Studio\Projects\Library\Bin\rr.Library.Controls.dll"  "D:\Documents\GitHub\Source\Repository\WPF\Blood\Bin" /V
 	
+	echo ---- Converter...
+	copy "D:\Documents\Visual Studio\Projects\Library\Bin\rr.Library.Converter.dll"  "D:\Documents\GitHub\Source\Repository\WPF\Blood\Bin" /V
+	
 	echo ---- Helper...
 	copy "D:\Documents\Visual Studio\Projects\Library\Bin\rr.Library.Helper.dll"  "D:\Documents\GitHub\Source\Repository\WPF\Blood\Bin" /V
 		

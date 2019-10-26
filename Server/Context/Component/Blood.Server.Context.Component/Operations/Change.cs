@@ -140,6 +140,8 @@ namespace Server.Context.Component
               }
 
               // Status 
+              var compStatus = Server.Models.Component.ComponentStatus.CreateDefault;
+
               var statusList = context.ComponentStatus
                 .Where (p => p.Id.Equals (id))
                 .ToList ()
@@ -150,6 +152,8 @@ namespace Server.Context.Component
                 var model = statusList [0];
                 model.Change (action.ModelAction.ComponentStatusModel);
                 context.ComponentStatus.Update (model);// change Status model
+
+                compStatus.CopyFrom (model);
               }
 
               // status collection
@@ -289,57 +293,123 @@ namespace Server.Context.Component
                       break;
 
                     case TComponentExtensionName.Node: {
-                        // remove old first (use ParentId)
-                        var nodeList = context.ExtensionNode
-                          .Where (p => p.ParentId.Equals (id))
-                          .ToList ()
-                        ;
-
-                        foreach (var node in nodeList) {
-                          // status
-                          var list = context.ComponentStatus
-                            .Where (p => p.Id.Equals (node.ChildId))
+                        // Node reverse
+                        if (compStatus.NodeReverse) {
+                          // remove old first (use ChildId)
+                          var nodeList = context.ExtensionNode
+                            .Where (p => p.ChildId.Equals (id))
                             .ToList ()
                           ;
 
                           // found
-                          if (list.Count.Equals (1)) {
-                            var model = list [0];
-                            model.Busy = false;
-                            context.ComponentStatus.Update (model);
+                          if (nodeList.Count.Equals (1)) {
+                            var node = nodeList [0];
+
+                            // status
+                            var list = context.ComponentStatus
+                              .Where (p => p.Id.Equals (node.ParentId))
+                              .ToList ()
+                            ;
+
+                            // found (just one)
+                            if (list.Count.Equals (1)) {
+                              var model = list [0];
+                              model.Busy = false;
+                              context.ComponentStatus.Update (model);
+                            }
+
+                            // remove
+                            context.ExtensionNode.Remove (node);
                           }
 
-                          // remove
-                          context.ExtensionNode.Remove (node);
-                        }
-
-                        // next insert new
-                        foreach (var node in action.CollectionAction.ExtensionNodeCollection) {
-                          // validate same parent
-                          if (node.ParentId.Equals (id)) {
-                            context.ExtensionNode.Add (node);
+                          // next insert new
+                          foreach (var node in action.CollectionAction.ExtensionNodeCollection) {
+                            // validate same 
+                            if (node.ChildId.Equals (id)) {
+                              context.ExtensionNode.Add (node);
+                              break; // just one
+                            }
                           }
-                        }
 
-                        context.SaveChanges (); // update
+                          context.SaveChanges (); // update
 
-                        // update status
-                        nodeList = context.ExtensionNode
-                          .Where (p => p.ParentId.Equals (id))
-                          .ToList ()
-                        ;
-
-                        foreach (var node in nodeList) {
-                          var list = context.ComponentStatus
-                            .Where (p => p.Id.Equals (node.ChildId))
+                          // update status
+                          nodeList = context.ExtensionNode
+                            .Where (p => p.ChildId.Equals (id))
                             .ToList ()
                           ;
 
-                          // found
-                          if (list.Count.Equals (1)) {
-                            var model = list [0];
-                            model.Busy = true;
-                            context.ComponentStatus.Update (model);
+                          // found (just one)
+                          if (nodeList.Count.Equals (1)) {
+                            var node = nodeList [0];
+
+                            var list = context.ComponentStatus
+                              .Where (p => p.Id.Equals (node.ParentId))
+                              .ToList ()
+                            ;
+
+                            // found (just one)
+                            if (list.Count.Equals (1)) {
+                              var model = list [0];
+                              model.Busy = true;
+                              context.ComponentStatus.Update (model);
+                            }
+                          }
+                        }
+
+                        else {
+                          // remove old first (use ParentId)
+                          var nodeList = context.ExtensionNode
+                            .Where (p => p.ParentId.Equals (id))
+                            .ToList ()
+                          ;
+
+                          foreach (var node in nodeList) {
+                            // status
+                            var list = context.ComponentStatus
+                              .Where (p => p.Id.Equals (node.ChildId))
+                              .ToList ()
+                            ;
+
+                            // found
+                            if (list.Count.Equals (1)) {
+                              var model = list [0];
+                              model.Busy = false;
+                              context.ComponentStatus.Update (model);
+                            }
+
+                            // remove Node
+                            context.ExtensionNode.Remove (node);
+                          }
+
+                          // next insert new
+                          foreach (var node in action.CollectionAction.ExtensionNodeCollection) {
+                            // validate same parent
+                            if (node.ParentId.Equals (id)) {
+                              context.ExtensionNode.Add (node);
+                            }
+                          }
+
+                          context.SaveChanges (); // update
+
+                          // update status
+                          nodeList = context.ExtensionNode
+                            .Where (p => p.ParentId.Equals (id))
+                            .ToList ()
+                          ;
+
+                          foreach (var node in nodeList) {
+                            var list = context.ComponentStatus
+                              .Where (p => p.Id.Equals (node.ChildId))
+                              .ToList ()
+                            ;
+
+                            // found
+                            if (list.Count.Equals (1)) {
+                              var model = list [0];
+                              model.Busy = true;
+                              context.ComponentStatus.Update (model);
+                            }
                           }
                         }
                       }
