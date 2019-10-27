@@ -180,40 +180,72 @@ namespace Server.Context.Component
                   break;
 
                 case TComponentExtensionName.Node: {
-                    // use Node from ModelAction 
-                    if (compStatus.UseNodeModel) {
-                      var childId = action.ModelAction.ExtensionNodeModel.ChildId;
-                      var parentId = action.ModelAction.ExtensionNodeModel.ParentId;
+                    // Node reverse
+                    if (compStatus.NodeReverse) {
+                      // use Node from ModelAction (only)
+                      if (compStatus.UseNodeModel) {
+                        action.ModelAction.ExtensionNodeModel.ChildId = id; // update
+                        context.ExtensionNode.Add (action.ModelAction.ExtensionNodeModel);
 
-                      // Node Reverse
-                      if (compStatus.NodeReverse) {
-                        action.ModelAction.ExtensionNodeModel.ChildId = childId.IsEmpty () ? id : childId; // update
+                        // update status
+                        var parentId = action.ModelAction.ExtensionNodeModel.ParentId;
+
+                        var statusList = context.ComponentStatus
+                          .Where (p => p.Id.Equals (parentId))
+                          .ToList ()
+                        ;
+
+                        // found
+                        if (statusList.Count.Equals (1)) {
+                          var model = statusList [0];
+                          model.Busy = true;
+
+                          context.ComponentStatus.Update (model);
+                        }
+
+                        context.SaveChanges (); // update all
                       }
-
-                      else {
-                        action.ModelAction.ExtensionNodeModel.ParentId = parentId.IsEmpty () ? id : parentId; // update
-                      }
-
-                      context.ExtensionNode.Add (action.ModelAction.ExtensionNodeModel);
                     }
 
-                    // Use Node Collection
-                    if (compStatus.UseNodeCollection) {
-                      foreach (var nodeModel in action.CollectionAction.ExtensionNodeCollection) {
-                        var childId = nodeModel.ChildId;
-                        var parentId = nodeModel.ParentId;
-
-                        // Node Reverse
-                        if (compStatus.NodeReverse) {
-                          nodeModel.ChildId = childId.IsEmpty () ? id : childId; // update
-                        }
-
-                        else {
-                          nodeModel.ParentId = parentId.IsEmpty () ? id : parentId; // for sure
-                        }
-
-                        context.ExtensionNode.Add (nodeModel);
+                    else {
+                      // use Node from ModelAction 
+                      if (compStatus.UseNodeModel) {
+                        action.ModelAction.ExtensionNodeModel.ParentId = id; // update
+                        context.ExtensionNode.Add (action.ModelAction.ExtensionNodeModel);
                       }
+
+                      // Use Node Collection
+                      if (compStatus.UseNodeCollection) {
+                        foreach (var nodeModel in action.CollectionAction.ExtensionNodeCollection) {
+                          nodeModel.ParentId = id; // for sure
+                          context.ExtensionNode.Add (nodeModel);
+                        }
+                      }
+
+                      context.SaveChanges (); // update all
+
+                      // update status
+                      var nodeList = context.ExtensionNode
+                        .Where (p => p.ParentId.Equals (id))
+                        .ToList ()
+                      ;
+
+                      foreach (var node in nodeList) {
+                        var statusList = context.ComponentStatus
+                          .Where (p => p.Id.Equals (node.ChildId))
+                          .ToList ()
+                        ;
+
+                        // found
+                        if (statusList.Count.Equals (1)) {
+                          var model = statusList [0];
+                          model.Busy = true;
+
+                          context.ComponentStatus.Update (model);
+                        }
+                      }
+
+                      context.SaveChanges (); // update all
                     }
                   }
                   break;

@@ -11,7 +11,11 @@
         <converters:TCollectionToBitmapImageConverter  x:Key="CollectionToBitmapImageConverter" />
 
         <CollectionViewSource x:Key="ModelItemsViewSource"
-                              Source="{Binding Model.ItemsSource}" />
+                              Source="{Binding Model.ItemsSource}">
+            <CollectionViewSource.GroupDescriptions>
+                <PropertyGroupDescription PropertyName="GadgetMaterialModel.Material" />
+            </CollectionViewSource.GroupDescriptions>
+        </CollectionViewSource>
 
         <DataTemplate x:Key="ListDataTemplate">
             <Border Padding="2"
