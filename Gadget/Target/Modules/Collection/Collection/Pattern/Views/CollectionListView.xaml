@@ -10,14 +10,18 @@
     <UserControl.Resources>
         <converters:TCollectionToBitmapImageConverter  x:Key="CollectionToBitmapImageConverter" />
 
-        <CollectionViewSource x:Key="ModelItemsViewSource"
-                              Source="{Binding Model.ItemsSource}">
+        <CollectionViewSource x:Key="MaterialModelItemsViewSource"
+                              Source="{Binding Model.MaterialItemsSource}">
+        </CollectionViewSource>
+
+        <CollectionViewSource x:Key="TargetModelItemsViewSource"
+                              Source="{Binding Model.TargetItemsSource}">
             <CollectionViewSource.GroupDescriptions>
                 <PropertyGroupDescription PropertyName="GadgetMaterialModel.Material" />
             </CollectionViewSource.GroupDescriptions>
         </CollectionViewSource>
 
-        <DataTemplate x:Key="ListDataTemplate">
+        <DataTemplate x:Key="TargetListDataTemplate">
             <Border Padding="2"
                     BorderThickness="0 .1 0 .1"
                     BorderBrush="LightGray"
@@ -63,16 +67,69 @@
         </DataTemplate>
     </UserControl.Resources>
 
-    <Border Padding="2"
+    <Border Padding="6"
             Width="240">
-        <!--list-->
-        <Border Padding="2">
-            <ListBox x:Name="List"
-                     SelectedIndex="{Binding Model.SelectedIndex}"
-                     ItemsSource="{Binding Source={StaticResource ModelItemsViewSource}}"
-                     ItemTemplate="{StaticResource ListDataTemplate}"
-                     caliburn:Message.Attach="[Event SelectionChanged] = [OnSelectionChanged (List.SelectedItem)]" />
-        </Border>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <!--Material-->
+            <Border Grid.Row="0">
+                <StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+
+                        <Border Grid.Column="0">
+                            <TextBlock Text="material" />
+                        </Border>
+
+                        <Border Grid.Column="1">
+                            <TextBlock HorizontalAlignment="Right"
+                                       Text="{Binding Model.MaterialCount}" />
+                        </Border>
+                    </Grid>
+
+                    <ComboBox x:Name="MaterialList"
+                              ItemsSource="{Binding Source={StaticResource MaterialModelItemsViewSource}}"
+                              DisplayMemberPath="Name"
+                              SelectedItem="{Binding Model.MaterialSelected}"
+                              caliburn:Message.Attach="[Event SelectionChanged] = [OnMaterialSelectionChanged (MaterialList.SelectedIndex)]" />
+                </StackPanel>
+            </Border>
+
+            <!--target list-->
+            <Border Grid.Row="1"
+                    Padding="0 10 0 0">
+                <StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+
+                        <Border Grid.Column="0">
+                            <TextBlock Text="target" />
+                        </Border>
+
+                        <Border Grid.Column="1">
+                            <TextBlock HorizontalAlignment="Right"
+                                       Text="{Binding Model.TargetCount}" />
+                        </Border>
+                    </Grid>
+
+                    <ListBox x:Name="TargetList"
+                             SelectedIndex="{Binding Model.TargetSelectedIndex}"
+                             ItemsSource="{Binding Source={StaticResource TargetModelItemsViewSource}}"
+                             ItemTemplate="{StaticResource TargetListDataTemplate}"
+                             caliburn:Message.Attach="[Event SelectionChanged] = [OnTargetSelectionChanged (TargetList.SelectedItem)]" />
+                </StackPanel>
+            </Border>
+        </Grid>
     </Border>
 
 </base:ViewChildBase>

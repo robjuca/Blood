@@ -305,21 +305,30 @@ namespace Server.Context.Component
                           if (nodeList.Count.Equals (1)) {
                             var node = nodeList [0];
 
-                            // status
-                            var list = context.ComponentStatus
-                              .Where (p => p.Id.Equals (node.ParentId))
+                            // remove
+                            context.ExtensionNode.Remove (node);
+                            context.SaveChanges (); // update
+
+                            var nodeListParent = context.ExtensionNode
+                              .Where (p => p.ParentId.Equals (node.ParentId))
                               .ToList ()
                             ;
 
-                            // found (just one)
-                            if (list.Count.Equals (1)) {
-                              var model = list [0];
-                              model.Busy = false;
-                              context.ComponentStatus.Update (model);
-                            }
+                            // just me
+                            if (nodeListParent.Count.Equals (1)) {
+                              // status
+                              var list = context.ComponentStatus
+                                .Where (p => p.Id.Equals (node.ParentId))
+                                .ToList ()
+                              ;
 
-                            // remove
-                            context.ExtensionNode.Remove (node);
+                              // found (just one)
+                              if (list.Count.Equals (1)) {
+                                var model = list [0];
+                                model.Busy = false;
+                                context.ComponentStatus.Update (model);
+                              }
+                            }
                           }
 
                           // next insert new
@@ -352,6 +361,7 @@ namespace Server.Context.Component
                             if (list.Count.Equals (1)) {
                               var model = list [0];
                               model.Busy = true;
+                              
                               context.ComponentStatus.Update (model);
                             }
                           }

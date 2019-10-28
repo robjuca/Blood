@@ -94,9 +94,14 @@ namespace Gadget.Collection.Pattern.ViewModels
     #endregion
 
     #region View Event
-    public void OnSelectionChanged (TComponentModelItem item)
+    public void OnMaterialSelectionChanged (int selectedIndex)
     {
-      TDispatcher.BeginInvoke (ItemSelectedDispatcher, item);
+      TDispatcher.BeginInvoke (MaterialItemSelectedDispatcher, selectedIndex);
+    }
+
+    public void OnTargetSelectionChanged (TComponentModelItem item)
+    {
+      TDispatcher.BeginInvoke (TargetItemSelectedDispatcher, item);
     }
     #endregion
 
@@ -105,7 +110,8 @@ namespace Gadget.Collection.Pattern.ViewModels
     {
       RaiseChanged ();
 
-      RefreshCollection ("ModelItemsViewSource");
+      RefreshCollection ("MaterialModelItemsViewSource");
+      RefreshCollection ("TargetModelItemsViewSource");
     }
 
     void RequestDataDispatcher ()
@@ -145,25 +151,6 @@ namespace Gadget.Collection.Pattern.ViewModels
       DelegateCommand.PublishInternalMessage.Execute (message);
     }
 
-    //void RequestModelDispatcher (TComponentModelItem item)
-    //{
-    //  if (item.Id.NotEmpty ()) {
-    //    // Select - ById
-    //    var action = Server.Models.Component.TEntityAction.Create (
-    //      Server.Models.Infrastructure.TCategory.Target,
-    //      Server.Models.Infrastructure.TOperation.Select,
-    //      Server.Models.Infrastructure.TExtension.ById);
-
-    //    action.Id = item.Id;
-
-    //    // to parent
-    //    var message = new TCollectionMessageInternal (TInternalMessageAction.Request, TChild.List, TypeInfo);
-    //    message.Support.Argument.Types.Select (action);
-
-    //    DelegateCommand.PublishInternalMessage.Execute (message);
-    //  }
-    //}
-
     void ResponseModelDispatcher (Server.Models.Component.TEntityAction action)
     {
       // to Sibling (Select)
@@ -186,7 +173,14 @@ namespace Gadget.Collection.Pattern.ViewModels
       DelegateCommand.PublishInternalMessage.Execute (message);
     }
 
-    void ItemSelectedDispatcher (TComponentModelItem item)
+    void MaterialItemSelectedDispatcher (int selectedIndex)
+    {
+      Model.MaterialChanged (selectedIndex);
+
+      TDispatcher.Invoke (RefreshAllDispatcher);
+    }
+
+    void TargetItemSelectedDispatcher (TComponentModelItem item)
     {
       if (item.IsNull ()) {
         // to Sibling (Cleanup)
