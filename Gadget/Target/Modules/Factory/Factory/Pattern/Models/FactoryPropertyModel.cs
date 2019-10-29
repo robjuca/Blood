@@ -8,6 +8,7 @@ using System;
 
 using rr.Library.Types;
 
+using Shared.Resources;
 using Shared.Types;
 //---------------------------//
 
@@ -21,6 +22,11 @@ namespace Gadget.Factory.Pattern.Models
       get;
       set;
     }
+
+    public TAlertsModel AlertsModel
+    {
+      get;
+    }
     #endregion
 
     #region Constructor
@@ -28,6 +34,8 @@ namespace Gadget.Factory.Pattern.Models
     {
       ComponentModelProperty = TModelProperty.Create (Server.Models.Infrastructure.TCategory.Target);
       ComponentModelProperty.PropertyChanged += OnModelPropertyChanged;
+
+      AlertsModel = TAlertsModel.CreateDefault;
     }
     #endregion
 
@@ -35,14 +43,30 @@ namespace Gadget.Factory.Pattern.Models
     internal void RefreshModel (Server.Models.Component.TEntityAction action)
     {
       if (action.NotNull ()) {
-        foreach (var item in action.CollectionAction.GadgetMaterialCollection) {
-          var selection = Server.Models.Infrastructure.TSelectionInfo.Create (item.Material, item.Id, item.Enabled);
-          selection.SetImage (item.GetImage ());
+        if (action.CollectionAction.GadgetMaterialCollection.Count.Equals (0)) {
+          ComponentModelProperty.ValidateModel (false);
 
-          action.SupportAction.SelectionCollection.Add (selection);
+          // show alerts
+          var message = $"Material list is EMPTY!";
+
+          AlertsModel.Select (TAlertsModel.TKind.Warning);
+          AlertsModel.Select ("EMPTY", message);
+          AlertsModel.Select (isOpen: true);
         }
 
-        ComponentModelProperty.ExtensionModel.SelectModel (Server.Models.Infrastructure.TCategory.Target, action); // update Selection Property (Material list)
+        else {
+          foreach (var item in action.CollectionAction.GadgetMaterialCollection) {
+            var selection = Server.Models.Infrastructure.TSelectionInfo.Create (item.Material, item.Id, item.Enabled);
+            selection.SetImage (item.GetImage ());
+
+            action.SupportAction.SelectionCollection.Add (selection);
+          }
+
+          ComponentModelProperty.ValidateModel (true);
+          ComponentModelProperty.ExtensionModel.SelectModel (Server.Models.Infrastructure.TCategory.Target, action); // update Selection Property (Material list)
+
+          AlertsModel.Select (isOpen: false); // default
+        }
       }
     }
 

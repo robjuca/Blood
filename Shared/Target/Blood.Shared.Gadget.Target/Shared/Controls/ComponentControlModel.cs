@@ -39,9 +39,11 @@ namespace Shared.Gadget.Target
         ChildControlModel.CopyFrom (action.ModelAction.GadgetMaterialModel);
 
         if (ControlModel.Id.IsEmpty ()) {
-          ChildControlModel.Id = (Guid) action.SupportAction.SelectionInfo.Tag;
-          ChildControlModel.Material = action.SupportAction.SelectionInfo.Name;
-          ChildControlModel.SetImage (action.SupportAction.SelectionInfo.GetImage ());
+          if (action.SupportAction.SelectionInfo.Tag is Guid id) {
+            ChildControlModel.Id = id;
+            ChildControlModel.Material = action.SupportAction.SelectionInfo.Name;
+            ChildControlModel.SetImage (action.SupportAction.SelectionInfo.GetImage ());
+          }
         }
       }
     }

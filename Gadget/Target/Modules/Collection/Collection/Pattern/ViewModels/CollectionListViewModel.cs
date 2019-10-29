@@ -87,6 +87,7 @@ namespace Gadget.Collection.Pattern.ViewModels
           if (message.IsAction (TInternalMessageAction.Reload)) {
             TDispatcher.Invoke (RefreshAllDispatcher);
             TDispatcher.Invoke (RequestDataDispatcher);
+            TDispatcher.Invoke (ReloadDispatcher);
           }
         }
       }
@@ -195,6 +196,13 @@ namespace Gadget.Collection.Pattern.ViewModels
 
         DelegateCommand.PublishInternalMessage.Execute (message);
       }
+    }
+
+    void ReloadDispatcher ()
+    {
+      // to parent
+      var message = new TCollectionMessageInternal (TInternalMessageAction.Reload, TChild.List, TypeInfo);
+      DelegateCommand.PublishInternalMessage.Execute (message);
     }
     #endregion
 
