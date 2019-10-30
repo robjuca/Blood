@@ -16,6 +16,8 @@ namespace Server.Models.Component
 
     public string       Target { get; set; }
     public string       Description { get; set; }
+    public string       Reference { get; set; }
+    public string       Value { get; set; }
     public string       ExternalLink { get; set; }
     public bool         Enabled { get; set; }
   }

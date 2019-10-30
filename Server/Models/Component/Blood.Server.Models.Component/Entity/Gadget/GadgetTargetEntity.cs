@@ -21,6 +21,8 @@ namespace Server.Models.Component
 
       Target = string.Empty;
       Description = string.Empty;
+      Reference = string.Empty;
+      Value = string.Empty;
       ExternalLink = string.Empty;
       Enabled = false;
     }
@@ -49,6 +51,8 @@ namespace Server.Models.Component
 
         Target = alias.Target;
         Description = alias.Description;
+        Reference = alias.Reference;
+        Value = alias.Value;
         ExternalLink = alias.ExternalLink;
         Enabled = alias.Enabled;
       }
@@ -59,6 +63,8 @@ namespace Server.Models.Component
       if (alias.NotNull ()) {
         Target = alias.Target;
         Description = alias.Description;
+        Reference = alias.Reference;
+        Value = alias.Value;
         ExternalLink = alias.ExternalLink;
         Enabled = alias.Enabled;
       }
@@ -112,6 +118,8 @@ namespace Server.Models.Component
 
       Target = modelAction.ExtensionTextModel.Text;
       Description = modelAction.ExtensionTextModel.Description;
+      Reference = modelAction.ExtensionTextModel.Reference;
+      Value = modelAction.ExtensionTextModel.Value;
       ExternalLink = modelAction.ExtensionTextModel.ExternalLink;
       Enabled = modelAction.ComponentInfoModel.Enabled;
     }

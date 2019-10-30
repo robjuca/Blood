@@ -49,7 +49,8 @@ namespace Shared.Gadget.Target
 
       m_Grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Auto) }); // row 0 target
       m_Grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Auto) }); // row 1 description
-      m_Grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Auto) }); // row 2 external link
+      m_Grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Auto) }); // row 2 reference
+      m_Grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Auto) }); // row 3 external link
 
       AddChild (m_Grid);
 
@@ -124,7 +125,28 @@ namespace Shared.Gadget.Target
         m_Grid.Children.Add (textBox); // row 1
       }
 
-      // external link (row 2)
+      // reference (row 2)
+
+      if (string.IsNullOrEmpty (Model.ControlModel.Reference).IsFalse ()) {
+        var textBox = new TextBox ()
+        {
+          Margin = new Thickness (3),
+          Padding = new Thickness (3),
+          MaxWidth = 400,
+          MaxHeight = 100,
+          TextWrapping = TextWrapping.Wrap,
+          TextAlignment = TextAlignment.Center,
+          VerticalAlignment = VerticalAlignment.Top,
+          VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+          Text = Model.ControlModel.Reference,
+        };
+
+        textBox.SetValue (Grid.RowProperty, 2);
+
+        m_Grid.Children.Add (textBox); // row 2
+      }
+
+      // external link (row 3)
 
       if (string.IsNullOrEmpty (Model.ControlModel.ExternalLink).IsFalse ()) {
         try {
@@ -140,9 +162,9 @@ namespace Shared.Gadget.Target
             Margin = new Thickness (3),
           };
 
-          textBoxLink.SetValue (Grid.RowProperty, 2);
+          textBoxLink.SetValue (Grid.RowProperty, 3);
 
-          m_Grid.Children.Add (textBoxLink); // row 2
+          m_Grid.Children.Add (textBoxLink); // row 3
         }
 
         //TODO: what for??

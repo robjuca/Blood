@@ -153,6 +153,48 @@ namespace Shared.Types
     }
 
     [Category ("5 - Text")]
+    [DisplayName ("Reference")]
+    [Description ("reference info")]
+    [RefreshProperties (RefreshProperties.All)]
+    [Browsable (true)]
+    [Editor (typeof (TTextEditorH60), typeof (PropertyValueEditor))]
+    public string ReferenceProperty
+    {
+      get
+      {
+        return (m_TextModel.Reference);
+      }
+
+      set
+      {
+        m_TextModel.Reference = value;
+
+        RaisePropertyChanged (nameof (ReferenceProperty));
+      }
+    }
+
+    [Category ("5 - Text")]
+    [DisplayName ("Value")]
+    [Description ("value info")]
+    [RefreshProperties (RefreshProperties.All)]
+    [Browsable (true)]
+    [Editor (typeof (TTextEditorH60), typeof (PropertyValueEditor))]
+    public string ValueProperty
+    {
+      get
+      {
+        return (m_TextModel.Value);
+      }
+
+      set
+      {
+        m_TextModel.Value = value;
+
+        RaisePropertyChanged (nameof (ValueProperty));
+      }
+    }
+
+    [Category ("5 - Text")]
     [DisplayName ("External Link")]
     [Description ("link for external Url")]
     [RefreshProperties (RefreshProperties.All)]
@@ -288,6 +330,7 @@ namespace Shared.Types
         // remove property not required
 
         switch (modelCategory) {
+          // Material
           case Server.Models.Infrastructure.TCategory.Material: {
               m_Names.Add ("LinkProperty");
               m_Names.Add ("ImagePositionProperty");
@@ -301,6 +344,7 @@ namespace Shared.Types
             }
             break;
 
+          // Target
           case Server.Models.Infrastructure.TCategory.Target: {
               m_Names.Add ("LinkProperty");
               m_Names.Add ("ImagePositionProperty");
@@ -311,6 +355,7 @@ namespace Shared.Types
               m_Names.Add ("ColumnsProperty");
               m_Names.Add ("RowsProperty");
               m_Names.Add ("ImageProperty");
+              m_Names.Add ("ValueProperty");
             }
             break;
 

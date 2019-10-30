@@ -17,6 +17,8 @@ namespace Server.Models.Component
       Id = Guid.Empty;
       Text = string.Empty;
       Description = string.Empty;
+      Reference = string.Empty;
+      Value = string.Empty;
       ExternalLink = string.Empty;
       IsCommit = false;
     }
@@ -35,6 +37,8 @@ namespace Server.Models.Component
         Id = alias.Id;
         Text = alias.Text;
         Description = alias.Description;
+        Reference = alias.Reference;
+        Value = alias.Value;
         ExternalLink = alias.ExternalLink;
         IsCommit = alias.IsCommit;
       }
@@ -45,6 +49,8 @@ namespace Server.Models.Component
       if (alias.NotNull ()) {
         Text = alias.Text;
         Description = alias.Description;
+        Reference = alias.Reference;
+        Value = alias.Value;
         ExternalLink = alias.ExternalLink;
         IsCommit = alias.IsCommit;
       }
