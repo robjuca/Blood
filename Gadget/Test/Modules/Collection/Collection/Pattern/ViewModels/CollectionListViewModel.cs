@@ -51,8 +51,8 @@ namespace Gadget.Collection.Pattern.ViewModels
             // Collection - Full
             if (message.Support.Argument.Types.IsOperation (Server.Models.Infrastructure.TOperation.Collection, Server.Models.Infrastructure.TExtension.Full)) {
               if (message.Result.IsValid) {
-                // Gadget
-                if (message.Support.Argument.Types.IsOperationCategory (Server.Models.Infrastructure.TCategory.Target)) {
+                // Gadget Test
+                if (message.Support.Argument.Types.IsOperationCategory (Server.Models.Infrastructure.TCategory.Test)) {
                   var action = Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction);
                   TDispatcher.BeginInvoke (ResponseDataDispatcher, action);
                 }
@@ -63,7 +63,7 @@ namespace Gadget.Collection.Pattern.ViewModels
             if (message.Support.Argument.Types.IsOperation (Server.Models.Infrastructure.TOperation.Select, Server.Models.Infrastructure.TExtension.ById)) {
               if (message.Result.IsValid) {
                 var action = Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction);
-                TDispatcher.BeginInvoke (ResponseModelDispatcher, action);
+                //TDispatcher.BeginInvoke (ResponseModelDispatcher, action);
               }
             }
           }
@@ -83,12 +83,6 @@ namespace Gadget.Collection.Pattern.ViewModels
             TDispatcher.Invoke (RequestDataDispatcher);
           }
 
-          // Style
-          if (message.IsAction (TInternalMessageAction.Style)) {
-            TDispatcher.BeginInvoke (StyleHorizontalChangedDispatcher, message.Support.Argument.Types.HorizontalStyle.StyleString);
-            TDispatcher.BeginInvoke (StyleVerticalChangedDispatcher, message.Support.Argument.Types.VerticalStyle.StyleString);
-          }
-
           // Back
           if (message.IsAction (TInternalMessageAction.Back)) {
             TDispatcher.Invoke (RefreshAllDispatcher);
@@ -99,81 +93,9 @@ namespace Gadget.Collection.Pattern.ViewModels
     #endregion
 
     #region View Event
-    public void OnStyleHorizontalSelected (string style)
-    {
-      Enum.TryParse (style, out TContentStyle.Style selectedStyle);
-
-
-      TDispatcher.Invoke (RefreshAllDispatcher);
-    }
-
-    public void OnStyleVerticalSelected (string style)
-    {
-      Enum.TryParse (style, out TContentStyle.Style selectedStyle);
-
-
-      TDispatcher.Invoke (RefreshAllDispatcher);
-    }
-
     public void OnSelectionChanged (TComponentModelItem item)
     {
       TDispatcher.BeginInvoke (ItemSelectedDispatcher, item);
-    }
-
-    public void OnFilterCanRemoveClicked ()
-    {
-      TDispatcher.Invoke (RefreshAllDispatcher);
-
-      //to Sibling
-      var message = new TCollectionSiblingMessageInternal (TInternalMessageAction.Filter, TChild.List, TypeInfo);
-      DelegateCommand.PublishInternalMessage.Execute (message);
-    }
-
-    
-
-    public void OnFilterEnabledChanged (string filter)
-    {
-      // TODO:filter
-      //var message = new TDocumentModuleInternalMessage ();
-      //message.SelectSender (new TTypeInfo (TypeName));
-      //message.Action.Select (TMessageActionInternals.Cleanup);
-      //DelegateCommand.PublishModuleInternalMessage.Execute (message);
-
-      //Model.DocumentFilter.SelectFilterEnabled (filter);
-      //THelper.DispatcherLater (PrepareToApplyFilterDispatcher);
-    }
-
-    public void OnFilterPictureChanged (string filter)
-    {
-      // TODO:filter
-      //var message = new TDocumentModuleInternalMessage ();
-      //message.SelectSender (new TTypeInfo (TypeName));
-      //message.Action.Select (TMessageActionInternals.Cleanup);
-      //DelegateCommand.PublishModuleInternalMessage.Execute (message);
-
-      //Model.DocumentFilter.SelectFilterPicture (filter);
-      //THelper.DispatcherLater (PrepareToApplyFilterDispatcher);
-    }
-
-    public void OnFilterSearchCommadClicked ()
-    {
-      // TODO:filter
-      //if (Model.DocumentFilter.ValidateSearch ()) {
-      //  var message = new TDocumentModuleInternalMessage ();
-      //  message.SelectSender (new TTypeInfo (TypeName));
-      //  message.Action.Select (TMessageActionInternals.Cleanup);
-      //  DelegateCommand.PublishModuleInternalMessage.Execute (message);
-
-      //  THelper.DispatcherLater (PrepareToApplyFilterDispatcher);
-      //}
-    }
-
-    public void OnFilterCleanCommadClicked ()
-    {
-      // TODO:filter
-      //Model.CleanSearch ();
-
-      //THelper.DispatcherLater (PrepareToApplyFilterDispatcher);
     }
     #endregion
 
@@ -190,7 +112,7 @@ namespace Gadget.Collection.Pattern.ViewModels
       // to parent
       // Collection - Full
       var action = Server.Models.Component.TEntityAction.Create (
-        Server.Models.Infrastructure.TCategory.Target,
+        Server.Models.Infrastructure.TCategory.Test,
         Server.Models.Infrastructure.TOperation.Collection,
         Server.Models.Infrastructure.TExtension.Full
       );
@@ -227,18 +149,6 @@ namespace Gadget.Collection.Pattern.ViewModels
       }
     }
 
-    void ResponseModelDispatcher (Server.Models.Component.TEntityAction action)
-    {
-
-      // to Sibling
-      //var message = new TCollectionSiblingMessageInternal (TInternalMessageAction.Select, TChild.List, TypeInfo);
-      //message.Support.Argument.Types.Item.CopyFrom (Model.Current);
-
-      //DelegateCommand.PublishInternalMessage.Execute (message);
-
-      //TDispatcher.Invoke (RefreshAllDispatcher);
-    }
-
     void ItemSelectedDispatcher (TComponentModelItem item)
     {
       if (item.IsNull ()) {
@@ -250,22 +160,6 @@ namespace Gadget.Collection.Pattern.ViewModels
       else {
         TDispatcher.Invoke (RequestModelDispatcher);
       }
-    }
-
-    void TryToSelectDispatcher ()
-    {
-
-      TDispatcher.Invoke (RefreshAllDispatcher);
-    }
-
-    void StyleHorizontalChangedDispatcher (string style)
-    {
-      OnStyleHorizontalSelected (style);
-    }
-
-    void StyleVerticalChangedDispatcher (string style)
-    {
-      OnStyleVerticalSelected (style);
     }
     #endregion
 

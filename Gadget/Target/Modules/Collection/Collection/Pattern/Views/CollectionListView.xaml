@@ -24,8 +24,7 @@
         <DataTemplate x:Key="TargetListDataTemplate">
             <Border Padding="2"
                     BorderThickness="0 .1 0 .1"
-                    BorderBrush="LightGray"
-                    Width="210">
+                    BorderBrush="LightGray">
 
                 <!-- busy, name, disable-->
                 <Grid>
@@ -68,7 +67,7 @@
     </UserControl.Resources>
 
     <Border Padding="6"
-            Width="240">
+            Width="210">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />

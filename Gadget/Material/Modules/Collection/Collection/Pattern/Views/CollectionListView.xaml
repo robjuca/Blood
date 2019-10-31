@@ -13,8 +13,7 @@
         <DataTemplate x:Key="ListDataTemplate">
             <Border Padding="2"
                     BorderThickness="0 .1 0 .1"
-                    BorderBrush="LightGray"
-                    Width="210">
+                    BorderBrush="LightGray">
 
                 <!-- busy, name, disable-->
                 <Grid>
@@ -26,7 +25,7 @@
 
                     <!--busy-->
                     <Border Grid.Column="0"
-                                        Padding="0 0 3 0">
+                            Padding="0 0 3 0">
                         <ContentControl Visibility="{Binding BusyVisibility}"
                                         Style="{DynamicResource ContentBusyIcon}" />
                     </Border>
@@ -49,7 +48,7 @@
     </UserControl.Resources>
 
     <Border Padding="2"
-            Width="240">
+            Width="210">
         <!--list-->
         <Border Padding="2">
             <ListBox x:Name="List"

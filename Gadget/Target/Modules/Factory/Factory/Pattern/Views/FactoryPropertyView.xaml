@@ -9,7 +9,7 @@
                     x:Name="ModuleFactoryPropertyViewModel">
 
     <Border Margin="2"
-            Width="240">
+            Width="210">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
