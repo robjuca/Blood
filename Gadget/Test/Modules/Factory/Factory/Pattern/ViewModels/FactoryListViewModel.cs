@@ -106,6 +106,16 @@ namespace Gadget.Factory.Pattern.ViewModels
     {
       TDispatcher.BeginInvoke (TargetItemSelectedDispatcher, item);
     }
+
+    public void OnItemInfoChecked (TItemInfo itemInfo)
+    {
+      Model.ItemInfoChecked (itemInfo, isChecked: true);
+    }
+
+    public void OnItemInfoUnchecked (TItemInfo itemInfo)
+    {
+      Model.ItemInfoChecked (itemInfo, isChecked: false);
+    }
     #endregion
 
     #region Dispatcher

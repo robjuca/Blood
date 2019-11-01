@@ -20,7 +20,7 @@ namespace Gadget.Factory.Pattern.Models
       get;
     }
 
-    public ObservableCollection<TComponentModelItem> TargetItemsSource
+    public ObservableCollection<TItemInfo> TargetItemsSource
     {
       get;
     }
@@ -53,7 +53,7 @@ namespace Gadget.Factory.Pattern.Models
       set;
     }
 
-    public TComponentModelItem TargetCurrent
+    public TItemInfo TargetCurrent
     {
       get;
     }
@@ -63,13 +63,14 @@ namespace Gadget.Factory.Pattern.Models
     public TFactoryListModel ()
     {
       MaterialItemsSource = new ObservableCollection<TComponentModelItem> ();
-      TargetItemsSource = new ObservableCollection<TComponentModelItem> ();
+      TargetItemsSource = new ObservableCollection<TItemInfo> ();
 
       TargetSelectedIndex = -1;
 
-      TargetCurrent = TComponentModelItem.CreateDefault;
+      TargetCurrent = TItemInfo.CreateDefault;
 
       Targets = new Collection<TComponentModelItem> ();
+      ItemInfoCheckedCollection = new Collection<TItemInfo> ();
     }
     #endregion
 
@@ -128,14 +129,43 @@ namespace Gadget.Factory.Pattern.Models
       }
 
       else {
-        foreach (var item in Targets) {
-          if (item.GadgetTargetModel.MaterialId.Equals (MaterialSelected.GadgetMaterialModel.Id)) {
-            TargetItemsSource.Add (item);
+        foreach (var itemTarget in Targets) {
+          if (itemTarget.GadgetTargetModel.MaterialId.Equals (MaterialSelected.GadgetMaterialModel.Id)) {
+            var item = IsChecked (itemTarget.Id);
+
+            if (item.IsEmpty) {
+              TargetItemsSource.Add (TItemInfo.Create (itemTarget));
+            }
+
+            else {
+              TargetItemsSource.Add (item);
+            }
           }
         }
 
         if (TargetCount > 0) {
           TargetSelectedIndex = 0;
+        }
+      }
+    }
+
+    internal void ItemInfoChecked (TItemInfo itemInfo, bool isChecked)
+    {
+      if (itemInfo.NotNull ()) {
+        itemInfo.IsChecked = isChecked;
+
+        var item = IsChecked (itemInfo);
+
+        if (isChecked) {
+          if (item.IsEmpty) {
+            AddChecked (itemInfo);
+          }
+        }
+
+        else {
+          if (item.IsEmpty.IsFalse ()) {
+            RemoveChecked (itemInfo.Id);
+          }
         }
       }
     }
@@ -146,6 +176,130 @@ namespace Gadget.Factory.Pattern.Models
     {
       get;
     }
+
+    Collection<TItemInfo> ItemInfoCheckedCollection
+    {
+      get;
+    }
+    #endregion
+
+    #region Support
+    TItemInfo IsChecked (TItemInfo itemInfo)
+    {
+      var item = TItemInfo.CreateDefault;
+
+      if (itemInfo.NotNull ()) {
+        foreach (var itemInfoChecked in ItemInfoCheckedCollection) {
+          if (itemInfoChecked.Contains (itemInfo)) {
+            item.CopyFrom (itemInfo);
+            break;
+          }
+        }
+      }
+
+      return (item);
+    }
+
+    TItemInfo IsChecked (Guid id)
+    {
+      var item = TItemInfo.CreateDefault;
+
+      foreach (var itemInfoChecked in ItemInfoCheckedCollection) {
+        if (itemInfoChecked.Contains (id)) {
+          item.CopyFrom (itemInfoChecked);
+          break;
+        }
+      }
+
+      return (item);
+    }
+
+    void AddChecked (TItemInfo itemInfo)
+    {
+      ItemInfoCheckedCollection.Add (itemInfo);
+    }
+
+    void RemoveChecked (Guid id)
+    {
+      foreach (var itemInfoChecked in ItemInfoCheckedCollection) {
+        if (itemInfoChecked.Contains (id)) {
+          ItemInfoCheckedCollection.Remove (itemInfoChecked);
+          break;
+        }
+      }
+    }
+    #endregion
+  };
+  //---------------------------//
+
+  //----- TItemInfo
+  public class TItemInfo
+  {
+    #region Property
+    public TComponentModelItem ModelItem
+    {
+      get;
+    }
+
+    public Guid Id
+    {
+      get
+      {
+        return (ModelItem.Id);
+      }
+    }
+
+    public bool IsEmpty
+    {
+      get
+      {
+        return (Id.Equals (Guid.Empty));
+      }
+    }
+
+    public bool IsChecked
+    {
+      get; 
+      set;
+    }
+    #endregion
+
+    #region Constructor
+    TItemInfo ()
+    {
+      ModelItem = TComponentModelItem.CreateDefault;
+    }
+
+    TItemInfo (TComponentModelItem item)
+      : this ()
+    {
+      ModelItem.CopyFrom (item);
+    }
+    #endregion
+
+    #region Members]
+    internal bool Contains (Guid id)
+    {
+      return (Id.Equals (id));
+    }
+
+    internal bool Contains (TItemInfo alias)
+    {
+      return (alias.NotNull () ? Id.Equals (alias.Id) : false);
+    }
+
+    internal void CopyFrom (TItemInfo alias)
+    {
+      if (alias.NotNull ()) {
+        ModelItem.CopyFrom (alias.ModelItem);
+        IsChecked = alias.IsChecked;
+      }
+    }
+    #endregion
+
+    #region Static
+    public static TItemInfo Create (TComponentModelItem item) => new TItemInfo (item);
+    public static TItemInfo CreateDefault => new TItemInfo ();
     #endregion
   };
   //---------------------------//

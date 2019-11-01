@@ -23,32 +23,21 @@
                     BorderThickness="0 .1 0 .1"
                     BorderBrush="LightGray">
 
-                <!-- busy, name, disable-->
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
+                <!--check, material, name-->
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox Margin="0 0 5 0"
+                              IsChecked="{Binding IsChecked}"
+                              caliburn:Message.Attach="[Event Checked] = [OnItemInfoChecked ($datacontext)]; [Event Unchecked] = [OnItemInfoUnchecked ($datacontext)]" />
 
-                    <!--check-->
-                    <Border Grid.Column="0">
-                        <CheckBox Margin="0 0 5 0" />
-                    </Border>
+                    <Image Margin="0 0 5 0"
+                           Width="16"
+                           Height="16"
+                           Source="{Binding ModelItem.GadgetMaterialModel.Image, Converter={StaticResource CollectionToBitmapImageConverter}}" />
 
-                    <!--material, name-->
-                    <Border Grid.Column="1">
-                        <StackPanel Orientation="Horizontal">
-                            <Image Margin="0 0 5 0"
-                                   Width="16"
-                                   Height="16"
-                                   Source="{Binding GadgetMaterialModel.Image, Converter={StaticResource CollectionToBitmapImageConverter}}" />
-
-                            <TextBlock Text="{Binding Name}"
-                                       FontWeight="Bold"
-                                       VerticalAlignment="Center" />
-                        </StackPanel>
-                    </Border>
-                </Grid>
+                    <TextBlock Text="{Binding ModelItem.Name}"
+                               FontWeight="Bold"
+                               VerticalAlignment="Center" />
+                </StackPanel>
             </Border>
         </DataTemplate>
     </UserControl.Resources>
