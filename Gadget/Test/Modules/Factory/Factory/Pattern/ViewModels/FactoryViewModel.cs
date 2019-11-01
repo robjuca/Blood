@@ -39,6 +39,15 @@ namespace Gadget.Factory.Pattern.ViewModels
     {
       // shell
       if (message.IsModule (TResource.TModule.Shell)) {
+        // DatabaseValidated
+        if (message.IsAction (TMessageAction.DatabaseValidated)) {
+          // to child list
+          var messageInternal = new TFactoryMessageInternal (TInternalMessageAction.DatabaseValidated, TypeInfo);
+          messageInternal.Node.SelectRelationParent (TChild.List);
+
+          DelegateCommand.PublishInternalMessage.Execute (messageInternal);
+        }
+
         // RefreshProcess
         if (message.IsAction (TMessageAction.RefreshProcess)) {
           // to child property (Edit Leave)
@@ -54,7 +63,7 @@ namespace Gadget.Factory.Pattern.ViewModels
         // Response
         if (message.IsAction (TMessageAction.Response)) {
           // to child
-          var messageInternal = new TFactoryMessageInternal (TInternalMessageAction.Response, TypeInfo);
+          var messageInternal = new TFactoryMessageInternal (message.Result, TInternalMessageAction.Response, TypeInfo);
           messageInternal.Node.SelectRelationParent (message.Node.Child);
           messageInternal.Support.Argument.Types.CopyFrom (message.Support.Argument.Types);
 

@@ -26,7 +26,7 @@ namespace Gadget.Factory.Pattern.Models
     #region Constructor
     public TFactoryPropertyModel ()
     {
-      ComponentModelProperty = TModelProperty.Create (Server.Models.Infrastructure.TCategory.Target);
+      ComponentModelProperty = TModelProperty.Create (Server.Models.Infrastructure.TCategory.Test);
       ComponentModelProperty.PropertyChanged += OnModelPropertyChanged;
     }
     #endregion

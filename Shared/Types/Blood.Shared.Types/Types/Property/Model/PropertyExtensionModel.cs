@@ -359,6 +359,23 @@ namespace Shared.Types
             }
             break;
 
+          // Test
+          case Server.Models.Infrastructure.TCategory.Test: {
+              m_Names.Add ("LinkProperty");
+              m_Names.Add ("ImagePositionProperty");
+              m_Names.Add ("HeaderVisibilityProperty");
+              m_Names.Add ("FooterVisibilityProperty");
+              m_Names.Add ("StyleHorizontalProperty");
+              m_Names.Add ("StyleVerticalProperty");
+              m_Names.Add ("ColumnsProperty");
+              m_Names.Add ("RowsProperty");
+              m_Names.Add ("ImageProperty");
+              m_Names.Add ("ValueProperty");
+              m_Names.Add ("ReferenceProperty");
+              m_Names.Add ("SelectionProperty");
+            }
+            break;
+
             //case Server.Models.Infrastructure.TCategory.Document: {
             //    m_Names.Add ("CaptionProperty");
             //    m_Names.Add ("DescriptionProperty");
