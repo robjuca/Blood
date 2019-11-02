@@ -32,6 +32,13 @@ namespace Gadget.Factory.Pattern.Models
     #endregion
 
     #region Members
+    internal void RefreshModel (Server.Models.Component.TEntityAction action)
+    {
+      if (action.NotNull ()) {
+        //TODO: review
+      }
+    }
+
     internal void SelectModel (Server.Models.Component.TEntityAction action)
     {
       ComponentModelProperty.SelectModel (action);

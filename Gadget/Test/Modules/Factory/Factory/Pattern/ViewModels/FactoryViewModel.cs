@@ -55,6 +55,12 @@ namespace Gadget.Factory.Pattern.ViewModels
           messageInternal.Node.SelectRelationParent (TChild.Property);
 
           DelegateCommand.PublishInternalMessage.Execute (messageInternal);
+
+          // to child list (Reload)
+          var msgInternal = new TFactoryMessageInternal (TInternalMessageAction.Reload, TypeInfo);
+          msgInternal.Node.SelectRelationParent (TChild.List);
+
+          DelegateCommand.PublishInternalMessage.Execute (msgInternal);
         }
       }
 
@@ -77,6 +83,16 @@ namespace Gadget.Factory.Pattern.ViewModels
         if (message.IsAction (TMessageAction.Edit)) {
           // to child edit 
           var messageInternal = new TFactoryMessageInternal (TInternalMessageAction.Edit, TypeInfo);
+          messageInternal.Node.SelectRelationParent (TChild.Property);
+          messageInternal.Support.Argument.Types.CopyFrom (message.Support.Argument.Types);
+
+          DelegateCommand.PublishInternalMessage.Execute (messageInternal);
+        }
+
+        // RefreshModel
+        if (message.IsAction (TMessageAction.RefreshModel)) {
+          // to child 
+          var messageInternal = new TFactoryMessageInternal (TInternalMessageAction.RefreshModel, TypeInfo);
           messageInternal.Node.SelectRelationParent (TChild.Property);
           messageInternal.Support.Argument.Types.CopyFrom (message.Support.Argument.Types);
 

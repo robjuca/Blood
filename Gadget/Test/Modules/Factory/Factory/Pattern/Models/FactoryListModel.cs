@@ -134,7 +134,9 @@ namespace Gadget.Factory.Pattern.Models
             var item = IsChecked (itemTarget.Id);
 
             if (item.IsEmpty) {
-              TargetItemsSource.Add (TItemInfo.Create (itemTarget));
+              if (itemTarget.Enabled) {
+                TargetItemsSource.Add (TItemInfo.Create (itemTarget));
+              }
             }
 
             else {
@@ -261,6 +263,14 @@ namespace Gadget.Factory.Pattern.Models
     {
       get; 
       set;
+    }
+
+    public string Name
+    {
+      get
+      {
+        return (ModelItem.GadgetTargetModel.Target);
+      }
     }
     #endregion
 

@@ -14,8 +14,6 @@ using Shared.Types;
 using Shared.Resources;
 using Shared.ViewModel;
 
-using Shared.Gadget.Test;
-
 using Gadget.Factory.Presentation;
 using Gadget.Factory.Pattern.Models;
 //---------------------------//
