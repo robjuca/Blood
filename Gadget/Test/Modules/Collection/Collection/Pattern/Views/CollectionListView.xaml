@@ -13,8 +13,7 @@
         <DataTemplate x:Key="ListDataTemplate">
             <Border Padding="2"
                     BorderThickness="0 .1 0 .1"
-                    BorderBrush="LightGray"
-                    >
+                    BorderBrush="LightGray">
 
                 <!-- busy, name, disable-->
                 <Grid>
@@ -31,10 +30,15 @@
                                         Style="{DynamicResource ContentBusyIcon}" />
                     </Border>
 
-                    <!--name-->
+                    <!--target count, name-->
                     <Border Grid.Column="1">
-                        <TextBlock Text="{Binding Target}"
-                                   FontWeight="Bold" />
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding GadgetTestModel.TargetCount}" />
+
+                            <TextBlock Margin="3 0 0 0"
+                                       Text="{Binding Name}"
+                                       FontWeight="Bold" />
+                        </StackPanel>
                     </Border>
 
                     <!--disable-->
@@ -50,14 +54,41 @@
 
     <Border Padding="2"
             Width="210">
-        <!--list-->
-        <Border Padding="2">
-            <ListBox x:Name="List"
-                     SelectedIndex="{Binding Model.SelectedIndex}"
-                     ItemsSource="{Binding Source={StaticResource ModelItemsViewSource}}"
-                     ItemTemplate="{StaticResource ListDataTemplate}"
-                     caliburn:Message.Attach="[Event SelectionChanged] = [OnSelectionChanged (List.SelectedItem)]" />
-        </Border>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <!-- test-->
+            <Border Grid.Row="0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0">
+                        <TextBlock Text="test" />
+                    </Border>
+
+                    <Border Grid.Column="1">
+                        <TextBlock HorizontalAlignment="Right"
+                                   Text="{Binding Model.TestCount}" />
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!--list-->
+            <Border Grid.Row="1"
+                    Padding="2">
+                <ListBox x:Name="List"
+                         SelectedIndex="{Binding Model.SelectedIndex}"
+                         ItemsSource="{Binding Source={StaticResource ModelItemsViewSource}}"
+                         ItemTemplate="{StaticResource ListDataTemplate}"
+                         caliburn:Message.Attach="[Event SelectionChanged] = [OnSelectionChanged (List.SelectedItem)]" />
+            </Border>
+        </Grid>
     </Border>
 
 </base:ViewChildBase>

@@ -171,6 +171,31 @@ namespace Gadget.Factory.Pattern.Models
         }
       }
     }
+
+    internal void RequestModel (Server.Models.Component.TEntityAction action)
+    {
+      action.ThrowNull ();
+
+      action.CollectionAction.ComponentRelationCollection.Clear ();
+
+      foreach (var item in ItemInfoCheckedCollection) {
+        var componentRelation = Server.Models.Component.ComponentRelation.CreateDefault;
+        componentRelation.ChildId = item.Id;
+        componentRelation.ChildCategory = item.CategoryValue;
+        componentRelation.ParentId = action.Id;
+        componentRelation.ParentCategory = Server.Models.Infrastructure.TCategoryType.ToValue (action.CategoryType.Category);
+
+        action.CollectionAction.ComponentRelationCollection.Add (componentRelation);
+      }
+    }
+
+    internal void Cleanup ()
+    {
+      ItemInfoCheckedCollection.Clear ();
+      TargetItemsSource.Clear ();
+
+      MaterialChanged (-1);
+    }
     #endregion
 
     #region property
@@ -270,6 +295,14 @@ namespace Gadget.Factory.Pattern.Models
       get
       {
         return (ModelItem.GadgetTargetModel.Target);
+      }
+    }
+
+    public int CategoryValue
+    {
+      get
+      {
+        return (Server.Models.Infrastructure.TCategoryType.ToValue (ModelItem.Category));
       }
     }
     #endregion

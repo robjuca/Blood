@@ -89,6 +89,18 @@ namespace Gadget.Factory.Pattern.ViewModels
             TDispatcher.Invoke (RequestDataDispatcher);
             TDispatcher.Invoke (ReloadDispatcher);
           }
+
+          // Request
+          if (message.IsAction (TInternalMessageAction.Request)) {
+            TDispatcher.BeginInvoke (RequestDesignDispatcher, Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction));
+          }
+
+          // Cleanup
+          if (message.IsAction (TInternalMessageAction.Cleanup)) {
+            Model.Cleanup ();
+
+            TDispatcher.Invoke (RefreshAllDispatcher);
+          }
         }
       }
     }
@@ -212,6 +224,17 @@ namespace Gadget.Factory.Pattern.ViewModels
     {
       // to parent
       var message = new TFactoryMessageInternal (TInternalMessageAction.Reload, TChild.List, TypeInfo);
+      DelegateCommand.PublishInternalMessage.Execute (message);
+    }
+
+    void RequestDesignDispatcher (Server.Models.Component.TEntityAction action)
+    {
+      Model.RequestModel (action);
+
+      // to Sibling
+      var message = new TFactorySiblingMessageInternal (TInternalMessageAction.Response, TChild.List, TypeInfo);
+      message.Support.Argument.Types.Select (action);
+
       DelegateCommand.PublishInternalMessage.Execute (message);
     }
     #endregion

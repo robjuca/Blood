@@ -112,10 +112,10 @@ namespace Gadget.Factory.Pattern.ViewModels
       Model.ShowPanels ();
       RaiseChanged ();
 
-      var action = Server.Models.Component.TEntityAction.Create (Server.Models.Infrastructure.TCategory.Target, Server.Models.Infrastructure.TOperation.Insert);
+      var action = Server.Models.Component.TEntityAction.Create (Server.Models.Infrastructure.TCategory.Test, Server.Models.Infrastructure.TOperation.Insert);
 
       if (IsViewModeEdit) {
-        action = Server.Models.Component.TEntityAction.Create (Server.Models.Infrastructure.TCategory.Target, Server.Models.Infrastructure.TOperation.Change, Server.Models.Infrastructure.TExtension.Full);
+        action = Server.Models.Component.TEntityAction.Create (Server.Models.Infrastructure.TCategory.Test, Server.Models.Infrastructure.TOperation.Change, Server.Models.Infrastructure.TExtension.Full);
       }
 
       Model.RequestModel (action);
@@ -166,6 +166,8 @@ namespace Gadget.Factory.Pattern.ViewModels
 
     void ResponseModelDispatcher (Server.Models.Component.TEntityAction action)
     {
+      action.ModelAction.GadgetTestModel.CopyFrom (action);
+
       TDispatcher.BeginInvoke (ApplyDispatcher, action);  
     }
 

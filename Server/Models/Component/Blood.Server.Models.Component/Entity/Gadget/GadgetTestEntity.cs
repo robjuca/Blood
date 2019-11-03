@@ -5,17 +5,33 @@
 
 //----- Include
 using System;
+using System.Collections.ObjectModel;
 //---------------------------//
 
 namespace Server.Models.Component
 {
   public partial class GadgetTest
   {
+    #region Property
+    public int TargetCount
+    {
+      get
+      {
+        return (Targets.Count);
+      }
+    } 
+    #endregion
+
     #region Constructor
     public GadgetTest ()
     {
       Id = Guid.Empty;
+
+      Test = string.Empty;
+      Description = string.Empty;
+      ExternalLink = string.Empty;
       Enabled = false;
+      Targets = new Collection<Guid> ();
     }
 
     public GadgetTest (GadgetTest alias)
@@ -30,6 +46,29 @@ namespace Server.Models.Component
     {
       if (action.NotNull ()) {
         CopyFrom (action.ModelAction);
+
+        Targets.Clear ();
+
+        // update
+        if (action.CollectionAction.ComponentRelationCollection.Count.Equals (0)) {
+          foreach (var item in action.CollectionAction.ComponentOperation.ParentCategoryCollection) {
+            foreach (var relation in item.Value) {
+              action.CollectionAction.ComponentRelationCollection.Add (relation);
+            }
+          }
+        }
+
+        foreach (var item in action.CollectionAction.ComponentRelationCollection) {
+          if (item.ParentId.IsEmpty ()) {
+            Targets.Add (item.ChildId);
+          }
+
+          else {
+            if (item.ParentId.Equals (Id)) {
+              Targets.Add (item.ChildId);
+            }
+          }
+        }
       }
     }
 
@@ -37,14 +76,23 @@ namespace Server.Models.Component
     {
       if (alias.NotNull ()) {
         Id = alias.Id;
+
+        Test = alias.Test;
+        Description = alias.Description;
+        ExternalLink = alias.ExternalLink;
         Enabled = alias.Enabled;
+        Targets = new Collection<Guid> (alias.Targets);
       }
     }
 
     public void Change (GadgetTest alias)
     {
       if (alias.NotNull ()) {
+        Test = alias.Test;
+        Description = alias.Description;
+        ExternalLink = alias.ExternalLink;
         Enabled = alias.Enabled;
+        Targets = new Collection<Guid> (alias.Targets);
       }
     }
 
@@ -83,6 +131,10 @@ namespace Server.Models.Component
     void CopyFrom (TModelAction modelAction)
     {
       Id = modelAction.ComponentInfoModel.Id;
+
+      Test = modelAction.ExtensionTextModel.Text;
+      Description = modelAction.ExtensionTextModel.Description;
+      ExternalLink = modelAction.ExtensionTextModel.ExternalLink;
       Enabled = modelAction.ComponentInfoModel.Enabled;
     } 
     #endregion

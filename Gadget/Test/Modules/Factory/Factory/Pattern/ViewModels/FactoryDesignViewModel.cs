@@ -49,10 +49,11 @@ namespace Gadget.Factory.Pattern.ViewModels
             TDispatcher.Invoke (RefreshDesignDispatcher);
           }
 
+          // TODO: review
           // Request
-          if (message.IsAction (TInternalMessageAction.Request)) {
-            TDispatcher.BeginInvoke (RequestDesignDispatcher, Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction));
-          }
+          //if (message.IsAction (TInternalMessageAction.Request)) {
+          //  TDispatcher.BeginInvoke (RequestDesignDispatcher, Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction));
+          //}
 
           // Cleanup
           if (message.IsAction (TInternalMessageAction.Cleanup)) {

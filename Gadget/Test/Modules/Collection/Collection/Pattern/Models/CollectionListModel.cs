@@ -30,6 +30,14 @@ namespace Gadget.Collection.Pattern.Models
     {
       get;
     }
+
+    public string TestCount
+    {
+      get
+      {
+        return ($"[ {ItemsSource.Count} ]");
+      }
+    }
     #endregion
 
     #region Constructor
@@ -56,7 +64,7 @@ namespace Gadget.Collection.Pattern.Models
         var model = action.ModelAction.GadgetTestModel;
         model.CopyFrom (action); // set gadget model
 
-        //ItemsSource.Add (model);
+        ItemsSource.Add (TComponentModelItem.Create (action));
       }
 
       if (ItemsSource.Count > 0) {
