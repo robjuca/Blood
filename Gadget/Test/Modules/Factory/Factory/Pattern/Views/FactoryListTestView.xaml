@@ -1,0 +1,95 @@
+﻿<base:ViewChildBase x:Class="Gadget.Factory.Pattern.Views.TFactoryListTestView"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:base="clr-namespace:rr.Library.Infrastructure;assembly=rr.Library.Infrastructure"
+                    xmlns:caliburn="http://www.caliburnproject.org"
+                    DataContext="{x:Null}"
+                    x:Name="ModuleFactoryListTestViewModel">
+
+    <UserControl.Resources>
+        <CollectionViewSource x:Key="TestModelItemsViewSource"
+                              Source="{Binding Model.TestItemsSource}" />
+
+        <DataTemplate x:Key="ListDataTemplate">
+            <Border Padding="0"
+                    BorderThickness="0 .1 0 .1"
+                    BorderBrush="LightGray">
+
+                <!--check, name-->
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox Margin="0 0 5 0"
+                              IsChecked="{Binding IsChecked}"
+                              caliburn:Message.Attach="[Event Checked] = [OnTestItemInfoChecked ($datacontext)]; [Event Unchecked] = [OnTestItemInfoUnchecked ($datacontext)]" />
+
+                    <TextBlock Text="{Binding ModelItem.Name}"
+                               FontWeight="Bold"
+                               VerticalAlignment="Center" />
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Border>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0"
+                    Padding="0 6 0 0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+
+                    <!-- test-->
+                    <Border Grid.Row="0">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+
+                            <Border Grid.Column="0">
+                                <StackPanel Orientation="Horizontal">
+                                    <ContentControl Padding="3 0 0 0"
+                                                    Style="{DynamicResource GadgetTestIcon}" />
+
+                                    <TextBlock Padding="6 0 0 0"
+                                               VerticalAlignment="Center"
+                                               Text="test" />
+                                </StackPanel>
+                            </Border>
+
+                            <Border Grid.Column="1">
+                                <TextBlock HorizontalAlignment="Right"
+                                           Text="{Binding Model.TestCount}" />
+                            </Border>
+                        </Grid>
+                    </Border>
+
+                    <!--list-->
+                    <Border Grid.Row="1"
+                            Padding="2">
+                        <ListBox x:Name="List"
+                                 ItemsSource="{Binding Source={StaticResource TestModelItemsViewSource}}"
+                                 ItemTemplate="{StaticResource ListDataTemplate}"
+                                  />
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!--target list button-->
+            <Border Grid.Row="1"
+                    Padding="0 0 4 0">
+                <Button HorizontalAlignment="Right"
+                        caliburn:Message.Attach="[Event Click] = [OnTargetListCommadClicked ()]">
+                    <ContentControl Style="{DynamicResource GadgetTargetIcon}" />
+                </Button>
+            </Border>
+        </Grid>
+    </Border>
+
+</base:ViewChildBase>

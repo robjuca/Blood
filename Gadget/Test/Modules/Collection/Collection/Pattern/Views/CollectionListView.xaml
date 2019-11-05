@@ -69,7 +69,14 @@
                     </Grid.ColumnDefinitions>
 
                     <Border Grid.Column="0">
-                        <TextBlock Text="test" />
+                        <StackPanel Orientation="Horizontal">
+                            <ContentControl Padding="3 0 0 0"
+                                            Style="{DynamicResource GadgetTestIcon}" />
+
+                            <TextBlock Padding="6 0 0 0"
+                                       VerticalAlignment="Center"
+                                       Text="test" />
+                        </StackPanel>
                     </Border>
 
                     <Border Grid.Column="1">

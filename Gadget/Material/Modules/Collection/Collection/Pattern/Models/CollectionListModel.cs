@@ -30,6 +30,14 @@ namespace Gadget.Collection.Pattern.Models
     {
       get;
     }
+
+    public string MaterialCount
+    {
+      get
+      {
+        return ($"[ {ItemsSource.Count} ]");
+      }
+    }
     #endregion
 
     #region Constructor

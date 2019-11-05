@@ -49,14 +49,42 @@
 
     <Border Padding="2"
             Width="210">
-        <!--list-->
-        <Border Padding="2">
-            <ListBox x:Name="List"
-                     SelectedIndex="{Binding Model.SelectedIndex}"
-                     ItemsSource="{Binding Source={StaticResource ModelItemsViewSource}}"
-                     ItemTemplate="{StaticResource ListDataTemplate}"
-                     caliburn:Message.Attach="[Event SelectionChanged] = [OnSelectionChanged (List.SelectedItem)]" />
-        </Border>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <!-- material-->
+            <Border Grid.Row="0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0">
+                        <TextBlock Padding="3 0 0 0"
+                                   Text="material" />
+                    </Border>
+
+                    <Border Grid.Column="1">
+                        <TextBlock HorizontalAlignment="Right"
+                                   Text="{Binding Model.MaterialCount}" />
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!--list-->
+            <Border Grid.Row="1"
+                    Padding="2">
+                <ListBox x:Name="List"
+                         SelectedIndex="{Binding Model.SelectedIndex}"
+                         ItemsSource="{Binding Source={StaticResource ModelItemsViewSource}}"
+                         ItemTemplate="{StaticResource ListDataTemplate}"
+                         caliburn:Message.Attach="[Event SelectionChanged] = [OnSelectionChanged (List.SelectedItem)]" />
+            </Border>
+        </Grid>
     </Border>
 
 </base:ViewChildBase>

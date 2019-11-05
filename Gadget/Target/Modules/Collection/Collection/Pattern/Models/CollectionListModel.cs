@@ -25,19 +25,19 @@ namespace Gadget.Collection.Pattern.Models
       get;
     }
 
-    public int MaterialCount
+    public string MaterialCount
     {
       get
       {
-        return (MaterialItemsSource.Count);
+        return ($"[ {MaterialItemsSource.Count} ]");
       }
     }
 
-    public int TargetCount
+    public string TargetCount
     {
       get
       {
-        return (TargetItemsSource.Count);
+        return ($"[ {TargetItemsSource.Count} ]");
       }
     }
 
@@ -134,7 +134,7 @@ namespace Gadget.Collection.Pattern.Models
           }
         }
 
-        if (TargetCount > 0) {
+        if (TargetItemsSource.Count > 0) {
           TargetSelectedIndex = 0;
         }
       }

@@ -58,6 +58,8 @@ namespace Gadget.Collection.Pattern.Models
 
       action.ThrowNull ();
 
+      ItemsSource.Clear ();
+
       foreach (var modelAction in action.CollectionAction.ModelCollection) {
         action.ModelAction.CopyFrom (modelAction.Value);
         

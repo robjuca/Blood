@@ -6,25 +6,16 @@
 //----- Include
 //---------------------------//
 
-namespace Gadget.Factory.Pattern.Models
+namespace Gadget.Factory.Pattern.Views
 {
-  public class TFactoryListModel
+  public partial class TFactoryListTargetView : rr.Library.Infrastructure.ViewChildBase
   {
-    #region Property
-    public int SlideIndex
-    {
-      get;
-      set;
-    }
-    #endregion
-
     #region Constructor
-    public TFactoryListModel ()
+    public TFactoryListTargetView ()
     {
-      SlideIndex = 0;
+      InitializeComponent ();
     }
     #endregion
-
   };
   //---------------------------//
 
