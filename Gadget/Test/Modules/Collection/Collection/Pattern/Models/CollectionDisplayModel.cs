@@ -97,8 +97,6 @@ namespace Gadget.Collection.Pattern.Models
     {
       ComponentModelItem = item ?? throw new System.ArgumentNullException (nameof (item));
 
-      SelectModel ();
-
       BusyVisibility = ComponentModelItem.BusyVisibility;
       DistortedVisibility = Distorted ? Visibility.Visible : Visibility.Hidden;
     }
@@ -112,8 +110,6 @@ namespace Gadget.Collection.Pattern.Models
 
       action.Id = Id;
       action.CategoryType.Select (ComponentModelItem.Category);
-
-      action.ModelAction.ComponentStatusModel.Locked = true;  // Style always locked
     }
 
     internal void Cleanup ()
@@ -123,14 +119,6 @@ namespace Gadget.Collection.Pattern.Models
 
       BusyVisibility = Visibility.Hidden;
       DistortedVisibility = Visibility.Hidden;
-    }
-    #endregion
-
-    #region Support
-    void SelectModel ()
-    {
-      //ComponentControlModel.SelectModel (ComponentModelItem);
-      //ComponentControlModel.PropertyName = "all";
     }
     #endregion
   };

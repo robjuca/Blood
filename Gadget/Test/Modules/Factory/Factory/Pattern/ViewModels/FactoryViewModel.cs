@@ -68,12 +68,14 @@ namespace Gadget.Factory.Pattern.ViewModels
       if (message.IsModule (TResource.TModule.Services)) {
         // Response
         if (message.IsAction (TMessageAction.Response)) {
-          // to child
-          var messageInternal = new TFactoryMessageInternal (message.Result, TInternalMessageAction.Response, TypeInfo);
-          messageInternal.Node.SelectRelationParent (message.Node.Child);
-          messageInternal.Support.Argument.Types.CopyFrom (message.Support.Argument.Types);
+          if (message.Node.IsModuleName (TModuleName.Factory)) {
+            // to child
+            var messageInternal = new TFactoryMessageInternal (message.Result, TInternalMessageAction.Response, TypeInfo);
+            messageInternal.Node.SelectRelationParent (message.Node.Child);
+            messageInternal.Support.Argument.Types.CopyFrom (message.Support.Argument.Types);
 
-          DelegateCommand.PublishInternalMessage.Execute (messageInternal);
+            DelegateCommand.PublishInternalMessage.Execute (messageInternal);
+          }
         }
       }
 
@@ -110,7 +112,7 @@ namespace Gadget.Factory.Pattern.ViewModels
           if (message.IsAction (TInternalMessageAction.Request)) {
             // to module
             var messageModule = new TFactoryMessage (TMessageAction.Request, TypeInfo);
-            messageModule.Node.SelectRelationModule (message.Node.Child);
+            messageModule.Node.SelectRelationModule (message.Node.Child, TModuleName.Factory);
             messageModule.Support.Argument.Types.CopyFrom (message.Support.Argument.Types);
 
             DelegateCommand.PublishMessage.Execute (messageModule);

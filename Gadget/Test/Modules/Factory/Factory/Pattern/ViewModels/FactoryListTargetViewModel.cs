@@ -83,6 +83,13 @@ namespace Gadget.Factory.Pattern.ViewModels
 
         // from sibilig
         if (message.Node.IsSiblingToMe (TChild.List)) {
+          // PropertySelect
+          if (message.IsAction (TInternalMessageAction.PropertySelect)) {
+            if (message.Support.Argument.Args.PropertyName.Equals ("all")) {
+              TDispatcher.BeginInvoke (EditDispatcher, Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction));
+            }
+          }
+
           // Request
           if (message.IsAction (TInternalMessageAction.Request)) {
             TDispatcher.BeginInvoke (RequestDesignDispatcher, Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction));
@@ -93,6 +100,7 @@ namespace Gadget.Factory.Pattern.ViewModels
             Model.Cleanup ();
 
             TDispatcher.Invoke (RefreshAllDispatcher);
+            TDispatcher.Invoke (RequestDataDispatcher);
           }
         }
       }
@@ -100,24 +108,24 @@ namespace Gadget.Factory.Pattern.ViewModels
     #endregion
 
     #region View Event
-    public void OnMaterialSelectionChanged (int selectedIndex)
+    public void OnGadgetSelectionChanged (int selectedIndex)
     {
-      TDispatcher.BeginInvoke (MaterialItemSelectedDispatcher, selectedIndex);
+      TDispatcher.BeginInvoke (GadgedSelectionChangedDispatcher, selectedIndex);
     }
 
-    public void OnTargetSelectionChanged (TComponentModelItem item)
+    public void OnGadgetChanged (TComponentModelItem item)
     {
-      TDispatcher.BeginInvoke (TargetItemSelectedDispatcher, item);
+      TDispatcher.BeginInvoke (GadgetChangedDispatcher, item);
     }
 
-    public void OnItemInfoChecked (TFactoryListItemInfo itemInfo)
+    public void OnGadgetItemChecked (TFactoryListItemInfo itemInfo)
     {
-      Model.ItemInfoChecked (itemInfo, isChecked: true);
+      Model.GadgetItemChecked (itemInfo, isChecked: true);
     }
 
-    public void OnItemInfoUnchecked (TFactoryListItemInfo itemInfo)
+    public void OnGadgetItemUnchecked (TFactoryListItemInfo itemInfo)
     {
-      Model.ItemInfoChecked (itemInfo, isChecked: false);
+      Model.GadgetItemChecked (itemInfo, isChecked: false);
     }
     #endregion
 
@@ -189,14 +197,14 @@ namespace Gadget.Factory.Pattern.ViewModels
       DelegateCommand.PublishInternalMessage.Execute (message);
     }
 
-    void MaterialItemSelectedDispatcher (int selectedIndex)
+    void GadgedSelectionChangedDispatcher (int selectedIndex)
     {
-      Model.MaterialChanged (selectedIndex);
+      Model.GadgetSelectionItemChanged (selectedIndex);
 
       TDispatcher.Invoke (RefreshAllDispatcher);
     }
 
-    void TargetItemSelectedDispatcher (TComponentModelItem item)
+    void GadgetChangedDispatcher (TComponentModelItem item)
     {
       if (item.IsNull ()) {
         // to Sibling (Cleanup)
@@ -222,6 +230,13 @@ namespace Gadget.Factory.Pattern.ViewModels
       message.Support.Argument.Types.Select (action);
 
       DelegateCommand.PublishInternalMessage.Execute (message);
+    }
+
+    void EditDispatcher (Server.Models.Component.TEntityAction action)
+    {
+      Model.Edit (action);
+
+      TDispatcher.Invoke (RefreshAllDispatcher);
     }
     #endregion
 

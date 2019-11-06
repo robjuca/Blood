@@ -15,16 +15,16 @@ namespace Gadget.Factory.Pattern.Models
   public class TFactoryListTestModel
   {
     #region Property
-    public ObservableCollection<TFactoryListItemInfo> TestItemsSource
+    public ObservableCollection<TFactoryListItemInfo> GadgetItemsSource
     {
       get;
     }
 
-    public string TestCount
+    public string GadgetItemsSourceCount
     {
       get
       {
-        return ($"[ {TestItemsSource.Count} ]");
+        return ($"[ {GadgetItemsSource.Count} ]");
       }
     }
     #endregion
@@ -32,9 +32,10 @@ namespace Gadget.Factory.Pattern.Models
     #region Constructor
     public TFactoryListTestModel ()
     {
-      TestItemsSource = new ObservableCollection<TFactoryListItemInfo> ();
+      GadgetItemsSource = new ObservableCollection<TFactoryListItemInfo> ();
 
-      ItemInfoCheckedCollection = new Collection<TFactoryListItemInfo> ();
+      GadgetFullCollection = new Collection<TComponentModelItem> ();
+      GadgetCheckedCollection = new Collection<TFactoryListItemInfo> ();
     }
     #endregion
 
@@ -46,7 +47,8 @@ namespace Gadget.Factory.Pattern.Models
 
       action.ThrowNull ();
 
-      TestItemsSource.Clear ();
+      GadgetFullCollection.Clear ();
+      GadgetItemsSource.Clear ();
 
       foreach (var modelAction in action.CollectionAction.ModelCollection) {
         action.ModelAction.CopyFrom (modelAction.Value);
@@ -56,23 +58,25 @@ namespace Gadget.Factory.Pattern.Models
 
         var gadgetItem = TComponentModelItem.Create (action);
 
+        GadgetFullCollection.Add (gadgetItem);
+
         var checkedItem = IsChecked (gadgetItem.Id);
 
         if (checkedItem.IsEmpty) {
           if (gadgetItem.Enabled) {
             if (gadgetItem.Busy.IsFalse ()) {
-              TestItemsSource.Add (TFactoryListItemInfo.Create (gadgetItem));
+              GadgetItemsSource.Add (TFactoryListItemInfo.Create (gadgetItem));
             }
           }
         }
 
         else {
-          TestItemsSource.Add (checkedItem);
+          GadgetItemsSource.Add (checkedItem);
         }
       }
     }
 
-    internal void ItemInfoChecked (TFactoryListItemInfo itemInfo, bool isChecked)
+    internal void GadgetItemChecked (TFactoryListItemInfo itemInfo, bool isChecked)
     {
       if (itemInfo.NotNull ()) {
         itemInfo.IsChecked = isChecked;
@@ -97,7 +101,7 @@ namespace Gadget.Factory.Pattern.Models
     {
       action.ThrowNull ();
 
-      foreach (var item in ItemInfoCheckedCollection) {
+      foreach (var item in GadgetCheckedCollection) {
         var componentRelation = Server.Models.Component.ComponentRelation.CreateDefault;
         componentRelation.ChildId = item.Id;
         componentRelation.ChildCategory = item.CategoryValue;
@@ -106,17 +110,62 @@ namespace Gadget.Factory.Pattern.Models
 
         action.CollectionAction.ComponentRelationCollection.Add (componentRelation);
       }
+
+      // update summary
+      if (action.SupportAction.SummaryInfo.GadgetCount.ContainsKey ("gadget")) {
+        action.SupportAction.SummaryInfo.GadgetCount ["gadget"]++;
+      }
+
+      else {
+        action.SupportAction.SummaryInfo.GadgetCount.Add ("gadget", 1);
+      }
+    }
+
+    internal void Edit (Server.Models.Component.TEntityAction action)
+    {
+      action.ThrowNull ();
+
+      foreach (var targetId in action.ModelAction.GadgetTestModel.Targets) {
+        var gadgetItem = GadgetById (targetId);
+
+        // found
+        if (gadgetItem.Id.NotEmpty ()) {
+          var itemInfo = TFactoryListItemInfo.Create (gadgetItem);
+          itemInfo.IsChecked = true;
+
+          AddChecked (itemInfo);
+        }
+      }
+
+      // remove my self
+      var id = action.ModelAction.GadgetTestModel.Id;
+
+      foreach (var item in GadgetItemsSource) {
+        if (item.Id.Equals (id)) {
+          GadgetItemsSource.Remove (item);
+          break;
+        }
+      }
     }
 
     internal void Cleanup ()
     {
-      ItemInfoCheckedCollection.Clear ();
-      TestItemsSource.Clear ();
+      GadgetCheckedCollection.Clear ();
+      GadgetItemsSource.Clear ();
+
+      foreach (var item in GadgetFullCollection) {
+        GadgetItemsSource.Add (TFactoryListItemInfo.Create (item));
+      }
     }
     #endregion
 
     #region property
-    Collection<TFactoryListItemInfo> ItemInfoCheckedCollection
+    Collection<TComponentModelItem> GadgetFullCollection
+    {
+      get;
+    }
+
+    Collection<TFactoryListItemInfo> GadgetCheckedCollection
     {
       get;
     }
@@ -128,7 +177,7 @@ namespace Gadget.Factory.Pattern.Models
       var item = TFactoryListItemInfo.CreateDefault;
 
       if (itemInfo.NotNull ()) {
-        foreach (var itemInfoChecked in ItemInfoCheckedCollection) {
+        foreach (var itemInfoChecked in GadgetCheckedCollection) {
           if (itemInfoChecked.Contains (itemInfo)) {
             item.CopyFrom (itemInfo);
             break;
@@ -143,7 +192,7 @@ namespace Gadget.Factory.Pattern.Models
     {
       var item = TFactoryListItemInfo.CreateDefault;
 
-      foreach (var itemInfoChecked in ItemInfoCheckedCollection) {
+      foreach (var itemInfoChecked in GadgetCheckedCollection) {
         if (itemInfoChecked.Contains (id)) {
           item.CopyFrom (itemInfoChecked);
           break;
@@ -155,17 +204,31 @@ namespace Gadget.Factory.Pattern.Models
 
     void AddChecked (TFactoryListItemInfo itemInfo)
     {
-      ItemInfoCheckedCollection.Add (itemInfo);
+      GadgetCheckedCollection.Add (itemInfo);
     }
 
     void RemoveChecked (Guid id)
     {
-      foreach (var itemInfoChecked in ItemInfoCheckedCollection) {
+      foreach (var itemInfoChecked in GadgetCheckedCollection) {
         if (itemInfoChecked.Contains (id)) {
-          ItemInfoCheckedCollection.Remove (itemInfoChecked);
+          GadgetCheckedCollection.Remove (itemInfoChecked);
           break;
         }
       }
+    }
+
+    TComponentModelItem GadgetById (Guid id)
+    {
+      var itemModel = TComponentModelItem.CreateDefault;
+
+      foreach (var item in GadgetFullCollection) {
+        if (item.Id.Equals (id)) {
+          itemModel.CopyFrom (item);
+          break;
+        }
+      }
+
+      return (itemModel);
     }
     #endregion
   };

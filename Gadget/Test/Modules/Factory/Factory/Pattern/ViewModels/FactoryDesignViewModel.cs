@@ -49,12 +49,6 @@ namespace Gadget.Factory.Pattern.ViewModels
             TDispatcher.Invoke (RefreshDesignDispatcher);
           }
 
-          // TODO: review
-          // Request
-          //if (message.IsAction (TInternalMessageAction.Request)) {
-          //  TDispatcher.BeginInvoke (RequestDesignDispatcher, Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction));
-          //}
-
           // Cleanup
           if (message.IsAction (TInternalMessageAction.Cleanup)) {
             TDispatcher.Invoke (RefreshDesignDispatcher);
@@ -81,32 +75,6 @@ namespace Gadget.Factory.Pattern.ViewModels
         RaiseChanged ();
       }
     }
-
-    void RequestDesignDispatcher (Server.Models.Component.TEntityAction action)
-    {
-      
-
-      //action.ModelAction.ExtensionTargetModel.Header = header;
-      //action.ModelAction.ExtensionTargetModel.Footer = footer;
-      //action.ModelAction.ExtensionTargetModel.Paragraph = paragraph;
-      //action.ModelAction.ExtensionImageModel.Distorted = m_DesignControl.Model.ImageDistorted;
-
-      //// RTF to HTML Converter
-      //MarkupConverter.IMarkupConverter markupConverter = new MarkupConverter.MarkupConverter ();
-
-      //action.ModelAction.ExtensionTargetModel.HtmlHeader = markupConverter.ConvertRtfToHtml (header);
-      //action.ModelAction.ExtensionTargetModel.HtmlFooter = markupConverter.ConvertRtfToHtml (footer);
-      //action.ModelAction.ExtensionTargetModel.HtmlParagraph = markupConverter.ConvertRtfToHtml (paragraph);
-
-      // Problem : font-size attribute must be in pixel like fonte-size:12px
-      CorrectFontSize (action);
-
-      // to Sibling
-      var message = new TFactorySiblingMessageInternal (TInternalMessageAction.Response, TChild.Design, TypeInfo);
-      message.Support.Argument.Types.Select (action);
-
-      DelegateCommand.PublishInternalMessage.Execute (message);
-    }
     #endregion
 
     #region Property
@@ -121,50 +89,6 @@ namespace Gadget.Factory.Pattern.ViewModels
 
     #region Fields
     TComponentDesignControl                                     m_DesignControl;
-    #endregion
-
-    #region Support
-    void CorrectFontSize (Server.Models.Component.TEntityAction action)
-    {
-      // header
-      //string s = action.ModelAction.ExtensionTargetModel.HtmlHeader;
-      //action.ModelAction.ExtensionTargetModel.HtmlHeader = ReplaceAction (s);
-
-      // footer
-      //s = action.ModelAction.ExtensionTargetModel.HtmlFooter;
-      //action.ModelAction.ExtensionTargetModel.HtmlFooter = ReplaceAction (s);
-
-      // paragrapf
-      //s = action.ModelAction.ExtensionTargetModel.HtmlParagraph;
-      //action.ModelAction.ExtensionTargetModel.HtmlParagraph = ReplaceAction (s);
-    }
-
-    string ReplaceAction (string html)
-    {
-      // replace: font-size:??; for font-size:??px;
-      string towatch = "font-size:";
-
-      string s = html;
-      int index = s.IndexOf (towatch);
-
-      while (index > -1) {
-        int pos = index + towatch.Length + 2;
-        s = s.Insert (pos, "px");
-
-        index = s.IndexOf (towatch, pos);
-
-        // ;font-size:10px.666666666666666;margin zap this
-        var toRemove = pos + 2;
-        var ss = s [toRemove];
-
-        while (ss.Equals (';').IsFalse ()) {
-          s = s.Remove (toRemove, 1);
-          ss = s [toRemove];
-        }
-      }
-
-      return (s);
-    }
     #endregion
   };
   //---------------------------//

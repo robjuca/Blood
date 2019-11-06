@@ -58,14 +58,6 @@ namespace Gadget.Collection.Pattern.ViewModels
                 }
               }
             }
-
-            // Select - ById
-            if (message.Support.Argument.Types.IsOperation (Server.Models.Infrastructure.TOperation.Select, Server.Models.Infrastructure.TExtension.ById)) {
-              if (message.Result.IsValid) {
-                var action = Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction);
-                //TDispatcher.BeginInvoke (ResponseModelDispatcher, action);
-              }
-            }
           }
 
           // Reload
@@ -127,25 +119,6 @@ namespace Gadget.Collection.Pattern.ViewModels
       TDispatcher.Invoke (RefreshAllDispatcher);
     }
 
-    void RequestModelDispatcher ()
-    {
-      if (Model.Current.Id.NotEmpty ()) {
-        // Select - ById
-        var action = Server.Models.Component.TEntityAction.Create (
-          Server.Models.Infrastructure.TCategory.Target,
-          Server.Models.Infrastructure.TOperation.Select,
-          Server.Models.Infrastructure.TExtension.ById);
-
-        action.Id = Model.Current.Id;
-
-        // to parent
-        var message = new TCollectionMessageInternal (TInternalMessageAction.Request, TChild.List, TypeInfo);
-        message.Support.Argument.Types.Select (action);
-
-        DelegateCommand.PublishInternalMessage.Execute (message);
-      }
-    }
-
     void ItemSelectedDispatcher (TComponentModelItem item)
     {
       if (item.IsNull ()) {
@@ -155,7 +128,10 @@ namespace Gadget.Collection.Pattern.ViewModels
       }
 
       else {
-        TDispatcher.Invoke (RequestModelDispatcher);
+        var message = new TCollectionSiblingMessageInternal (TInternalMessageAction.Select, TChild.List, TypeInfo);
+        message.Support.Argument.Types.Item.CopyFrom (item);
+
+        DelegateCommand.PublishInternalMessage.Execute (message);
       }
     }
 

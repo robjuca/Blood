@@ -12,11 +12,11 @@
         <converters:TCollectionToBitmapImageConverter  x:Key="CollectionToBitmapImageConverter" />
 
         <CollectionViewSource x:Key="MaterialModelItemsViewSource"
-                              Source="{Binding Model.MaterialItemsSource}">
+                              Source="{Binding Model.GadgetSelectionItemsSource}">
         </CollectionViewSource>
 
         <CollectionViewSource x:Key="TargetModelItemsViewSource"
-                              Source="{Binding Model.TargetItemsSource}">
+                              Source="{Binding Model.GadgetItemsSource}">
             <CollectionViewSource.SortDescriptions>
                 <scm:SortDescription PropertyName="Name"
                                      Direction="Ascending" />
@@ -32,7 +32,7 @@
                 <StackPanel Orientation="Horizontal">
                     <CheckBox Margin="0 0 5 0"
                               IsChecked="{Binding IsChecked}"
-                              caliburn:Message.Attach="[Event Checked] = [OnItemInfoChecked ($datacontext)]; [Event Unchecked] = [OnItemInfoUnchecked ($datacontext)]" />
+                              caliburn:Message.Attach="[Event Checked] = [OnGadgetItemChecked ($datacontext)]; [Event Unchecked] = [OnGadgetItemUnchecked ($datacontext)]" />
 
                     <Image Margin="0 0 5 0"
                            Width="16"
@@ -77,15 +77,15 @@
 
                         <Border Grid.Column="1">
                             <TextBlock HorizontalAlignment="Right"
-                                       Text="{Binding Model.MaterialCount}" />
+                                       Text="{Binding Model.GadgetSelectionItemsSourceCount}" />
                         </Border>
                     </Grid>
 
                     <ComboBox x:Name="MaterialList"
                               ItemsSource="{Binding Source={StaticResource MaterialModelItemsViewSource}}"
                               DisplayMemberPath="Name"
-                              SelectedItem="{Binding Model.MaterialSelected}"
-                              caliburn:Message.Attach="[Event SelectionChanged] = [OnMaterialSelectionChanged (MaterialList.SelectedIndex)]" />
+                              SelectedItem="{Binding Model.GadgetSelectionCurrent}"
+                              caliburn:Message.Attach="[Event SelectionChanged] = [OnGadgetSelectionChanged (MaterialList.SelectedIndex)]" />
                 </StackPanel>
             </Border>
 
@@ -119,7 +119,7 @@
 
                             <Border Grid.Column="1">
                                 <TextBlock HorizontalAlignment="Right"
-                                           Text="{Binding Model.TargetCount}" />
+                                           Text="{Binding Model.GadgetItemsSourceCount}" />
                             </Border>
                         </Grid>
                     </Border>
@@ -127,10 +127,9 @@
                     <!--list-->
                     <Border Grid.Row="1">
                         <ListBox x:Name="TargetList"
-                                 SelectedIndex="{Binding Model.TargetSelectedIndex}"
                                  ItemsSource="{Binding Source={StaticResource TargetModelItemsViewSource}}"
                                  ItemTemplate="{StaticResource TargetListDataTemplate}"
-                                 caliburn:Message.Attach="[Event SelectionChanged] = [OnTargetSelectionChanged (TargetList.SelectedItem)]" />
+                                 caliburn:Message.Attach="[Event SelectionChanged] = [OnGadgetChanged (TargetList.SelectedItem)]" />
                     </Border>
                 </Grid>
             </Border>

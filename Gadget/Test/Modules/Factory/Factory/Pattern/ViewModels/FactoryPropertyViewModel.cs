@@ -151,8 +151,6 @@ namespace Gadget.Factory.Pattern.ViewModels
       // to Sibling
       var message = new TFactorySiblingMessageInternal (TInternalMessageAction.Cleanup, TChild.Property, TypeInfo);
       DelegateCommand.PublishInternalMessage.Execute (message);
-
-      PropertySelect ("all");
     }
 
     void RequestModelDispatcher (Server.Models.Component.TEntityAction action)
@@ -168,7 +166,13 @@ namespace Gadget.Factory.Pattern.ViewModels
     {
       action.ModelAction.GadgetTestModel.CopyFrom (action);
 
-      TDispatcher.BeginInvoke (ApplyDispatcher, action);  
+      if (action.SupportAction.SummaryInfo.GadgetCount.ContainsKey ("gadget")) {
+        if (action.SupportAction.SummaryInfo.GadgetCount ["gadget"].Equals (2)) {
+          action.SupportAction.SummaryInfo.GadgetCount.Remove ("gadget");
+          
+          TDispatcher.BeginInvoke (ApplyDispatcher, action);  
+        }
+      }
     }
 
     void ApplyDispatcher (Server.Models.Component.TEntityAction action)

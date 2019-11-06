@@ -62,6 +62,13 @@ namespace Gadget.Factory.Pattern.ViewModels
 
         // from sibilig
         if (message.Node.IsSiblingToMe (TChild.List)) {
+          // PropertySelect
+          if (message.IsAction (TInternalMessageAction.PropertySelect)) {
+            if (message.Support.Argument.Args.PropertyName.Equals ("all")) {
+              TDispatcher.BeginInvoke (EditDispatcher, Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction));
+            }
+          }
+
           // Request
           if (message.IsAction (TInternalMessageAction.Request)) {
             TDispatcher.BeginInvoke (RequestDesignDispatcher, Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction));
@@ -72,6 +79,7 @@ namespace Gadget.Factory.Pattern.ViewModels
             Model.Cleanup ();
 
             TDispatcher.Invoke (RefreshAllDispatcher);
+            TDispatcher.Invoke (RequestDataDispatcher);
           }
         }
       }
@@ -79,14 +87,14 @@ namespace Gadget.Factory.Pattern.ViewModels
     #endregion
 
     #region View Event
-    public void OnTestItemInfoChecked (TFactoryListItemInfo itemInfo)
+    public void OnGadgetItemChecked (TFactoryListItemInfo itemInfo)
     {
-      Model.ItemInfoChecked (itemInfo, isChecked: true);
+      Model.GadgetItemChecked (itemInfo, isChecked: true);
     }
 
-    public void OnTestItemInfoUnchecked (TFactoryListItemInfo itemInfo)
+    public void OnGadgetItemUnchecked (TFactoryListItemInfo itemInfo)
     {
-      Model.ItemInfoChecked (itemInfo, isChecked: false);
+      Model.GadgetItemChecked (itemInfo, isChecked: false);
     }
     #endregion
 
@@ -130,6 +138,13 @@ namespace Gadget.Factory.Pattern.ViewModels
       message.Support.Argument.Types.Select (action);
 
       DelegateCommand.PublishInternalMessage.Execute (message);
+    }
+
+    void EditDispatcher (Server.Models.Component.TEntityAction action)
+    {
+      Model.Edit (action);
+
+      TDispatcher.Invoke (RefreshAllDispatcher);
     }
     #endregion
 

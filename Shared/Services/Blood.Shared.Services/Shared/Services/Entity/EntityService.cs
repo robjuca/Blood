@@ -52,7 +52,7 @@ namespace Shared.Services
     #endregion
 
     #region Fields
-    Shared.ViewModel.TEntityService                             m_EntityService;
+    readonly Shared.ViewModel.TEntityService                              m_EntityService;
     #endregion
 
     #region Support

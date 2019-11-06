@@ -15,62 +15,47 @@ namespace Gadget.Factory.Pattern.Models
   public class TFactoryListTargetModel
   {
     #region Property
-    public ObservableCollection<TComponentModelItem> MaterialItemsSource
+    public ObservableCollection<TComponentModelItem> GadgetSelectionItemsSource
     {
       get;
     }
 
-    public ObservableCollection<TFactoryListItemInfo> TargetItemsSource
+    public ObservableCollection<TFactoryListItemInfo> GadgetItemsSource
     {
       get;
     }
 
-    public int MaterialCount
+    public int GadgetSelectionItemsSourceCount
     {
       get
       {
-        return (MaterialItemsSource.Count);
+        return (GadgetSelectionItemsSource.Count);
       }
     }
 
-    public int TargetCount
+    public int GadgetItemsSourceCount
     {
       get
       {
-        return (TargetItemsSource.Count);
+        return (GadgetItemsSource.Count);
       }
     }
 
-    public TComponentModelItem MaterialSelected
+    public TComponentModelItem GadgetSelectionCurrent
     {
       get;
       set;
-    }
-
-    public int TargetSelectedIndex
-    {
-      get;
-      set;
-    }
-
-    public TFactoryListItemInfo TargetCurrent
-    {
-      get;
     }
     #endregion
 
     #region Constructor
     public TFactoryListTargetModel ()
     {
-      MaterialItemsSource = new ObservableCollection<TComponentModelItem> ();
-      TargetItemsSource = new ObservableCollection<TFactoryListItemInfo> ();
+      GadgetSelectionItemsSource = new ObservableCollection<TComponentModelItem> ();
+      GadgetItemsSource = new ObservableCollection<TFactoryListItemInfo> ();
 
-      TargetSelectedIndex = -1;
-
-      TargetCurrent = TFactoryListItemInfo.CreateDefault;
-
-      Targets = new Collection<TComponentModelItem> ();
-      ItemInfoCheckedCollection = new Collection<TFactoryListItemInfo> ();
+      GadgetFullCollection = new Collection<TComponentModelItem> ();
+      GadgetCheckedCollection = new Collection<TFactoryListItemInfo> ();
     }
     #endregion
 
@@ -82,7 +67,7 @@ namespace Gadget.Factory.Pattern.Models
 
       action.ThrowNull ();
 
-      Targets.Clear ();
+      GadgetFullCollection.Clear ();
 
       foreach (var gadget in action.CollectionAction.GadgetTargetCollection) {
         var modelAction = action.CollectionAction.ModelCollection [gadget.Id];
@@ -90,14 +75,14 @@ namespace Gadget.Factory.Pattern.Models
 
         action.ModelAction.CopyFrom (modelAction);
 
-        Targets.Add (TComponentModelItem.Create (action));
+        GadgetFullCollection.Add (TComponentModelItem.Create (action));
       }
     }
 
     internal void RefreshModel (Server.Models.Component.TEntityAction action)
     {
       // for gadget Material
-      MaterialItemsSource.Clear ();
+      GadgetSelectionItemsSource.Clear ();
 
       foreach (var gadget in action.CollectionAction.GadgetMaterialCollection) {
         var modelAction = action.CollectionAction.ModelCollection [gadget.Id];
@@ -105,9 +90,9 @@ namespace Gadget.Factory.Pattern.Models
 
         action.ModelAction.CopyFrom (modelAction);
 
-        MaterialItemsSource.Add (TComponentModelItem.Create (action));
+        GadgetSelectionItemsSource.Add (TComponentModelItem.Create (action));
 
-        foreach (var item in Targets) {
+        foreach (var item in GadgetFullCollection) {
           // Node reverse here
           if (item.NodeModel.ParentId.Equals (gadget.Id)) {
             item.GadgetMaterialModel.CopyFrom (gadget);
@@ -115,45 +100,41 @@ namespace Gadget.Factory.Pattern.Models
         }
       }
 
-      if (MaterialItemsSource.Count > 0) {
-        MaterialSelected = MaterialItemsSource [0];
+      if (GadgetSelectionItemsSource.Count > 0) {
+        GadgetSelectionCurrent = GadgetSelectionItemsSource [0];
       }
     }
 
-    internal void MaterialChanged (int selectdIndex)
+    internal void GadgetSelectionItemChanged (int selectdIndex)
     {
-      TargetItemsSource.Clear ();
+      GadgetItemsSource.Clear ();
 
       if (selectdIndex.Equals (-1)) {
-        TargetSelectedIndex = -1;
+        // do nothing
       }
 
       else {
-        foreach (var gadgetItem in Targets) {
-          if (gadgetItem.GadgetTargetModel.MaterialId.Equals (MaterialSelected.GadgetMaterialModel.Id)) {
+        foreach (var gadgetItem in GadgetFullCollection) {
+          if (gadgetItem.GadgetTargetModel.MaterialId.Equals (GadgetSelectionCurrent.GadgetMaterialModel.Id)) {
             var checkedItem = IsChecked (gadgetItem.Id);
 
             if (checkedItem.IsEmpty) {
               if (gadgetItem.Enabled) {
                 if (gadgetItem.Busy.IsFalse ()) {
-                  TargetItemsSource.Add (TFactoryListItemInfo.Create (gadgetItem));
+                  GadgetItemsSource.Add (TFactoryListItemInfo.Create (gadgetItem));
                 }
               }
             }
 
             else {
-              TargetItemsSource.Add (checkedItem);
+              GadgetItemsSource.Add (checkedItem);
             }
           }
-        }
-
-        if (TargetCount > 0) {
-          TargetSelectedIndex = 0;
         }
       }
     }
 
-    internal void ItemInfoChecked (TFactoryListItemInfo itemInfo, bool isChecked)
+    internal void GadgetItemChecked (TFactoryListItemInfo itemInfo, bool isChecked)
     {
       if (itemInfo.NotNull ()) {
         itemInfo.IsChecked = isChecked;
@@ -178,7 +159,7 @@ namespace Gadget.Factory.Pattern.Models
     {
       action.ThrowNull ();
 
-      foreach (var item in ItemInfoCheckedCollection) {
+      foreach (var item in GadgetCheckedCollection) {
         var componentRelation = Server.Models.Component.ComponentRelation.CreateDefault;
         componentRelation.ChildId = item.Id;
         componentRelation.ChildCategory = item.CategoryValue;
@@ -187,24 +168,62 @@ namespace Gadget.Factory.Pattern.Models
 
         action.CollectionAction.ComponentRelationCollection.Add (componentRelation);
       }
+
+      // update summary
+      if (action.SupportAction.SummaryInfo.GadgetCount.ContainsKey ("gadget")) {
+        action.SupportAction.SummaryInfo.GadgetCount ["gadget"]++;
+      }
+
+      else {
+        action.SupportAction.SummaryInfo.GadgetCount.Add ("gadget", 1);
+      }
+    }
+
+    internal void Edit (Server.Models.Component.TEntityAction action)
+    {
+      action.ThrowNull ();
+
+      foreach (var targetId in action.ModelAction.GadgetTestModel.Targets) {
+        var gadgetItem = GadgetById (targetId);
+
+        // found
+        if (gadgetItem.Id.NotEmpty ()) {
+          var selectionId = gadgetItem.GadgetTargetModel.MaterialId;
+
+          // ensure gadget selection is current
+          if (GadgetSelectionCurrent.Id.Equals (selectionId).IsFalse ()) {
+            foreach (var item in GadgetSelectionItemsSource) {
+              if (item.Id.Equals (selectionId)) {
+                GadgetSelectionCurrent = item;
+                break;
+              }
+            }            
+          }
+
+          var itemInfo = TFactoryListItemInfo.Create (gadgetItem);
+          itemInfo.IsChecked = true;
+
+          AddChecked (itemInfo);
+          GadgetSelectionItemChanged (0); // dummy index
+        }
+      }
     }
 
     internal void Cleanup ()
     {
-      ItemInfoCheckedCollection.Clear ();
-      TargetItemsSource.Clear ();
+      GadgetCheckedCollection.Clear ();
 
-      MaterialChanged (-1);
+      GadgetSelectionItemChanged (0); // dummy index
     }
     #endregion
 
     #region property
-    Collection<TComponentModelItem> Targets
+    Collection<TComponentModelItem> GadgetFullCollection
     {
       get;
     }
 
-    Collection<TFactoryListItemInfo> ItemInfoCheckedCollection
+    Collection<TFactoryListItemInfo> GadgetCheckedCollection
     {
       get;
     }
@@ -216,7 +235,7 @@ namespace Gadget.Factory.Pattern.Models
       var item = TFactoryListItemInfo.CreateDefault;
 
       if (itemInfo.NotNull ()) {
-        foreach (var itemInfoChecked in ItemInfoCheckedCollection) {
+        foreach (var itemInfoChecked in GadgetCheckedCollection) {
           if (itemInfoChecked.Contains (itemInfo)) {
             item.CopyFrom (itemInfo);
             break;
@@ -231,7 +250,7 @@ namespace Gadget.Factory.Pattern.Models
     {
       var item = TFactoryListItemInfo.CreateDefault;
 
-      foreach (var itemInfoChecked in ItemInfoCheckedCollection) {
+      foreach (var itemInfoChecked in GadgetCheckedCollection) {
         if (itemInfoChecked.Contains (id)) {
           item.CopyFrom (itemInfoChecked);
           break;
@@ -243,17 +262,31 @@ namespace Gadget.Factory.Pattern.Models
 
     void AddChecked (TFactoryListItemInfo itemInfo)
     {
-      ItemInfoCheckedCollection.Add (itemInfo);
+      GadgetCheckedCollection.Add (itemInfo);
     }
 
     void RemoveChecked (Guid id)
     {
-      foreach (var itemInfoChecked in ItemInfoCheckedCollection) {
+      foreach (var itemInfoChecked in GadgetCheckedCollection) {
         if (itemInfoChecked.Contains (id)) {
-          ItemInfoCheckedCollection.Remove (itemInfoChecked);
+          GadgetCheckedCollection.Remove (itemInfoChecked);
           break;
         }
       }
+    }
+
+    TComponentModelItem GadgetById (Guid id)
+    {
+      var itemModel = TComponentModelItem.CreateDefault;
+
+      foreach (var item in GadgetFullCollection) {
+        if (item.Id.Equals (id)) {
+          itemModel.CopyFrom (item);
+          break;
+        }
+      }
+
+      return (itemModel);
     }
     #endregion
   };

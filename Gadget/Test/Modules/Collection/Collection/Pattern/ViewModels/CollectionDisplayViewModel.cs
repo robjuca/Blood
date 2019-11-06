@@ -66,18 +66,6 @@ namespace Gadget.Collection.Pattern.ViewModels
           if (message.IsAction (TInternalMessageAction.Cleanup)) {
             TDispatcher.Invoke (CleanupDispatcher);
           }
-
-          // FilterEnter
-          if (message.IsAction (TInternalMessageAction.FilterEnter)) {
-            Model.IsViewEnabled = false;
-            RaiseChanged ();
-          }
-
-          // FilterLeave
-          if (message.IsAction (TInternalMessageAction.FilterLeave)) {
-            Model.IsViewEnabled = true;
-            RaiseChanged ();
-          }
         }
       }
     }
