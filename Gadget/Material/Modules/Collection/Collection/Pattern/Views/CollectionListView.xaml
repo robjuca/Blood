@@ -15,32 +15,28 @@
                     BorderThickness="0 .1 0 .1"
                     BorderBrush="LightGray">
 
-                <!-- busy, name, disable-->
+                <!-- busy, disable, name-->
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition />
-                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
                     <!--busy-->
                     <Border Grid.Column="0"
                             Padding="0 0 3 0">
-                        <ContentControl Visibility="{Binding BusyVisibility}"
-                                        Style="{DynamicResource ContentBusyIcon}" />
+                        <StackPanel Orientation="Horizontal">
+                            <ContentControl Visibility="{Binding DisableVisibility}"
+                                            Style="{DynamicResource DisableIcon}" />
+                            <ContentControl Visibility="{Binding BusyVisibility}"
+                                            Style="{DynamicResource ContentBusyIcon}" />
+                        </StackPanel>
                     </Border>
 
                     <!--name-->
                     <Border Grid.Column="1">
                         <TextBlock Text="{Binding Name}"
                                    FontWeight="Bold" />
-                    </Border>
-
-                    <!--disable-->
-                    <Border Grid.Column="2"
-                            Padding="3 0 0 0">
-                        <ContentControl Visibility="{Binding DisableVisibility}"
-                                        Style="{DynamicResource DisableIcon}" />
                     </Border>
                 </Grid>
             </Border>

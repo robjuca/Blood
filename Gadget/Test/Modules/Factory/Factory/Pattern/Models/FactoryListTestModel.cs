@@ -111,22 +111,16 @@ namespace Gadget.Factory.Pattern.Models
         action.CollectionAction.ComponentRelationCollection.Add (componentRelation);
       }
 
-      // update summary
-      if (action.SupportAction.SummaryInfo.GadgetCount.ContainsKey ("gadget")) {
-        action.SupportAction.SummaryInfo.GadgetCount ["gadget"]++;
-      }
-
-      else {
-        action.SupportAction.SummaryInfo.GadgetCount.Add ("gadget", 1);
-      }
+      // update rule
+      action.SupportAction.Rule.Pump ("gadget");
     }
 
     internal void Edit (Server.Models.Component.TEntityAction action)
     {
       action.ThrowNull ();
 
-      foreach (var targetId in action.ModelAction.GadgetTestModel.Targets) {
-        var gadgetItem = GadgetById (targetId);
+      foreach (var gadgetTargetId in action.ModelAction.GadgetTestModel.Targets) {
+        var gadgetItem = GadgetById (gadgetTargetId);
 
         // found
         if (gadgetItem.Id.NotEmpty ()) {
@@ -134,6 +128,7 @@ namespace Gadget.Factory.Pattern.Models
           itemInfo.IsChecked = true;
 
           AddChecked (itemInfo);
+          GadgetItemsSource.Add (itemInfo);
         }
       }
 

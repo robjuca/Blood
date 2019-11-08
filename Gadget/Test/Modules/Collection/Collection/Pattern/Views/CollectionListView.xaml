@@ -15,37 +15,38 @@
                     BorderThickness="0 .1 0 .1"
                     BorderBrush="LightGray">
 
-                <!-- busy, name, disable-->
+                <!-- busy, disable, name-->
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition />
-                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <!--busy-->
-                    <Border Grid.Column="0"
-                            Padding="0 0 3 0">
-                        <ContentControl Visibility="{Binding BusyVisibility}"
-                                        Style="{DynamicResource ContentBusyIcon}" />
+                    <!--busy, disable-->
+                    <Border Grid.Column="0">
+                        <StackPanel Orientation="Horizontal">
+                            <ContentControl Visibility="{Binding BusyVisibility}"
+                                            Style="{DynamicResource ContentBusyIcon}" />
+                            <ContentControl Visibility="{Binding DisableVisibility}"
+                                            Style="{DynamicResource DisableIcon}" />
+                        </StackPanel>
+
                     </Border>
 
                     <!--target count, name-->
-                    <Border Grid.Column="1">
+                    <Border Grid.Column="1"
+                            Padding="3 0 0 0">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding GadgetTestModel.TargetCount}" />
+                            <TextBlock>
+                                <Run Text="[" />
+                                <Run Text="{Binding GadgetTestModel.TargetCount, Mode=OneWay}" />
+                                <Run Text="]" />
+                            </TextBlock>
 
                             <TextBlock Margin="3 0 0 0"
                                        Text="{Binding Name}"
                                        FontWeight="Bold" />
                         </StackPanel>
-                    </Border>
-
-                    <!--disable-->
-                    <Border Grid.Column="2"
-                            Padding="3 0 0 0">
-                        <ContentControl Visibility="{Binding DisableVisibility}"
-                                        Style="{DynamicResource DisableIcon}" />
                     </Border>
                 </Grid>
             </Border>

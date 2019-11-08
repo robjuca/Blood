@@ -47,7 +47,7 @@ namespace Gadget.Collection.Pattern.Models
     {
       get
       {
-        return (ComponentModelItem.IsNull () ? false : (ComponentModelItem.InfoModel.Enabled.IsFalse ()));
+        return (ComponentModelItem.IsNull () ? false : ComponentModelItem.CanRemove);
       }
     }
 

@@ -45,7 +45,7 @@ namespace Gadget.Factory.Pattern.Models
     {
       get
       {
-        return (ModelItem.GadgetTargetModel.Target);
+        return (ModelItem.Name);
       }
     }
 

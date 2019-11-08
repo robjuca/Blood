@@ -340,7 +340,9 @@ namespace Shared.Types
               m_Names.Add ("StyleVerticalProperty");
               m_Names.Add ("ColumnsProperty");
               m_Names.Add ("RowsProperty");
+              m_Names.Add ("ReferenceProperty");
               m_Names.Add ("SelectionProperty");
+              m_Names.Add ("ValueProperty");
             }
             break;
 

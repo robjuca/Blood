@@ -224,7 +224,7 @@ namespace Shared.ViewModel
     {
       get
       {
-        return (Enabled.IsFalse () && HasChild.IsFalse () && ValidateId);
+        return (Enabled.IsFalse () && HasChild.IsFalse () && ValidateId && GadgetCanRemove ());
       }
     }
 
@@ -269,10 +269,8 @@ namespace Shared.ViewModel
     {
       get
       {
-        return (false /*
-          Category.Equals (Server.Models.Infrastructure.TCategory.Shelf) ||
-          Category.Equals (Server.Models.Infrastructure.TCategory.Drawer) ||
-          Category.Equals (Server.Models.Infrastructure.TCategory.Chest)*/
+        return (
+          Category.Equals (Server.Models.Infrastructure.TCategory.Test)
         );
       }
     }
@@ -436,6 +434,22 @@ namespace Shared.ViewModel
       alias.CopyFrom (this);
 
       return (alias);
+    }
+
+    public bool GadgetCanRemove ()
+    {
+      var res = true;
+
+      if (HasRelation) {
+        switch (Category) {
+          case Server.Models.Infrastructure.TCategory.Test: {
+              res = GadgetTestModel.CanRemove;
+            }
+            break;
+        }
+      }
+
+      return (res);
     }
     #endregion
 

@@ -62,12 +62,14 @@ namespace Gadget.Collection.Pattern.ViewModels
       if (message.IsModule (TResource.TModule.Services)) {
         // Response
         if (message.IsAction (TMessageAction.Response)) {
-          // to child
-          var messageInternal = new TCollectionMessageInternal (message.Result, TInternalMessageAction.Response, TypeInfo);
-          messageInternal.Node.SelectRelationParent (message.Node.Child);
-          messageInternal.Support.Argument.Types.CopyFrom (message.Support.Argument.Types);
+          if (message.Node.IsModuleName (TModuleName.Collection)) {
+            // to child
+            var messageInternal = new TCollectionMessageInternal (message.Result, TInternalMessageAction.Response, TypeInfo);
+            messageInternal.Node.SelectRelationParent (message.Node.Child);
+            messageInternal.Support.Argument.Types.CopyFrom (message.Support.Argument.Types);
 
-          DelegateCommand.PublishInternalMessage.Execute (messageInternal);
+            DelegateCommand.PublishInternalMessage.Execute (messageInternal);
+          }
         }
       }
 
@@ -95,6 +97,16 @@ namespace Gadget.Collection.Pattern.ViewModels
       if (message.IsModule (TResource.TModule.Collection)) {
         // from child only
         if (message.Node.IsRelationChild) {
+          // Request
+          if (message.IsAction (TInternalMessageAction.Request)) {
+            // to module
+            var messageModule = new TCollectionMessage (TMessageAction.Request, TypeInfo);
+            messageModule.Node.SelectRelationModule (message.Node.Child, TModuleName.Collection);
+            messageModule.Support.Argument.Types.CopyFrom (message.Support.Argument.Types);
+
+            DelegateCommand.PublishMessage.Execute (messageModule);
+          }
+
           // RefreshModel
           if (message.IsAction (TInternalMessageAction.RefreshModel)) {
             // to module
@@ -113,16 +125,6 @@ namespace Gadget.Collection.Pattern.ViewModels
             // to module (Update)
             var messageModule = new TCollectionMessage (TMessageAction.Update, TypeInfo);
             messageModule.Node.SelectRelationModule (TChild.None);
-
-            DelegateCommand.PublishMessage.Execute (messageModule);
-          }
-
-          // Request
-          if (message.IsAction (TInternalMessageAction.Request)) {
-            // to module
-            var messageModule = new TCollectionMessage (TMessageAction.Request, TypeInfo);
-            messageModule.Node.SelectRelationModule (message.Node.Child);
-            messageModule.Support.Argument.Types.CopyFrom (message.Support.Argument.Types);
 
             DelegateCommand.PublishMessage.Execute (messageModule);
           }

@@ -20,7 +20,7 @@
             <CollectionViewSource.GroupDescriptions>
                 <PropertyGroupDescription PropertyName="Busy" />
             </CollectionViewSource.GroupDescriptions>
-            
+
             <CollectionViewSource.SortDescriptions>
                 <scm:SortDescription PropertyName="GadgetTargetModel.Target"
                                      Direction="Ascending" />
@@ -32,19 +32,23 @@
                     BorderThickness="0 .1 0 .1"
                     BorderBrush="LightGray">
 
-                <!-- busy, name, disable-->
+                <!-- busy, disable, name -->
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition />
-                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
                     <!--busy-->
                     <Border Grid.Column="0"
                             Padding="0 0 3 0">
-                        <ContentControl Visibility="{Binding BusyVisibility}"
-                                        Style="{DynamicResource ContentBusyIcon}" />
+                        <StackPanel Orientation="Horizontal">
+                            <ContentControl Visibility="{Binding BusyVisibility}"
+                                            Style="{DynamicResource ContentBusyIcon}" />
+
+                            <ContentControl Visibility="{Binding DisableVisibility}"
+                                            Style="{DynamicResource DisableIcon}" />
+                        </StackPanel>
                     </Border>
 
                     <!--material, name-->
@@ -59,13 +63,6 @@
                                        FontWeight="Bold"
                                        VerticalAlignment="Center" />
                         </StackPanel>
-                    </Border>
-
-                    <!--disable-->
-                    <Border Grid.Column="2"
-                            Padding="3 0 0 0">
-                        <ContentControl Visibility="{Binding DisableVisibility}"
-                                        Style="{DynamicResource DisableIcon}" />
                     </Border>
                 </Grid>
             </Border>

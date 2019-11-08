@@ -97,6 +97,16 @@ namespace Gadget.Collection.Pattern.ViewModels
       if (message.IsModule (TResource.TModule.Collection)) {
         // from child only
         if (message.Node.IsRelationChild) {
+          // Request
+          if (message.IsAction (TInternalMessageAction.Request)) {
+            // to module
+            var messageModule = new TCollectionMessage (TMessageAction.Request, TypeInfo);
+            messageModule.Node.SelectRelationModule (message.Node.Child, TModuleName.Collection);
+            messageModule.Support.Argument.Types.CopyFrom (message.Support.Argument.Types);
+
+            DelegateCommand.PublishMessage.Execute (messageModule);
+          }
+
           // RefreshModel
           if (message.IsAction (TInternalMessageAction.RefreshModel)) {
             // to module
@@ -115,16 +125,6 @@ namespace Gadget.Collection.Pattern.ViewModels
             // to module (Update)
             var messageModule = new TCollectionMessage (TMessageAction.Update, TypeInfo);
             messageModule.Node.SelectRelationModule (TChild.None);
-
-            DelegateCommand.PublishMessage.Execute (messageModule);
-          }
-
-          // Request
-          if (message.IsAction (TInternalMessageAction.Request)) {
-            // to module
-            var messageModule = new TCollectionMessage (TMessageAction.Request, TypeInfo);
-            messageModule.Node.SelectRelationModule (message.Node.Child, TModuleName.Collection);
-            messageModule.Support.Argument.Types.CopyFrom (message.Support.Argument.Types);
 
             DelegateCommand.PublishMessage.Execute (messageModule);
           }

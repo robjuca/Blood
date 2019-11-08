@@ -22,6 +22,11 @@ namespace Server.Models.Infrastructure
       get;
     }
 
+    public rr.Library.Types.TRule Rule
+    {
+      get;
+    }
+
     public Collection<TSummaryInfo> SummaryCollection
     {
       get;
@@ -38,6 +43,8 @@ namespace Server.Models.Infrastructure
     {
       SummaryInfo = TSummaryInfo.CreateDefault;
       SelectionInfo = TSelectionInfo.CreateDefault;
+
+      Rule = rr.Library.Types.TRule.CreateDefault;
 
       SummaryCollection = new Collection<TSummaryInfo> ();
       SelectionCollection = new Collection<TSelectionInfo> ();

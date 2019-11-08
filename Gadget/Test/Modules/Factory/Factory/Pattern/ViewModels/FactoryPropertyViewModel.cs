@@ -155,6 +155,8 @@ namespace Gadget.Factory.Pattern.ViewModels
 
     void RequestModelDispatcher (Server.Models.Component.TEntityAction action)
     {
+      action.SupportAction.Rule.Add (TRuleInfo.Create ("gadget", 2));
+
       // request from Sibling
       var message = new TFactorySiblingMessageInternal (TInternalMessageAction.Request, TChild.Property, TypeInfo);
       message.Support.Argument.Types.Select (action);
@@ -166,12 +168,10 @@ namespace Gadget.Factory.Pattern.ViewModels
     {
       action.ModelAction.GadgetTestModel.CopyFrom (action);
 
-      if (action.SupportAction.SummaryInfo.GadgetCount.ContainsKey ("gadget")) {
-        if (action.SupportAction.SummaryInfo.GadgetCount ["gadget"].Equals (2)) {
-          action.SupportAction.SummaryInfo.GadgetCount.Remove ("gadget");
-          
-          TDispatcher.BeginInvoke (ApplyDispatcher, action);  
-        }
+      if (action.SupportAction.Rule.IsCommit ("gadget")) {
+        action.SupportAction.Rule.Remove ("gadget");
+        
+        TDispatcher.BeginInvoke (ApplyDispatcher, action);  
       }
     }
 

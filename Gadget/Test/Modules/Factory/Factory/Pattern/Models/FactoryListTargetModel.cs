@@ -85,17 +85,19 @@ namespace Gadget.Factory.Pattern.Models
       GadgetSelectionItemsSource.Clear ();
 
       foreach (var gadget in action.CollectionAction.GadgetMaterialCollection) {
-        var modelAction = action.CollectionAction.ModelCollection [gadget.Id];
-        modelAction.GadgetMaterialModel.CopyFrom (gadget);
+        if (gadget.Enabled) {
+          var modelAction = action.CollectionAction.ModelCollection [gadget.Id];
+          modelAction.GadgetMaterialModel.CopyFrom (gadget);
 
-        action.ModelAction.CopyFrom (modelAction);
+          action.ModelAction.CopyFrom (modelAction);
 
-        GadgetSelectionItemsSource.Add (TComponentModelItem.Create (action));
+          GadgetSelectionItemsSource.Add (TComponentModelItem.Create (action));
 
-        foreach (var item in GadgetFullCollection) {
-          // Node reverse here
-          if (item.NodeModel.ParentId.Equals (gadget.Id)) {
-            item.GadgetMaterialModel.CopyFrom (gadget);
+          foreach (var item in GadgetFullCollection) {
+            // Node reverse here
+            if (item.NodeModel.ParentId.Equals (gadget.Id)) {
+              item.GadgetMaterialModel.CopyFrom (gadget);
+            }
           }
         }
       }
@@ -169,14 +171,8 @@ namespace Gadget.Factory.Pattern.Models
         action.CollectionAction.ComponentRelationCollection.Add (componentRelation);
       }
 
-      // update summary
-      if (action.SupportAction.SummaryInfo.GadgetCount.ContainsKey ("gadget")) {
-        action.SupportAction.SummaryInfo.GadgetCount ["gadget"]++;
-      }
-
-      else {
-        action.SupportAction.SummaryInfo.GadgetCount.Add ("gadget", 1);
-      }
+      // update rule
+      action.SupportAction.Rule.Pump ("gadget");
     }
 
     internal void Edit (Server.Models.Component.TEntityAction action)

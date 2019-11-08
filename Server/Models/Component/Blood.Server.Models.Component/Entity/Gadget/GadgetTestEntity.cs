@@ -19,7 +19,15 @@ namespace Server.Models.Component
       {
         return (Targets.Count);
       }
-    } 
+    }
+
+    public bool CanRemove
+    {
+      get
+      {
+        return (Enabled.IsFalse () && TargetCount.Equals (0));
+      }
+    }
     #endregion
 
     #region Constructor
