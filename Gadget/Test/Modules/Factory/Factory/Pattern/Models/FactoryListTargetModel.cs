@@ -33,11 +33,19 @@ namespace Gadget.Factory.Pattern.Models
       }
     }
 
-    public int GadgetItemsSourceCount
+    public string GadgetCount
     {
       get
       {
-        return (GadgetItemsSource.Count);
+        return ($"[{GadgetItemsSource.Count}] [{GadgetCheckedCollection.Count}]");
+      }
+    }
+
+    public bool IsListButtonEnabled
+    {
+      get
+      {
+        return (GadgetCheckedCollection.Count.Equals (0));
       }
     }
 

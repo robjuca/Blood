@@ -59,7 +59,8 @@ namespace Gadget.Collection.Pattern.ViewModels
         if (message.Node.IsSiblingToMe (TChild.Display)) {
           // Select
           if (message.IsAction (TInternalMessageAction.Select)) {
-            TDispatcher.BeginInvoke (SelectDispatcher, message.Support.Argument.Types.Item);
+            var action = Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction);
+            TDispatcher.BeginInvoke (SelectDispatcher, action);
           }
 
           // Cleanup
@@ -84,9 +85,9 @@ namespace Gadget.Collection.Pattern.ViewModels
     #endregion
 
     #region Dispatcher
-    void SelectDispatcher (TComponentModelItem item)
+    void SelectDispatcher (Server.Models.Component.TEntityAction action)
     {
-      Model.Select (item);
+      Model.Select (action);
 
       if (FrameworkElementView.FindName ("DisplayControl") is Shared.Gadget.Test.TComponentDisplayControl control) {
         control.RefreshDesign ();

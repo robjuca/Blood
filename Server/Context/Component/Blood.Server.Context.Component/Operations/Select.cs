@@ -128,6 +128,7 @@ namespace Server.Context.Component
       DATA OUT
       - action.ModelAction (model)
       - action.CollectionAction.ModeCollection {id, model} (for each node)
+      - action.CollectionAction.EntityCollection {id, model} (for each relation)
       */
 
       try {
@@ -154,7 +155,7 @@ namespace Server.Context.Component
             var componentRelationList = action.ComponentOperation.ParentIdCollection [action.Id];
 
             foreach (var relation in componentRelationList) {
-              var entityAction = Server.Models.Component.TEntityAction.CreateDefault;
+              var entityAction = Server.Models.Component.TEntityAction.Create (TCategoryType.FromValue (relation.ChildCategory));
               entityAction.CollectionAction.SetCollection (action.CollectionAction.CategoryRelationCollection);
               entityAction.Id = relation.ChildId;
 
@@ -164,6 +165,7 @@ namespace Server.Context.Component
             }
           }
 
+          
           action.RefreshComponentModel (); // refresh model
         }
       }

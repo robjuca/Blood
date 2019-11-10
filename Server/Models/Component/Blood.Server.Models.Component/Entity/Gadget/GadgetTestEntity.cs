@@ -111,6 +111,14 @@ namespace Server.Models.Component
         if (action.CategoryType.IsCategory (Infrastructure.TCategory.Test)) {
           // update model action
           CopyFrom (action.ModelAction); // my self
+
+          // target list
+          foreach (var item in action.ComponentOperation.ParentIdCollection) {
+            foreach (var relation in item.Value) {
+              Targets.Add (relation.ChildId);
+            }
+          }
+
           action.ModelAction.GadgetTestModel.CopyFrom (this);
 
           action.CollectionAction.GadgetTestCollection.Clear ();

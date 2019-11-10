@@ -89,12 +89,12 @@ namespace Gadget.Factory.Pattern.ViewModels
     #region View Event
     public void OnGadgetItemChecked (TFactoryListItemInfo itemInfo)
     {
-      Model.GadgetItemChecked (itemInfo, isChecked: true);
+      TDispatcher.BeginInvoke (ItemCheckedChangedDispatcher, itemInfo);
     }
 
     public void OnGadgetItemUnchecked (TFactoryListItemInfo itemInfo)
     {
-      Model.GadgetItemChecked (itemInfo, isChecked: false);
+      TDispatcher.BeginInvoke (ItemCheckedChangedDispatcher, itemInfo);
     }
     #endregion
 
@@ -136,6 +136,20 @@ namespace Gadget.Factory.Pattern.ViewModels
       // to Sibling
       var message = new TFactorySiblingMessageInternal (TInternalMessageAction.Response, TChild.List, TypeInfo);
       message.Support.Argument.Types.Select (action);
+
+      DelegateCommand.PublishInternalMessage.Execute (message);
+    }
+
+    void ItemCheckedChangedDispatcher (TFactoryListItemInfo itemInfo)
+    {
+      Model.GadgetItemChecked (itemInfo, isChecked: itemInfo.IsChecked);
+
+      TDispatcher.Invoke (RefreshAllDispatcher);
+
+      // to Sibling
+      var message = new TFactorySiblingMessageInternal (TInternalMessageAction.PropertySelect, TChild.List, TypeInfo);
+      message.Support.Argument.Types.Item.CopyFrom (itemInfo.ModelItem);
+      message.Support.Argument.Args.Select (itemInfo.IsChecked ? "GadgetAdd" : "GadgetRemove");
 
       DelegateCommand.PublishInternalMessage.Execute (message);
     }

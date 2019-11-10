@@ -58,6 +58,17 @@ namespace Gadget.Collection.Pattern.ViewModels
                 }
               }
             }
+
+            // Select - ById
+            if (message.Support.Argument.Types.IsOperation (Server.Models.Infrastructure.TOperation.Select, Server.Models.Infrastructure.TExtension.ById)) {
+              if (message.Result.IsValid) {
+                // Gadget Test
+                if (message.Support.Argument.Types.IsOperationCategory (Server.Models.Infrastructure.TCategory.Test)) {
+                  var action = Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction);
+                  TDispatcher.BeginInvoke (ResponseSelectByIdDispatcher, action);
+                }
+              }
+            }
           }
 
           // Reload
@@ -128,11 +139,30 @@ namespace Gadget.Collection.Pattern.ViewModels
       }
 
       else {
-        var message = new TCollectionSiblingMessageInternal (TInternalMessageAction.Select, TChild.List, TypeInfo);
-        message.Support.Argument.Types.Item.CopyFrom (item);
+        // to parent
+        // Select - ById
+        var action = Server.Models.Component.TEntityAction.Create (
+          Server.Models.Infrastructure.TCategory.Test,
+          Server.Models.Infrastructure.TOperation.Select,
+          Server.Models.Infrastructure.TExtension.ById
+        );
+
+        action.Id = item.Id;
+
+        var message = new TCollectionMessageInternal (TInternalMessageAction.Request, TChild.List, TypeInfo);
+        message.Support.Argument.Types.Select (action);
 
         DelegateCommand.PublishInternalMessage.Execute (message);
       }
+    }
+
+    void ResponseSelectByIdDispatcher (Server.Models.Component.TEntityAction action)
+    {
+      // to Sibling
+      var message = new TCollectionSiblingMessageInternal (TInternalMessageAction.Select, TChild.List, TypeInfo);
+      message.Support.Argument.Types.Select (action);
+
+      DelegateCommand.PublishInternalMessage.Execute (message);
     }
 
     void ReloadDispatcher ()

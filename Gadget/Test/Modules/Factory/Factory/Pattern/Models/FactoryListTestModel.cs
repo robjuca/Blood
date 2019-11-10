@@ -20,11 +20,19 @@ namespace Gadget.Factory.Pattern.Models
       get;
     }
 
-    public string GadgetItemsSourceCount
+    public string GadgetCount
     {
       get
       {
-        return ($"[ {GadgetItemsSource.Count} ]");
+        return ($"[{GadgetItemsSource.Count}] [{GadgetCheckedCollection.Count}]");
+      }
+    }
+
+    public bool IsListButtonEnabled
+    {
+      get
+      {
+        return (GadgetCheckedCollection.Count.Equals (0));
       }
     }
     #endregion

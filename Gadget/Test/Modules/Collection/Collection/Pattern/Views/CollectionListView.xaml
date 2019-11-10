@@ -81,7 +81,7 @@
                     </Border>
 
                     <Border Grid.Column="1">
-                        <TextBlock HorizontalAlignment="Right"
+                        <TextBlock HorizontalAlignment="Right" 
                                    Text="{Binding Model.TestCount}" />
                     </Border>
                 </Grid>

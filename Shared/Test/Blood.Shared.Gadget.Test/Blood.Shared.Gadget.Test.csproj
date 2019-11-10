@@ -41,6 +41,10 @@
     <Reference Include="Blood.Shared.Types">
       <HintPath>..\..\..\Bin\Blood.Shared.Types.dll</HintPath>
     </Reference>
+    <Reference Include="Blood.Shared.ViewModel, Version=1.0.2019.10, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Bin\Blood.Shared.ViewModel.dll</HintPath>
+    </Reference>
     <Reference Include="rr.Library.Helper">
       <HintPath>..\..\..\Bin\rr.Library.Helper.dll</HintPath>
     </Reference>

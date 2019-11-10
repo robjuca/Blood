@@ -65,7 +65,7 @@
 
                             <Border Grid.Column="1">
                                 <TextBlock HorizontalAlignment="Right"
-                                           Text="{Binding Model.GadgetItemsSourceCount}" />
+                                           Text="{Binding Model.GadgetCount}" />
                             </Border>
                         </Grid>
                     </Border>
@@ -85,6 +85,7 @@
             <Border Grid.Row="1"
                     Padding="0 0 4 0">
                 <Button HorizontalAlignment="Right"
+                        IsEnabled="{Binding Model.IsListButtonEnabled}"
                         caliburn:Message.Attach="[Event Click] = [OnTargetListCommadClicked ()]">
                     <ContentControl Style="{DynamicResource GadgetTargetIcon}" />
                 </Button>

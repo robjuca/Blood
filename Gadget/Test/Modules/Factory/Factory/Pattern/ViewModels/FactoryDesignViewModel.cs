@@ -45,12 +45,25 @@ namespace Gadget.Factory.Pattern.ViewModels
         if (message.Node.IsSiblingToMe (TChild.Design)) {
           // PropertySelect
           if (message.IsAction (TInternalMessageAction.PropertySelect)) {
-            Model.SelectModel (Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction));
-            TDispatcher.Invoke (RefreshDesignDispatcher);
+            if (message.Support.Argument.Args.PropertyName.Equals ("all")) {
+              Model.SelectModel (Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction));
+              TDispatcher.Invoke (RefreshDesignDispatcher);
+            }
+
+            if (message.Support.Argument.Args.PropertyName.Equals ("GadgetAdd")) {
+              Model.AddModel (message.Support.Argument.Types.Item);
+              TDispatcher.Invoke (RefreshDesignDispatcher);
+            }
+
+            if (message.Support.Argument.Args.PropertyName.Equals ("GadgetRemove")) {
+              Model.RemoveModel (message.Support.Argument.Types.Item);
+              TDispatcher.Invoke (RefreshDesignDispatcher);
+            }
           }
 
           // Cleanup
           if (message.IsAction (TInternalMessageAction.Cleanup)) {
+            Model.Cleanup ();
             TDispatcher.Invoke (RefreshDesignDispatcher);
           }
         }

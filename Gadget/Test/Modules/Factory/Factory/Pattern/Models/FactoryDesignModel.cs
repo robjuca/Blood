@@ -4,6 +4,10 @@
 ----------------------------------------------------------------*/
 
 //----- Include
+using System;
+
+using Shared.ViewModel;
+
 using Shared.Gadget.Test;
 //---------------------------//
 
@@ -30,9 +34,30 @@ namespace Gadget.Factory.Pattern.Models
     internal void SelectModel (Server.Models.Component.TEntityAction action)
     {
       ComponentControlModel.SelectModel (action);
+      ComponentControlModel.SelectTargets (action);
+    }
+
+    internal void AddModel (TComponentModelItem item) 
+    {
+      item.ThrowNull ();
+
+      ComponentControlModel.AddTarget (item);
+    }
+
+    internal void RemoveModel (TComponentModelItem item)
+    {
+      item.ThrowNull ();
+
+      ComponentControlModel.RemoveTarget (item);
+    }
+
+    internal void Cleanup ()
+    {
+      ComponentControlModel.Cleanup ();
     }
     #endregion
   };
   //---------------------------//
+
 
 }  // namespace

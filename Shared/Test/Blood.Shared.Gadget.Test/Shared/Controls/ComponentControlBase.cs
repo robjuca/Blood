@@ -5,11 +5,15 @@
 
 //----- Include
 using System;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
+using Server.Models.Infrastructure;
+
 using Shared.Types;
+using Shared.ViewModel;
 //---------------------------//
 
 namespace Shared.Gadget.Test
@@ -41,15 +45,16 @@ namespace Shared.Gadget.Test
     {
       Background = Brushes.White;
 
-      m_Grid = new Grid () 
+      m_Grid = new Grid ()
       {
-        HorizontalAlignment= HorizontalAlignment.Center,
-        VerticalAlignment=VerticalAlignment.Center,
+        HorizontalAlignment = HorizontalAlignment.Left,
+        VerticalAlignment = VerticalAlignment.Top,
       };
 
-      m_Grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Auto) }); // row 0 image, material
+      m_Grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Auto) }); // row 0 test name
       m_Grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Auto) }); // row 1 description
       m_Grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Auto) }); // row 2 external link
+      m_Grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Star) }); // row 3 targets
 
       AddChild (m_Grid);
 
@@ -66,7 +71,93 @@ namespace Shared.Gadget.Test
     #region Members
     public void RefreshDesign ()
     {
+      m_Grid.Children.Clear ();
+
+      // test name (row 0)
+      var textBlock = new TextBlock ()
+      {
+        VerticalAlignment = VerticalAlignment.Center,
+        Text = Model.ControlModel.Test,
+        FontWeight = FontWeights.UltraBold,
+        FontSize = 14,
+      };
+
+      textBlock.SetValue (Grid.RowProperty, 0);  // row  0
+      m_Grid.Children.Add (textBlock);
+
+      // test description (row 1)
+      var textBox = new TextBox ()
+      {
+        Margin = new Thickness (3),
+        Padding = new Thickness (3),
+        FontSize = 11,
+        TextWrapping = TextWrapping.Wrap,
+        TextAlignment = TextAlignment.Left,
+        VerticalAlignment = VerticalAlignment.Top,
+        VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+        Text = Model.ControlModel.Description,
+      };
       
+
+      textBox.SetValue (Grid.RowProperty, 1);  // row  1
+      m_Grid.Children.Add (textBox);
+
+      // external link (row 2)
+      if (string.IsNullOrEmpty (Model.ControlModel.ExternalLink).IsFalse ()) {
+        try {
+          var externalLink = new System.Windows.Documents.Hyperlink (new System.Windows.Documents.Run ("more info"))
+          {
+            NavigateUri = new Uri (Model.ControlModel.ExternalLink),
+            TargetName = "_blanc",
+          };
+
+          var textBoxLink = new TextBlock (externalLink)
+          {
+            HorizontalAlignment = HorizontalAlignment.Center,
+            Margin = new Thickness (3),
+          };
+
+          textBoxLink.SetValue (Grid.RowProperty, 2);
+          m_Grid.Children.Add (textBoxLink); // row 2
+        }
+
+        //TODO: what for??
+        catch (Exception) {
+          // do nothing
+        }
+      }
+
+      // targets (row 3)
+      var targetsItemSource = new Collection<TComponentModelItem> ();
+
+      foreach (var item in Model.Targets) {
+        if (item.Category.Equals (TCategory.Target)) {
+          targetsItemSource.Add (item);
+        }
+      }
+
+      string itemTemplate = @"
+        <DataTemplate
+            xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'
+            xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml'>
+              <StackPanel>
+                <TextBlock FontWeight='Bold' Foreground='DarkBlue' Text='{Binding GadgetTargetModel.Target}' />
+                <TextBox FontSize='10px' IsReadOnly='true' MaxWidth='680' TextWrapping='Wrap' Text='{Binding GadgetTargetModel.Description}' />
+                <TextBlock Foreground='DarkGreen' Text='{Binding GadgetTargetModel.Reference}' />
+              </StackPanel>
+        </DataTemplate>"
+      ;
+
+      using (var sr = new System.IO.MemoryStream (System.Text.Encoding.UTF8.GetBytes (itemTemplate))) {
+        var listboxTargets = new ListBox ()
+        {
+          ItemsSource = targetsItemSource,
+          ItemTemplate = System.Windows.Markup.XamlReader.Load (sr) as DataTemplate,
+        };
+
+        listboxTargets.SetValue (Grid.RowProperty, 3);  // row  3
+        m_Grid.Children.Add (listboxTargets);
+      }
     }
     #endregion
 
@@ -97,7 +188,7 @@ namespace Shared.Gadget.Test
     #endregion
 
     #region Fields
-    readonly Grid                                     m_Grid;
+    readonly Grid m_Grid;
     #endregion
   };
   //---------------------------//

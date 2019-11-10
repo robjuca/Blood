@@ -39,7 +39,7 @@ namespace Gadget.Collection.Pattern.Models
     {
       get
       {
-        return (ComponentModelItem.NotNull ());
+        return (ComponentModelItem.IsNull () ? false : ComponentModelItem.Busy.IsFalse ());
       }
     }
 
@@ -51,24 +51,10 @@ namespace Gadget.Collection.Pattern.Models
       }
     }
 
-    public Visibility DistortedVisibility
-    {
-      get;
-      set;
-    }
-
     public Visibility BusyVisibility
     {
       get;
       set;
-    }
-
-    public bool Distorted
-    {
-      get
-      {
-        return (false);
-      }
     }
 
     public Guid Id
@@ -86,30 +72,34 @@ namespace Gadget.Collection.Pattern.Models
       ComponentControlModel = TComponentControlModel.CreateDefault;
 
       BusyVisibility = Visibility.Hidden;
-      DistortedVisibility = Visibility.Hidden;
 
       IsViewEnabled = true;
     }
     #endregion
 
     #region Members
-    internal void Select (TComponentModelItem item)
+    internal void Select (Server.Models.Component.TEntityAction action)
     {
-      ComponentModelItem = item ?? throw new System.ArgumentNullException (nameof (item));
+      action.ThrowNull ();
+
+      ComponentModelItem = TComponentModelItem.Create (action);
+
+      ComponentControlModel.SelectModel (action);
 
       BusyVisibility = ComponentModelItem.BusyVisibility;
-      DistortedVisibility = Distorted ? Visibility.Visible : Visibility.Hidden;
     }
 
     internal void RequestModel (Server.Models.Component.TEntityAction action)
     {
       action.ThrowNull ();
 
+      action.Id = Id;
+      action.CategoryType.Select (ComponentModelItem.Category);
+
       var modelAction = ComponentModelItem.RequestModel ();
       action.ModelAction.CopyFrom (modelAction);
 
-      action.Id = Id;
-      action.CategoryType.Select (ComponentModelItem.Category);
+      ComponentControlModel.RequestTargets (action);
     }
 
     internal void Cleanup ()
@@ -118,7 +108,6 @@ namespace Gadget.Collection.Pattern.Models
       ComponentControlModel = TComponentControlModel.CreateDefault;
 
       BusyVisibility = Visibility.Hidden;
-      DistortedVisibility = Visibility.Hidden;
     }
     #endregion
   };
