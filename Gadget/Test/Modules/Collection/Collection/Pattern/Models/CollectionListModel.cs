@@ -6,6 +6,7 @@
 //----- Include
 using System;
 using System.Collections.ObjectModel;
+using System.Windows;
 
 using Shared.ViewModel;
 //---------------------------//
@@ -15,7 +16,7 @@ namespace Gadget.Collection.Pattern.Models
   public sealed class TCollectionListModel
   {
     #region Property
-    public ObservableCollection<TComponentModelItem> ItemsSource
+    public ObservableCollection<TModelItemInfo> ItemsSource
     {
       get; 
     }
@@ -45,7 +46,7 @@ namespace Gadget.Collection.Pattern.Models
     {
       SelectedIndex = -1;
 
-      ItemsSource = new ObservableCollection<TComponentModelItem> ();
+      ItemsSource = new ObservableCollection<TModelItemInfo> ();
       Current = TComponentModelItem.CreateDefault;
     }
     #endregion
@@ -66,13 +67,110 @@ namespace Gadget.Collection.Pattern.Models
         var model = action.ModelAction.GadgetTestModel;
         model.CopyFrom (action); // set gadget model
 
-        ItemsSource.Add (TComponentModelItem.Create (action));
+        ItemsSource.Add (TModelItemInfo.Create (action));
       }
 
       if (ItemsSource.Count > 0) {
         SelectedIndex = 0;
       }
     }
+    #endregion
+  };
+  //---------------------------//
+
+  //----- TModelItemInfo
+  public class TModelItemInfo
+  {
+    #region Property
+    public TComponentModelItem ModelItem
+    {
+      get;
+    }
+
+    public Guid Id
+    {
+      get
+      {
+        return (ModelItem.Id);
+      }
+    }
+
+    public string Name
+    {
+      get
+      {
+        return (ModelItem.Name);
+      }
+    }
+
+    public int TargetCount
+    {
+      get
+      {
+        return (ModelItem.GadgetTestModel.TargetCount);
+      }
+    }
+
+    public int RelationCategoryValue
+    {
+      get
+      {
+        return (ModelItem.GadgetTestModel.RelationCategory);
+      }
+    }
+
+    public Server.Models.Infrastructure.TCategory RelationCategory
+    {
+      get
+      {
+        return (Server.Models.Infrastructure.TCategoryType.FromValue (RelationCategoryValue));
+      }
+    }
+
+    public Visibility TestRelationVisibility
+    {
+      get
+      {
+        return (HasTarget ? RelationCategory.Equals (Server.Models.Infrastructure.TCategory.Test) ? Visibility.Visible : Visibility.Collapsed : Visibility.Collapsed);
+      }
+    }
+
+    public Visibility TargetRelationVisibility
+    {
+      get
+      {
+        return (HasTarget ? RelationCategory.Equals (Server.Models.Infrastructure.TCategory.Target) ? Visibility.Visible : Visibility.Collapsed : Visibility.Collapsed);
+      }
+    }
+    #endregion
+
+    #region Constructor
+    TModelItemInfo (Server.Models.Component.TEntityAction action)
+      : this ()
+    {
+      if (action.NotNull ()) {
+        ModelItem = TComponentModelItem.Create (action);
+      }
+    }
+
+    TModelItemInfo ()
+    {
+      ModelItem = TComponentModelItem.CreateDefault;
+    }
+    #endregion
+
+    #region property
+    public bool HasTarget
+    {
+      get
+      {
+        return (TargetCount.Equals (0).IsFalse ());
+      }
+    } 
+    #endregion
+
+    #region Static
+    public static TModelItemInfo Create (Server.Models.Component.TEntityAction action) => new TModelItemInfo (action); 
     #endregion
   };
   //---------------------------//

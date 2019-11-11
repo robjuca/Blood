@@ -10,7 +10,7 @@
         <CollectionViewSource x:Key="ModelItemsViewSource"
                               Source="{Binding Model.ItemsSource}">
             <CollectionViewSource.GroupDescriptions>
-                <PropertyGroupDescription PropertyName="GadgetTestModel.RelationCategory" />
+                <PropertyGroupDescription PropertyName="RelationCategory" />
             </CollectionViewSource.GroupDescriptions>
         </CollectionViewSource>
 
@@ -29,9 +29,12 @@
                     <!--busy, disable-->
                     <Border Grid.Column="0">
                         <StackPanel Orientation="Horizontal">
-                            <ContentControl Visibility="{Binding BusyVisibility}"
+                            <!--busy-->
+                            <ContentControl Visibility="{Binding ModelItem.BusyVisibility}"
                                             Style="{DynamicResource ContentBusyIcon}" />
-                            <ContentControl Visibility="{Binding DisableVisibility}"
+                            
+                            <!--disable-->
+                            <ContentControl Visibility="{Binding ModelItem.DisableVisibility}"
                                             Style="{DynamicResource DisableIcon}" />
                         </StackPanel>
 
@@ -41,12 +44,20 @@
                     <Border Grid.Column="1"
                             Padding="3 0 0 0">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock>
+                            <!--relation category-->
+                            <ContentControl Visibility="{Binding TestRelationVisibility}"
+                                            Style="{DynamicResource GadgetTestMiniIcon}" />
+                            <ContentControl Visibility="{Binding TargetRelationVisibility}"
+                                            Style="{DynamicResource GadgetTargetMiniIcon}" />
+                            
+                            <!--count-->
+                            <TextBlock Margin="3 0 0 0">
                                 <Run Text="[" />
-                                <Run Text="{Binding GadgetTestModel.TargetCount, Mode=OneWay}" />
+                                <Run Text="{Binding TargetCount, Mode=OneWay}" />
                                 <Run Text="]" />
                             </TextBlock>
 
+                            <!--name-->
                             <TextBlock Margin="3 0 0 0"
                                        Text="{Binding Name}"
                                        FontWeight="Bold" />
@@ -58,7 +69,7 @@
     </UserControl.Resources>
 
     <Border Padding="2"
-            Width="210">
+            Width="240">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />

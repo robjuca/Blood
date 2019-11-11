@@ -93,9 +93,9 @@ namespace Gadget.Collection.Pattern.ViewModels
     #endregion
 
     #region View Event
-    public void OnSelectionChanged (TComponentModelItem item)
+    public void OnSelectionChanged (TModelItemInfo itemInfo)
     {
-      TDispatcher.BeginInvoke (ItemSelectedDispatcher, item);
+      TDispatcher.BeginInvoke (ItemSelectedDispatcher, itemInfo);
     }
     #endregion
 
@@ -130,9 +130,9 @@ namespace Gadget.Collection.Pattern.ViewModels
       TDispatcher.Invoke (RefreshAllDispatcher);
     }
 
-    void ItemSelectedDispatcher (TComponentModelItem item)
+    void ItemSelectedDispatcher (TModelItemInfo itemInfo)
     {
-      if (item.IsNull ()) {
+      if (itemInfo.IsNull ()) {
         // to Sibling
         var message = new TCollectionSiblingMessageInternal (TInternalMessageAction.Cleanup, TChild.List, TypeInfo);
         DelegateCommand.PublishInternalMessage.Execute (message);
@@ -147,7 +147,7 @@ namespace Gadget.Collection.Pattern.ViewModels
           Server.Models.Infrastructure.TExtension.ById
         );
 
-        action.Id = item.Id;
+        action.Id = itemInfo.Id;
 
         var message = new TCollectionMessageInternal (TInternalMessageAction.Request, TChild.List, TypeInfo);
         message.Support.Argument.Types.Select (action);

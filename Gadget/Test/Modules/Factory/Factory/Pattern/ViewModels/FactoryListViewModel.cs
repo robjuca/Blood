@@ -30,6 +30,7 @@ namespace Gadget.Factory.Pattern.ViewModels
       TypeName = GetType ().Name;
 
       presentation.RequestPresentationCommand (this);
+      presentation.EventSubscribe (this);
     }
     #endregion
 
@@ -44,6 +45,13 @@ namespace Gadget.Factory.Pattern.ViewModels
 
         // from sibilig
         if (message.Node.IsSiblingToMe (TChild.List)) {
+          // PropertySelect
+          if (message.IsAction (TInternalMessageAction.PropertySelect)) {
+            if (message.Support.Argument.Args.PropertyName.Equals ("all")) {
+              TDispatcher.BeginInvoke (EditDispatcher, Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction));
+            }
+          }
+
           // Reload
           if (message.IsAction (TInternalMessageAction.Reload)) {
             // to parent
@@ -68,6 +76,21 @@ namespace Gadget.Factory.Pattern.ViewModels
 
       RaiseChanged ();
     }
+    #endregion
+
+    #region Dispatcher
+    void EditDispatcher (Server.Models.Component.TEntityAction action)
+    {
+      var relationCategory = Server.Models.Infrastructure.TCategoryType.FromValue (action.ModelAction.GadgetTestModel.RelationCategory);
+
+      Model.SlideIndex =
+        relationCategory.Equals (Server.Models.Infrastructure.TCategory.Test) ? 1 :
+        relationCategory.Equals (Server.Models.Infrastructure.TCategory.Target) ? 0 : 
+        Model.SlideIndex
+      ;
+
+      RaiseChanged ();
+    } 
     #endregion
 
     #region Property
