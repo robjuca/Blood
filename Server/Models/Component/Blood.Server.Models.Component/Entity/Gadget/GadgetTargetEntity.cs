@@ -104,6 +104,16 @@ namespace Server.Models.Component
         }
       }
     }
+
+    public void UpdateModel (TComponentModel model, TEntityAction action)
+    {
+      foreach (var item in action.CollectionAction.GadgetMaterialCollection) {
+        if (item.Id.Equals (MaterialId)) {
+          model.GadgetMaterialModel.CopyFrom (item);
+          break;
+        }
+      }
+    }
     #endregion
 
     #region Static

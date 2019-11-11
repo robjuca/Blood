@@ -39,6 +39,7 @@ namespace Server.Models.Component
       Description = string.Empty;
       ExternalLink = string.Empty;
       Enabled = false;
+      RelationCategory = Server.Models.Infrastructure.TCategoryType.ToValue (Server.Models.Infrastructure.TCategory.None);
       Targets = new Collection<Guid> ();
     }
 
@@ -89,6 +90,7 @@ namespace Server.Models.Component
         Description = alias.Description;
         ExternalLink = alias.ExternalLink;
         Enabled = alias.Enabled;
+        RelationCategory = alias.RelationCategory;
         Targets = new Collection<Guid> (alias.Targets);
       }
     }
@@ -100,6 +102,7 @@ namespace Server.Models.Component
         Description = alias.Description;
         ExternalLink = alias.ExternalLink;
         Enabled = alias.Enabled;
+        RelationCategory = alias.RelationCategory;
         Targets = new Collection<Guid> (alias.Targets);
       }
     }
@@ -112,12 +115,21 @@ namespace Server.Models.Component
           // update model action
           CopyFrom (action.ModelAction); // my self
 
+          var relCategory = Server.Models.Infrastructure.TCategoryType.FromValue (RelationCategory);
+
           // target list
           foreach (var item in action.ComponentOperation.ParentIdCollection) {
             foreach (var relation in item.Value) {
               Targets.Add (relation.ChildId);
+
+              if (relCategory.Equals (Server.Models.Infrastructure.TCategory.None)) {
+                relCategory = Server.Models.Infrastructure.TCategoryType.FromValue (relation.ChildCategory);
+              }
             }
           }
+
+          // update
+          RelationCategory = Server.Models.Infrastructure.TCategoryType.ToValue (relCategory);
 
           action.ModelAction.GadgetTestModel.CopyFrom (this);
 
@@ -133,6 +145,26 @@ namespace Server.Models.Component
             modelAction.Value.GadgetTestModel.CopyFrom (gadget); // update colection
 
             action.CollectionAction.GadgetTestCollection.Add (gadget);
+          }
+        }
+      }
+    }
+
+    public void UpdateModel (TEntityAction action)
+    {
+      var relCategory = Server.Models.Infrastructure.TCategoryType.FromValue (RelationCategory);
+
+      if (relCategory.Equals (Server.Models.Infrastructure.TCategory.None)) {
+        if (TargetCount.Equals (0).IsFalse ()) {
+          var targetId = Targets [0];
+
+          foreach (var item in action.ComponentOperation.ParentCategoryCollection) {
+            foreach (var relation in item.Value) {
+              if (relation.ParentId.Equals (Id) && relation.ChildId.Equals (targetId)) {
+                RelationCategory = relation.ChildCategory;
+                return;
+              }
+            }
           }
         }
       }

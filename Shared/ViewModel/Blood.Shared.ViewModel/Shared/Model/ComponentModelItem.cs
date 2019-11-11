@@ -481,16 +481,12 @@ namespace Shared.ViewModel
             break;
 
           case Server.Models.Infrastructure.TCategory.Target: {
-              foreach (var item in action.CollectionAction.GadgetMaterialCollection) {
-                if (item.Id.Equals (modelItem.GadgetTargetModel.MaterialId)) {
-                  modelItem.GadgetMaterialModel.CopyFrom (item);
-                  break;
-                }
-              }
+              modelItem.GadgetTargetModel.UpdateModel (modelItem, action);
             }
             break;
 
           case Server.Models.Infrastructure.TCategory.Test: {
+              modelItem.GadgetTestModel.UpdateModel (action);
             }
             break;
         }
