@@ -128,36 +128,8 @@ namespace Shared.Gadget.Test
       }
 
       // targets (row 3)
-      var targetsItemSource = new Collection<TComponentModelItem> ();
-
-      foreach (var item in Model.Targets) {
-        if (item.Category.Equals (TCategory.Target)) {
-          targetsItemSource.Add (item);
-        }
-      }
-
-      string itemTemplate = @"
-        <DataTemplate
-            xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'
-            xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml'>
-              <StackPanel>
-                <TextBlock FontWeight='Bold' Foreground='DarkBlue' Text='{Binding GadgetTargetModel.Target}' />
-                <TextBox FontSize='10px' IsReadOnly='true' MaxWidth='680' TextWrapping='Wrap' Text='{Binding GadgetTargetModel.Description}' />
-                <TextBlock Foreground='DarkGreen' Text='{Binding GadgetTargetModel.Reference}' />
-              </StackPanel>
-        </DataTemplate>"
-      ;
-
-      using (var sr = new System.IO.MemoryStream (System.Text.Encoding.UTF8.GetBytes (itemTemplate))) {
-        var listboxTargets = new ListBox ()
-        {
-          ItemsSource = targetsItemSource,
-          ItemTemplate = System.Windows.Markup.XamlReader.Load (sr) as DataTemplate,
-        };
-
-        listboxTargets.SetValue (Grid.RowProperty, 3);  // row  3
-        m_Grid.Children.Add (listboxTargets);
-      }
+      InsertTargetRelation ();
+      InsertTestRelation ();
     }
     #endregion
 
@@ -189,6 +161,90 @@ namespace Shared.Gadget.Test
 
     #region Fields
     readonly Grid m_Grid;
+    #endregion
+
+    #region Support
+    void InsertTargetRelation ()
+    {
+      if (Model.IsRelationCategory (TCategory.Target)) {
+        var targetsItemSource = new Collection<TComponentModelItem> ();
+
+        foreach (var item in Model.Targets) {
+          if (item.Category.Equals (TCategory.Target)) {
+            targetsItemSource.Add (item);
+          }
+        }
+
+        string itemTemplate = @"
+          <DataTemplate
+              xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'
+              xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml'>
+                <StackPanel>
+                  <TextBlock FontWeight='Bold' Foreground='DarkBlue' Text='{Binding GadgetTargetModel.Target}' />
+                  <TextBox FontSize='10px' IsReadOnly='true' MaxWidth='680' TextWrapping='Wrap' Text='{Binding GadgetTargetModel.Description}' />
+                  <TextBlock Foreground='DarkGreen' Text='{Binding GadgetTargetModel.Reference}' />
+                </StackPanel>
+          </DataTemplate>"
+        ;
+
+        using (var sr = new System.IO.MemoryStream (System.Text.Encoding.UTF8.GetBytes (itemTemplate))) {
+          var listboxTargets = new ListBox ()
+          {
+            ItemsSource = targetsItemSource,
+            ItemTemplate = System.Windows.Markup.XamlReader.Load (sr) as DataTemplate,
+          };
+
+          listboxTargets.SetValue (Grid.RowProperty, 3);  // row  3
+          m_Grid.Children.Add (listboxTargets);
+        }
+      }
+    }
+
+    void InsertTestRelation ()
+    {
+      if (Model.IsRelationCategory (TCategory.Test)) {
+        var targetsItemSource = new Collection<TRelationComponentControlModel> ();
+
+        var stack = new StackPanel ();
+
+        var scrow = new ScrollViewer ();
+        scrow.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
+        scrow.SetValue (Grid.RowProperty, 3); // row 3
+        scrow.Content = stack;
+        
+        m_Grid.Children.Add (scrow);
+
+        foreach (var modelItem in Model.Targets) {
+          if (modelItem.Category.Equals (TCategory.Test)) {
+            if (Model.HasRelationModels) {
+              if (Model.RequestRelationModel (modelItem.Id) is TComponentControlModel controlModel) {
+                targetsItemSource.Clear ();
+                targetsItemSource.Add (TRelationComponentControlModel.Create (controlModel, modelItem));
+
+                string itemTemplate = @"
+                  <DataTemplate
+                      xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'
+                      xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml'
+                      xmlns:control='clr-namespace:Shared.Gadget.Test;assembly=Blood.Shared.Gadget.Test'>
+                        <control:TComponentDisplayControl Model='{Binding ControlModel}' />
+                  </DataTemplate>"
+                ;
+
+                using (var sr = new System.IO.MemoryStream (System.Text.Encoding.UTF8.GetBytes (itemTemplate))) {
+                  var control = new ContentControl ()
+                  {
+                    Content = targetsItemSource[0],
+                    ContentTemplate = System.Windows.Markup.XamlReader.Load (sr) as DataTemplate,
+                  };
+
+                  stack.Children.Add (control);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
     #endregion
   };
   //---------------------------//

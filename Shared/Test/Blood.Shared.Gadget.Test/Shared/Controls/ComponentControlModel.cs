@@ -20,9 +20,38 @@ namespace Shared.Gadget.Test
       get;
     }
 
+    public int RelationCategoryValue
+    {
+      get
+      {
+        return (ControlModel.RelationCategory);
+      }
+    }
+
+    public Server.Models.Infrastructure.TCategory RelationCategory
+    {
+      get
+      {
+        return (Server.Models.Infrastructure.TCategoryType.FromValue (RelationCategoryValue));
+      }
+    }
+
     public Collection<TComponentModelItem> Targets
     {
       get; 
+    }
+
+    public Collection<TComponentControlModel> RelationControlModels
+    {
+      get;
+    }
+
+    public bool HasRelationModels
+    {
+      get
+      {
+        return (RelationControlModels.Count.Equals (0).IsFalse ());
+      }
     }
     #endregion
 
@@ -32,6 +61,7 @@ namespace Shared.Gadget.Test
       ControlModel = Server.Models.Component.GadgetTest.CreateDefault;
 
       Targets = new Collection<TComponentModelItem> ();
+      RelationControlModels = new Collection<TComponentControlModel> ();
     }
     #endregion
 
@@ -40,6 +70,7 @@ namespace Shared.Gadget.Test
     {
       if (action.NotNull ()) {
         Targets.Clear ();
+        RelationControlModels.Clear ();
 
         ControlModel.CopyFrom (action.ModelAction.GadgetTestModel);
 
@@ -48,6 +79,13 @@ namespace Shared.Gadget.Test
             var targetAction = action.CollectionAction.EntityCollection [targetId];
 
             Targets.Add (TComponentModelItem.Create (targetAction));
+
+            if (targetAction.CategoryType.Category.Equals (Server.Models.Infrastructure.TCategory.Test)) {
+              var controlModel = TComponentControlModel.CreateDefault;
+              controlModel.SelectModel (targetAction);
+
+              RelationControlModels.Add (controlModel);
+            }
           }
         }
       }
@@ -95,10 +133,44 @@ namespace Shared.Gadget.Test
       }
     }
 
+    public bool IsRelationCategory (Server.Models.Infrastructure.TCategory category)
+    {
+      return (RelationCategory.Equals (category));
+    }
+
+    public void CopyFrom (TComponentControlModel alias)
+    {
+      if (alias.NotNull ()) {
+        Cleanup ();
+
+        ControlModel.CopyFrom (alias.ControlModel);
+
+        foreach (var item in alias.Targets) {
+          Targets.Add (item);
+        }
+
+        foreach (var item in alias.RelationControlModels) {
+          RelationControlModels.Add (item);
+        }
+      }
+    }
+
+    public TComponentControlModel RequestRelationModel (Guid id)
+    {
+      foreach (var item in RelationControlModels) {
+        if (item.ControlModel.Id.Equals (id)) {
+          return (item);
+        }
+      }
+
+      return (null);
+    }
     public void Cleanup ()
     {
       ControlModel.CopyFrom (Server.Models.Component.GadgetTest.CreateDefault);
+
       Targets.Clear ();
+      RelationControlModels.Clear ();
     }
     #endregion
 
@@ -117,6 +189,58 @@ namespace Shared.Gadget.Test
 
       return (TComponentModelItem.CreateDefault);
     } 
+    #endregion
+  };
+  //---------------------------//
+
+  //----- TRelationComponentControlModel
+  public class TRelationComponentControlModel
+  {
+    #region Property
+    public TComponentControlModel ControlModel
+    {
+      get;
+      set;
+    }
+
+    public TComponentModelItem ModelItem
+    {
+      get; 
+    }
+    #endregion
+
+    #region Constructor
+    TRelationComponentControlModel (TComponentControlModel controlModel, TComponentModelItem modelItem)
+      : this ()
+    {
+      if (controlModel.NotNull ()) {
+        ControlModel.CopyFrom (controlModel);
+      }
+
+      if (modelItem.NotNull ()) {
+        ModelItem.CopyFrom (modelItem);
+      }
+    }
+
+    TRelationComponentControlModel (TComponentModelItem modelItem)
+      : this ()
+    {
+      if (modelItem.NotNull ()) {
+        ModelItem.CopyFrom (modelItem);
+      }
+    }
+
+    TRelationComponentControlModel ()
+    {
+      ControlModel = TComponentControlModel.CreateDefault;
+      ModelItem = TComponentModelItem.CreateDefault;
+    }
+    #endregion
+
+    #region Static
+    public static TRelationComponentControlModel Create (TComponentModelItem modelItem) => new TRelationComponentControlModel (modelItem);
+
+    public static TRelationComponentControlModel Create (TComponentControlModel controlModel, TComponentModelItem modelItem) => new TRelationComponentControlModel (controlModel, modelItem); 
     #endregion
   };
   //---------------------------//
