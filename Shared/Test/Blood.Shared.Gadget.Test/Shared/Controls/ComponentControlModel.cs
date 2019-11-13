@@ -95,10 +95,17 @@ namespace Shared.Gadget.Test
     {
       if (action.NotNull ()) {
         Targets.Clear ();
+        RelationControlModels.Clear ();
 
         if (action.Param1 is Collection<TComponentModelItem> targets) {
           foreach (var item in targets) {
             Targets.Add (item);
+          }
+        }
+
+        if (action.Param2 is Collection<TComponentControlModel> relations) {
+          foreach (var item in relations) {
+            RelationControlModels.Add (item);
           }
         }
       }
@@ -108,6 +115,7 @@ namespace Shared.Gadget.Test
     {
       if (action.NotNull ()) {
         action.Param1 = Targets;
+        action.Param2 = RelationControlModels;
       }
     }
 

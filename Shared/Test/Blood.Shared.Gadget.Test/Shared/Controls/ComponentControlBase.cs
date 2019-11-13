@@ -203,12 +203,13 @@ namespace Shared.Gadget.Test
     void InsertTestRelation ()
     {
       if (Model.IsRelationCategory (TCategory.Test)) {
-        var targetsItemSource = new Collection<TRelationComponentControlModel> ();
-
         var stack = new StackPanel ();
 
-        var scrow = new ScrollViewer ();
-        scrow.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
+        var scrow = new ScrollViewer
+        {
+          VerticalScrollBarVisibility = ScrollBarVisibility.Auto
+        };
+
         scrow.SetValue (Grid.RowProperty, 3); // row 3
         scrow.Content = stack;
         
@@ -218,27 +219,12 @@ namespace Shared.Gadget.Test
           if (modelItem.Category.Equals (TCategory.Test)) {
             if (Model.HasRelationModels) {
               if (Model.RequestRelationModel (modelItem.Id) is TComponentControlModel controlModel) {
-                targetsItemSource.Clear ();
-                targetsItemSource.Add (TRelationComponentControlModel.Create (controlModel, modelItem));
+                var cc = new TComponentDisplayControl
+                {
+                  Model = controlModel
+                };
 
-                string itemTemplate = @"
-                  <DataTemplate
-                      xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'
-                      xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml'
-                      xmlns:control='clr-namespace:Shared.Gadget.Test;assembly=Blood.Shared.Gadget.Test'>
-                        <control:TComponentDisplayControl Model='{Binding ControlModel}' />
-                  </DataTemplate>"
-                ;
-
-                using (var sr = new System.IO.MemoryStream (System.Text.Encoding.UTF8.GetBytes (itemTemplate))) {
-                  var control = new ContentControl ()
-                  {
-                    Content = targetsItemSource[0],
-                    ContentTemplate = System.Windows.Markup.XamlReader.Load (sr) as DataTemplate,
-                  };
-
-                  stack.Children.Add (control);
-                }
+                stack.Children.Add (cc);
               }
             }
           }
