@@ -124,5 +124,14 @@
   <ItemGroup>
     <Resource Include="Images\MedicalTest.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\MedicalCareRegistration.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\MedicalCareReport.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\MedicalCareTests.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

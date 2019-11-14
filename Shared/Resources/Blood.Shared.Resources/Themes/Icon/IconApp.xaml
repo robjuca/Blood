@@ -305,6 +305,78 @@
         </Setter>
     </Style>
 
+    <!--MenuMedicalCareRegistrationIcon-->
+    <Style x:Key="MenuMedicalCareRegistrationIcon"
+           TargetType="{x:Type ContentControl}">
+        <Setter Property="ToolTip"
+                Value="registration" />
+        <Setter Property="VerticalAlignment"
+                Value="Center" />
+        <Setter Property="HorizontalAlignment"
+                Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ContentControl}">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/MedicalCareRegistration.ico"
+                               Width="28"
+                               Height="28" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--MenuMedicalCareTestsIcon-->
+    <Style x:Key="MenuMedicalCareTestsIcon"
+           TargetType="{x:Type ContentControl}">
+        <Setter Property="ToolTip"
+                Value="tests" />
+        <Setter Property="VerticalAlignment"
+                Value="Center" />
+        <Setter Property="HorizontalAlignment"
+                Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ContentControl}">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/MedicalCareTests.ico"
+                               Width="28"
+                               Height="28" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--MenuMedicalCareReportIcon-->
+    <Style x:Key="MenuMedicalCareReportIcon"
+           TargetType="{x:Type ContentControl}">
+        <Setter Property="ToolTip"
+                Value="report" />
+        <Setter Property="VerticalAlignment"
+                Value="Center" />
+        <Setter Property="HorizontalAlignment"
+                Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ContentControl}">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/MedicalCareReport.ico"
+                               Width="28"
+                               Height="28" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <!--GadgetMaterialIcon-->
     <Style x:Key="GadgetMaterialIcon"
            TargetType="{x:Type ContentControl}">

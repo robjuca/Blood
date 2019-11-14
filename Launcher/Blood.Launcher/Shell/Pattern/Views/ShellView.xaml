@@ -30,16 +30,17 @@
             </Button>
 
             <!--medical test-->
-            <materialDesign:PopupBox Width="44"
-                                     Height="44"
+            <materialDesign:PopupBox Width="45"
+                                     Height="45"
                                      ToolTip="medical test"
+                                     IsPopupOpen="True"
                                      Style="{DynamicResource MaterialDesignMultiFloatingActionPopupBox}"
                                      PlacementMode="BottomAndAlignCentres">
 
                 <materialDesign:PopupBox.ToggleCheckedContent>
                     <materialDesign:PackIcon Kind="MedicalBag"
-                                             Width="24"
-                                             Height="24" />
+                                             Width="26"
+                                             Height="26" />
                 </materialDesign:PopupBox.ToggleCheckedContent>
 
                 <StackPanel>
@@ -62,6 +63,47 @@
                             IsEnabled="{Binding Model.IsEnabledMedicalTest, Mode=OneWay}"
                             caliburn:Message.Attach="[Event Click] = [OnMedicalTestCommadClicked ()]">
                         <ContentControl Style="{DynamicResource MenuMedicalTestIcon}" />
+                    </Button>
+                </StackPanel>
+            </materialDesign:PopupBox>
+
+            <!--medical care-->
+            <materialDesign:PopupBox Width="45"
+                                     Height="45"
+                                     Margin="6 0 0 0"
+                                     ToolTip="medical care"
+                                     Background="Green"
+                                     BorderBrush="DarkGreen"
+                                     IsPopupOpen="True"
+                                     Style="{DynamicResource MaterialDesignMultiFloatingActionPopupBox}"
+                                     PlacementMode="BottomAndAlignCentres">
+
+                <materialDesign:PopupBox.ToggleCheckedContent>
+                    <materialDesign:PackIcon Kind="Hearts"
+                                             Width="26"
+                                             Height="26" />
+                </materialDesign:PopupBox.ToggleCheckedContent>
+
+                <StackPanel>
+                    <!--medical care registration-->
+                    <Button ToolTip="registration"
+                            IsEnabled="{Binding Model.IsEnabledMedicalTestMaterial, Mode=OneWay}"
+                            caliburn:Message.Attach="[Event Click] = [OnMedicalTestMaterialCommadClicked ()]">
+                        <ContentControl Style="{DynamicResource MenuMedicalCareRegistrationIcon}" />
+                    </Button>
+
+                    <!--medical care tests-->
+                    <Button ToolTip="tests"
+                            IsEnabled="{Binding Model.IsEnabledMedicalTestTarget, Mode=OneWay}"
+                            caliburn:Message.Attach="[Event Click] = [OnMedicalTestTargetCommadClicked ()]">
+                        <ContentControl Style="{DynamicResource MenuMedicalCareTestsIcon}" />
+                    </Button>
+
+                    <!--medical care report-->
+                    <Button ToolTip="report"
+                            IsEnabled="{Binding Model.IsEnabledMedicalTest, Mode=OneWay}"
+                            caliburn:Message.Attach="[Event Click] = [OnMedicalTestCommadClicked ()]">
+                        <ContentControl Style="{DynamicResource MenuMedicalCareReportIcon}" />
                     </Button>
                 </StackPanel>
             </materialDesign:PopupBox>
