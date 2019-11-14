@@ -1,7 +1,7 @@
 # Blood
 Saúde em foco (histórico médico, na forma numérica e gráfica, a partir de exames médicos )
 
-*Projeto*: ![](Docs/Media/Blood.png) Blood 
+*Projeto*: ![](Docs/Media/Blood32.png) Blood 
 
 *Launcher*
 ![](Docs/Media/BloodLauncher.jpg)
