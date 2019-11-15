@@ -62,15 +62,26 @@ CALL :error "Could not find Visual Studio directory."
 	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\ViewModel\Blood Shared ViewModel.sln" -t:rebuild -verbosity:minimal -nologo
 	
 	
-	echo Blood SHARED GADGET
+	echo Blood SHARED GADGET MEDICAL TEST
 	echo --- Blood SHARED GADGET MATERIAL . . .
-	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\Material\Blood Shared Gadget Material.sln" -t:rebuild -verbosity:minimal -nologo
+	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\MedicalTest\Material\Blood Shared Gadget Material.sln" -t:rebuild -verbosity:minimal -nologo
 	
 	echo --- Blood SHARED GADGET TARGET . . .
-	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\Target\Blood Shared Gadget Target.sln" -t:rebuild -verbosity:minimal -nologo
+	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\MedicalTest\Target\Blood Shared Gadget Target.sln" -t:rebuild -verbosity:minimal -nologo
 	
 	echo --- Blood SHARED GADGET TEST . . .
-	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\Test\Blood Shared Gadget Test.sln" -t:rebuild -verbosity:minimal -nologo
+	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\MedicalTest\Test\Blood Shared Gadget Test.sln" -t:rebuild -verbosity:minimal -nologo
+	
+	
+	echo Blood SHARED GADGET MEDICAL CARE
+	echo --- Blood SHARED GADGET REGISTRATION . . .
+	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\MedicalCare\Registration\Blood Shared Gadget Registration.sln" -t:rebuild -verbosity:minimal -nologo
+	
+	echo --- Blood SHARED GADGET TESTS . . .
+	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\MedicalCare\Tests\Blood Shared Gadget Tests.sln" -t:rebuild -verbosity:minimal -nologo
+	
+	echo --- Blood SHARED GADGET REPORT . . .
+	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\MedicalCare\Report\Blood Shared Gadget Report.sln" -t:rebuild -verbosity:minimal -nologo
 	
 	
 	echo --- Blood SHARED SERVICES . . .
@@ -86,16 +97,27 @@ CALL :error "Could not find Visual Studio directory."
 	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Module\Settings\Blood Module Settings.sln" -t:rebuild -verbosity:minimal -nologo
 
 	
-	echo  -- Blood GADGET
+	echo  -- Blood GADGET MEDICAL TEST
 	echo --- Blood GADGET MATERIAL . . .
-	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Gadget\Material\Blood Gadget Material.sln" -t:rebuild -verbosity:minimal -nologo
+	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Gadget\MedicalTest\Material\Blood Gadget Material.sln" -t:rebuild -verbosity:minimal -nologo
 	
 	echo --- Blood GADGET TARGET . . .
-	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Gadget\Target\Blood Gadget Target.sln" -t:rebuild -verbosity:minimal -nologo
+	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Gadget\MedicalTest\Target\Blood Gadget Target.sln" -t:rebuild -verbosity:minimal -nologo
 	
 	echo --- Blood GADGET TEST . . .
-	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Gadget\Test\Blood Gadget Test.sln" -t:rebuild -verbosity:minimal -nologo
+	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Gadget\MedicalTest\Test\Blood Gadget Test.sln" -t:rebuild -verbosity:minimal -nologo
 	
+	
+	echo  -- Blood GADGET MEDICAL CARE
+	echo --- Blood GADGET REGISTRATION . . .
+	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Gadget\MedicalCare\Registration\Blood Gadget Registration.sln" -t:rebuild -verbosity:minimal -nologo
+	
+	echo --- Blood GADGET TESTS . . .
+	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Gadget\MedicalCare\Tests\Blood Gadget Tests.sln" -t:rebuild -verbosity:minimal -nologo
+	
+	echo --- Blood GADGET REPORT . . .
+	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Gadget\MedicalCare\Report\Blood Gadget Report.sln" -t:rebuild -verbosity:minimal -nologo
+
 
 	echo --- Blood BUILD DONE
 	

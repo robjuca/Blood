@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29509.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blood.Gadget.Tests", "Blood.Gadget.Tests\Blood.Gadget.Tests.csproj", "{7B514F15-07AB-4A73-BE99-141015B63788}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "client", "client", "{F9AC4427-E364-4A83-851B-83F948DC5491}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "modules", "modules", "{1844E585-5E6D-4653-8614-2ADE95FFE06E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7B514F15-07AB-4A73-BE99-141015B63788}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B514F15-07AB-4A73-BE99-141015B63788}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B514F15-07AB-4A73-BE99-141015B63788}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B514F15-07AB-4A73-BE99-141015B63788}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7B514F15-07AB-4A73-BE99-141015B63788} = {F9AC4427-E364-4A83-851B-83F948DC5491}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1C724375-341D-4F6B-B51C-A20A412D5D69}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29318.209
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blood.Shared.Gadget.Material", "Blood.Shared.Gadget.Material\Blood.Shared.Gadget.Material.csproj", "{379B10A2-C2EB-4339-BB4A-55B460264F52}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{379B10A2-C2EB-4339-BB4A-55B460264F52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{379B10A2-C2EB-4339-BB4A-55B460264F52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{379B10A2-C2EB-4339-BB4A-55B460264F52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{379B10A2-C2EB-4339-BB4A-55B460264F52}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A38320CD-1A86-4344-837D-340CE1D92920}
+	EndGlobalSection
+EndGlobal
