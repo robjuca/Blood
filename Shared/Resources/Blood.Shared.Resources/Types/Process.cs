@@ -18,6 +18,9 @@ namespace Shared.Resources
       GadgetMaterial,
       GadgetTarget,
       GadgetTest,
+      GadgetRegistration,
+      GadgetTests,
+      GadgetReport,
     };
     #endregion
 
@@ -38,6 +41,12 @@ namespace Shared.Resources
 
     public static string GADGETTEST => TName.GadgetTest.ToString ();
 
+    public static string GADGETREGISTRATION => TName.GadgetRegistration.ToString ();
+
+    public static string GADGETTESTS => TName.GadgetTests.ToString ();
+
+    public static string GADGETREPORT => TName.GadgetReport.ToString ();
+
     public static string MODULESETTINGS => TName.ModuleSettings.ToString ();
     #endregion
 
@@ -50,6 +59,9 @@ namespace Shared.Resources
         { TName.GadgetMaterial, "Gadget.Material" },
         { TName.GadgetTarget, "Gadget.Target" },
         { TName.GadgetTest, "Gadget.Test" },
+        { TName.GadgetRegistration, "Gadget.Registration" },
+        { TName.GadgetTests, "Gadget.Tests" },
+        { TName.GadgetReport, "Gadget.Report" },
       };
 
       ModuleExecutable = new Dictionary<TName, string> ();

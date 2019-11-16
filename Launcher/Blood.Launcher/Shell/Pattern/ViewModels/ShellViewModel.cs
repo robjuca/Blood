@@ -63,6 +63,21 @@ namespace Launcher.Shell.Pattern.ViewModels
     {
       TDispatcher.BeginInvoke (StartProcessDispatcher, TProcess.TName.GadgetTest);
     }
+
+    public void OnMedicalCareRegistrationCommadClicked ()
+    {
+      TDispatcher.BeginInvoke (StartProcessDispatcher, TProcess.TName.GadgetRegistration);
+    }
+
+    public void OnMedicalCareTestsCommadClicked ()
+    {
+      TDispatcher.BeginInvoke (StartProcessDispatcher, TProcess.TName.GadgetTests);
+    }
+
+    public void OnMedicalCareReportCommadClicked ()
+    {
+      TDispatcher.BeginInvoke (StartProcessDispatcher, TProcess.TName.GadgetReport);
+    }
     #endregion
 
     #region Dispatcher
@@ -168,6 +183,36 @@ namespace Launcher.Shell.Pattern.ViewModels
           break;
 
         case TProcess.TName.GadgetTest: {
+            switch (e.Data.Command) {
+              case TCommandComm.Closed: {
+                  RemoveProcess (module);
+                }
+                break;
+            }
+          }
+          break;
+
+        case TProcess.TName.GadgetRegistration: {
+            switch (e.Data.Command) {
+              case TCommandComm.Closed: {
+                  RemoveProcess (module);
+                }
+                break;
+            }
+          }
+          break;
+
+        case TProcess.TName.GadgetTests: {
+            switch (e.Data.Command) {
+              case TCommandComm.Closed: {
+                  RemoveProcess (module);
+                }
+                break;
+            }
+          }
+          break;
+
+        case TProcess.TName.GadgetReport: {
             switch (e.Data.Command) {
               case TCommandComm.Closed: {
                   RemoveProcess (module);

@@ -38,6 +38,10 @@
     <ApplicationIcon>Assets\Images\App.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Blood.Shared.Message, Version=1.0.2019.10, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Bin\Blood.Shared.Message.dll</HintPath>
+    </Reference>
     <Reference Include="Blood.Shared.Resources, Version=1.0.2019.10, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Bin\Blood.Shared.Resources.dll</HintPath>
@@ -45,6 +49,10 @@
     <Reference Include="Blood.Shared.Services, Version=1.0.2019.10, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Bin\Blood.Shared.Services.dll</HintPath>
+    </Reference>
+    <Reference Include="Blood.Shared.Types, Version=1.0.2019.10, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Bin\Blood.Shared.Types.dll</HintPath>
     </Reference>
     <Reference Include="Blood.Shared.ViewModel, Version=1.0.2019.10, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -65,9 +73,17 @@
     <Reference Include="MaterialDesignThemes.Wpf, Version=2.6.0.325, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignThemes.2.6.0\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
     </Reference>
+    <Reference Include="rr.Library.Helper, Version=1.0.2014.11, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Bin\rr.Library.Helper.dll</HintPath>
+    </Reference>
     <Reference Include="rr.Library.Infrastructure, Version=1.0.2014.11, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Bin\rr.Library.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="rr.Library.Message, Version=1.0.2014.11, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Bin\rr.Library.Message.dll</HintPath>
     </Reference>
     <Reference Include="rr.Library.Types, Version=1.0.2014.11, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -101,6 +117,27 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Shell\Pattern\Models\ShellCollectionModel.cs" />
+    <Compile Include="Shell\Pattern\Models\ShellFactoryModel.cs" />
+    <Compile Include="Shell\Pattern\Models\ShellModel.cs" />
+    <Compile Include="Shell\Pattern\ViewModels\Interfaces\IShellCollectionlViewModel.cs" />
+    <Compile Include="Shell\Pattern\ViewModels\Interfaces\IShellFactoryViewModel.cs" />
+    <Compile Include="Shell\Pattern\ViewModels\ShellCollectionViewModel.cs" />
+    <Compile Include="Shell\Pattern\ViewModels\ShellFactoryViewModel.cs" />
+    <Compile Include="Shell\Pattern\ViewModels\ShellViewModel.cs" />
+    <Compile Include="Shell\Pattern\Views\ShellCollectionView.xaml.cs">
+      <DependentUpon>ShellCollectionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Shell\Pattern\Views\ShellFactoryView.xaml.cs">
+      <DependentUpon>ShellFactoryView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Shell\Pattern\Views\ShellView.xaml.cs">
+      <DependentUpon>ShellView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Shell\Presentation\Interfaces\IDelegateCommand.cs" />
+    <Compile Include="Shell\Presentation\Interfaces\IPresentation.cs" />
+    <Compile Include="Shell\Presentation\Presentation.cs" />
+    <Compile Include="Shell\Presentation\PresentationCommand.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
@@ -114,6 +151,20 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\Images\App.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Shell\Pattern\Views\ShellCollectionView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Shell\Pattern\Views\ShellFactoryView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Shell\Pattern\Views\ShellView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -45,6 +45,30 @@ namespace Launcher.Shell.Pattern.Models
         return (m_IsMenuEnabled && IsProcessAlive (TProcess.TName.GadgetTest));
       }
     }
+
+    public bool IsEnabledMedicalCareRegistration
+    {
+      get
+      {
+        return (m_IsMenuEnabled && IsProcessAlive (TProcess.TName.GadgetRegistration));
+      }
+    }
+
+    public bool IsEnabledMedicalCareTests
+    {
+      get
+      {
+        return (m_IsMenuEnabled && IsProcessAlive (TProcess.TName.GadgetTests));
+      }
+    }
+
+    public bool IsEnabledMedicalCareReport
+    {
+      get
+      {
+        return (m_IsMenuEnabled && IsProcessAlive (TProcess.TName.GadgetReport));
+      }
+    }
     #endregion
 
     #region Constructor

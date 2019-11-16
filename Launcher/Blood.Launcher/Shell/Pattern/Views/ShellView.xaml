@@ -87,22 +87,22 @@
                 <StackPanel>
                     <!--medical care registration-->
                     <Button ToolTip="registration"
-                            IsEnabled="{Binding Model.IsEnabledMedicalTestMaterial, Mode=OneWay}"
-                            caliburn:Message.Attach="[Event Click] = [OnMedicalTestMaterialCommadClicked ()]">
+                            IsEnabled="{Binding Model.IsEnabledMedicalCareRegistration, Mode=OneWay}"
+                            caliburn:Message.Attach="[Event Click] = [OnMedicalCareRegistrationCommadClicked ()]">
                         <ContentControl Style="{DynamicResource MenuMedicalCareRegistrationIcon}" />
                     </Button>
 
                     <!--medical care tests-->
                     <Button ToolTip="tests"
-                            IsEnabled="{Binding Model.IsEnabledMedicalTestTarget, Mode=OneWay}"
-                            caliburn:Message.Attach="[Event Click] = [OnMedicalTestTargetCommadClicked ()]">
+                            IsEnabled="{Binding Model.IsEnabledMedicalCareTests, Mode=OneWay}"
+                            caliburn:Message.Attach="[Event Click] = [OnMedicalCareTestsCommadClicked ()]">
                         <ContentControl Style="{DynamicResource MenuMedicalCareTestsIcon}" />
                     </Button>
 
                     <!--medical care report-->
                     <Button ToolTip="report"
-                            IsEnabled="{Binding Model.IsEnabledMedicalTest, Mode=OneWay}"
-                            caliburn:Message.Attach="[Event Click] = [OnMedicalTestCommadClicked ()]">
+                            IsEnabled="{Binding Model.IsEnabledMedicalCareReport, Mode=OneWay}"
+                            caliburn:Message.Attach="[Event Click] = [OnMedicalCareReportCommadClicked ()]">
                         <ContentControl Style="{DynamicResource MenuMedicalCareReportIcon}" />
                     </Button>
                 </StackPanel>
