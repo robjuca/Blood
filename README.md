@@ -6,5 +6,7 @@ Saúde em foco (histórico médico, na forma numérica e gráfica, a partir de e
 *Launcher*
 ![](Docs/Media/BloodLauncher.jpg)
 
+![](Docs/Media/BloodSettings.jpg)
 ![](Docs/Media/BloodGadgetTarget.jpg)
 ![](Docs/Media/BloodGadgetMaterial.jpg)
+![](Docs/Media/BloodGadgetTest.jpg)
