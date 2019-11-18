@@ -43,14 +43,20 @@ namespace Server.Models.Infrastructure
   //----- TCategory
   public enum TCategory
   {
-    None        = 0,
+    None                = 0,
 
-    // gadget
-    Material    = 200,
-    Target      = 210,
-    Test        = 220,
+    // gadget Test
+    Material            = 200,
+    Target              = 210,
+    Test                = 220,
 
-    Settings    = 300,
+    // gadget Care
+    Registration        = 400,
+    Tests               = 410,
+    Report              = 420,
+
+    // module
+    Settings            = 300,
   };
   //---------------------------//
 

@@ -80,7 +80,7 @@ namespace Server.Models.Component
     }
     #endregion
 
-    #region Gadget
+    #region Gadget Medical Test
     public Collection<GadgetMaterial> GadgetMaterialCollection
     {
       get;
@@ -94,6 +94,26 @@ namespace Server.Models.Component
     }
 
     public Collection<GadgetTest> GadgetTestCollection
+    {
+      get;
+      private set;
+    }
+    #endregion
+
+    #region Gadget Medical Care
+    public Collection<GadgetRegistration> GadgetRegistrationCollection
+    {
+      get;
+      private set;
+    }
+
+    public Collection<GadgetTests> GadgetTestsCollection
+    {
+      get;
+      private set;
+    }
+
+    public Collection<GadgetReport> GadgetReportCollection
     {
       get;
       private set;
@@ -140,10 +160,15 @@ namespace Server.Models.Component
       ExtensionNodeCollection = new Collection<ExtensionNode> ();
       ExtensionTextCollection = new Collection<ExtensionText> ();
 
-      // Gadget
+      // Gadget Medical Test
       GadgetMaterialCollection = new Collection<GadgetMaterial> ();
       GadgetTargetCollection = new Collection<GadgetTarget> ();
       GadgetTestCollection = new Collection<GadgetTest> ();
+
+      // Gadget Medical Care
+      GadgetRegistrationCollection = new Collection<GadgetRegistration> ();
+      GadgetTestsCollection = new Collection<GadgetTests> ();
+      GadgetReportCollection = new Collection<GadgetReport> ();
 
       // ById
       ModelCollection = new Dictionary<Guid, TModelAction> ();
@@ -217,6 +242,21 @@ namespace Server.Models.Component
     public void SetCollection (IList<GadgetTest> list)
     {
       GadgetTestCollection = new Collection<GadgetTest> (list);
+    }
+
+    public void SetCollection (IList<GadgetRegistration> list)
+    {
+      GadgetRegistrationCollection = new Collection<GadgetRegistration> (list);
+    }
+
+    public void SetCollection (IList<GadgetTests> list)
+    {
+      GadgetTestsCollection = new Collection<GadgetTests> (list);
+    }
+
+    public void SetCollection (IList<GadgetReport> list)
+    {
+      GadgetReportCollection = new Collection<GadgetReport> (list);
     }
 
     public bool IsComponentOperation (TComponentOperation.TInternalOperation componentOperation)

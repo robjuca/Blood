@@ -330,7 +330,7 @@ namespace Shared.Types
         // remove property not required
 
         switch (modelCategory) {
-          // Material
+          //  Medical Test: Gadget Material
           case Server.Models.Infrastructure.TCategory.Material: {
               m_Names.Add ("LinkProperty");
               m_Names.Add ("ImagePositionProperty");
@@ -346,7 +346,7 @@ namespace Shared.Types
             }
             break;
 
-          // Target
+          //  Medical Test: Gadget Target
           case Server.Models.Infrastructure.TCategory.Target: {
               m_Names.Add ("LinkProperty");
               m_Names.Add ("ImagePositionProperty");
@@ -361,7 +361,7 @@ namespace Shared.Types
             }
             break;
 
-          // Test
+          //  Medical Test: Gadget Test
           case Server.Models.Infrastructure.TCategory.Test: {
               m_Names.Add ("LinkProperty");
               m_Names.Add ("ImagePositionProperty");
@@ -378,78 +378,58 @@ namespace Shared.Types
             }
             break;
 
-            //case Server.Models.Infrastructure.TCategory.Document: {
-            //    m_Names.Add ("CaptionProperty");
-            //    m_Names.Add ("DescriptionProperty");
-            //    m_Names.Add ("ColumnsProperty");
-            //    m_Names.Add ("RowsProperty");
-            //  }
-            //  break;
+          //  Medical Care: Gadget Registration
+          case Server.Models.Infrastructure.TCategory.Registration: {
+              m_Names.Add ("LinkProperty");
+              m_Names.Add ("ExternalLinkProperty");
+              m_Names.Add ("ImagePositionProperty");
+              m_Names.Add ("HeaderVisibilityProperty");
+              m_Names.Add ("FooterVisibilityProperty");
+              m_Names.Add ("StyleHorizontalProperty");
+              m_Names.Add ("StyleVerticalProperty");
+              m_Names.Add ("ColumnsProperty");
+              m_Names.Add ("RowsProperty");
+              m_Names.Add ("ValueProperty");
+              m_Names.Add ("ReferenceProperty");
+              m_Names.Add ("SelectionProperty");
+            }
+            break;
 
-            //case Server.Models.Infrastructure.TCategory.Image: {
-            //    m_Names.Add ("ImagePositionProperty");
-            //    m_Names.Add ("LinkProperty");
-            //    m_Names.Add ("HeaderVisibilityProperty");
-            //    m_Names.Add ("FooterVisibilityProperty");
-            //    m_Names.Add ("ColumnsProperty");
-            //    m_Names.Add ("RowsProperty");
-            //  }
-            //  break;
+          //  Medical Care: Gadget Tests
+          case Server.Models.Infrastructure.TCategory.Tests: {
+              m_Names.Add ("LinkProperty");
+              m_Names.Add ("ExternalLinkProperty");
+              m_Names.Add ("ImagePositionProperty");
+              m_Names.Add ("HeaderVisibilityProperty");
+              m_Names.Add ("FooterVisibilityProperty");
+              m_Names.Add ("StyleHorizontalProperty");
+              m_Names.Add ("StyleVerticalProperty");
+              m_Names.Add ("ColumnsProperty");
+              m_Names.Add ("RowsProperty");
+              m_Names.Add ("ImageProperty");
+              m_Names.Add ("ValueProperty");
+              m_Names.Add ("ReferenceProperty");
+              m_Names.Add ("SelectionProperty");
+            }
+            break;
 
-            //case Server.Models.Infrastructure.TCategory.Bag: {
-            //    m_Names.Add ("CaptionProperty");
-            //    m_Names.Add ("DescriptionProperty");
-            //    m_Names.Add ("ImagePositionProperty");
-            //    m_Names.Add ("LinkProperty");
-            //    m_Names.Add ("HeaderVisibilityProperty");
-            //    m_Names.Add ("FooterVisibilityProperty");
-            //    m_Names.Add ("ImageProperty");
-            //    m_Names.Add ("ColumnsProperty");
-            //    m_Names.Add ("RowsProperty");
-            //  }
-            //  break;
-
-            //case Server.Models.Infrastructure.TCategory.Shelf: {
-            //    m_Names.Add ("CaptionProperty");
-            //    m_Names.Add ("DescriptionProperty");
-            //    m_Names.Add ("ImagePositionProperty");
-            //    m_Names.Add ("LinkProperty");
-            //    m_Names.Add ("HeaderVisibilityProperty");
-            //    m_Names.Add ("FooterVisibilityProperty");
-            //    m_Names.Add ("ImageProperty");
-            //    m_Names.Add ("StyleHorizontalProperty");
-            //    m_Names.Add ("StyleVerticalProperty");
-            //  }
-            //  break;
-
-            //case Server.Models.Infrastructure.TCategory.Drawer: {
-            //    m_Names.Add ("DescriptionProperty");
-            //    m_Names.Add ("ImagePositionProperty");
-            //    m_Names.Add ("LinkProperty");
-            //    m_Names.Add ("HeaderVisibilityProperty");
-            //    m_Names.Add ("FooterVisibilityProperty");
-            //    m_Names.Add ("ImageProperty");
-            //    m_Names.Add ("StyleHorizontalProperty");
-            //    m_Names.Add ("StyleVerticalProperty");
-            //    m_Names.Add ("ColumnsProperty");
-            //    m_Names.Add ("RowsProperty");
-            //  }
-            //  break;
-
-            //case Server.Models.Infrastructure.TCategory.Chest: {
-            //    m_Names.Add ("CaptionProperty");
-            //    m_Names.Add ("DescriptionProperty");
-            //    m_Names.Add ("ImagePositionProperty");
-            //    m_Names.Add ("LinkProperty");
-            //    m_Names.Add ("HeaderVisibilityProperty");
-            //    m_Names.Add ("FooterVisibilityProperty");
-            //    m_Names.Add ("ImageProperty");
-            //    m_Names.Add ("StyleHorizontalProperty");
-            //    m_Names.Add ("StyleVerticalProperty");
-            //    m_Names.Add ("ColumnsProperty");
-            //    m_Names.Add ("RowsProperty");
-            //  }
-            //  break;
+          //  Medical Care: Gadget Report
+          case Server.Models.Infrastructure.TCategory.Report: {
+              m_Names.Add ("LinkProperty");
+              m_Names.Add ("ExternalLinkProperty");
+              m_Names.Add ("ImagePositionProperty");
+              m_Names.Add ("HeaderVisibilityProperty");
+              m_Names.Add ("FooterVisibilityProperty");
+              m_Names.Add ("StyleHorizontalProperty");
+              m_Names.Add ("StyleVerticalProperty");
+              m_Names.Add ("ColumnsProperty");
+              m_Names.Add ("RowsProperty");
+              m_Names.Add ("ImageProperty");
+              m_Names.Add ("ValueProperty");
+              m_Names.Add ("ReferenceProperty");
+              m_Names.Add ("SelectionProperty");
+            }
+            break;
         }
       }
     }

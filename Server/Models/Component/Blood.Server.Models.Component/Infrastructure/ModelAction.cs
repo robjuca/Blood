@@ -86,7 +86,7 @@ namespace Server.Models.Component
     }
     #endregion
 
-    #region Gadget
+    #region Gadget Medical Test
     public GadgetMaterial GadgetMaterialModel
     {
       get;
@@ -100,6 +100,27 @@ namespace Server.Models.Component
     }
 
     public GadgetTest GadgetTestModel
+    {
+      get;
+      private set;
+    }
+    #endregion
+
+
+    #region Gadget Medical Care
+    public GadgetRegistration GadgetRegistrationModel
+    {
+      get;
+      private set;
+    }
+
+    public GadgetTests GadgetTestsModel
+    {
+      get;
+      private set;
+    }
+
+    public GadgetReport GadgetReportModel
     {
       get;
       private set;
@@ -129,10 +150,15 @@ namespace Server.Models.Component
       ExtensionNodeModel = ExtensionNode.CreateDefault;
       ExtensionTextModel = ExtensionText.CreateDefault;
 
-      // Gadget
+      // Gadget Medical Test
       GadgetMaterialModel = GadgetMaterial.CreateDefault;
       GadgetTargetModel = GadgetTarget.CreateDefault;
       GadgetTestModel = GadgetTest.CreateDefault;
+
+      // Gadget Medical Care
+      GadgetRegistrationModel = GadgetRegistration.CreateDefault;
+      GadgetTestsModel = GadgetTests.CreateDefault;
+      GadgetReportModel = GadgetReport.CreateDefault;
     }
     #endregion
 
@@ -158,6 +184,10 @@ namespace Server.Models.Component
         GadgetMaterialModel.CopyFrom (alias.GadgetMaterialModel);
         GadgetTargetModel.CopyFrom (alias.GadgetTargetModel);
         GadgetTestModel.CopyFrom (alias.GadgetTestModel);
+
+        GadgetRegistrationModel.CopyFrom (alias.GadgetRegistrationModel);
+        GadgetTestsModel.CopyFrom (alias.GadgetTestsModel);
+        GadgetReportModel.CopyFrom (alias.GadgetReportModel);
       }
     }
     #endregion

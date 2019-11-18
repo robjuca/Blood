@@ -1,0 +1,151 @@
+﻿<base:ViewChildBase x:Class="Gadget.Collection.Pattern.Views.TCollectionListView"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:base="clr-namespace:rr.Library.Infrastructure;assembly=rr.Library.Infrastructure"
+                    xmlns:converters="clr-namespace:rr.Library.Converter;assembly=rr.Library.Converter"
+                    xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+                    xmlns:caliburn="http://www.caliburnproject.org"
+                    DataContext="{x:Null}"
+                    x:Name="ModuleCollectionListViewModel">
+
+    <UserControl.Resources>
+        <converters:TCollectionToBitmapImageConverter  x:Key="CollectionToBitmapImageConverter" />
+
+        <CollectionViewSource x:Key="MaterialModelItemsViewSource"
+                              Source="{Binding Model.MaterialItemsSource}">
+        </CollectionViewSource>
+
+        <CollectionViewSource x:Key="RegistrationModelItemsViewSource"
+                              Source="{Binding Model.RegistrationItemsSource}">
+            <CollectionViewSource.GroupDescriptions>
+                <PropertyGroupDescription PropertyName="Busy" />
+            </CollectionViewSource.GroupDescriptions>
+
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="GadgetRegistrationModel.Registration"
+                                     Direction="Ascending" />
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+
+        <DataTemplate x:Key="RegistrationListDataTemplate">
+            <Border Padding="2"
+                    BorderThickness="0 .1 0 .1"
+                    BorderBrush="LightGray">
+
+                <!-- busy, disable, name -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <!--busy-->
+                    <Border Grid.Column="0"
+                            Padding="0 0 3 0">
+                        <StackPanel Orientation="Horizontal">
+                            <ContentControl Visibility="{Binding BusyVisibility}"
+                                            Style="{DynamicResource ContentBusyIcon}" />
+
+                            <ContentControl Visibility="{Binding DisableVisibility}"
+                                            Style="{DynamicResource DisableIcon}" />
+                        </StackPanel>
+                    </Border>
+
+                    <!--material, name-->
+                    <Border Grid.Column="1">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Margin="0 0 5 0"
+                                   Width="16"
+                                   Height="16"
+                                   Source="{Binding GadgetMaterialModel.Image, Converter={StaticResource CollectionToBitmapImageConverter}}" />
+
+                            <TextBlock Text="{Binding Name}"
+                                       FontWeight="Bold"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Border>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Border Padding="2"
+            Width="210">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <!--Material-->
+            <Border Grid.Row="0">
+                <StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+
+                        <Border Grid.Column="0">
+                            <TextBlock Padding="3 0 0 0"
+                                       Text="material" />
+                        </Border>
+
+                        <Border Grid.Column="1">
+                            <TextBlock HorizontalAlignment="Right"
+                                       Text="{Binding Model.MaterialCount}" />
+                        </Border>
+                    </Grid>
+
+                    <ComboBox x:Name="MaterialList"
+                              Padding="3 0 0 0"
+                              ItemsSource="{Binding Source={StaticResource MaterialModelItemsViewSource}}"
+                              DisplayMemberPath="Name"
+                              SelectedItem="{Binding Model.MaterialSelected}"
+                              caliburn:Message.Attach="[Event SelectionChanged] = [OnMaterialSelectionChanged (MaterialList.SelectedIndex)]" />
+                </StackPanel>
+            </Border>
+
+            <!--Registration list-->
+            <Border Grid.Row="1"
+                    Padding="0 6 0 0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+
+                    <!--Registration-->
+                    <Border Grid.Row="0">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+
+                            <Border Grid.Column="0">
+                                <TextBlock Padding="3 0 0 0"
+                                           Text="Registration" />
+                            </Border>
+
+                            <Border Grid.Column="1">
+                                <TextBlock HorizontalAlignment="Right"
+                                           Text="{Binding Model.RegistrationCount}" />
+                            </Border>
+                        </Grid>
+                    </Border>
+
+                    <!--list-->
+                    <Border Grid.Row="1">
+                        <ListBox x:Name="RegistrationList"
+                                 SelectedIndex="{Binding Model.RegistrationSelectedIndex}"
+                                 ItemsSource="{Binding Source={StaticResource RegistrationModelItemsViewSource}}"
+                                 ItemTemplate="{StaticResource RegistrationListDataTemplate}"
+                                 caliburn:Message.Attach="[Event SelectionChanged] = [OnRegistrationSelectionChanged (RegistrationList.SelectedItem)]" />
+                    </Border>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+
+</base:ViewChildBase>

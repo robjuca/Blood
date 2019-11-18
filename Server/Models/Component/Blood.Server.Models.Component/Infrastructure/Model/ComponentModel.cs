@@ -74,7 +74,7 @@ namespace Server.Models.Component
     }
     #endregion
 
-    #region Gadget
+    #region Gadget Medical Test
     public GadgetMaterial GadgetMaterialModel
     {
       get;
@@ -88,6 +88,26 @@ namespace Server.Models.Component
     }
 
     public GadgetTest GadgetTestModel
+    {
+      get;
+      private set;
+    }
+    #endregion
+
+    #region Gadget Medical Care
+    public GadgetRegistration GadgetRegistrationModel
+    {
+      get;
+      private set;
+    }
+
+    public GadgetTests GadgetTestsModel
+    {
+      get;
+      private set;
+    }
+
+    public GadgetReport GadgetReportModel
     {
       get;
       private set;
@@ -146,6 +166,10 @@ namespace Server.Models.Component
       GadgetMaterialModel = GadgetMaterial.CreateDefault;
       GadgetTargetModel = GadgetTarget.CreateDefault;
       GadgetTestModel = GadgetTest.CreateDefault;
+
+      GadgetRegistrationModel = GadgetRegistration.CreateDefault;
+      GadgetTestsModel = GadgetTests.CreateDefault;
+      GadgetReportModel = GadgetReport.CreateDefault;
     }
     #endregion
 
@@ -210,6 +234,21 @@ namespace Server.Models.Component
       GadgetTestModel.CopyFrom (gadget);
     }
 
+    public void Select (GadgetRegistration gadget)
+    {
+      GadgetRegistrationModel.CopyFrom (gadget);
+    }
+
+    public void Select (GadgetTests gadget)
+    {
+      GadgetTestsModel.CopyFrom (gadget);
+    }
+
+    public void Select (GadgetReport gadget)
+    {
+      GadgetReportModel.CopyFrom (gadget);
+    }
+
     public void Select (TEntityAction action)
     {
       if (action.NotNull ()) {
@@ -245,6 +284,10 @@ namespace Server.Models.Component
         GadgetMaterialModel.RefreshModel (action);
         GadgetTargetModel.RefreshModel (action);
         GadgetTestModel.RefreshModel (action);
+
+        GadgetRegistrationModel.RefreshModel (action);
+        GadgetTestsModel.RefreshModel (action);
+        GadgetReportModel.RefreshModel (action);
       }
     }
     #endregion
@@ -269,6 +312,10 @@ namespace Server.Models.Component
         GadgetMaterialModel.CopyFrom (alias.GadgetMaterialModel);
         GadgetTargetModel.CopyFrom (alias.GadgetTargetModel);
         GadgetTestModel.CopyFrom (alias.GadgetTestModel);
+
+        GadgetRegistrationModel.CopyFrom (alias.GadgetRegistrationModel);
+        GadgetTestsModel.CopyFrom (alias.GadgetTestsModel);
+        GadgetReportModel.CopyFrom (alias.GadgetReportModel);
       }
     }
     #endregion
@@ -293,6 +340,10 @@ namespace Server.Models.Component
         model.GadgetMaterialModel.CopyFrom (modelAction.GadgetMaterialModel);
         model.GadgetTargetModel.CopyFrom (modelAction.GadgetTargetModel);
         model.GadgetTestModel.CopyFrom (modelAction.GadgetTestModel);
+
+        model.GadgetRegistrationModel.CopyFrom (modelAction.GadgetRegistrationModel);
+        model.GadgetTestsModel.CopyFrom (modelAction.GadgetTestsModel);
+        model.GadgetReportModel.CopyFrom (modelAction.GadgetReportModel);
       }
 
       return (model);
