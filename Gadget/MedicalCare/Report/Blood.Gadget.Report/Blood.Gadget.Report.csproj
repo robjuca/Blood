@@ -166,5 +166,15 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Modules\Collection\Blood.Gadget.Report.Collection.csproj">
+      <Project>{4a4b168a-29ce-459c-a01f-a4b18e2043a5}</Project>
+      <Name>Blood.Gadget.Report.Collection</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Modules\Factory\Blood.Gadget.Report.Factory.csproj">
+      <Project>{d3ad9a65-2cdb-4f28-b677-2cba57f11777}</Project>
+      <Name>Blood.Gadget.Report.Factory</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

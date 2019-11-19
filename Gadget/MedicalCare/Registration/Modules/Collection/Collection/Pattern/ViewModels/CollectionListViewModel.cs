@@ -56,12 +56,6 @@ namespace Gadget.Collection.Pattern.ViewModels
                   var action = Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction);
                   TDispatcher.BeginInvoke (ResponseDataDispatcher, action);
                 }
-
-                // Gadget Material
-                if (message.Support.Argument.Types.IsOperationCategory (Server.Models.Infrastructure.TCategory.Material)) {
-                  var action = Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction);
-                  TDispatcher.BeginInvoke (RefreshModelDispatcher, action);
-                }
               }
             }
 
@@ -95,11 +89,6 @@ namespace Gadget.Collection.Pattern.ViewModels
     #endregion
 
     #region View Event
-    public void OnMaterialSelectionChanged (int selectedIndex)
-    {
-      TDispatcher.BeginInvoke (MaterialItemSelectedDispatcher, selectedIndex);
-    }
-
     public void OnRegistrationSelectionChanged (TComponentModelItem item)
     {
       TDispatcher.BeginInvoke (RegistrationItemSelectedDispatcher, item);
@@ -111,7 +100,6 @@ namespace Gadget.Collection.Pattern.ViewModels
     {
       RaiseChanged ();
 
-      RefreshCollection ("MaterialModelItemsViewSource");
       RefreshCollection ("RegistrationModelItemsViewSource");
     }
 
@@ -137,19 +125,6 @@ namespace Gadget.Collection.Pattern.ViewModels
       Model.Select (action);
 
       TDispatcher.Invoke (RefreshAllDispatcher);
-
-      // to parent
-      // Collection - Full (Material list - used to send RefreshModel)
-      var entityAction = Server.Models.Component.TEntityAction.Create (
-        Server.Models.Infrastructure.TCategory.Material,
-        Server.Models.Infrastructure.TOperation.Collection,
-        Server.Models.Infrastructure.TExtension.Full
-      );
-
-      var message = new TCollectionMessageInternal (TInternalMessageAction.Request, TChild.List, TypeInfo);
-      message.Support.Argument.Types.Select (entityAction);
-
-      DelegateCommand.PublishInternalMessage.Execute (message);
     }
 
     void ResponseModelDispatcher (Server.Models.Component.TEntityAction action)
@@ -159,26 +134,6 @@ namespace Gadget.Collection.Pattern.ViewModels
       message.Support.Argument.Types.Item.CopyFrom (TComponentModelItem.Create (action));
 
       DelegateCommand.PublishInternalMessage.Execute (message);
-    }
-
-    void RefreshModelDispatcher (Server.Models.Component.TEntityAction action)
-    {
-      // refresh model
-      Model.RefreshModel (action);
-      TDispatcher.Invoke (RefreshAllDispatcher);
-
-      // to parent (RefreshModel)
-      var message = new TCollectionMessageInternal (TInternalMessageAction.RefreshModel, TChild.List, TypeInfo);
-      message.Support.Argument.Types.Select (action);
-
-      DelegateCommand.PublishInternalMessage.Execute (message);
-    }
-
-    void MaterialItemSelectedDispatcher (int selectedIndex)
-    {
-      Model.MaterialChanged (selectedIndex);
-
-      TDispatcher.Invoke (RefreshAllDispatcher);
     }
 
     void RegistrationItemSelectedDispatcher (TComponentModelItem item)

@@ -32,6 +32,22 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Blood.Server.Models.Component, Version=1.0.2019.10, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Bin\Blood.Server.Models.Component.dll</HintPath>
+    </Reference>
+    <Reference Include="Blood.Server.Models.Infrastructure, Version=1.0.2019.10, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Bin\Blood.Server.Models.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Blood.Shared.Types, Version=1.0.2019.10, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Bin\Blood.Shared.Types.dll</HintPath>
+    </Reference>
+    <Reference Include="rr.Library.Helper, Version=1.0.2014.11, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Bin\rr.Library.Helper.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -51,6 +67,10 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Shared\Controls\ComponentControlBase.cs" />
+    <Compile Include="Shared\Controls\ComponentControlModel.cs" />
+    <Compile Include="Shared\Controls\ComponentDesignControl.cs" />
+    <Compile Include="Shared\Controls\ComponentDisplayControl.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
