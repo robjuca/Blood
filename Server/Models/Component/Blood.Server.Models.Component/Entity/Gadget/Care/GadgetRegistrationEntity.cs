@@ -25,6 +25,7 @@ namespace Server.Models.Component
       Description = string.Empty;
       ExternalLink = string.Empty;
       Image = new Collection<byte>();
+      Date = DateTime.Now;
       Enabled = false;
     }
 
@@ -51,6 +52,7 @@ namespace Server.Models.Component
         Description = alias.Description;
         ExternalLink = alias.ExternalLink;
         SetImage (alias.Image);
+        Date = alias.Date;
         Enabled = alias.Enabled;
       }
     }
@@ -141,6 +143,7 @@ namespace Server.Models.Component
       Description = modelAction.ExtensionTextModel.Description;
       ExternalLink = modelAction.ExtensionTextModel.ExternalLink;
       Enabled = modelAction.ComponentInfoModel.Enabled;
+      Date = modelAction.ExtensionTextModel.Date;
     } 
     #endregion
   };

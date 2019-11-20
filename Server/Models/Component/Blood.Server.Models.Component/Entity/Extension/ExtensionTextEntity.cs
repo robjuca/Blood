@@ -21,6 +21,7 @@ namespace Server.Models.Component
       Value = string.Empty;
       ExternalLink = string.Empty;
       IsCommit = false;
+      Date = DateTime.Now;
     }
 
     public ExtensionText (ExtensionText alias)
@@ -41,6 +42,7 @@ namespace Server.Models.Component
         Value = alias.Value;
         ExternalLink = alias.ExternalLink;
         IsCommit = alias.IsCommit;
+        Date = alias.Date;
       }
     }
 
@@ -53,6 +55,7 @@ namespace Server.Models.Component
         Value = alias.Value;
         ExternalLink = alias.ExternalLink;
         IsCommit = alias.IsCommit;
+        Date = alias.Date;
       }
     }
     #endregion

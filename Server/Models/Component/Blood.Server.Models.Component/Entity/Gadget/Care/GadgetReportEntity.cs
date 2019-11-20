@@ -22,6 +22,7 @@ namespace Server.Models.Component
 
       Name = string.Empty;
       Description = string.Empty;
+      Date = DateTime.Now;
       Enabled = false;
     }
 
@@ -46,6 +47,7 @@ namespace Server.Models.Component
         Id = alias.Id;
         Name = alias.Name;
         Description = alias.Description;
+        Date = alias.Date;
         Enabled = alias.Enabled;
       }
     }
@@ -111,6 +113,7 @@ namespace Server.Models.Component
       Name = modelAction.ExtensionTextModel.Text;
       Description = modelAction.ExtensionTextModel.Description;
       Enabled = modelAction.ComponentInfoModel.Enabled;
+      Date = modelAction.ExtensionTextModel.Date;
     } 
     #endregion
   };

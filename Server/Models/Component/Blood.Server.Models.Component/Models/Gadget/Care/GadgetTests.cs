@@ -15,6 +15,7 @@ namespace Server.Models.Component
 
     public string                 Name { get; set; }
     public string                 Description { get; set; }
+    public DateTime               Date { get; private set; }
     public bool                   Enabled { get; set; }
   }
   //---------------------------//

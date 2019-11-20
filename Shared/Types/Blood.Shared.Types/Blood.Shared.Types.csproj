@@ -69,6 +69,7 @@
     <Compile Include="Types\Data\RequestData.cs" />
     <Compile Include="Types\Data\SupportSettingsData.cs" />
     <Compile Include="Types\Enums.cs" />
+    <Compile Include="Types\Property\Date\DatePropertyInfo.cs" />
     <Compile Include="Types\Property\Int4\Int4PropertyInfo.cs" />
     <Compile Include="Types\Property\Int4\TInt4Item.cs" />
     <Compile Include="Types\Property\Model\ModelProperty.cs" />

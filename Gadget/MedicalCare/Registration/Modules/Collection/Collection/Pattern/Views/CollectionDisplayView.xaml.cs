@@ -14,8 +14,13 @@ namespace Gadget.Collection.Pattern.Views
     public TCollectionDisplayView ()
     {
       InitializeComponent ();
-    } 
+    }
     #endregion
+
+    private void Calendar_DisplayDateChanged (object sender, System.Windows.Controls.CalendarDateChangedEventArgs e)
+    {
+
+    }
   };
   //---------------------------//
 

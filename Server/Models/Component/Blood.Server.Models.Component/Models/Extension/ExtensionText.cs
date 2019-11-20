@@ -21,6 +21,7 @@ namespace Server.Models.Component
     public string       Value { get; set; }
     public string       ExternalLink { get; set; }
     public bool         IsCommit { get; set; }
+    public DateTime     Date { get; set; }
   }
   //---------------------------//
 

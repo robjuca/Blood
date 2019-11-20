@@ -216,6 +216,19 @@ namespace Shared.Types
     }
 
     [Category ("5 - Text")]
+    [DisplayName ("Date")]
+    [MaxLength (40)]
+    [Description ("current date time")]
+    [RefreshProperties (RefreshProperties.All)]
+    [Browsable (true)]
+    [Editor (typeof (TTextEditorDate), typeof (PropertyValueEditor))]
+    public TDatePropertyInfo DateProperty
+    {
+      get;
+      set;
+    }
+
+    [Category ("5 - Text")]
     [DisplayName ("Text")]
     [MaxLength (40)]
     [Description ("max length = 40")]
@@ -313,6 +326,7 @@ namespace Shared.Types
       RowsProperty = TInt4PropertyInfo.Create (4);
 
       SelectionProperty = TSelectionPropertyInfo.CreateDefault;
+      DateProperty = TDatePropertyInfo.CreateDefault;
 
       m_Names = new Collection<string> ();
       m_ModelCategory = Server.Models.Infrastructure.TCategoryType.ToValue (Server.Models.Infrastructure.TCategory.None);
@@ -343,6 +357,7 @@ namespace Shared.Types
               m_Names.Add ("ReferenceProperty");
               m_Names.Add ("SelectionProperty");
               m_Names.Add ("ValueProperty");
+              m_Names.Add ("DateProperty");
             }
             break;
 
@@ -358,6 +373,7 @@ namespace Shared.Types
               m_Names.Add ("RowsProperty");
               m_Names.Add ("ImageProperty");
               m_Names.Add ("ValueProperty");
+              m_Names.Add ("DateProperty");
             }
             break;
 
@@ -375,6 +391,7 @@ namespace Shared.Types
               m_Names.Add ("ValueProperty");
               m_Names.Add ("ReferenceProperty");
               m_Names.Add ("SelectionProperty");
+              m_Names.Add ("DateProperty");
             }
             break;
 
@@ -437,12 +454,14 @@ namespace Shared.Types
     public void Initialize ()
     {
       StyleHorizontalProperty.Initialize (TContentStyle.Mode.Horizontal);
-      StyleVerticalProperty.Initialize (TContentStyle.Mode.Vertical);
+      StyleVerticalProperty.Initialize (TContentStyle.Mode.Vertical); 
+
       ColumnsProperty.Initialize ();
       RowsProperty.Initialize ();
 
       StyleHorizontalProperty.PropertyChanged += OnPropertyChanged;
       StyleVerticalProperty.PropertyChanged += OnPropertyChanged;
+
       ColumnsProperty.PropertyChanged += Int4PropertyChanged;
       RowsProperty.PropertyChanged += Int4PropertyChanged;
 
