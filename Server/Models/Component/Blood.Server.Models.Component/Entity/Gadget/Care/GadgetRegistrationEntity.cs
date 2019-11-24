@@ -23,7 +23,6 @@ namespace Server.Models.Component
 
       Name = string.Empty;
       Description = string.Empty;
-      ExternalLink = string.Empty;
       Image = new Collection<byte>();
       Date = DateTime.Now;
       Enabled = false;
@@ -50,7 +49,6 @@ namespace Server.Models.Component
         Id = alias.Id;
         Name = alias.Name;
         Description = alias.Description;
-        ExternalLink = alias.ExternalLink;
         SetImage (alias.Image);
         Date = alias.Date;
         Enabled = alias.Enabled;
@@ -62,8 +60,8 @@ namespace Server.Models.Component
       if (alias.NotNull ()) {
         Name = alias.Name;
         Description = alias.Description;
-        ExternalLink = alias.ExternalLink;
         SetImage (alias.Image);
+        Date = alias.Date;
         Enabled = alias.Enabled;
       }
     }
@@ -107,7 +105,7 @@ namespace Server.Models.Component
           action.ModelAction.GadgetRegistrationModel.CopyFrom (this); 
 
           // update model collection
-          action.CollectionAction.GadgetMaterialCollection.Clear ();
+          action.CollectionAction.GadgetRegistrationCollection.Clear ();
 
           foreach (var modelAction in action.CollectionAction.ModelCollection) {
             var gadget = GadgetRegistration.CreateDefault;
@@ -141,8 +139,8 @@ namespace Server.Models.Component
       Id = modelAction.ComponentInfoModel.Id;
       Name = modelAction.ExtensionTextModel.Text;
       Description = modelAction.ExtensionTextModel.Description;
-      ExternalLink = modelAction.ExtensionTextModel.ExternalLink;
       Enabled = modelAction.ComponentInfoModel.Enabled;
+      SetImage (modelAction.ExtensionImageModel.Image);
       Date = modelAction.ExtensionTextModel.Date;
     } 
     #endregion

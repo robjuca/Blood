@@ -550,9 +550,6 @@ namespace Shared.Types
         action.ModelAction.ExtensionLayoutModel.CopyFrom (m_LayoutModel);
         action.ModelAction.ExtensionImageModel.CopyFrom (m_ImageModel);
         action.ModelAction.ExtensionTextModel.CopyFrom (m_TextModel);
-
-        action.ModelAction.ExtensionLayoutModel.CopyFrom (m_LayoutModel);
-        action.ModelAction.ExtensionImageModel.CopyFrom (m_ImageModel);
         //action.ModelAction.ExtensionDocumentModel.CopyFrom (m_DocumentModel);
         action.ModelAction.ExtensionGeometryModel.CopyFrom (m_GeometryModel);
 

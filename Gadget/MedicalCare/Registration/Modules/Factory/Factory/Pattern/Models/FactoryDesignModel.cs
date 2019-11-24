@@ -32,17 +32,6 @@ namespace Gadget.Factory.Pattern.Models
     internal void SelectModel (string propertyName, Server.Models.Component.TEntityAction action)
     {
       //TODO: review
-      if (action.ModelAction.GadgetRegistrationModel.Id.IsEmpty ()) {
-        // try selection info
-        if (action.SupportAction.SelectionInfo.Tag is Guid id) {
-          //if (action.ModelAction.GadgetRegistrationModel.MaterialId.Equals (id)) {
-          //  action.ModelAction.GadgetMaterialModel.Id = id;
-          //  action.ModelAction.GadgetMaterialModel.Material = action.SupportAction.SelectionInfo.Name;
-          //  action.ModelAction.GadgetMaterialModel.SetImage (action.SupportAction.SelectionInfo.GetImage ());
-          //}
-        }
-      }
-
       ComponentControlModel.SelectModel (action);
     }
     #endregion

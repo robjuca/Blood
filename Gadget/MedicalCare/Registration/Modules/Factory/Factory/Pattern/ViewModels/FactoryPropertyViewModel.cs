@@ -239,7 +239,7 @@ namespace Gadget.Factory.Pattern.ViewModels
     {
       action.ThrowNull ();
 
-      Model.RefreshModel (action);
+      
       RaiseChanged ();
     }
     #endregion

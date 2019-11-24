@@ -49,6 +49,7 @@ namespace Gadget.Collection.Pattern.Models
 
       RegistrationCurrent = TComponentModelItem.CreateDefault;
 
+      // TODO: what for??
       Registrations = new Collection<TComponentModelItem> ();
     }
     #endregion
@@ -62,14 +63,24 @@ namespace Gadget.Collection.Pattern.Models
       action.ThrowNull ();
 
       Registrations.Clear ();
+      RegistrationItemsSource.Clear ();
 
       foreach (var gadget in action.CollectionAction.GadgetRegistrationCollection) {
-        var modelAction = action.CollectionAction.ModelCollection [gadget.Id];
-        modelAction.GadgetRegistrationModel.CopyFrom (gadget);
+        if (action.CollectionAction.ModelCollection.ContainsKey (gadget.Id)) {
+          var modelAction = action.CollectionAction.ModelCollection [gadget.Id];
+          modelAction.GadgetRegistrationModel.CopyFrom (gadget);
 
-        action.ModelAction.CopyFrom (modelAction);
+          action.ModelAction.CopyFrom (modelAction);
 
-        Registrations.Add (TComponentModelItem.Create (action));
+          var item = TComponentModelItem.Create (action);
+
+          Registrations.Add (item);
+          RegistrationItemsSource.Add (item);
+        }
+      }
+
+      if (RegistrationItemsSource.Count.Equals (0).IsFalse ()) {
+        RegistrationSelectedIndex = 0;
       }
     }
     #endregion

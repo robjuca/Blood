@@ -69,9 +69,15 @@ namespace Server.Models.Infrastructure
   // ----------------------------------------------------------------------------------
 
   // TODO: review
-  //  Material      = 00100100 binary -> 24 hex -> 36 decimal
-  //  Target        = 00110000 binary -> 30 hex -> 48 decimal
-  //  Test          = 00110100 binary -> 34 hex -> 52 decimal
+  // gadget Test
+  //  Material          = 00100100 binary -> 24 hex -> 36 decimal
+  //  Target            = 00110000 binary -> 30 hex -> 48 decimal
+  //  Test              = 00110100 binary -> 34 hex -> 52 decimal
+
+  // gadget Care
+  //  Registration      = 00100100 binary -> 24 hex -> 36 decimal
+  //  Tests             = 00000000 binary -> 00 hex -> 00 decimal
+  //  Report            = 00000000 binary -> 00 hex -> 00 decimal
 
 
   // TODO: review

@@ -106,7 +106,6 @@ namespace Server.Models.Component
     }
     #endregion
 
-
     #region Gadget Medical Care
     public GadgetRegistration GadgetRegistrationModel
     {

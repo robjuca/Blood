@@ -275,6 +275,10 @@ namespace Server.Models.Component
       modelAction.GadgetTargetModel.CopyFrom (GadgetTargetModel);
       modelAction.GadgetTestModel.CopyFrom (GadgetTestModel);
 
+      modelAction.GadgetRegistrationModel.CopyFrom (GadgetRegistrationModel);
+      modelAction.GadgetTestsModel.CopyFrom (GadgetTestsModel);
+      modelAction.GadgetReportModel.CopyFrom (GadgetReportModel);
+
       return (modelAction);
     }
 

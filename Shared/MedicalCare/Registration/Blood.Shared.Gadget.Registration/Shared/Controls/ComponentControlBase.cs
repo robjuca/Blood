@@ -47,10 +47,8 @@ namespace Shared.Gadget.Registration
         VerticalAlignment=VerticalAlignment.Center,
       };
 
-      m_Grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Auto) }); // row 0 Registration
+      m_Grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Auto) }); // row 0 image, Registration
       m_Grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Auto) }); // row 1 description
-      m_Grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Auto) }); // row 2 reference
-      m_Grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Auto) }); // row 3 external link
 
       AddChild (m_Grid);
 
@@ -69,15 +67,37 @@ namespace Shared.Gadget.Registration
     {
       m_Grid.Children.Clear ();
 
-      // Registration (row 0)
+      // image, Registration (row 0)
       var grid = new Grid () 
       { 
         HorizontalAlignment= HorizontalAlignment.Center
       };
 
-      grid.ColumnDefinitions.Add (new ColumnDefinition () { Width = new GridLength (1, GridUnitType.Auto) }); // col 0 material
+      grid.ColumnDefinitions.Add (new ColumnDefinition () { Width = new GridLength (1, GridUnitType.Auto) }); // col 0 image
       grid.ColumnDefinitions.Add (new ColumnDefinition () { Width = new GridLength (1, GridUnitType.Auto) }); // col 1 Registration
       grid.SetValue (Grid.RowProperty, 0); // row 0
+
+      m_Grid.Children.Add (grid); // row 0
+
+      // image
+      if (Model.ControlModel.Image.NotNull ()) {
+        var imageSource = rr.Library.Helper.THelper.ByteArrayToBitmapImage (Model.ControlModel.Image);
+
+        if (imageSource.NotNull ()) {
+          var image = new Image ()
+          {
+            Margin = new Thickness (0, 0, 10, 0),
+            Stretch = Stretch.Fill,
+            Width = 48,
+            Height = 48,
+            Source = imageSource.Clone (),
+          };
+
+          image.SetValue (Grid.ColumnProperty, 0);
+
+          grid.Children.Add (image);
+        }
+      }
 
       // Registration
       if (string.IsNullOrEmpty (Model.ControlModel.Name).IsFalse ()) {
@@ -92,10 +112,7 @@ namespace Shared.Gadget.Registration
         grid.Children.Add (textBlock);
       }
 
-      m_Grid.Children.Add (grid); // row 0
-
       // description (row 1)
-
       if (string.IsNullOrEmpty (Model.ControlModel.Description).IsFalse ()) {
         var textBox = new TextBox ()
         {
@@ -113,33 +130,6 @@ namespace Shared.Gadget.Registration
         textBox.SetValue (Grid.RowProperty, 1);
 
         m_Grid.Children.Add (textBox); // row 1
-      }
-
-      // external link (row 3)
-
-      if (string.IsNullOrEmpty (Model.ControlModel.ExternalLink).IsFalse ()) {
-        try {
-          var externalLink = new System.Windows.Documents.Hyperlink (new System.Windows.Documents.Run ("more info"))
-          {
-            NavigateUri = new Uri (Model.ControlModel.ExternalLink),
-            TargetName = "_blanc",
-          };
-
-          var textBoxLink = new TextBlock (externalLink)
-          {
-            HorizontalAlignment = HorizontalAlignment.Center,
-            Margin = new Thickness (3),
-          };
-
-          textBoxLink.SetValue (Grid.RowProperty, 3);
-
-          m_Grid.Children.Add (textBoxLink); // row 3
-        }
-
-        //TODO: what for??
-        catch (Exception) {
-          // do nothing
-        }
       }
     }
     #endregion

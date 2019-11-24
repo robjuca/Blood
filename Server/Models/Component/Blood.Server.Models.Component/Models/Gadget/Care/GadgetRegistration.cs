@@ -16,7 +16,6 @@ namespace Server.Models.Component
 
     public string                 Name { get; set; }
     public string                 Description { get; set; }
-    public string                 ExternalLink { get; set; }
     public Collection<byte>       Image { get; private set; }
     public DateTime               Date { get; private set; }
     public bool                   Enabled { get; set; }
