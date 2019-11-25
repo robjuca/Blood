@@ -38,6 +38,7 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                         <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
                     <!--design-->
@@ -45,8 +46,13 @@
                         <views:TFactoryDesignView />
                     </Border>
 
-                    <!--property grid-->
+                    <!--list-->
                     <Border Grid.Column="1">
+                        <views:TFactoryListView />
+                    </Border>
+
+                    <!--property grid-->
+                    <Border Grid.Column="2">
                         <views:TFactoryPropertyView />
                     </Border>
                 </Grid>

@@ -1,0 +1,81 @@
+﻿<base:ViewChildBase x:Class="Gadget.Factory.Pattern.Views.TFactoryListView"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:base="clr-namespace:rr.Library.Infrastructure;assembly=rr.Library.Infrastructure"
+                    xmlns:converters="clr-namespace:rr.Library.Converter;assembly=rr.Library.Converter"
+                    xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+                    xmlns:caliburn="http://www.caliburnproject.org"
+                    DataContext="{x:Null}"
+                    x:Name="ModuleFactoryListViewModel">
+
+    <UserControl.Resources>
+        <converters:TCollectionToBitmapImageConverter  x:Key="CollectionToBitmapImageConverter" />
+
+        <CollectionViewSource x:Key="RegistrationModelItemsViewSource"
+                              Source="{Binding Model.RegistrationItemsSource}">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="GadgetRegistrationModel.Registration"
+                                     Direction="Ascending" />
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+
+        <DataTemplate x:Key="RegistrationListDataTemplate">
+            <Border Padding="2"
+                    BorderThickness="0 .1 0 .1"
+                    BorderBrush="LightGray">
+                <StackPanel Orientation="Horizontal">
+                    <!--image-->
+                    <Image Width="32"
+                           Height="32"
+                           Source="{Binding GadgetRegistrationModel.Image, Converter={StaticResource CollectionToBitmapImageConverter}}" />
+
+                    <!--name-->
+                    <RadioButton GroupName="Registration"
+                                 VerticalAlignment="Center"
+                                 Margin="5 0 0 0"
+                                 caliburn:Message.Attach="[Event Checked] = [OnCheckedRegistrationCommadClicked ($dataContext)]">
+                        <TextBlock Text="{Binding Name}" />
+                    </RadioButton>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Border Margin="2"
+            Width="210">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <!--Registration-->
+            <Border Grid.Row="0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0">
+                        <TextBlock Padding="3 0 0 0"
+                                   Text="Registration" />
+                    </Border>
+
+                    <Border Grid.Column="1">
+                        <TextBlock HorizontalAlignment="Right"
+                                   Text="{Binding Model.RegistrationCount}" />
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!--list-->
+            <Border Grid.Row="1">
+                <ListBox x:Name="RegistrationList"
+                         ItemsSource="{Binding Source={StaticResource RegistrationModelItemsViewSource}}"
+                         ItemTemplate="{StaticResource RegistrationListDataTemplate}" />
+            </Border>
+        </Grid>
+    </Border>
+
+</base:ViewChildBase>

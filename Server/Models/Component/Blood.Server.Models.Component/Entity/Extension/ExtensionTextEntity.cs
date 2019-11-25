@@ -42,7 +42,7 @@ namespace Server.Models.Component
         Value = alias.Value;
         ExternalLink = alias.ExternalLink;
         IsCommit = alias.IsCommit;
-        Date = alias.Date;
+        Date = alias.Date.IsNull () ? DateTime.Now : alias.Date;
       }
     }
 
@@ -55,7 +55,7 @@ namespace Server.Models.Component
         Value = alias.Value;
         ExternalLink = alias.ExternalLink;
         IsCommit = alias.IsCommit;
-        Date = alias.Date;
+        Date = alias.Date.IsNull () ? DateTime.Now : alias.Date;
       }
     }
     #endregion
