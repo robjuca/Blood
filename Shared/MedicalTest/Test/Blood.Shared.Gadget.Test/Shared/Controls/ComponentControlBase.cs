@@ -10,6 +10,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
+using MaterialDesignThemes.Wpf;
+
 using Server.Models.Infrastructure;
 
 using Shared.Types;
@@ -76,14 +78,22 @@ namespace Shared.Gadget.Test
       // test name (row 0)
       var textBlock = new TextBlock ()
       {
+        Margin = new Thickness (10, 0, 0, 0),
         VerticalAlignment = VerticalAlignment.Center,
         Text = Model.ControlModel.Test,
         FontWeight = FontWeights.UltraBold,
         FontSize = 14,
       };
 
-      textBlock.SetValue (Grid.RowProperty, 0);  // row  0
-      m_Grid.Children.Add (textBlock);
+      var cz = new ColorZone ()
+      {
+        Padding = new Thickness (3),
+        Mode = Model.HasRelationModels ? ColorZoneMode.Accent : ColorZoneMode.PrimaryLight,
+        Content = textBlock,
+      };
+
+      cz.SetValue (Grid.RowProperty, 0);  // row  0
+      m_Grid.Children.Add (cz);
 
       // test description (row 1)
       var textBox = new TextBox ()

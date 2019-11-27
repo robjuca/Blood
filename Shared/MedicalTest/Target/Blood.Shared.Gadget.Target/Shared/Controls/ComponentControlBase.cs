@@ -9,6 +9,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
+using MaterialDesignThemes.Wpf;
+
 using Shared.Types;
 //---------------------------//
 
@@ -41,18 +43,15 @@ namespace Shared.Gadget.Target
     {
       Background = Brushes.White;
 
-      m_Grid = new Grid () 
+      m_StackPanel = new StackPanel ();
+
+      m_Card = new Card ()
       {
-        HorizontalAlignment= HorizontalAlignment.Center,
-        VerticalAlignment=VerticalAlignment.Center,
+        Padding = new Thickness (6),
+        Content = m_StackPanel,
       };
 
-      m_Grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Auto) }); // row 0 target
-      m_Grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Auto) }); // row 1 description
-      m_Grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Auto) }); // row 2 reference
-      m_Grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Auto) }); // row 3 external link
-
-      AddChild (m_Grid);
+      AddChild (m_Card);
 
       ControlMode = TControlMode.None;
     }
@@ -67,17 +66,13 @@ namespace Shared.Gadget.Target
     #region Members
     public void RefreshDesign ()
     {
-      m_Grid.Children.Clear ();
+      m_StackPanel.Children.Clear ();
 
-      // target (row 0)
-      var grid = new Grid () 
+       // target 
+       var stack = new StackPanel() 
       { 
-        HorizontalAlignment= HorizontalAlignment.Center
+        Orientation = Orientation.Horizontal
       };
-
-      grid.ColumnDefinitions.Add (new ColumnDefinition () { Width = new GridLength (1, GridUnitType.Auto) }); // col 0 material
-      grid.ColumnDefinitions.Add (new ColumnDefinition () { Width = new GridLength (1, GridUnitType.Auto) }); // col 1 target
-      grid.SetValue (Grid.RowProperty, 0); // row 0
 
       // material image
       var materialImage = new Image
@@ -85,69 +80,68 @@ namespace Shared.Gadget.Target
         Source = rr.Library.Helper.THelper.ByteArrayToBitmapImage (Model.ChildControlModel.Image)
       };
 
-      materialImage.SetValue (Grid.ColumnProperty, 0);
-
-      grid.Children.Add (materialImage);
+      stack.Children.Add (materialImage);
 
       // target
       if (string.IsNullOrEmpty (Model.ControlModel.Target).IsFalse ()) {
         var textBlock = new TextBlock ()
         {
+          Margin = new Thickness (10, 0, 0, 0),
           VerticalAlignment = VerticalAlignment.Center,
+          FontWeight = FontWeights.Bold,
           Text = Model.ControlModel.Target,
         };
 
-        textBlock.SetValue (Grid.ColumnProperty, 1);  // col 1
-
-        grid.Children.Add (textBlock);
+        stack.Children.Add (textBlock);
       }
 
-      m_Grid.Children.Add (grid); // row 0
+      var cz = new ColorZone ()
+      {
+        Mode = ColorZoneMode.PrimaryLight,
+        Content = stack,
+      };
 
-      // description (row 1)
+      m_StackPanel.Children.Add (cz);
+      m_StackPanel.Children.Add (new Separator ());
 
+      // description 
       if (string.IsNullOrEmpty (Model.ControlModel.Description).IsFalse ()) {
         var textBox = new TextBox ()
         {
           Margin = new Thickness (3),
-          Padding=new Thickness (3),
-          MaxWidth = 400,
-          MaxHeight = 100,
+          Padding = new Thickness (3),
+          MaxWidth = 420,
+          MaxHeight = 500,
           TextWrapping = TextWrapping.Wrap,
-          TextAlignment = TextAlignment.Center,
-          VerticalAlignment= VerticalAlignment.Top,
-          VerticalScrollBarVisibility= ScrollBarVisibility.Auto,
+          TextAlignment = TextAlignment.Justify,
+          HorizontalAlignment = HorizontalAlignment.Left,
+          VerticalAlignment = VerticalAlignment.Top,
+          VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
           Text = Model.ControlModel.Description,
         };
 
-        textBox.SetValue (Grid.RowProperty, 1);
-
-        m_Grid.Children.Add (textBox); // row 1
+        m_StackPanel.Children.Add (textBox); 
       }
 
-      // reference (row 2)
-
+      // reference 
       if (string.IsNullOrEmpty (Model.ControlModel.Reference).IsFalse ()) {
         var textBox = new TextBox ()
         {
           Margin = new Thickness (3),
           Padding = new Thickness (3),
-          MaxWidth = 400,
-          MaxHeight = 100,
+          MaxWidth = 420,
+          FontWeight = FontWeights.SemiBold,
           TextWrapping = TextWrapping.Wrap,
-          TextAlignment = TextAlignment.Center,
+          TextAlignment = TextAlignment.Left,
           VerticalAlignment = VerticalAlignment.Top,
           VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
           Text = Model.ControlModel.Reference,
         };
 
-        textBox.SetValue (Grid.RowProperty, 2);
-
-        m_Grid.Children.Add (textBox); // row 2
+        m_StackPanel.Children.Add (textBox); 
       }
 
-      // external link (row 3)
-
+      // external link 
       if (string.IsNullOrEmpty (Model.ControlModel.ExternalLink).IsFalse ()) {
         try {
           var externalLink = new System.Windows.Documents.Hyperlink (new System.Windows.Documents.Run ("more info"))
@@ -164,7 +158,7 @@ namespace Shared.Gadget.Target
 
           textBoxLink.SetValue (Grid.RowProperty, 3);
 
-          m_Grid.Children.Add (textBoxLink); // row 3
+          m_StackPanel.Children.Add (textBoxLink); // row 3
         }
 
         //TODO: what for??
@@ -202,7 +196,8 @@ namespace Shared.Gadget.Target
     #endregion
 
     #region Fields
-    readonly Grid                                     m_Grid;
+    readonly StackPanel                               m_StackPanel;
+    readonly Card                                     m_Card;
     #endregion
   };
   //---------------------------//

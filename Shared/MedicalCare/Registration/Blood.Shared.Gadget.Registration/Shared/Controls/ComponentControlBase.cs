@@ -9,6 +9,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
+using MaterialDesignThemes.Wpf;
+
 using Shared.Types;
 //---------------------------//
 
@@ -47,10 +49,18 @@ namespace Shared.Gadget.Registration
         VerticalAlignment=VerticalAlignment.Center,
       };
 
-      m_Grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Auto) }); // row 0 image, Registration
-      m_Grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Auto) }); // row 1 description
+      m_Grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Auto) }); // row 0 image 
+      m_Grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Auto) }); // row 1 registration name
+      m_Grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Auto) }); // row 2 description
 
-      AddChild (m_Grid);
+      m_Card = new Card
+      {
+        Padding = new Thickness (2),
+        Width = 200,
+        Content = m_Grid,
+      };
+
+      AddChild (m_Card);
 
       ControlMode = TControlMode.None;
     }
@@ -67,69 +77,55 @@ namespace Shared.Gadget.Registration
     {
       m_Grid.Children.Clear ();
 
-      // image, Registration (row 0)
-      var grid = new Grid () 
-      { 
-        HorizontalAlignment= HorizontalAlignment.Center
-      };
-
-      grid.ColumnDefinitions.Add (new ColumnDefinition () { Width = new GridLength (1, GridUnitType.Auto) }); // col 0 image
-      grid.ColumnDefinitions.Add (new ColumnDefinition () { Width = new GridLength (1, GridUnitType.Auto) }); // col 1 Registration
-      grid.SetValue (Grid.RowProperty, 0); // row 0
-
-      m_Grid.Children.Add (grid); // row 0
-
-      // image
+      // image (row 0)
       if (Model.ControlModel.Image.NotNull ()) {
         var imageSource = rr.Library.Helper.THelper.ByteArrayToBitmapImage (Model.ControlModel.Image);
 
         if (imageSource.NotNull ()) {
           var image = new Image ()
           {
-            Margin = new Thickness (0, 0, 10, 0),
-            Stretch = Stretch.Fill,
-            Width = 48,
-            Height = 48,
+            Stretch = Stretch.UniformToFill,
+            Height = 140,
             Source = imageSource.Clone (),
           };
 
-          image.SetValue (Grid.ColumnProperty, 0);
-
-          grid.Children.Add (image);
+          image.SetValue (Grid.RowProperty, 0);  // row 0
+          m_Grid.Children.Add (image);
         }
       }
 
-      // Registration
+      // Registration (row 1)
       if (string.IsNullOrEmpty (Model.ControlModel.Name).IsFalse ()) {
         var textBlock = new TextBlock ()
         {
-          VerticalAlignment = VerticalAlignment.Center,
+          Padding = new Thickness (2),
+          FontWeight = FontWeights.SemiBold,
           Text = Model.ControlModel.Name,
         };
 
-        textBlock.SetValue (Grid.ColumnProperty, 1);  // col 1
+        textBlock.SetValue (Grid.RowProperty, 1);  // row 1
 
-        grid.Children.Add (textBlock);
+        m_Grid.Children.Add (textBlock);
       }
 
-      // description (row 1)
+      // description (row 2)
       if (string.IsNullOrEmpty (Model.ControlModel.Description).IsFalse ()) {
         var textBox = new TextBox ()
         {
           Margin = new Thickness (3),
-          Padding=new Thickness (3),
+          Padding = new Thickness (3),
           MaxWidth = 400,
           MaxHeight = 100,
           TextWrapping = TextWrapping.Wrap,
           TextAlignment = TextAlignment.Center,
-          VerticalAlignment= VerticalAlignment.Top,
-          VerticalScrollBarVisibility= ScrollBarVisibility.Auto,
+          VerticalAlignment = VerticalAlignment.Top,
+          VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
           Text = Model.ControlModel.Description,
         };
 
-        textBox.SetValue (Grid.RowProperty, 1);
+        textBox.SetValue (Grid.RowProperty, 2);
 
-        m_Grid.Children.Add (textBox); // row 1
+        m_Grid.Children.Add (textBox); // row 2
       }
     }
     #endregion
@@ -162,6 +158,7 @@ namespace Shared.Gadget.Registration
 
     #region Fields
     readonly Grid                                     m_Grid;
+    readonly Card                                     m_Card;
     #endregion
   };
   //---------------------------//

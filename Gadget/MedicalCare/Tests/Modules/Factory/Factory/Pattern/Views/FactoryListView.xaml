@@ -3,6 +3,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:base="clr-namespace:rr.Library.Infrastructure;assembly=rr.Library.Infrastructure"
                     xmlns:converters="clr-namespace:rr.Library.Converter;assembly=rr.Library.Converter"
+                    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                     xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
                     xmlns:caliburn="http://www.caliburnproject.org"
                     DataContext="{x:Null}"
@@ -11,6 +12,20 @@
     <UserControl.Resources>
         <converters:TCollectionToBitmapImageConverter  x:Key="CollectionToBitmapImageConverter" />
 
+        <!--test-->
+        <CollectionViewSource x:Key="TestModelItemsViewSource"
+                              Source="{Binding Model.TestItemsSource}">
+            <CollectionViewSource.GroupDescriptions>
+                <PropertyGroupDescription PropertyName="RelationCategory" />
+            </CollectionViewSource.GroupDescriptions>
+
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="GadgetTestModel.Test"
+                                     Direction="Ascending" />
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+
+        <!--registration-->
         <CollectionViewSource x:Key="RegistrationModelItemsViewSource"
                               Source="{Binding Model.RegistrationItemsSource}">
             <CollectionViewSource.SortDescriptions>
@@ -19,61 +34,124 @@
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
 
+        <!--test-->
+        <DataTemplate x:Key="TestListDataTemplate">
+            <Border Padding="2"
+                    BorderThickness="0 .1 0 .1"
+                    BorderBrush="LightGray">
+                <!--check, name-->
+                <StackPanel Orientation="Horizontal">
+                    <!--check-->
+                    <CheckBox Margin="0 0 5 0"
+                              caliburn:Message.Attach="[Event Checked] = [OnTestItemChecked ($dataContext)]; [Event Unchecked] = [OnTestItemUnchecked ($dataContext)]" />
+
+                    <!--test name-->
+                    <TextBlock Text="{Binding Name}"
+                               VerticalAlignment="Center" />
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+
+        <!--registration-->
         <DataTemplate x:Key="RegistrationListDataTemplate">
             <Border Padding="2"
                     BorderThickness="0 .1 0 .1"
                     BorderBrush="LightGray">
-                <StackPanel Orientation="Horizontal">
-                    <!--image-->
-                    <Image Width="32"
-                           Height="32"
-                           Source="{Binding GadgetRegistrationModel.Image, Converter={StaticResource CollectionToBitmapImageConverter}}" />
+                <materialDesign:Card Padding="2"
+                                     HorizontalAlignment="Stretch"
+                                     VerticalAlignment="Stretch">
+                    <StackPanel>
+                        <!--image-->
+                        <Image Stretch="UniformToFill"
+                               Height="140"
+                               Source="{Binding GadgetRegistrationModel.Image, Converter={StaticResource CollectionToBitmapImageConverter}}" />
 
-                    <!--name-->
-                    <RadioButton GroupName="Registration"
-                                 VerticalAlignment="Center"
-                                 Margin="5 0 0 0"
-                                 caliburn:Message.Attach="[Event Checked] = [OnCheckedRegistrationCommadClicked ($dataContext)]">
-                        <TextBlock Text="{Binding Name}" />
-                    </RadioButton>
-                </StackPanel>
+                        <!--registration-->
+                        <TextBlock FontWeight="DemiBold"
+                                   Margin="3"
+                                   Text="{Binding GadgetRegistrationModel.Name}" />
+
+                        <!--name-->
+                        <RadioButton GroupName="Registration"
+                                     Margin="3"
+                                     caliburn:Message.Attach="[Event Checked] = [OnCheckedRegistrationCommadClicked ($dataContext)]">
+                            <TextBlock Text="{Binding Name}" />
+                        </RadioButton>
+                    </StackPanel>
+                </materialDesign:Card>
             </Border>
         </DataTemplate>
     </UserControl.Resources>
 
-    <Border Margin="2"
-            Width="210">
+    <Border Margin="2">
         <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition />
-            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
 
-            <!--Registration-->
-            <Border Grid.Row="0">
+            <!--test-->
+            <Border Grid.Column="0"
+                    Padding="0 0 10 0">
                 <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
 
-                    <Border Grid.Column="0">
-                        <TextBlock Padding="3 0 0 0"
-                                   Text="Registration" />
+                    <!--count, test-->
+                    <Border Grid.Row="0">
+                        <StackPanel Orientation="Horizontal">
+                            <!--count-->
+                            <TextBlock Text="{Binding Model.TestCount}" />
+
+                            <!--count checked-->
+                            <TextBlock Margin="3 0 0 0" Text="{Binding Model.TestCheckedCount}" />
+
+                            <!--test-->
+                            <TextBlock Margin="3 0 0 0"
+                                       Text="Test" />
+                        </StackPanel>
                     </Border>
 
-                    <Border Grid.Column="1">
-                        <TextBlock HorizontalAlignment="Right"
-                                   Text="{Binding Model.RegistrationCount}" />
+                    <!--test list-->
+                    <Border Grid.Row="1">
+                        <ListBox ScrollViewer.CanContentScroll="False"
+                                 IsEnabled="{Binding Model.TestListEnabled}"
+                                 ItemsSource="{Binding Source={StaticResource TestModelItemsViewSource}}"
+                                 ItemTemplate="{StaticResource TestListDataTemplate}" />
                     </Border>
                 </Grid>
             </Border>
 
-            <!--list-->
-            <Border Grid.Row="1">
-                <ListBox x:Name="RegistrationList"
-                         ItemsSource="{Binding Source={StaticResource RegistrationModelItemsViewSource}}"
-                         ItemTemplate="{StaticResource RegistrationListDataTemplate}" />
+            <!--registration-->
+            <Border Grid.Column="1"
+                    Width="210">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+
+                    <!--Count, Registration-->
+                    <Border Grid.Row="0">
+                        <StackPanel Orientation="Horizontal">
+                            <!--count-->
+                            <TextBlock Text="{Binding Model.RegistrationCount}" />
+
+                            <!--registration-->
+                            <TextBlock Padding="3 0 0 0"
+                                       Text="Registration" />
+                        </StackPanel>
+                    </Border>
+
+                    <!--registration list-->
+                    <Border Grid.Row="1">
+                        <ListBox ScrollViewer.CanContentScroll="False"
+                                 ItemsSource="{Binding Source={StaticResource RegistrationModelItemsViewSource}}"
+                                 ItemTemplate="{StaticResource RegistrationListDataTemplate}" />
+                    </Border>
+                </Grid>
             </Border>
         </Grid>
     </Border>

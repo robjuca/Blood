@@ -38,21 +38,15 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                         <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <!--design-->
-                    <Border Grid.Column="0">
-                        <views:TFactoryDesignView />
-                    </Border>
-
                     <!--list-->
-                    <Border Grid.Column="1">
+                    <Border Grid.Column="0">
                         <views:TFactoryListView />
                     </Border>
 
                     <!--property grid-->
-                    <Border Grid.Column="2">
+                    <Border Grid.Column="1">
                         <views:TFactoryPropertyView />
                     </Border>
                 </Grid>
