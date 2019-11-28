@@ -12,7 +12,6 @@ using rr.Library.Helper;
 using Shared.Types;
 using Shared.Resources;
 using Shared.Message;
-using Shared.ViewModel;
 
 using Module.Settings.Factory.Support.Presentation;
 using Module.Settings.Factory.Support.Pattern.Models;
@@ -38,12 +37,40 @@ namespace Module.Settings.Factory.Support.Pattern.ViewModels
     {
       // shell
       if (message.IsModule (TResource.TModule.Shell)) {
-        
+        if (message.IsAction (TMessageAction.DatabaseValidated)) {
+          TDispatcher.Invoke (IniFileManagerDispatcher);
+        }
       }
     }
     #endregion
 
-    
+    #region Dispatcher
+    void RefreshDispatcher ()
+    {
+      RaiseChanged ();
+      RefreshCollection ("ProcessInfoViewSource");
+    }
+
+    void IniFileManagerDispatcher ()
+    {
+      var filePath = System.Environment.CurrentDirectory;
+      var fileName = TNames.SettingsIniFileName;
+
+      var iniFileManager = TIniFileManager.CreatDefault;
+      iniFileManager.SelectPath (filePath, fileName);
+
+      if (iniFileManager.ValidatePath ().IsValid) {
+        if (iniFileManager.ContainsSection (TProcess.PROCESSMODULESSECTION)) {
+          var names = iniFileManager.RequestKey (TProcess.PROCESSMODULESSECTION, TProcess.PROCESSNAME);
+          var alive = iniFileManager.RequestKey (TProcess.PROCESSMODULESSECTION, TProcess.PROCESSISALIVE);
+
+          Model.Select (names, alive);
+
+          TDispatcher.Invoke (RefreshDispatcher);
+        }
+      }
+    }
+    #endregion
 
     #region Property
     IDelegateCommand DelegateCommand

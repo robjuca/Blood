@@ -15,6 +15,7 @@ using rr.Library.Communication;
 
 using Shared.Resources;
 using Shared.Communication;
+using Shared.Types;
 
 using Launcher.Shell.Presentation;
 using Launcher.Shell.Pattern.Models;
@@ -40,6 +41,12 @@ namespace Launcher.Shell.Pattern.ViewModels
 
       m_Communication = new TMessagingComm<TDataComm> (m_DataComm);
       m_Communication.Handle += OnCommunicationHandle; // Attach event handler for incoming messages
+
+      var filePath = System.Environment.CurrentDirectory;
+      var fileName = TNames.SettingsIniFileName;
+
+      IniFileManager = TIniFileManager.CreatDefault;
+      IniFileManager.SelectPath (filePath, fileName);
     }
     #endregion
 
@@ -231,6 +238,7 @@ namespace Launcher.Shell.Pattern.ViewModels
       (FrameworkElementView as System.Windows.Window).Closing += OnClosing;
 
       ValidateProcessAlive ();
+      UpdateIniSettings ();
 
       OnSettingsCommadClicked ();
     }
@@ -244,6 +252,13 @@ namespace Launcher.Shell.Pattern.ViewModels
         return (PresentationCommand as IDelegateCommand);
       }
     }
+    #endregion
+
+    #region Property
+    TIniFileManager IniFileManager
+    {
+      get;
+    } 
     #endregion
 
     #region Fields
@@ -318,7 +333,34 @@ namespace Launcher.Shell.Pattern.ViewModels
           throw new Exception (ex.Message);
         }
       }
-    } 
+    }
+
+    void UpdateIniSettings ()
+    {
+      if (IniFileManager.ValidatePath ().IsValid) {
+        // first time only
+        if (IniFileManager.ContainsSection (TProcess.PROCESSMODULESSECTION).IsFalse ()) {
+          var token = IniFileManager.AddSection (TProcess.PROCESSMODULESSECTION);
+
+          TIniFileManager.AddTrailingComment (token, "Process Alive"); // comment.
+          TIniFileManager.AddKey (token, TProcess.PROCESSNAME, string.Empty);
+          TIniFileManager.AddKey (token, TProcess.PROCESSISALIVE , false.ToString ());
+        }
+
+        string names = string.Empty;
+        string alive = string.Empty;
+
+        foreach (var process in Model.RequestProcess ()) {
+          names += process.Key + "?";
+          alive += process.Value + "?";
+        }
+
+        IniFileManager.ChangeKey (TProcess.PROCESSMODULESSECTION, TProcess.PROCESSNAME, names);
+        IniFileManager.ChangeKey (TProcess.PROCESSMODULESSECTION, TProcess.PROCESSISALIVE, alive);
+
+        IniFileManager.SaveChanges ();
+      }
+    }
     #endregion
   };
   //---------------------------//

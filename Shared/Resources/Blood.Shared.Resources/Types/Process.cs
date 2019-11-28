@@ -48,6 +48,10 @@ namespace Shared.Resources
     public static string GADGETREPORT => TName.GadgetReport.ToString ();
 
     public static string MODULESETTINGS => TName.ModuleSettings.ToString ();
+
+    public static string PROCESSMODULESSECTION => ProcessModulesSection;
+    public static string PROCESSNAME => ProcessName;
+    public static string PROCESSISALIVE => ProcessIsAlive;
     #endregion
 
     #region Constructor
@@ -74,6 +78,11 @@ namespace Shared.Resources
     }
     #endregion
 
+    #region Fields
+    const string ProcessModulesSection                          = "ProcessModulesSection";
+    const string ProcessName                                    = "ProcessName";
+    const string ProcessIsAlive                                 = "ProcessIsAlive"; 
+    #endregion
   };
   //---------------------------//
 

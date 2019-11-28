@@ -116,6 +116,11 @@ namespace Launcher.Shell.Pattern.Models
         m_Process.Add (name, alive);
       }
     }
+
+    internal Dictionary<TProcess.TName, bool> RequestProcess ()
+    {
+      return (m_Process);
+    }
     #endregion
 
     #region Fields

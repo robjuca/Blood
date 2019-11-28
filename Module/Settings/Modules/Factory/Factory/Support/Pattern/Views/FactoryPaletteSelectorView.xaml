@@ -26,6 +26,58 @@
             </Setter>
         </Style>
 
+        <CollectionViewSource x:Key="ProcessInfoViewSource"
+                              Source="{Binding Model.ProcessItemsSource}" />
+
+        <!--process list-->
+        <DataTemplate x:Key="ProcessListDataTemplate">
+            <Border Padding="2"
+                    BorderThickness="0 .1 0 .1"
+                    BorderBrush="LightGray">
+
+                <!-- alive, name -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <!--alive-->
+                    <Border Grid.Column="0"
+                            Padding="10 0 0 0">
+                        <Grid>
+                            <ContentControl Visibility="{Binding AliveOnVisibility}">
+                                <materialDesign:PackIcon Kind="Check"
+                                                         Foreground="Green" />
+                            </ContentControl>
+
+                            <ContentControl Visibility="{Binding AliveOffVisibility}">
+                                <materialDesign:PackIcon Kind="Close"
+                                                         Foreground="Red" />
+                            </ContentControl>
+                        </Grid>
+                    </Border>
+
+                    <!--radiobutton-->
+                    <Border Grid.Column="1"
+                            Padding="15 0 3 0">
+                        <RadioButton GroupName="Process"
+                                     IsEnabled="{Binding IsAlive}"
+                                     IsChecked="{Binding IsChecked}"
+                                     VerticalAlignment="Center" />
+                    </Border>
+
+                    <!--name-->
+                    <Border Grid.Column="2">
+                        <TextBlock Text="{Binding Name}"
+                                   FontWeight="Bold"
+                                   VerticalAlignment="Center" />
+                    </Border>
+                </Grid>
+            </Border>
+        </DataTemplate>
+
         <DataTemplate DataType="{x:Type materialDesignColors:Swatch}">
             <materialDesign:Card Margin="2 2 6 6">
                 <Grid>
@@ -84,10 +136,11 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
 
-        <!--palette-->
+        <!--palette title-->
         <Border Grid.Row="0">
             <materialDesign:Card Padding="4"
                                  HorizontalAlignment="Stretch"
@@ -103,21 +156,83 @@
             </materialDesign:Card>
         </Border>
 
-        <!--current palette-->
-        <Border Grid.Row="1"
-                Padding="10">
+        <!--module selector, current palette-->
+        <Border Grid.Row="1">
             <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <!--Process module selector-->
+                <Border Grid.Column="0"
+                        Margin="6">
+                    <materialDesign:Card VerticalAlignment="Stretch">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+
+                            <!--process count, process name-->
+                            <Border Grid.Row="0"
+                                    Padding="10 0 10 0">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+
+                                    <!--process count-->
+                                    <Border Grid.Column="0">
+                                        <TextBlock HorizontalAlignment="Left"
+                                                   Text="{Binding Model.ProcessCount}" />
+                                    </Border>
+
+                                    <!--process name-->
+                                    <Border Grid.Column="1">
+                                        <TextBlock HorizontalAlignment="Right"
+                                                   FontWeight="DemiBold"
+                                                   Text="{Binding Model.CurrentProcessName}" />
+                                    </Border>
+                                </Grid>
+                            </Border>
+
+                            <!--process module list-->
+                            <Border Grid.Row="1"
+                                    Margin="6"
+                                    Height="90">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                              HorizontalScrollBarVisibility="Disabled">
+
+                                    <ItemsControl ItemsSource="{Binding Source={StaticResource ProcessInfoViewSource}}"
+                                                  ItemTemplate="{StaticResource ProcessListDataTemplate}" />
+                                </ScrollViewer>
+                            </Border>
+                        </Grid>
+                    </materialDesign:Card>
+                </Border>
 
                 <!--current palette-->
-                <Border Grid.Row="0">
-                    <materialDesign:Card Margin="2">
-                        <DockPanel>
-                            <Border DockPanel.Dock="Left"
-                                    Width="200">
+                <Border Grid.Column="1"
+                        Margin="6">
+                    <materialDesign:Card>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <!--text-->
+                            <Border Grid.Row="0">
+                                <TextBlock HorizontalAlignment="Center"
+                                           Text="current palette" />
+                            </Border>
+
+                            <!--current palette-->
+                            <Border Grid.Row="1"
+                                    Margin="6">
                                 <Grid>
                                     <Grid.Resources>
                                         <Style TargetType="TextBlock">
@@ -177,55 +292,43 @@
                                 </Grid>
                             </Border>
 
-                            <TextBlock Margin="16"
-                                       TextWrapping="Wrap"
-                                       VerticalAlignment="Center">This is current palette</TextBlock>
-                        </DockPanel>
+                            <!--lidht/dark control-->
+                            <Border Grid.Row="2"
+                                    Margin="6"
+                                    HorizontalAlignment="Right">
+                                <StackPanel Orientation="Horizontal"
+                                            Margin="0 0 10 0">
+                                    <TextBlock VerticalAlignment="Center"
+                                               Text="light" />
+
+                                    <ToggleButton Margin="8 0 8 0"
+                                                  Command="{Binding Model.ToggleBaseCommand}"
+                                                  CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=IsChecked}" />
+
+                                    <TextBlock VerticalAlignment="Center"
+                                               Text="dark" />
+                                </StackPanel>
+                            </Border>
+                        </Grid>
                     </materialDesign:Card>
                 </Border>
-
-                <!--palette selector-->
-                <Border Grid.Row="1">
-                    <Grid Margin="0 16 0 0">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-
-                        <!--lidht/dark control-->
-                        <Border Grid.Row="0"
-                                Margin="8">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock VerticalAlignment="Center"
-                                           Text="light" />
-
-                                <ToggleButton Margin="8 0 16 0"
-                                              Command="{Binding Model.ToggleBaseCommand}"
-                                              CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=IsChecked}" />
-
-                                <TextBlock VerticalAlignment="Center"
-                                           Text="dark" />
-                            </StackPanel>
-                        </Border>
-
-                        <!--Swatches list-->
-                        <Border Grid.Row="1"
-                                Margin="0 12 0 0">
-                            <ScrollViewer VerticalScrollBarVisibility="Auto"
-                                          HorizontalScrollBarVisibility="Disabled">
-
-                                <ItemsControl ItemsSource="{Binding Model.Swatches, Mode=OneTime}">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <WrapPanel />
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                </ItemsControl>
-                            </ScrollViewer>
-                        </Border>
-                    </Grid>
-                </Border>
             </Grid>
+        </Border>
+
+        <!--Swatches list-->
+        <Border Grid.Row="2"
+                Margin="6">
+            <ScrollViewer VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Disabled">
+
+                <ItemsControl ItemsSource="{Binding Model.Swatches, Mode=OneTime}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </ScrollViewer>
         </Border>
     </Grid>
 

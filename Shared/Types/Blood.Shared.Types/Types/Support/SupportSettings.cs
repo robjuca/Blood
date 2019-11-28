@@ -56,7 +56,7 @@ namespace Shared.Types
             var keyName = settingsName;
             var keyValue = m_SupportSettingsData.Request (settingsName);
 
-            IniFileManager.AddKey (token, keyName, keyValue);
+            TIniFileManager.AddKey (token, keyName, keyValue);
           }
 
           IniFileManager.SaveChanges ();
