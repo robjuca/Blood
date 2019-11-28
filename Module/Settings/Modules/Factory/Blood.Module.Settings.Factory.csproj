@@ -145,10 +145,16 @@
     <Compile Include="Factory\Database\Presentation\Interfaces\IPresentation.cs" />
     <Compile Include="Factory\Database\Presentation\Presentation.cs" />
     <Compile Include="Factory\Database\Presentation\PresentationCommand.cs" />
+    <Compile Include="Factory\Support\Pattern\Models\FactoryPaletteSelectorModel.cs" />
     <Compile Include="Factory\Support\Pattern\Models\FactorySupportModel.cs" />
     <Compile Include="Factory\Support\Pattern\Models\SupportInfo.cs" />
+    <Compile Include="Factory\Support\Pattern\ViewModels\FactoryPaletteSelectorViewModel.cs" />
     <Compile Include="Factory\Support\Pattern\ViewModels\FactorySupportViewModel.cs" />
+    <Compile Include="Factory\Support\Pattern\ViewModels\Interfaces\IFactoryPaletteSelectorViewModel.cs" />
     <Compile Include="Factory\Support\Pattern\ViewModels\Interfaces\IFactorySupportViewModel.cs" />
+    <Compile Include="Factory\Support\Pattern\Views\FactoryPaletteSelectorView.xaml.cs">
+      <DependentUpon>FactoryPaletteSelectorView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Factory\Support\Pattern\Views\FactorySupportView.xaml.cs">
       <DependentUpon>FactorySupportView.xaml</DependentUpon>
     </Compile>
@@ -182,6 +188,10 @@
     <Page Include="Factory\Database\Pattern\Views\WADBFrontSettingsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Factory\Support\Pattern\Views\FactoryPaletteSelectorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Factory\Support\Pattern\Views\FactorySupportView.xaml">
       <Generator>MSBuild:Compile</Generator>
