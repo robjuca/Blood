@@ -50,8 +50,14 @@ namespace Shared.Resources
     public static string MODULESETTINGS => TName.ModuleSettings.ToString ();
 
     public static string PROCESSMODULESSECTION => ProcessModulesSection;
-    public static string PROCESSNAME => ProcessName;
+    public static string PROCESSNAMESSECTION => ProcessNamesSection;
+    public static string PROCESSNAMES => ProcessNames;
     public static string PROCESSISALIVE => ProcessIsAlive;
+    public static string PALETTETHEME => PaletteTheme;
+    public static string PALETTEPRIMARY => PalettePrimary;
+    public static string PALETTEACCENT => PaletteAccent;
+    public static string PALETTETHEMEDARK => PaletteThemeDark;
+    public static string PALETTETHEMELIGHT => PaletteThemeLight;
     #endregion
 
     #region Constructor
@@ -80,8 +86,14 @@ namespace Shared.Resources
 
     #region Fields
     const string ProcessModulesSection                          = "ProcessModulesSection";
-    const string ProcessName                                    = "ProcessName";
-    const string ProcessIsAlive                                 = "ProcessIsAlive"; 
+    const string ProcessNamesSection                            = "ProcessNamesSection";
+    const string ProcessNames                                   = "ProcessNames";
+    const string ProcessIsAlive                                 = "ProcessIsAlive";
+    const string PaletteTheme                                   = "PaletteTheme";
+    const string PalettePrimary                                 = "PalettePrimary";
+    const string PaletteAccent                                  = "PaletteAccent";
+    const string PaletteThemeDark                               = "Dark";
+    const string PaletteThemeLight                              = "Light";
     #endregion
   };
   //---------------------------//

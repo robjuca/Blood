@@ -4,6 +4,7 @@
 ----------------------------------------------------------------*/
 
 //----- Include
+using System;
 using System.Collections.Generic;
 
 using Shared.Resources;
@@ -115,6 +116,33 @@ namespace Launcher.Shell.Pattern.Models
       else {
         m_Process.Add (name, alive);
       }
+    }
+
+    internal string RequestAllProcessNames ()
+    {
+      string [] names = new string [m_Process.Count];
+      int index = 0;
+
+      foreach (var item in m_Process) {
+        var name = item.Key.ToString ();
+
+        if (string.IsNullOrEmpty (name).IsFalse ()) {
+          names [index++] = item.Key.ToString ();
+        }
+      }
+
+      string allNames = string.Empty;
+
+      for (int i = 0; i < names.Length; i++) {
+        allNames += names [i];
+
+        if (i.Equals (names.Length - 1).IsFalse ()) {
+          allNames += "?";
+        }
+      }
+
+      // processName?...
+      return (allNames);
     }
 
     internal Dictionary<TProcess.TName, bool> RequestProcess ()

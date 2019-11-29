@@ -14,11 +14,12 @@ using MaterialDesignColors;
 using MaterialDesignThemes.Wpf;
 
 using rr.Library.Types;
+using Shared.Resources;
 //---------------------------//
 
 namespace Module.Settings.Factory.Support.Pattern.Models
 {
-  public class TFactoryPaletteSelectorModel
+  public class TFactoryPaletteSelectorModel : NotificationObject
   {
     #region Property
     public IEnumerable<Swatch> Swatches
@@ -51,13 +52,39 @@ namespace Module.Settings.Factory.Support.Pattern.Models
     {
       get
       {
-        return (RequestCurrentProcess ().Name);
+        return (CurrentProcess.Name);
       }
     }
 
-    public ICommand ToggleBaseCommand { get; } = new AnotherCommandImplementation (o => ApplyBase ((bool) o));
-    public ICommand ApplyAccentCommand { get; } = new AnotherCommandImplementation (o => ApplyAccent ((Swatch) o));
-    public ICommand ApplyPrimaryCommand { get; } = new AnotherCommandImplementation (o => ApplyPrimary ((Swatch) o));
+    public bool IsApplyEnabled
+    {
+      get; 
+      set;
+    }
+
+    public bool BaseThemeDarkChecked
+    {
+      get; 
+      set;
+    }
+
+    public TObservableCommand ToggleBaseCommand
+    {
+      get;
+      private set;
+    }
+
+    public TObservableCommand ApplyPrimaryCommand
+    {
+      get;
+      private set;
+    }
+
+    public TObservableCommand ApplyAccentCommand
+    {
+      get;
+      private set;
+    }
     #endregion
 
     #region Contructor
@@ -66,68 +93,77 @@ namespace Module.Settings.Factory.Support.Pattern.Models
       Swatches = new SwatchesProvider ().Swatches;
 
       ProcessItemsSource = new ObservableCollection<TProcessInfo> ();
+
+      ToggleBaseCommand = new TObservableCommand (new DelegateCommand<bool> (ApplyBaseCommandHandler));
+      ApplyPrimaryCommand = new TObservableCommand (new DelegateCommand<Swatch> (ApplyPrimaryCommandHandler));
+      ApplyAccentCommand = new TObservableCommand (new DelegateCommand<Swatch> (ApplyAccentCommandHandler));
     } 
     #endregion
 
     #region Event
-    static void ApplyBase (bool isDark)
+    void ApplyBaseCommandHandler (bool isDark)
     {
       new PaletteHelper ().SetLightDark (isDark);
+
+      var baseTheme = isDark ? TProcess.PALETTETHEMEDARK : TProcess.PALETTETHEMELIGHT;
+      CurrentProcess.PaletteInfo.SetBaseTheme (baseTheme);
     }
 
-    static void ApplyPrimary (Swatch swatch)
+    void ApplyPrimaryCommandHandler (Swatch swatch)
     {
       new PaletteHelper ().ReplacePrimaryColor (swatch);
+
+      CurrentProcess.PaletteInfo.SetPalettePrimary (swatch.Name);
     }
 
-    static void ApplyAccent (Swatch swatch)
+    void ApplyAccentCommandHandler (Swatch swatch)
     {
       new PaletteHelper ().ReplaceAccentColor (swatch);
+
+      CurrentProcess.PaletteInfo.SetPaletteAccent (swatch.Name);
     }
     #endregion
 
     #region Members
-    internal void Select (string names, string alive)
+    internal void CleanupProcess ()
     {
-      names.ThrowNull ();
-      alive.ThrowNull ();
-
       ProcessItemsSource.Clear ();
+    }
 
-      var processNames = names.Split ('?');
-      var processAlive = alive.Split ('?');
-
-      for (int i = 0; i < processNames.Length; i++) {
-        var nameInfo = processNames [i];
-        var aliveInfo = processAlive [i];
-
-        if (string.IsNullOrEmpty (nameInfo) || string.IsNullOrEmpty (aliveInfo)) {
-          continue;
-        }
-
-        var processInfo = new TProcessInfo (nameInfo, bool.Parse (aliveInfo));
-        ProcessItemsSource.Add (processInfo);
-      }
+    internal bool SelectProcess ()
+    {
+      bool res = false;
+      IsApplyEnabled = false;
 
       if (ProcessItemsSource.Count.Equals (0).IsFalse ()) {
-        ProcessItemsSource [0].Checked ();
+        var processInfo = ProcessItemsSource [0];
+        processInfo.IsChecked = true;
+
+        BaseThemeDarkChecked = processInfo.IsBaseThemeDark;
+
+        IsApplyEnabled = true;
+        res = true;
       }
+
+      return (res);
+    }
+
+    internal void AddProcessInfo (string processName, bool isAlive, TPaletteInfo paletteInfo)
+    {
+      ProcessItemsSource.Add (new TProcessInfo (processName, isAlive, paletteInfo));
     }
     #endregion
 
     #region Support
     TProcessInfo RequestCurrentProcess ()
     {
-      var process = TProcessInfo.CreateDefault;
-
       foreach (var item in ProcessItemsSource) {
         if (item.IsChecked) {
-          process.CopyFrom (item);
-          break;
+          return (item);
         }
       }
 
-      return (process);
+      return (TProcessInfo.CreateDefault);
     } 
     #endregion
   };
@@ -170,10 +206,33 @@ namespace Module.Settings.Factory.Support.Pattern.Models
       get;
       set;
     }
+
+    public TPaletteInfo PaletteInfo
+    {
+      get; 
+    }
+
+    public bool IsBaseThemeDark
+    {
+      get
+      {
+        return (PaletteInfo.IsBaseThemeDark);
+      }
+    }
     #endregion
 
     #region Constructor
+    public TProcessInfo (string name, bool isAlive, TPaletteInfo paletteInfo)
+      : this ()
+    {
+      Name = name;
+      IsAlive = isAlive;
+
+      PaletteInfo.CopyFrom (paletteInfo);
+    }
+
     public TProcessInfo (string name, bool isAlive)
+      : this ()
     {
       Name = name;
       IsAlive = isAlive;
@@ -183,6 +242,8 @@ namespace Module.Settings.Factory.Support.Pattern.Models
     {
       Name = string.Empty;
       IsAlive = false;
+
+      PaletteInfo = TPaletteInfo.CreateDefault;
     }
     #endregion
 
@@ -197,12 +258,95 @@ namespace Module.Settings.Factory.Support.Pattern.Models
       if (alias.NotNull ()) {
         Name = alias.Name;
         IsAlive = alias.IsAlive;
+        IsChecked = alias.IsChecked;
+
+        PaletteInfo.CopyFrom (alias.PaletteInfo);
       }
     }
     #endregion
 
     #region Static
     public static TProcessInfo CreateDefault => new TProcessInfo (); 
+    #endregion
+  };
+  //---------------------------//
+
+  //----- TPaletteInfo
+  public class TPaletteInfo
+  {
+    #region Property
+    public string BaseTheme
+    {
+      get;
+      private set;
+    }
+
+    public string PalettePrimary
+    {
+      get;
+      private set;
+    }
+
+    public string PaletteAccent
+    {
+      get;
+      private set;
+    }
+
+    public bool IsBaseThemeDark
+    {
+      get
+      {
+        return (BaseTheme.Equals (TProcess.PALETTETHEMEDARK));
+      }
+    }
+    #endregion
+
+    #region Constructor
+    TPaletteInfo ()
+    {
+      BaseTheme = TProcess.PALETTETHEMELIGHT;
+      PalettePrimary = "blue";
+      PaletteAccent = "lime";
+    }
+
+    TPaletteInfo (string baseTheme, string primaryColor, string accentColor)
+    {
+      BaseTheme = baseTheme;
+      PalettePrimary = primaryColor;
+      PaletteAccent = accentColor;
+    }
+    #endregion
+
+    #region Members
+    internal void SetBaseTheme (string baseTheme)
+    {
+      BaseTheme = baseTheme;
+    }
+
+    internal void SetPalettePrimary (string colorName)
+    {
+      PalettePrimary = colorName;
+    }
+
+    internal void SetPaletteAccent (string colorName)
+    {
+      PaletteAccent = colorName;
+    }
+
+    internal void CopyFrom (TPaletteInfo alias)
+    {
+      if (alias.NotNull ()) {
+        SetBaseTheme (alias.BaseTheme);
+        SetPalettePrimary (alias.PalettePrimary);
+        SetPaletteAccent (alias.PaletteAccent);
+      }
+    }
+    #endregion
+
+    #region Static
+    public static TPaletteInfo Create (string baseTheme, string primaryColor, string accentColor) => new TPaletteInfo (baseTheme, primaryColor, accentColor);
+    public static TPaletteInfo CreateDefault => new TPaletteInfo ();
     #endregion
   };
   //---------------------------//

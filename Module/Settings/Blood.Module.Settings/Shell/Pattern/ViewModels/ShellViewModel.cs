@@ -358,6 +358,8 @@ namespace Module.Settings.Shell.Pattern.ViewModels
     #region Overrides
     protected override void Initialize ()
     {
+      base.Initialize (); // must be called to apply theme
+        
       OnFactoryDatabaseCommadClicked (); // show current database settings
 
       Model.Lock ();

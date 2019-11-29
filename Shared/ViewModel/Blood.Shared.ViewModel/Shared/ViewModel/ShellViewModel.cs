@@ -13,6 +13,7 @@ using rr.Library.Communication;
 
 using Shared.Types;
 using Shared.Communication;
+using Shared.Resources;
 //---------------------------//
 
 namespace Shared.ViewModel
@@ -161,6 +162,38 @@ namespace Shared.ViewModel
     #endregion
 
     #region Overrides
+    protected override void Initialize ()
+    {
+      // restore palette
+      var filePath = System.Environment.CurrentDirectory;
+      var fileName = TNames.SettingsIniFileName;
+
+      var iniFileManager = TIniFileManager.CreatDefault;
+      iniFileManager.SelectPath (filePath, fileName);
+
+      if (iniFileManager.ValidatePath ().IsValid) {
+        if (iniFileManager.ContainsSection (ProcessName)) {
+          /* 
+           [ModuleSettings]
+            ProcessIsAlive=True
+            PaletteTheme=light
+            PalettePrimary=blue
+            PaletteAccent=lime
+          */
+
+          var theme = iniFileManager.RequestKey (ProcessName, TProcess.PALETTETHEME);
+          bool isDark = theme.Equals (TProcess.PALETTETHEMEDARK);
+          var palettePrimary = iniFileManager.RequestKey (ProcessName, TProcess.PALETTEPRIMARY);
+          var paletteAccent = iniFileManager.RequestKey (ProcessName, TProcess.PALETTEACCENT);
+
+          var paletteHelper = new MaterialDesignThemes.Wpf.PaletteHelper ();
+          paletteHelper.SetLightDark (isDark);
+          paletteHelper.ReplacePrimaryColor (palettePrimary);
+          paletteHelper.ReplaceAccentColor (paletteAccent);
+        }
+      }
+    }
+
     protected override void AllDone ()
     {
       (FrameworkElementView as System.Windows.Window).Closing += OnClosing;

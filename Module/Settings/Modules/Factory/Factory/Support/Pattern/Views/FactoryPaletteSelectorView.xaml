@@ -5,6 +5,7 @@
                     xmlns:materialDesignColors="clr-namespace:MaterialDesignColors;assembly=MaterialDesignColors"
                     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                     xmlns:views="clr-namespace:Module.Settings.Factory.Support.Pattern.Views"
+                    xmlns:caliburn="http://www.caliburnproject.org"
                     DataContext="{x:Null}"
                     x:Name="ModuleSettingsFactorySupportPaletteSelectorViewModel">
 
@@ -64,8 +65,9 @@
                             Padding="15 0 3 0">
                         <RadioButton GroupName="Process"
                                      IsEnabled="{Binding IsAlive}"
-                                     IsChecked="{Binding IsChecked}"
-                                     VerticalAlignment="Center" />
+                                     IsChecked="{Binding IsChecked, Mode=TwoWay}"
+                                     VerticalAlignment="Center"  
+                                     caliburn:Message.Attach="[Event Checked] = [OnProcessChecked ($dataContext)]" />
                     </Border>
 
                     <!--name-->
@@ -106,7 +108,7 @@
                             <SolidColorBrush Color="{Binding ExemplarHue.Color, Mode=OneTime}" />
                         </Border.Background>
 
-                        <Button Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:TFactoryPaletteSelectorView}}, Path=DataContext.Model.ApplyPrimaryCommand, Mode=OneTime}"
+                        <Button Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:TFactoryPaletteSelectorView}}, Path=DataContext.Model.ApplyPrimaryCommand.Value, Mode=OneTime}"
                                 CommandParameter="{Binding}">
                             <TextBlock FontSize="10"
                                        Text="primary" />
@@ -121,7 +123,7 @@
                             <SolidColorBrush Color="{Binding AccentExemplarHue.Color, Mode=OneTime}" />
                         </Border.Background>
 
-                        <Button Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:TFactoryPaletteSelectorView}}, Path=DataContext.Model.ApplyAccentCommand, Mode=OneTime}"
+                        <Button Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:TFactoryPaletteSelectorView}}, Path=DataContext.Model.ApplyAccentCommand.Value, Mode=OneTime}"
                                 CommandParameter="{Binding}"
                                 Visibility="{Binding IsAccented, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneTime}">
                             <TextBlock FontSize="10"
@@ -213,7 +215,7 @@
                     </materialDesign:Card>
                 </Border>
 
-                <!--current palette-->
+                <!--current palette, apply-->
                 <Border Grid.Column="1"
                         Margin="6">
                     <materialDesign:Card>
@@ -292,22 +294,43 @@
                                 </Grid>
                             </Border>
 
-                            <!--lidht/dark control-->
+                            <!--apply, light/dark control-->
                             <Border Grid.Row="2"
                                     Margin="6"
-                                    HorizontalAlignment="Right">
-                                <StackPanel Orientation="Horizontal"
-                                            Margin="0 0 10 0">
-                                    <TextBlock VerticalAlignment="Center"
-                                               Text="light" />
+                                    >
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
 
-                                    <ToggleButton Margin="8 0 8 0"
-                                                  Command="{Binding Model.ToggleBaseCommand}"
-                                                  CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=IsChecked}" />
+                                    <!--apply-->
+                                    <Border Grid.Column="0">
+                                        <Button Width="70"
+                                                IsEnabled="{Binding Model.IsApplyEnabled, Mode=TwoWay}"
+                                                Content="apply"
+                                                Style="{DynamicResource MaterialDesignFlatButton}"
+                                                caliburn:Message.Attach="[Event Click] = [OnApplyCommadClicked ()]" />
+                                    </Border>
 
-                                    <TextBlock VerticalAlignment="Center"
-                                               Text="dark" />
-                                </StackPanel>
+                                    <!--base theme-->
+                                    <Border Grid.Column="1">
+                                        <StackPanel Orientation="Horizontal"
+                                                    Margin="0 0 10 0"
+                                                    HorizontalAlignment="Right">
+                                            <TextBlock VerticalAlignment="Center"
+                                                       Text="light" />
+
+                                            <ToggleButton Margin="8 0 8 0"
+                                                          IsChecked="{Binding Model.BaseThemeDarkChecked, Mode=TwoWay}"
+                                                          Command="{Binding Model.ToggleBaseCommand.Value}"
+                                                          CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=IsChecked}" />
+
+                                            <TextBlock VerticalAlignment="Center"
+                                                       Text="dark" />
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
                             </Border>
                         </Grid>
                     </materialDesign:Card>

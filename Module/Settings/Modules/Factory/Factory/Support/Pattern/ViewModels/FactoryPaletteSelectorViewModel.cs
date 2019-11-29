@@ -44,6 +44,20 @@ namespace Module.Settings.Factory.Support.Pattern.ViewModels
     }
     #endregion
 
+    #region Event
+    public void OnProcessChecked (object obj)
+    {
+      if (obj is TProcessInfo info) {
+        TDispatcher.BeginInvoke (ProcessSelectedDispatcher, info);
+      }
+    }
+
+    public void OnApplyCommadClicked ()
+    {
+      TDispatcher.Invoke (ApplyPaletteDispatcher);
+    }
+    #endregion
+
     #region Dispatcher
     void RefreshDispatcher ()
     {
@@ -53,6 +67,8 @@ namespace Module.Settings.Factory.Support.Pattern.ViewModels
 
     void IniFileManagerDispatcher ()
     {
+      Model.CleanupProcess ();
+
       var filePath = System.Environment.CurrentDirectory;
       var fileName = TNames.SettingsIniFileName;
 
@@ -60,13 +76,80 @@ namespace Module.Settings.Factory.Support.Pattern.ViewModels
       iniFileManager.SelectPath (filePath, fileName);
 
       if (iniFileManager.ValidatePath ().IsValid) {
+        // Process Module section
         if (iniFileManager.ContainsSection (TProcess.PROCESSMODULESSECTION)) {
-          var names = iniFileManager.RequestKey (TProcess.PROCESSMODULESSECTION, TProcess.PROCESSNAME);
-          var alive = iniFileManager.RequestKey (TProcess.PROCESSMODULESSECTION, TProcess.PROCESSISALIVE);
+          // Process Names section
+          if (iniFileManager.ContainsSection (TProcess.PROCESSNAMESSECTION)) {
+            // [ProcessNamesSection]
+            // ProcessNames=ModuleSettings? GadgetMaterial?GadgetTarget? GadgetTest?GadgetRegistration? GadgetTests?GadgetReport                   
+            
+            var processNames = iniFileManager.RequestKey (TProcess.PROCESSNAMESSECTION, TProcess.PROCESSNAMES);
+            var allProcessNames = processNames.Split ('?');
 
-          Model.Select (names, alive);
+            for (int i = 0; i < allProcessNames.Length; i++) {
+              var processNameSection = allProcessNames [i];
 
-          TDispatcher.Invoke (RefreshDispatcher);
+              if (iniFileManager.ContainsSection (processNameSection)) {
+                /* 
+                 [ModuleSettings]
+                  ProcessIsAlive=True
+                  PaletteTheme=light
+                  PalettePrimary=blue
+                  PaletteAccent=lime
+                */
+                
+                var isAlive = iniFileManager.RequestKey (processNameSection, TProcess.PROCESSISALIVE);
+
+                var baseTheme = iniFileManager.RequestKey (processNameSection, TProcess.PALETTETHEME);
+                var primaryColor = iniFileManager.RequestKey (processNameSection, TProcess.PALETTEPRIMARY);
+                var accentColor = iniFileManager.RequestKey (processNameSection, TProcess.PALETTEACCENT);
+
+                var paletteInfo = TPaletteInfo.Create(baseTheme, primaryColor, accentColor);
+
+                Model.AddProcessInfo (processNameSection, bool.Parse (isAlive), paletteInfo);
+              }
+            }
+
+            if (Model.SelectProcess ()) {
+              TDispatcher.BeginInvoke (ProcessSelectedDispatcher, Model.CurrentProcess);
+            }
+          }
+        }
+      }
+
+      TDispatcher.Invoke (RefreshDispatcher);
+    }
+
+    void ProcessSelectedDispatcher (TProcessInfo info)
+    {
+      TDispatcher.Invoke (RefreshDispatcher);
+    }
+
+    void ApplyPaletteDispatcher ()
+    {
+      var filePath = System.Environment.CurrentDirectory;
+      var fileName = TNames.SettingsIniFileName;
+
+      var iniFileManager = TIniFileManager.CreatDefault;
+      iniFileManager.SelectPath (filePath, fileName);
+
+      if (iniFileManager.ValidatePath ().IsValid) {
+        var processNameSection = Model.CurrentProcessName;
+
+        if (iniFileManager.ContainsSection (processNameSection)) {
+          /* 
+           [ModuleSettings]
+            ProcessIsAlive=True
+            PaletteTheme=light
+            PalettePrimary=blue
+            PaletteAccent=lime
+          */
+
+          iniFileManager.ChangeKey (processNameSection, TProcess.PALETTETHEME, Model.CurrentProcess.PaletteInfo.BaseTheme);
+          iniFileManager.ChangeKey (processNameSection, TProcess.PALETTEPRIMARY, Model.CurrentProcess.PaletteInfo.PalettePrimary);
+          iniFileManager.ChangeKey (processNameSection, TProcess.PALETTEACCENT, Model.CurrentProcess.PaletteInfo.PaletteAccent);
+
+          iniFileManager.SaveChanges ();
         }
       }
     }

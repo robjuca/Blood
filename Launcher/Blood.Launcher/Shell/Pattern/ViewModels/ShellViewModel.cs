@@ -340,25 +340,33 @@ namespace Launcher.Shell.Pattern.ViewModels
       if (IniFileManager.ValidatePath ().IsValid) {
         // first time only
         if (IniFileManager.ContainsSection (TProcess.PROCESSMODULESSECTION).IsFalse ()) {
+          // Module Process section
           var token = IniFileManager.AddSection (TProcess.PROCESSMODULESSECTION);
+          TIniFileManager.AddTrailingComment (token, "Module Process"); // comment.
 
-          TIniFileManager.AddTrailingComment (token, "Process Alive"); // comment.
-          TIniFileManager.AddKey (token, TProcess.PROCESSNAME, string.Empty);
-          TIniFileManager.AddKey (token, TProcess.PROCESSISALIVE , false.ToString ());
+          // Process Names section
+          token = IniFileManager.AddSection (TProcess.PROCESSNAMESSECTION);
+          TIniFileManager.AddTrailingComment (token, "Process Names"); // comment.
+
+          // key (all process names separated by '?')
+          TIniFileManager.AddKey (token, TProcess.PROCESSNAMES, Model.RequestAllProcessNames ());
+
+          foreach (var process in Model.RequestProcess ()) {
+            var section = process.Key.ToString ();
+            var key = process.Value.ToString ();
+
+            // section (Process name)
+            token = IniFileManager.AddSection (section);
+
+            // key
+            TIniFileManager.AddKey (token, TProcess.PROCESSISALIVE, key);
+            TIniFileManager.AddKey (token, TProcess.PALETTETHEME, string.Empty);
+            TIniFileManager.AddKey (token, TProcess.PALETTEPRIMARY, string.Empty);
+            TIniFileManager.AddKey (token, TProcess.PALETTEACCENT, string.Empty);
+          }
+
+          IniFileManager.SaveChanges ();
         }
-
-        string names = string.Empty;
-        string alive = string.Empty;
-
-        foreach (var process in Model.RequestProcess ()) {
-          names += process.Key + "?";
-          alive += process.Value + "?";
-        }
-
-        IniFileManager.ChangeKey (TProcess.PROCESSMODULESSECTION, TProcess.PROCESSNAME, names);
-        IniFileManager.ChangeKey (TProcess.PROCESSMODULESSECTION, TProcess.PROCESSISALIVE, alive);
-
-        IniFileManager.SaveChanges ();
       }
     }
     #endregion
