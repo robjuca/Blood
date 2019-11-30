@@ -120,8 +120,10 @@ namespace Module.Settings.Factory.Support.Pattern.ViewModels
       TDispatcher.Invoke (RefreshDispatcher);
     }
 
-    void ProcessSelectedDispatcher (TProcessInfo info)
+    void ProcessSelectedDispatcher (TProcessInfo processInfo)
     {
+      Model.ProcessSelected (processInfo);
+
       TDispatcher.Invoke (RefreshDispatcher);
     }
 

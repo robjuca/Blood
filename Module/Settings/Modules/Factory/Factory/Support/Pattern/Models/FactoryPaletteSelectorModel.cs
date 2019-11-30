@@ -130,6 +130,15 @@ namespace Module.Settings.Factory.Support.Pattern.Models
       ProcessItemsSource.Clear ();
     }
 
+    internal void ProcessSelected (TProcessInfo processInfo)
+    {
+      BaseThemeDarkChecked = processInfo.IsBaseThemeDark;
+
+      new PaletteHelper ().SetLightDark (BaseThemeDarkChecked);
+      new PaletteHelper ().ReplacePrimaryColor (processInfo.PaletteInfo.PalettePrimary);
+      new PaletteHelper ().ReplaceAccentColor (processInfo.PaletteInfo.PaletteAccent);
+    }
+
     internal bool SelectProcess ()
     {
       bool res = false;
@@ -164,7 +173,7 @@ namespace Module.Settings.Factory.Support.Pattern.Models
       }
 
       return (TProcessInfo.CreateDefault);
-    } 
+    }
     #endregion
   };
   //---------------------------//
@@ -311,10 +320,11 @@ namespace Module.Settings.Factory.Support.Pattern.Models
     }
 
     TPaletteInfo (string baseTheme, string primaryColor, string accentColor)
+      : this ()
     {
-      BaseTheme = baseTheme;
-      PalettePrimary = primaryColor;
-      PaletteAccent = accentColor;
+      BaseTheme = string.IsNullOrEmpty (BaseTheme) ? BaseTheme : baseTheme;
+      PalettePrimary = string.IsNullOrEmpty (primaryColor) ? PalettePrimary : primaryColor;
+      PaletteAccent = string.IsNullOrEmpty (accentColor) ? PaletteAccent : accentColor;
     }
     #endregion
 

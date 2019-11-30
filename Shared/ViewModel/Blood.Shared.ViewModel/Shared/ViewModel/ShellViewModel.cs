@@ -188,8 +188,8 @@ namespace Shared.ViewModel
 
           var paletteHelper = new MaterialDesignThemes.Wpf.PaletteHelper ();
           paletteHelper.SetLightDark (isDark);
-          paletteHelper.ReplacePrimaryColor (palettePrimary);
-          paletteHelper.ReplaceAccentColor (paletteAccent);
+          paletteHelper.ReplacePrimaryColor (string.IsNullOrEmpty (palettePrimary) ? "blue" : palettePrimary);
+          paletteHelper.ReplaceAccentColor (string.IsNullOrEmpty (paletteAccent) ? "lime" : paletteAccent);
         }
       }
     }

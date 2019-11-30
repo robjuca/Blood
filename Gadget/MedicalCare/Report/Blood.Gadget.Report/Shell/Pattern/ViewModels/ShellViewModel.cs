@@ -123,6 +123,8 @@ namespace Gadget.Report.Shell.Pattern.ViewModels
     #region Overrides
     protected override void Initialize ()
     {
+      base.Initialize (); // must be called to apply theme
+
       TDispatcher.Invoke (RequestServiceValidationDispatcher);
     }
     #endregion
