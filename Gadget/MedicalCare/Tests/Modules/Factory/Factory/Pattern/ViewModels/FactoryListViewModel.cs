@@ -120,7 +120,7 @@ namespace Gadget.Factory.Pattern.ViewModels
         Server.Models.Infrastructure.TExtension.Full
       );
 
-      var message = new TCollectionMessageInternal (TInternalMessageAction.Request, TChild.List, TypeInfo);
+      var message = new TFactoryMessageInternal (TInternalMessageAction.Request, TChild.List, TypeInfo);
       message.Support.Argument.Types.Select (action);
 
       DelegateCommand.PublishInternalMessage.Execute (message);
@@ -132,7 +132,7 @@ namespace Gadget.Factory.Pattern.ViewModels
         Server.Models.Infrastructure.TExtension.Full
       );
 
-      message = new TCollectionMessageInternal (TInternalMessageAction.Request, TChild.List, TypeInfo);
+      message = new TFactoryMessageInternal (TInternalMessageAction.Request, TChild.List, TypeInfo);
       message.Support.Argument.Types.Select (action);
 
       DelegateCommand.PublishInternalMessage.Execute (message);

@@ -97,7 +97,10 @@ namespace Gadget.Factory.Pattern.Models
                 action.ModelAction.CopyFrom (modelAction);
 
                 var item = TComponentModelItem.Create (action);
-                TestItemsSource.Add (item);
+
+                if (item.GadgetTestModel.HasRelation) {
+                  TestItemsSource.Add (item);
+                }
               }
             }
           }

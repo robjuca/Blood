@@ -28,6 +28,14 @@ namespace Server.Models.Component
         return (Enabled.IsFalse () && TargetCount.Equals (0));
       }
     }
+
+    public bool HasRelation
+    {
+      get
+      {
+        return (Server.Models.Infrastructure.TCategoryType.FromValue (RelationCategory).Equals (Server.Models.Infrastructure.TCategory.Test));
+      }
+    }
     #endregion
 
     #region Constructor
@@ -39,8 +47,11 @@ namespace Server.Models.Component
       Description = string.Empty;
       ExternalLink = string.Empty;
       Enabled = false;
+
       RelationCategory = Server.Models.Infrastructure.TCategoryType.ToValue (Server.Models.Infrastructure.TCategory.None);
+
       Targets = new Collection<Guid> ();
+      Relations = new Collection<GadgetTest> ();
     }
 
     public GadgetTest (GadgetTest alias)
@@ -90,8 +101,11 @@ namespace Server.Models.Component
         Description = alias.Description;
         ExternalLink = alias.ExternalLink;
         Enabled = alias.Enabled;
+
         RelationCategory = alias.RelationCategory;
+
         Targets = new Collection<Guid> (alias.Targets);
+        Relations = new Collection<GadgetTest> (alias.Relations);
       }
     }
 
@@ -102,8 +116,11 @@ namespace Server.Models.Component
         Description = alias.Description;
         ExternalLink = alias.ExternalLink;
         Enabled = alias.Enabled;
+
         RelationCategory = alias.RelationCategory;
+
         Targets = new Collection<Guid> (alias.Targets);
+        Relations = new Collection<GadgetTest> (alias.Relations);
       }
     }
 
@@ -152,6 +169,8 @@ namespace Server.Models.Component
 
     public void UpdateModel (TEntityAction action)
     {
+      Relations.Clear ();
+
       var relCategory = Server.Models.Infrastructure.TCategoryType.FromValue (RelationCategory);
 
       if (relCategory.Equals (Server.Models.Infrastructure.TCategory.None)) {
@@ -162,6 +181,15 @@ namespace Server.Models.Component
             foreach (var relation in item.Value) {
               if (relation.ParentId.Equals (Id) && relation.ChildId.Equals (targetId)) {
                 RelationCategory = relation.ChildCategory;
+
+                if (HasRelation) {
+                  foreach (var gadget in action.CollectionAction.GadgetTestCollection) {
+                    if (ContainsTarget (gadget)) {
+                      Relations.Add (gadget);
+                    }
+                  }
+                }
+
                 return;
               }
             }
@@ -184,7 +212,18 @@ namespace Server.Models.Component
       Description = modelAction.ExtensionTextModel.Description;
       ExternalLink = modelAction.ExtensionTextModel.ExternalLink;
       Enabled = modelAction.ComponentInfoModel.Enabled;
-    } 
+    }
+
+    bool ContainsTarget (GadgetTest gadget)
+    {
+      foreach (var targetId in Targets) {
+        if (targetId.Equals (gadget.Id)) {
+          return (true);
+        }
+      }
+
+      return (false);
+    }
     #endregion
   };
   //---------------------------//

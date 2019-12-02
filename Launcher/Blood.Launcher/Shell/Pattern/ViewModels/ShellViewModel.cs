@@ -364,9 +364,20 @@ namespace Launcher.Shell.Pattern.ViewModels
             TIniFileManager.AddKey (token, TProcess.PALETTEPRIMARY, string.Empty);
             TIniFileManager.AddKey (token, TProcess.PALETTEACCENT, string.Empty);
           }
-
-          IniFileManager.SaveChanges ();
         }
+
+        // update ini
+        else {
+          foreach (var process in Model.RequestProcess ()) {
+            var section = process.Key.ToString ();
+            var key = process.Value.ToString ();
+
+            // key
+            IniFileManager.ChangeKey (section, TProcess.PROCESSISALIVE, key);
+          }
+        }
+
+        IniFileManager.SaveChanges ();
       }
     }
     #endregion

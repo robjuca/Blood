@@ -39,15 +39,24 @@
             <Border Padding="2"
                     BorderThickness="0 .1 0 .1"
                     BorderBrush="LightGray">
-                <!--check, name-->
-                <StackPanel Orientation="Horizontal">
-                    <!--check-->
-                    <CheckBox Margin="0 0 5 0"
-                              caliburn:Message.Attach="[Event Checked] = [OnTestItemChecked ($dataContext)]; [Event Unchecked] = [OnTestItemUnchecked ($dataContext)]" />
+                <StackPanel>
+                    <!--check, name-->
+                    <StackPanel Orientation="Horizontal">
+                        <!--check-->
+                        <CheckBox Margin="0 0 5 0"
+                                  caliburn:Message.Attach="[Event Checked] = [OnTestItemChecked ($dataContext)]; [Event Unchecked] = [OnTestItemUnchecked ($dataContext)]" />
 
-                    <!--test name-->
-                    <TextBlock Text="{Binding Name}"
-                               VerticalAlignment="Center" />
+                        <!--test name-->
+                        <TextBlock Text="{Binding Name}"
+                                   VerticalAlignment="Center" />
+                    </StackPanel>
+
+                    <Separator />
+
+                    <!--relation-->
+                    <ItemsControl Margin="30 0 0 0"
+                                  ItemsSource="{Binding GadgetTestModel.Relations}"
+                                  DisplayMemberPath="Test" />
                 </StackPanel>
             </Border>
         </DataTemplate>
@@ -106,7 +115,12 @@
                             <TextBlock Text="{Binding Model.TestCount}" />
 
                             <!--count checked-->
-                            <TextBlock Margin="3 0 0 0" Text="{Binding Model.TestCheckedCount}" />
+                            <TextBlock Margin="3 0 0 0"
+                                       Text="{Binding Model.TestCheckedCount}" />
+
+                            <!--test icon-->
+                            <ContentControl Margin="3 0 0 0"
+                                            Style="{DynamicResource GadgetTestMiniIcon}" />
 
                             <!--test-->
                             <TextBlock Margin="3 0 0 0"

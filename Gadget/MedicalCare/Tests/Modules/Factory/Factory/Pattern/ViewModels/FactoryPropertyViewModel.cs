@@ -221,7 +221,7 @@ namespace Gadget.Factory.Pattern.ViewModels
       if (action.Id.NotEmpty ()) {
         SelectViewMode (TViewMode.Edit);
 
-        Model.SelectModel (action);
+        //Model.SelectModel (action);
 
         TDispatcher.Invoke (RefreshAllDispatcher);
         TDispatcher.Invoke (EditEnterDispatcher);
@@ -239,7 +239,7 @@ namespace Gadget.Factory.Pattern.ViewModels
     {
       action.ThrowNull ();
 
-      Model.RefreshModel (action);
+      //Model.RefreshModel (action);
       RaiseChanged ();
     }
     #endregion

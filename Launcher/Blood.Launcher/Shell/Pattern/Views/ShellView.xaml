@@ -72,8 +72,8 @@
                                      Height="45"
                                      Margin="6 0 0 0"
                                      ToolTip="medical care"
-                                     Background="Green"
-                                     BorderBrush="DarkGreen"
+                                     Background="RoyalBlue"
+                                     BorderBrush="RoyalBlue"
                                      IsPopupOpen="True"
                                      Style="{DynamicResource MaterialDesignMultiFloatingActionPopupBox}"
                                      PlacementMode="BottomAndAlignCentres">
