@@ -69,6 +69,14 @@ namespace Gadget.Factory.Pattern.Models
     {
       ModelItem.CopyFrom (item);
     }
+
+    TFactoryListItemInfo (TComponentModelItem item, bool isChecked)
+      : this ()
+    {
+      ModelItem.CopyFrom (item);
+
+      IsChecked = isChecked;
+    }
     #endregion
 
     #region Members]
@@ -93,6 +101,7 @@ namespace Gadget.Factory.Pattern.Models
 
     #region Static
     public static TFactoryListItemInfo Create (TComponentModelItem item) => new TFactoryListItemInfo (item);
+    public static TFactoryListItemInfo Create (TComponentModelItem item, bool isChecked) => new TFactoryListItemInfo (item,isChecked);
     public static TFactoryListItemInfo CreateDefault => new TFactoryListItemInfo ();
     #endregion
   };

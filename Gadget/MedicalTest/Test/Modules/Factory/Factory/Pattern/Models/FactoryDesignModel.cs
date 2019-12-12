@@ -34,21 +34,20 @@ namespace Gadget.Factory.Pattern.Models
     internal void SelectModel (Server.Models.Component.TEntityAction action)
     {
       ComponentControlModel.SelectModel (action);
-      ComponentControlModel.SelectTargets (action);
     }
 
     internal void AddModel (TComponentModelItem item) 
     {
       item.ThrowNull ();
 
-      ComponentControlModel.AddTarget (item);
+      ComponentControlModel.AddComponent (item);
     }
 
     internal void RemoveModel (TComponentModelItem item)
     {
       item.ThrowNull ();
 
-      ComponentControlModel.RemoveTarget (item);
+      ComponentControlModel.RemoveComponent (item);
     }
 
     internal void Cleanup ()

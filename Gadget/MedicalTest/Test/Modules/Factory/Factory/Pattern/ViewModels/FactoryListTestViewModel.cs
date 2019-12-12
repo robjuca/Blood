@@ -4,6 +4,7 @@
 ----------------------------------------------------------------*/
 
 //----- Include
+using System;
 using System.ComponentModel.Composition;
 
 using rr.Library.Infrastructure;
@@ -47,13 +48,24 @@ namespace Gadget.Factory.Pattern.ViewModels
 
           // Response
           if (message.IsAction (TInternalMessageAction.Response)) {
-            // Collection-Full
+            // Collection - Full
             if (message.Support.Argument.Types.IsOperation (Server.Models.Infrastructure.TOperation.Collection, Server.Models.Infrastructure.TExtension.Full)) {
               if (message.Result.IsValid) {
                 // Gadget Test
                 if (message.Support.Argument.Types.IsOperationCategory (Server.Models.Infrastructure.TCategory.Test)) {
                   var action = Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction);
                   TDispatcher.BeginInvoke (ResponseDataDispatcher, action);
+                }
+              }
+            }
+
+            // Select - ById
+            if (message.Support.Argument.Types.IsOperation (Server.Models.Infrastructure.TOperation.Select, Server.Models.Infrastructure.TExtension.ById)) {
+              if (message.Result.IsValid) {
+                // Gadget Test
+                if (message.Support.Argument.Types.IsOperationCategory (Server.Models.Infrastructure.TCategory.Test)) {
+                  var action = Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction);
+                  TDispatcher.BeginInvoke (ResponseSelectByIdDispatcher, action);
                 }
               }
             }
@@ -140,16 +152,41 @@ namespace Gadget.Factory.Pattern.ViewModels
       DelegateCommand.PublishInternalMessage.Execute (message);
     }
 
+    void ResponseSelectByIdDispatcher (Server.Models.Component.TEntityAction action)
+    {
+      action.ThrowNull ();
+
+      if (action.Param2 is TFactoryListItemInfo itemInfo) {
+        itemInfo.ModelItem.GadgetTestModel.UpdateContents (action);
+
+        Model.GadgetItemChecked (itemInfo, isChecked: itemInfo.IsChecked);
+
+        TDispatcher.Invoke (RefreshAllDispatcher);
+
+        // to Sibling
+        var message = new TFactorySiblingMessageInternal (TInternalMessageAction.PropertySelect, TChild.List, TypeInfo);
+        message.Support.Argument.Types.Item.CopyFrom (itemInfo.ModelItem);
+        message.Support.Argument.Args.Select (itemInfo.IsChecked ? "GadgetAdd" : "GadgetRemove");
+
+        DelegateCommand.PublishInternalMessage.Execute (message);
+      }
+    }
+
     void ItemCheckedChangedDispatcher (TFactoryListItemInfo itemInfo)
     {
-      Model.GadgetItemChecked (itemInfo, isChecked: itemInfo.IsChecked);
+      // to parent
+      // Collection - Full 
+      var action = Server.Models.Component.TEntityAction.Create (
+        Server.Models.Infrastructure.TCategory.Test,
+        Server.Models.Infrastructure.TOperation.Select,
+        Server.Models.Infrastructure.TExtension.ById
+      );
 
-      TDispatcher.Invoke (RefreshAllDispatcher);
+      action.Id = itemInfo.Id;
+      action.Param2 = itemInfo; // preserve
 
-      // to Sibling
-      var message = new TFactorySiblingMessageInternal (TInternalMessageAction.PropertySelect, TChild.List, TypeInfo);
-      message.Support.Argument.Types.Item.CopyFrom (itemInfo.ModelItem);
-      message.Support.Argument.Args.Select (itemInfo.IsChecked ? "GadgetAdd" : "GadgetRemove");
+      var message = new TFactoryMessageInternal (TInternalMessageAction.Request, TChild.List, TypeInfo);
+      message.Support.Argument.Types.Select (action);
 
       DelegateCommand.PublishInternalMessage.Execute (message);
     }

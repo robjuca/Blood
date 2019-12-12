@@ -45,19 +45,24 @@ namespace Gadget.Factory.Pattern.ViewModels
         if (message.Node.IsSiblingToMe (TChild.Design)) {
           // PropertySelect
           if (message.IsAction (TInternalMessageAction.PropertySelect)) {
-            if (message.Support.Argument.Args.PropertyName.Equals ("all")) {
-              Model.SelectModel (Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction));
-              TDispatcher.Invoke (RefreshDesignDispatcher);
-            }
+            var propertyName = message.Support.Argument.Args.PropertyName;
 
-            if (message.Support.Argument.Args.PropertyName.Equals ("GadgetAdd")) {
+            if (propertyName.Equals ("GadgetAdd")) {
               Model.AddModel (message.Support.Argument.Types.Item);
               TDispatcher.Invoke (RefreshDesignDispatcher);
             }
 
-            if (message.Support.Argument.Args.PropertyName.Equals ("GadgetRemove")) {
+            if (propertyName.Equals ("GadgetRemove")) {
               Model.RemoveModel (message.Support.Argument.Types.Item);
               TDispatcher.Invoke (RefreshDesignDispatcher);
+            }
+
+            var action = Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction);
+
+            if (action.NotNull ()) {
+              action.Param1 = propertyName;
+
+              TDispatcher.BeginInvoke (PropertySelectDispatcher, action);
             }
           }
 
@@ -86,6 +91,16 @@ namespace Gadget.Factory.Pattern.ViewModels
       if (m_DesignControl.NotNull ()) {
         m_DesignControl.RefreshDesign ();
         RaiseChanged ();
+      }
+    }
+
+    void PropertySelectDispatcher (Server.Models.Component.TEntityAction action)
+    {
+      if (action.Param1 is string propertyName) {
+        if (propertyName.Equals ("all") || propertyName.Equals ("DescriptionProperty") || propertyName.Equals ("TextProperty") || propertyName.Equals ("ExternalLinkProperty")) {
+          Model.SelectModel (action);
+          TDispatcher.Invoke (RefreshDesignDispatcher);
+        }
       }
     }
     #endregion

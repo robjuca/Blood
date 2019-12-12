@@ -282,10 +282,12 @@ namespace Gadget.Factory.Pattern.ViewModels
     #region Support
     void PropertySelect (string propertyName)
     {
+      Model.ValidateProperty (propertyName);
+
       var action = Server.Models.Component.TEntityAction.CreateDefault;
       Model.ComponentModelProperty.RequestModel (action);
 
-      action.ModelAction.GadgetTargetModel.CopyFrom (action); // set model
+      action.ModelAction.GadgetTestModel.CopyFrom (action); // set model
 
       // to Sibling
       var message = new TFactorySiblingMessageInternal (TInternalMessageAction.PropertySelect, TChild.Property, TypeInfo);

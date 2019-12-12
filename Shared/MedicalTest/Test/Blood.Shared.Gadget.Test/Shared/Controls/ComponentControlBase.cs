@@ -88,7 +88,7 @@ namespace Shared.Gadget.Test
       var cz = new ColorZone ()
       {
         Padding = new Thickness (3),
-        Mode = Model.HasRelationModels ? ColorZoneMode.Accent : ColorZoneMode.PrimaryLight,
+        Mode = Model.HasComponentControlModels ? ColorZoneMode.Accent : ColorZoneMode.PrimaryLight,
         Content = textBlock,
       };
 
@@ -170,19 +170,25 @@ namespace Shared.Gadget.Test
     #endregion
 
     #region Fields
-    readonly Grid m_Grid;
+    readonly Grid                                     m_Grid;
     #endregion
 
     #region Support
     void InsertTargetRelation ()
     {
-      if (Model.IsRelationCategory (TCategory.Target)) {
+      // TODO: review
+      if (Model.RequestCategory ().Equals (TCategory.Target)) {
+        var targets = new Collection<Server.Models.Component.GadgetTarget> ();
+        Model.ControlModel.RequestContent (targets);
+
         var targetsItemSource = new Collection<TComponentModelItem> ();
 
-        foreach (var item in Model.Targets) {
-          if (item.Category.Equals (TCategory.Target)) {
-            targetsItemSource.Add (item);
-          }
+        foreach (var item in targets) {
+          var modelItem = TComponentModelItem.CreateDefault;
+          modelItem.Select (item.Id, TCategory.Target);
+          modelItem.GadgetTargetModel.CopyFrom (item);
+
+          targetsItemSource.Add (modelItem);
         }
 
         string itemTemplate = @"
@@ -212,31 +218,29 @@ namespace Shared.Gadget.Test
 
     void InsertTestRelation ()
     {
-      if (Model.IsRelationCategory (TCategory.Test)) {
+      // TODO: review
+      if (Model.RequestCategory ().Equals (TCategory.Test) ) {
         var stack = new StackPanel ();
 
         var scrow = new ScrollViewer
         {
-          VerticalScrollBarVisibility = ScrollBarVisibility.Auto
+          VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+          CanContentScroll= false,
         };
 
         scrow.SetValue (Grid.RowProperty, 3); // row 3
         scrow.Content = stack;
-        
+
         m_Grid.Children.Add (scrow);
 
-        foreach (var modelItem in Model.Targets) {
-          if (modelItem.Category.Equals (TCategory.Test)) {
-            if (Model.HasRelationModels) {
-              if (Model.RequestRelationModel (modelItem.Id) is TComponentControlModel controlModel) {
-                var cc = new TComponentDisplayControl
-                {
-                  Model = controlModel
-                };
+        if (Model.HasComponentControlModels) {
+          foreach (var controlModel in Model.ComponentControlModels) {
+            var cc = new TComponentDisplayControl
+            {
+              Model = controlModel
+            };
 
-                stack.Children.Add (cc);
-              }
-            }
+            stack.Children.Add (cc);
           }
         }
       }

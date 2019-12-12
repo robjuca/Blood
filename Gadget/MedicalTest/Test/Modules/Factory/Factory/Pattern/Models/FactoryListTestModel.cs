@@ -127,27 +127,42 @@ namespace Gadget.Factory.Pattern.Models
     {
       action.ThrowNull ();
 
-      foreach (var gadgetTargetId in action.ModelAction.GadgetTestModel.Targets) {
-        var gadgetItem = GadgetById (gadgetTargetId);
+      var gadgetId = action.ModelAction.GadgetTestModel.Id;
+      var gadgetItem = GadgetById (gadgetId);
 
-        // found
-        if (gadgetItem.Id.NotEmpty ()) {
-          var itemInfo = TFactoryListItemInfo.Create (gadgetItem);
-          itemInfo.IsChecked = true;
+      // found
+      if (gadgetItem.Id.NotEmpty ()) {
+        if (gadgetItem.Category.Equals (Server.Models.Infrastructure.TCategory.Test)) {
+          gadgetItem.GadgetTestModel.CopyFrom (action.ModelAction.GadgetTestModel);
+          var gadgetTest = gadgetItem.GadgetTestModel;
 
-          AddChecked (itemInfo);
-          GadgetItemsSource.Add (itemInfo);
+          if (gadgetTest.RequestCategory ().Equals (Server.Models.Infrastructure.TCategory.Test)) {
+            var contents = new Collection<Server.Models.Component.GadgetTest> ();
+            gadgetTest.RequestContent (contents);
+
+            foreach (var gadgetContent in contents) {
+              var item = GadgetById (gadgetContent.Id);
+
+              if (item.Id.NotEmpty ()) {
+                var itemInfo = TFactoryListItemInfo.Create (item, isChecked: true);
+
+                GadgetItemsSource.Add (itemInfo);
+                AddChecked (itemInfo);
+              }
+            }
+          }
+        }
+
+        else {
+          AddChecked (TFactoryListItemInfo.Create (gadgetItem, isChecked: true));
         }
       }
 
       // remove my self
-      var id = action.ModelAction.GadgetTestModel.Id;
+      var itemSource = ItemSourceById (gadgetId);
 
-      foreach (var item in GadgetItemsSource) {
-        if (item.Id.Equals (id)) {
-          GadgetItemsSource.Remove (item);
-          break;
-        }
+      if (itemSource.Id.NotEmpty ()) {
+        GadgetItemsSource.Remove (itemSource);
       }
     }
 
@@ -177,37 +192,56 @@ namespace Gadget.Factory.Pattern.Models
     #region Support
     TFactoryListItemInfo IsChecked (TFactoryListItemInfo itemInfo)
     {
-      var item = TFactoryListItemInfo.CreateDefault;
-
       if (itemInfo.NotNull ()) {
         foreach (var itemInfoChecked in GadgetCheckedCollection) {
           if (itemInfoChecked.Contains (itemInfo)) {
-            item.CopyFrom (itemInfo);
-            break;
+            return (itemInfoChecked);
           }
         }
       }
 
-      return (item);
+      return (TFactoryListItemInfo.CreateDefault);
     }
 
     TFactoryListItemInfo IsChecked (Guid id)
     {
-      var item = TFactoryListItemInfo.CreateDefault;
-
       foreach (var itemInfoChecked in GadgetCheckedCollection) {
         if (itemInfoChecked.Contains (id)) {
-          item.CopyFrom (itemInfoChecked);
-          break;
+          return (itemInfoChecked);
         }
       }
 
-      return (item);
+      return (TFactoryListItemInfo.CreateDefault);
+    }
+
+    bool ContainsChecked (Guid id)
+    {
+      foreach (var itemInfoChecked in GadgetCheckedCollection) {
+        if (itemInfoChecked.Contains (id)) {
+          return (true);
+        }
+      }
+
+      return (false);
     }
 
     void AddChecked (TFactoryListItemInfo itemInfo)
     {
-      GadgetCheckedCollection.Add (itemInfo);
+      if (itemInfo.NotNull ()) {
+        if (ContainsChecked (itemInfo.Id).IsFalse ()) {
+          GadgetCheckedCollection.Add (itemInfo);
+        }
+
+        else {
+          (IsChecked (itemInfo)).IsChecked = true;
+        }
+
+        var itemSource = ItemSourceById (itemInfo.Id);
+
+        if (itemSource.Id.IsEmpty ().IsFalse ()) {
+          itemSource.IsChecked = true; // for sure
+        }
+      }
     }
 
     void RemoveChecked (Guid id)
@@ -218,20 +252,34 @@ namespace Gadget.Factory.Pattern.Models
           break;
         }
       }
+
+      var itemSource = ItemSourceById (id);
+
+      if (itemSource.Id.IsEmpty ().IsFalse ()) {
+        itemSource.IsChecked = false; // for sure
+      }
     }
 
     TComponentModelItem GadgetById (Guid id)
     {
-      var itemModel = TComponentModelItem.CreateDefault;
-
       foreach (var item in GadgetFullCollection) {
         if (item.Id.Equals (id)) {
-          itemModel.CopyFrom (item);
-          break;
+          return (item);
         }
       }
 
-      return (itemModel);
+      return (TComponentModelItem.CreateDefault);
+    }
+
+    TFactoryListItemInfo ItemSourceById (Guid id)
+    {
+      foreach (var item in GadgetItemsSource) {
+        if (item.Id.Equals (id)) {
+          return (item);
+        }
+      }
+
+      return (TFactoryListItemInfo.CreateDefault);
     }
     #endregion
   };

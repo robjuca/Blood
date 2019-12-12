@@ -8,6 +8,7 @@ using System;
 
 using rr.Library.Types;
 
+using Shared.Resources;
 using Shared.Types;
 //---------------------------//
 
@@ -21,6 +22,11 @@ namespace Gadget.Factory.Pattern.Models
       get;
       set;
     }
+
+    public TAlertsModel AlertsModel
+    {
+      get;
+    }
     #endregion
 
     #region Constructor
@@ -28,6 +34,8 @@ namespace Gadget.Factory.Pattern.Models
     {
       ComponentModelProperty = TModelProperty.Create (Server.Models.Infrastructure.TCategory.Test);
       ComponentModelProperty.PropertyChanged += OnModelPropertyChanged;
+
+      AlertsModel = TAlertsModel.CreateDefault;
     }
     #endregion
 
@@ -36,6 +44,7 @@ namespace Gadget.Factory.Pattern.Models
     {
       if (action.NotNull ()) {
         //TODO: review
+        
       }
     }
 
@@ -57,9 +66,33 @@ namespace Gadget.Factory.Pattern.Models
       ComponentModelProperty.ShowPanels ();
     }
 
+    internal void ValidateProperty (string propertyName)
+    {
+      AlertsModel.Select (isOpen: false); // default
+
+      var textProperty = ComponentModelProperty.ExtensionModel.TextProperty;
+      bool validateModel = string.IsNullOrEmpty (textProperty).IsFalse ();
+
+      ComponentModelProperty.ValidateModel (validateModel);
+
+      // show alerts
+      if (validateModel.IsFalse ()) {
+        var message = $"Test (Text = EMPTY)";
+
+        AlertsModel.Select (TAlertsModel.TKind.Warning);
+        AlertsModel.Select ("ENTRY EMPTY", message);
+        AlertsModel.Select (isOpen: true);
+      }
+
+      AlertsModel.Refresh ();
+    }
+
     internal void Cleanup ()
     {
       ComponentModelProperty.Cleanup ();
+
+      AlertsModel.Select (isOpen: false); // default
+      AlertsModel.Refresh ();
     }
     #endregion
 

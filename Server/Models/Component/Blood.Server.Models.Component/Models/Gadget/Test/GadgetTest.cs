@@ -18,9 +18,6 @@ namespace Server.Models.Component
     public string                         Description { get; set; }
     public string                         ExternalLink { get; set; }
     public bool                           Enabled { get; set; }
-    public int                            RelationCategory { get; private set; }
-    public Collection<Guid>               Targets { get; private set; }
-    public Collection<GadgetTest>         Relations { get; private set; }
   }
   //---------------------------//
 

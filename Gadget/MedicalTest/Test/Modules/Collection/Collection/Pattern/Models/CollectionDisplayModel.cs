@@ -99,7 +99,7 @@ namespace Gadget.Collection.Pattern.Models
       var modelAction = ComponentModelItem.RequestModel ();
       action.ModelAction.CopyFrom (modelAction);
 
-      ComponentControlModel.RequestTargets (action);
+      ComponentControlModel.RequestComponents (action);
     }
 
     internal void Cleanup ()

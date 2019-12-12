@@ -18,7 +18,7 @@
                 <!--check, name-->
                 <StackPanel Orientation="Horizontal">
                     <CheckBox Margin="0 0 5 0"
-                              IsChecked="{Binding IsChecked}"
+                              IsChecked="{Binding IsChecked, Mode=TwoWay}"
                               caliburn:Message.Attach="[Event Checked] = [OnGadgetItemChecked ($datacontext)]; [Event Unchecked] = [OnGadgetItemUnchecked ($datacontext)]" />
 
                     <TextBlock Text="{Binding ModelItem.Name}"

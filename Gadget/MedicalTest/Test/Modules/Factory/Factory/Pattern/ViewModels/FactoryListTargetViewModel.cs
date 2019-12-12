@@ -234,7 +234,7 @@ namespace Gadget.Factory.Pattern.ViewModels
 
     void ItemCheckedChangedDispatcher (TFactoryListItemInfo itemInfo)
     {
-      Model.GadgetItemChecked (itemInfo, isChecked: itemInfo.IsChecked);
+      Model.GadgetItemChecked (itemInfo);
 
       TDispatcher.Invoke (RefreshAllDispatcher);
 

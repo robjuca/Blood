@@ -81,11 +81,11 @@ namespace Gadget.Factory.Pattern.ViewModels
     #region Dispatcher
     void EditDispatcher (Server.Models.Component.TEntityAction action)
     {
-      var relationCategory = Server.Models.Infrastructure.TCategoryType.FromValue (action.ModelAction.GadgetTestModel.RelationCategory);
+      var relationCategory = action.ModelAction.GadgetTestModel.RequestCategory ();
 
       Model.SlideIndex =
         relationCategory.Equals (Server.Models.Infrastructure.TCategory.Test) ? 1 :
-        relationCategory.Equals (Server.Models.Infrastructure.TCategory.Target) ? 0 : 
+        relationCategory.Equals (Server.Models.Infrastructure.TCategory.Target) ? 0 :
         Model.SlideIndex
       ;
 

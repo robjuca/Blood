@@ -144,14 +144,12 @@ namespace Gadget.Factory.Pattern.Models
       }
     }
 
-    internal void GadgetItemChecked (TFactoryListItemInfo itemInfo, bool isChecked)
+    internal void GadgetItemChecked (TFactoryListItemInfo itemInfo)
     {
       if (itemInfo.NotNull ()) {
-        itemInfo.IsChecked = isChecked;
-
         var item = IsChecked (itemInfo);
 
-        if (isChecked) {
+        if (itemInfo.IsChecked) {
           if (item.IsEmpty) {
             AddChecked (itemInfo);
           }
@@ -187,28 +185,24 @@ namespace Gadget.Factory.Pattern.Models
     {
       action.ThrowNull ();
 
-      foreach (var targetId in action.ModelAction.GadgetTestModel.Targets) {
-        var gadgetItem = GadgetById (targetId);
+      var gadgetTest = action.ModelAction.GadgetTestModel;
 
-        // found
-        if (gadgetItem.Id.NotEmpty ()) {
-          var selectionId = gadgetItem.GadgetTargetModel.MaterialId;
+      // found
+      if (gadgetTest.Id.NotEmpty ()) {
+        if (gadgetTest.RequestCategory ().Equals (Server.Models.Infrastructure.TCategory.Target)) {
+          var contents = new Collection<Server.Models.Component.GadgetTarget> ();
+          gadgetTest.RequestContent (contents);
 
-          // ensure gadget selection is current
-          if (GadgetSelectionCurrent.Id.Equals (selectionId).IsFalse ()) {
-            foreach (var item in GadgetSelectionItemsSource) {
-              if (item.Id.Equals (selectionId)) {
-                GadgetSelectionCurrent = item;
-                break;
-              }
-            }            
+          foreach (var gadgetContent in contents) {
+            var item = GadgetById (gadgetContent.Id);
+
+            if (item.Id.NotEmpty ()) {
+              var itemInfo = TFactoryListItemInfo.Create (item, isChecked: true);
+
+              GadgetItemsSource.Add (itemInfo);
+              AddChecked (itemInfo);
+            }
           }
-
-          var itemInfo = TFactoryListItemInfo.Create (gadgetItem);
-          itemInfo.IsChecked = true;
-
-          AddChecked (itemInfo);
-          GadgetSelectionItemChanged (0); // dummy index
         }
       }
     }

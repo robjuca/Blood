@@ -107,15 +107,7 @@ namespace Gadget.Collection.Pattern.Models
     {
       get
       {
-        return (ModelItem.GadgetTestModel.TargetCount);
-      }
-    }
-
-    public int RelationCategoryValue
-    {
-      get
-      {
-        return (ModelItem.GadgetTestModel.RelationCategory);
+        return (ModelItem.GadgetTestModel.ContentCount);
       }
     }
 
@@ -123,7 +115,7 @@ namespace Gadget.Collection.Pattern.Models
     {
       get
       {
-        return (Server.Models.Infrastructure.TCategoryType.FromValue (RelationCategoryValue));
+        return (ModelItem.GadgetTestModel.RequestCategory ());
       }
     }
 
