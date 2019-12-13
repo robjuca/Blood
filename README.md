@@ -12,4 +12,4 @@ Saúde em foco (histórico médico, na forma numérica e gráfica, a partir de e
 
 ![](Docs/Media/BloodGadgetTarget.jpg)
 
-![](Docs/Media/BloodGadgetTest.jpg)
+![](Docs/Media/BloodGadgetTest.jpg) 
