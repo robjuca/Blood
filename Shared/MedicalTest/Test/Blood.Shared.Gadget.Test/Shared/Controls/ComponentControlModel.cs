@@ -149,6 +149,8 @@ namespace Shared.Gadget.Test
               var contents = new Collection<Server.Models.Component.GadgetTest> ();
               ControlModel.RequestContent (contents);
 
+              ComponentControlModels.Clear ();
+
               foreach (var gadgetContent in contents) {
                 var componentControlModel = TComponentControlModel.CreateDefault;
                 componentControlModel.ControlModel.CopyFrom (gadgetContent);

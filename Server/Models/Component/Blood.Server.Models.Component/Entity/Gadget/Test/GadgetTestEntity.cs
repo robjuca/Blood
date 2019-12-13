@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 //---------------------------//
 
 namespace Server.Models.Component
@@ -201,7 +202,12 @@ namespace Server.Models.Component
             if (IsCategoryTest) {
               collection.Clear ();
 
-              foreach (var item in TestCollection) {
+              var list = TestCollection
+                .OrderBy (p => p.Test)
+                .ToList ()
+              ;
+
+              foreach (var item in list) {
                 collection.Add (item);
               }
             }
@@ -216,7 +222,12 @@ namespace Server.Models.Component
             if (IsCategoryTarget) {
               collection.Clear ();
 
-              foreach (var item in TargetCollection) {
+              var list = TargetCollection
+                .OrderBy (p => p.Target)
+                .ToList ()
+              ;
+
+              foreach (var item in list) {
                 collection.Add (item);
               }
             }

@@ -40,11 +40,12 @@ namespace Gadget.Factory.Pattern.Models
     #endregion
 
     #region Members
-    internal void RefreshModel (Server.Models.Component.TEntityAction action)
+    internal void EditEnter (Server.Models.Component.TEntityAction action)
     {
       if (action.NotNull ()) {
-        //TODO: review
-        
+        ComponentModelProperty.SelectModel (action);
+
+        ValidateProperty ("TextProperty");
       }
     }
 
@@ -68,23 +69,25 @@ namespace Gadget.Factory.Pattern.Models
 
     internal void ValidateProperty (string propertyName)
     {
-      AlertsModel.Select (isOpen: false); // default
+      if (propertyName.Equals ("TextProperty")) {
+        AlertsModel.Select (isOpen: false); // default
 
-      var textProperty = ComponentModelProperty.ExtensionModel.TextProperty;
-      bool validateModel = string.IsNullOrEmpty (textProperty).IsFalse ();
+        var textProperty = ComponentModelProperty.ExtensionModel.TextProperty;
+        bool validateModel = string.IsNullOrEmpty (textProperty).IsFalse ();
 
-      ComponentModelProperty.ValidateModel (validateModel);
+        ComponentModelProperty.ValidateModel (validateModel);
 
-      // show alerts
-      if (validateModel.IsFalse ()) {
-        var message = $"Test (Text = EMPTY)";
+        // show alerts
+        if (validateModel.IsFalse ()) {
+          var message = $"Test (Text = EMPTY)";
 
-        AlertsModel.Select (TAlertsModel.TKind.Warning);
-        AlertsModel.Select ("ENTRY EMPTY", message);
-        AlertsModel.Select (isOpen: true);
+          AlertsModel.Select (TAlertsModel.TKind.Warning);
+          AlertsModel.Select ("ENTRY EMPTY", message);
+          AlertsModel.Select (isOpen: true);
+        }
+
+        AlertsModel.Refresh ();
       }
-
-      AlertsModel.Refresh ();
     }
 
     internal void Cleanup ()
