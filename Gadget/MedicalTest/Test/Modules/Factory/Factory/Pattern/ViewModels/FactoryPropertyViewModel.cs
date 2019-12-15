@@ -248,9 +248,9 @@ namespace Gadget.Factory.Pattern.ViewModels
       }
     }
 
+    //TODO: what for??
     void RefreshModelDispatcher (Server.Models.Component.TEntityAction action)
     {
-      //TODO: what for??
       action.ThrowNull ();
 
       //Model.RefreshModel (action);

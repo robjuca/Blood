@@ -55,17 +55,6 @@ namespace Shared.Gadget.Test
     {
       if (gadget.NotNull ()) {
         ControlModel.CopyFrom (gadget);
-
-        // TODO: review
-        //if (gadget.IsRelationTarget) {
-        //  foreach (var item in gadget.RelationsTarget) {
-        //    var modelItem = TComponentModelItem.CreateDefault;
-        //    modelItem.Select (item.Id, Server.Models.Infrastructure.TCategory.Target);
-        //    modelItem.GadgetTargetModel.CopyFrom (item);
-
-        //    Components.Add (modelItem);
-        //  }
-        //}
       }
     }
     #endregion
@@ -140,7 +129,6 @@ namespace Shared.Gadget.Test
     
     public void AddComponent (TComponentModelItem item)
     {
-      // TODO: review
       if (item.NotNull ()) {
         switch (item.Category) {
           case Server.Models.Infrastructure.TCategory.Test: {
@@ -176,8 +164,6 @@ namespace Shared.Gadget.Test
             ControlModel.AddContent (item.GadgetTargetModel);
             break;
         }
-        
-        
       }
     }
 

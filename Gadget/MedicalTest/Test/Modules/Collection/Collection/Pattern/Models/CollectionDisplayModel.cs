@@ -10,6 +10,7 @@ using System.Windows;
 using Shared.ViewModel;
 
 using Shared.Gadget.Test;
+using System.Collections.ObjectModel;
 //---------------------------//
 
 namespace Gadget.Collection.Pattern.Models
@@ -100,6 +101,12 @@ namespace Gadget.Collection.Pattern.Models
       action.ModelAction.CopyFrom (modelAction);
 
       ComponentControlModel.RequestComponents (action);
+
+      if (action.Param2 is Collection<Server.Models.Component.GadgetTest> list) {
+        if (action.CategoryType.IsCategory (Server.Models.Infrastructure.TCategory.Test)) {
+          action.ModelAction.GadgetTestModel.UpdateContents (list);
+        }
+      }
     }
 
     internal void Cleanup ()

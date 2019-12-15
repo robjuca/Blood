@@ -95,6 +95,7 @@ namespace Shared.Gadget.Material
             Width = width,
             Height = height,
             Source = imageSource.Clone (),
+            Margin = new Thickness (0, 0, 10, 0),
           };
 
           image.SetValue (Grid.ColumnProperty, 0);
@@ -109,6 +110,7 @@ namespace Shared.Gadget.Material
         {
           VerticalAlignment = VerticalAlignment.Center,
           Text = Model.ControlModel.Material,
+          FontWeight = FontWeights.Bold,
         };
 
         textBlock.SetValue (Grid.ColumnProperty, 1);
@@ -122,13 +124,13 @@ namespace Shared.Gadget.Material
         var textBox = new TextBox ()
         {
           Margin = new Thickness (3),
-          Padding=new Thickness (3),
+          Padding = new Thickness (3),
           MaxWidth = 400,
           MaxHeight = 100,
           TextWrapping = TextWrapping.Wrap,
-          TextAlignment = TextAlignment.Center,
-          VerticalAlignment= VerticalAlignment.Top,
-          VerticalScrollBarVisibility= ScrollBarVisibility.Auto,
+          TextAlignment = TextAlignment.Justify,
+          VerticalAlignment = VerticalAlignment.Top,
+          VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
           Text = Model.ControlModel.Description,
         };
 

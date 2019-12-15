@@ -176,7 +176,6 @@ namespace Shared.Gadget.Test
     #region Support
     void InsertTargetRelation ()
     {
-      // TODO: review
       if (Model.RequestCategory ().Equals (TCategory.Target)) {
         var targets = new Collection<Server.Models.Component.GadgetTarget> ();
         Model.ControlModel.RequestContent (targets);
@@ -218,7 +217,6 @@ namespace Shared.Gadget.Test
 
     void InsertTestRelation ()
     {
-      // TODO: review
       if (Model.RequestCategory ().Equals (TCategory.Test) ) {
         var stack = new StackPanel ();
 

@@ -171,8 +171,12 @@ namespace Gadget.Factory.Pattern.Models
       GadgetCheckedCollection.Clear ();
       GadgetItemsSource.Clear ();
 
-      foreach (var item in GadgetFullCollection) {
-        GadgetItemsSource.Add (TFactoryListItemInfo.Create (item));
+      foreach (var gadgetItem in GadgetFullCollection) {
+        if (gadgetItem.Enabled) {
+          if (gadgetItem.Busy.IsFalse ()) {
+            GadgetItemsSource.Add (TFactoryListItemInfo.Create (gadgetItem));
+          }
+        }
       }
     }
     #endregion

@@ -144,8 +144,6 @@ namespace Server.Models.Component
 
       public void Add (Server.Models.Component.TEntityAction action)
       {
-        // TODO: review
-
         /*
         action.CollectionAction.EntityCollection (contents to add)
         action.CollectionAction.EntityCollection [id] (ModelAction content to add Test or Target)
@@ -269,14 +267,41 @@ namespace Server.Models.Component
         }
       }
 
+      public void Update (Collection<GadgetTest> list)
+      {
+        if (list.NotNull ()) {
+          if (IsEmpty.IsFalse ()) {
+            if (IsCategoryTest) {
+              foreach (var gadgetTest in list) {
+                if (Contains (gadgetTest.Id)) {
+                  if (ContainsTest (gadgetTest.Id).IsFalse ()) {
+                    TestCollection.Add (gadgetTest);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
       public void CopyFrom (TContent alias)
       {
         if (alias.NotNull ()) {
+          Cleanup ();
+
           Category = alias.Category;
 
-          IdCollection = new Collection<Guid> (alias.IdCollection);
-          TestCollection = new Collection<GadgetTest> (alias.TestCollection);
-          TargetCollection = new Collection<GadgetTarget> (alias.TargetCollection);
+          foreach (var id in alias.IdCollection) {
+            IdCollection.Add (id);
+          }
+
+          foreach (var gadgetTest in alias.TestCollection) {
+            TestCollection.Add (gadgetTest);
+          }
+
+          foreach (var gadgetTarget in alias.TargetCollection) {
+            TargetCollection.Add (gadgetTarget);
+          }
         }
       }
 
@@ -554,7 +579,6 @@ namespace Server.Models.Component
 
     public void RefreshModel (TEntityAction action)
     {
-      // TODO: review
       if (action.NotNull ()) {
         if (action.CategoryType.IsCategory (Infrastructure.TCategory.Test)) {
           if (action.ModelAction.ComponentInfoModel.Id.IsEmpty ().IsFalse ()) {
@@ -607,9 +631,10 @@ namespace Server.Models.Component
       Content.Request (collection);
     }
 
+    // TODO: review what for??
     //public void UpdateModel (TEntityAction action)
     //{
-    //  // TODO: review
+    //  
     //  //RelationsTest.Clear ();
 
     //  //var relCategory = Server.Models.Infrastructure.TCategoryType.FromValue (ContentCategoryValue);
@@ -642,6 +667,11 @@ namespace Server.Models.Component
     public void UpdateContents (TEntityAction action)
     {
       Content.Update (action);
+    }
+
+    public void UpdateContents (Collection <GadgetTest> list)
+    {
+      Content.Update (list);
     }
     #endregion
 
