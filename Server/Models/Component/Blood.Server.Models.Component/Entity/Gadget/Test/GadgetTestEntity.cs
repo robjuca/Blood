@@ -296,13 +296,21 @@ namespace Server.Models.Component
           }
 
           foreach (var gadgetTest in alias.TestCollection) {
-            TestCollection.Add (gadgetTest);
+            TestCollection.Add (gadgetTest.Clone ());
           }
 
           foreach (var gadgetTarget in alias.TargetCollection) {
-            TargetCollection.Add (gadgetTarget);
+            TargetCollection.Add (gadgetTarget.Clone ());
           }
         }
+      }
+
+      public TContent Clone ()
+      {
+        var model = CreateDefault;
+        model.CopyFrom (this);
+
+        return (model);
       }
 
       public void Cleanup ()
@@ -526,7 +534,7 @@ namespace Server.Models.Component
         ExternalLink = alias.ExternalLink;
         Enabled = alias.Enabled;
 
-        Content.CopyFrom (alias.Content);
+        Content.CopyFrom (alias.Content.Clone ());
       }
     }
 
@@ -632,37 +640,40 @@ namespace Server.Models.Component
     }
 
     // TODO: review what for??
-    //public void UpdateModel (TEntityAction action)
-    //{
-    //  
-    //  //RelationsTest.Clear ();
+    public void UpdateModel (TEntityAction action)
+    {
+      if (action.NotNull ()) {
+        if (action.CategoryType.IsCategory (Server.Models.Infrastructure.TCategory.Test)) {
+          Content.Update (action);
+        }
+      }
 
-    //  //var relCategory = Server.Models.Infrastructure.TCategoryType.FromValue (ContentCategoryValue);
+      
 
-    //  //if (relCategory.Equals (Server.Models.Infrastructure.TCategory.None) || relCategory.Equals (Server.Models.Infrastructure.TCategory.Test)) {
-    //  //  if (ContentIdCollectionCount.Equals (0).IsFalse ()) {
-    //  //    var targetId = ContentIdCollection [0];
+      //if (relCategory.Equals (Server.Models.Infrastructure.TCategory.None) || relCategory.Equals (Server.Models.Infrastructure.TCategory.Test)) {
+      //  if (ContentIdCollectionCount.Equals (0).IsFalse ()) {
+      //    var targetId = ContentIdCollection [0];
 
-    //  //    foreach (var item in action.ComponentOperation.ParentCategoryCollection) {
-    //  //      foreach (var relation in item.Value) {
-    //  //        if (relation.ParentId.Equals (Id) && relation.ChildId.Equals (targetId)) {
-    //  //          ContentCategoryValue = relation.ChildCategory;
+      //    foreach (var item in action.ComponentOperation.ParentCategoryCollection) {
+      //      foreach (var relation in item.Value) {
+      //        if (relation.ParentId.Equals (Id) && relation.ChildId.Equals (targetId)) {
+      //          ContentCategoryValue = relation.ChildCategory;
 
-    //  //          if (IsRelationTest) {
-    //  //            foreach (var gadget in action.CollectionAction.GadgetTestCollection) {
-    //  //              if (ContainsContentId (gadget.Id)) {
-    //  //                RelationsTest.Add (gadget);
-    //  //              }
-    //  //            }
-    //  //          }
+      //          if (IsRelationTest) {
+      //            foreach (var gadget in action.CollectionAction.GadgetTestCollection) {
+      //              if (ContainsContentId (gadget.Id)) {
+      //                RelationsTest.Add (gadget);
+      //              }
+      //            }
+      //          }
 
-    //  //          return;
-    //  //        }
-    //  //      }
-    //  //    }
-    //  //  }
-    //  //}
-    //}
+      //          return;
+      //        }
+      //      }
+      //    }
+      //  }
+      //}
+    }
 
     public void UpdateContents (TEntityAction action)
     {
@@ -672,6 +683,14 @@ namespace Server.Models.Component
     public void UpdateContents (Collection <GadgetTest> list)
     {
       Content.Update (list);
+    }
+
+    public GadgetTest Clone ()
+    {
+      var model = CreateDefault;
+      model.CopyFrom (this);
+
+      return (model);
     }
     #endregion
 

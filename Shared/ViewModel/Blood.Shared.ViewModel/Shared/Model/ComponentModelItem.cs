@@ -486,7 +486,7 @@ namespace Shared.ViewModel
             break;
 
           case Server.Models.Infrastructure.TCategory.Test: {
-              //modelItem.GadgetTestModel.UpdateModel (action);
+              modelItem.GadgetTestModel.UpdateModel (action);
             }
             break;
         }
