@@ -15,7 +15,7 @@ namespace Gadget.Factory.Pattern.Models
   public class TFactoryListModel
   {
     #region Property
-    public ObservableCollection<TComponentModelItem> TestItemsSource
+    public ObservableCollection<TGadgetTestInfo> TestItemsSource
     {
       get;
     }
@@ -66,7 +66,7 @@ namespace Gadget.Factory.Pattern.Models
     #region Constructor
     public TFactoryListModel ()
     {
-      TestItemsSource = new ObservableCollection<TComponentModelItem> ();
+      TestItemsSource = new ObservableCollection<TGadgetTestInfo> ();
       RegistrationItemsSource = new ObservableCollection<TComponentModelItem> ();
 
       RegistrationCurrent = TComponentModelItem.CreateDefault;
@@ -91,16 +91,11 @@ namespace Gadget.Factory.Pattern.Models
           if (gadget.Enabled) {
             if (action.CollectionAction.ModelCollection.ContainsKey (gadget.Id)) {
               var modelAction = action.CollectionAction.ModelCollection [gadget.Id];
-              modelAction.GadgetTestModel.CopyFrom (gadget);
 
               if (modelAction.ComponentStatusModel.Busy.IsFalse ()) {
-                action.ModelAction.CopyFrom (modelAction);
+                TestItemsSource.Add (TGadgetTestInfo.Create (gadget));
 
-                var item = TComponentModelItem.Create (action);
-
-                if (item.GadgetTestModel.HasRelation) {
-                  TestItemsSource.Add (item);
-                }
+                action.IdCollection.Add (gadget.Id); // for future uodate
               }
             }
           }
@@ -121,6 +116,26 @@ namespace Gadget.Factory.Pattern.Models
 
               var item = TComponentModelItem.Create (action);
               RegistrationItemsSource.Add (item);
+            }
+          }
+        }
+      }
+    }
+
+    internal void SelectMany (Server.Models.Component.TEntityAction action)
+    {
+      // DATA IN:
+      // action.IdCollection
+      // action.CollectionAction.EntityCollection[id]
+
+      action.ThrowNull ();
+
+      foreach (var id in action.IdCollection) {
+        foreach (var item in TestItemsSource) {
+          if (item.Contains (id)) {
+            if (action.CollectionAction.EntityCollection.ContainsKey (id)) {
+              var entityAction = action.CollectionAction.EntityCollection [id];
+              item.UpdateContents (entityAction);
             }
           }
         }
@@ -149,7 +164,79 @@ namespace Gadget.Factory.Pattern.Models
     #endregion
 
     #region Fields
-    readonly Collection<TComponentModelItem>                              m_TestCheckedItems; 
+    readonly Collection<TComponentModelItem>                    m_TestCheckedItems;
+    #endregion
+  };
+  //---------------------------//
+
+  //----- TGadgetTestInfo
+  public class TGadgetTestInfo
+  {
+    #region Property
+    public string Category
+    {
+      get
+      {
+        return (Gadget.RequestCategory().ToString ());
+      }
+    }
+
+    public string Name
+    {
+      get
+      {
+        return (Gadget.Test);
+      }
+    }
+
+    public Collection<string> ContentNames
+    {
+      get
+      {
+        var names = new Collection<string> ();
+        Gadget.RequestContentNames (names, useSeparator: true);
+
+        return (names);
+      }
+    }
+
+    public Server.Models.Component.GadgetTest Gadget
+    {
+      get; 
+    }
+    #endregion
+
+    #region Constructor
+    TGadgetTestInfo (Server.Models.Component.GadgetTest gadget)
+      : this ()
+    {
+      if (gadget.NotNull ()) {
+        Gadget.CopyFrom (gadget.Clone ());
+      }
+    }
+
+    TGadgetTestInfo ()
+    {
+      Gadget = Server.Models.Component.GadgetTest.CreateDefault;
+    }
+    #endregion
+
+    #region Members
+    public bool Contains (Guid id)
+    {
+      return (Gadget.Id.Equals (id));
+    }
+
+    public void UpdateContents (Server.Models.Component.TEntityAction action)
+    {
+      if (action.NotNull ()) {
+        Gadget.UpdateContents (action);
+      }
+    } 
+    #endregion
+
+    #region Static
+    public static TGadgetTestInfo Create (Server.Models.Component.GadgetTest gadget) => new TGadgetTestInfo (gadget); 
     #endregion
   };
   //---------------------------//

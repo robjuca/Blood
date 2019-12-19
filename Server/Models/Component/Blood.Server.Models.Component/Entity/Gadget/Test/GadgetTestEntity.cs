@@ -233,6 +233,39 @@ namespace Server.Models.Component
         }
       }
 
+      public void Request (IList<string> collection, bool useSeparator)
+      {
+        if (collection.NotNull ()) {
+          if (IsEmpty.IsFalse ()) {
+            var separator = useSeparator ? " - " : string.Empty;
+
+            collection.Clear ();
+
+            if (IsCategoryTest) {
+              var list = TestCollection
+                .OrderBy (p => p.Test)
+                .ToList ()
+              ;
+
+              foreach (var item in list) {
+                collection.Add (separator + item.Test);
+              }
+            }
+
+            if (IsCategoryTarget) {
+              var list = TargetCollection
+                .OrderBy (p => p.Target)
+                .ToList ()
+              ;
+
+              foreach (var item in list) {
+                collection.Add (separator + item.Target);
+              }
+            }
+          }
+        }
+      }
+
       public void Update (TEntityAction action)
       {
         /*
@@ -589,7 +622,30 @@ namespace Server.Models.Component
     {
       if (action.NotNull ()) {
         if (action.CategoryType.IsCategory (Infrastructure.TCategory.Test)) {
-          if (action.ModelAction.ComponentInfoModel.Id.IsEmpty ().IsFalse ()) {
+          // collection
+          if (action.ModelAction.ComponentInfoModel.Id.IsEmpty ()) {
+            // action.CollectionAction.ModelCollection [Id(GadgetTest)]
+            foreach (var modelAction in action.CollectionAction.ModelCollection) {
+              var gadget = GadgetTest.CreateDefault;
+              gadget.CopyFrom (modelAction.Value);
+
+              foreach (var item in action.ComponentOperation.ParentCategoryCollection) {
+                var relationList = item.Value
+                  .Where (p => p.ParentId.Equals (gadget.Id))
+                  .ToList ()
+                ;
+
+                foreach (var relation in relationList) {
+                  gadget.AddContentId (relation.ChildId, Server.Models.Infrastructure.TCategoryType.FromValue (relation.ChildCategory));
+                }
+              }
+
+              action.CollectionAction.GadgetTestCollection.Add (gadget);
+            }
+          }
+          
+          // just me
+          else {
             // update model action
             CopyFrom (action.ModelAction); // my self
 
@@ -639,40 +695,20 @@ namespace Server.Models.Component
       Content.Request (collection);
     }
 
-    // TODO: review what for??
+    public void RequestContentNames (IList<string> collection, bool useSeparator)
+    {
+      Content.Request (collection, useSeparator);
+    }
+
     public void UpdateModel (TEntityAction action)
     {
       if (action.NotNull ()) {
         if (action.CategoryType.IsCategory (Server.Models.Infrastructure.TCategory.Test)) {
-          Content.Update (action);
+          if (action.ModelAction.GadgetTestModel.Id.Equals (Id)) {
+            Content.Update (action);
+          }
         }
       }
-
-      
-
-      //if (relCategory.Equals (Server.Models.Infrastructure.TCategory.None) || relCategory.Equals (Server.Models.Infrastructure.TCategory.Test)) {
-      //  if (ContentIdCollectionCount.Equals (0).IsFalse ()) {
-      //    var targetId = ContentIdCollection [0];
-
-      //    foreach (var item in action.ComponentOperation.ParentCategoryCollection) {
-      //      foreach (var relation in item.Value) {
-      //        if (relation.ParentId.Equals (Id) && relation.ChildId.Equals (targetId)) {
-      //          ContentCategoryValue = relation.ChildCategory;
-
-      //          if (IsRelationTest) {
-      //            foreach (var gadget in action.CollectionAction.GadgetTestCollection) {
-      //              if (ContainsContentId (gadget.Id)) {
-      //                RelationsTest.Add (gadget);
-      //              }
-      //            }
-      //          }
-
-      //          return;
-      //        }
-      //      }
-      //    }
-      //  }
-      //}
     }
 
     public void UpdateContents (TEntityAction action)

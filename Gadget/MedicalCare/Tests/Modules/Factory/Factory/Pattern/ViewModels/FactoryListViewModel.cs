@@ -66,6 +66,17 @@ namespace Gadget.Factory.Pattern.ViewModels
                 }
               }
             }
+
+            // Select-Many
+            if (message.Support.Argument.Types.IsOperation (Server.Models.Infrastructure.TOperation.Select, Server.Models.Infrastructure.TExtension.Many)) {
+              if (message.Result.IsValid) {
+                // Gadget Test
+                if (message.Support.Argument.Types.IsOperationCategory (Server.Models.Infrastructure.TCategory.Test)) {
+                  var action = Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction);
+                  TDispatcher.BeginInvoke (SelectManyDispatcher, action);
+                }
+              }
+            }
           }
         }
 
@@ -113,7 +124,7 @@ namespace Gadget.Factory.Pattern.ViewModels
     void RequestDataDispatcher ()
     {
       // to parent
-      // Test - Collection - Full 
+      // Registration - Collection - Full 
       var action = Server.Models.Component.TEntityAction.Create (
         Server.Models.Infrastructure.TCategory.Registration,
         Server.Models.Infrastructure.TOperation.Collection,
@@ -125,7 +136,7 @@ namespace Gadget.Factory.Pattern.ViewModels
 
       DelegateCommand.PublishInternalMessage.Execute (message);
 
-      // Registration - Collection - Full 
+      // Test - Collection - Full 
       action = Server.Models.Component.TEntityAction.Create (
         Server.Models.Infrastructure.TCategory.Test,
         Server.Models.Infrastructure.TOperation.Collection,
@@ -140,10 +151,28 @@ namespace Gadget.Factory.Pattern.ViewModels
 
     void ResponseDataDispatcher (Server.Models.Component.TEntityAction action)
     {
-      // Collection - Full (Registration list)
+      // Collection - Full (Registration list, Test list)
       Model.Select (action);
 
       TDispatcher.Invoke (RefreshAllDispatcher);
+
+      // update
+      // Test - Select - Many
+      if (action.CategoryType.IsCategory (Server.Models.Infrastructure.TCategory.Test)) {
+        action.Operation.Select (Server.Models.Infrastructure.TCategory.Test, Server.Models.Infrastructure.TOperation.Select, Server.Models.Infrastructure.TExtension.Many);
+
+        var message = new TFactoryMessageInternal (TInternalMessageAction.Request, TChild.List, TypeInfo);
+        message.Support.Argument.Types.Select (action);
+
+        DelegateCommand.PublishInternalMessage.Execute (message);
+      }
+    }
+
+    void SelectManyDispatcher (Server.Models.Component.TEntityAction action)
+    {
+      Model.SelectMany (action);
+
+      RaiseChanged ();
     }
 
     void RegistrationItemSelectedDispatcher (TComponentModelItem item)

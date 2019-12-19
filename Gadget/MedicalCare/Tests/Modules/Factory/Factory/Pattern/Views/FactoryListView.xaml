@@ -16,11 +16,11 @@
         <CollectionViewSource x:Key="TestModelItemsViewSource"
                               Source="{Binding Model.TestItemsSource}">
             <CollectionViewSource.GroupDescriptions>
-                <PropertyGroupDescription PropertyName="RelationCategory" />
+                <PropertyGroupDescription PropertyName="Category" />
             </CollectionViewSource.GroupDescriptions>
 
             <CollectionViewSource.SortDescriptions>
-                <scm:SortDescription PropertyName="GadgetTestModel.Test"
+                <scm:SortDescription PropertyName="Name"
                                      Direction="Ascending" />
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
@@ -48,15 +48,14 @@
 
                         <!--test name-->
                         <TextBlock Text="{Binding Name}"
+                                   FontWeight="DemiBold"
                                    VerticalAlignment="Center" />
                     </StackPanel>
 
                     <Separator />
 
-                    <!--relation-->
-                    <ItemsControl Margin="30 0 0 0"
-                                  ItemsSource="{Binding GadgetTestModel.Relations}"
-                                  DisplayMemberPath="Test" />
+                    <ItemsControl Margin="10 0 0 0"
+                                  ItemsSource="{Binding ContentNames}" />
                 </StackPanel>
             </Border>
         </DataTemplate>
