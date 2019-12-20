@@ -20,10 +20,10 @@
 
                 <!--display-->
                 <Border Grid.Row="0"
-                        Padding="5">
-                    <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                        Padding="2">
+                    <ScrollViewer HorizontalScrollBarVisibility="Disabled"
                                   VerticalScrollBarVisibility="Auto"
-                                  Padding="5">
+                                  Padding="2">
                         <control:TComponentDisplayControl x:Name="DisplayControl"
                                                           Model="{Binding Model.ComponentControlModel}" />
                     </ScrollViewer>

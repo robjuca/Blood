@@ -695,7 +695,7 @@ namespace Server.Models.Component
       Content.Request (collection);
     }
 
-    public void RequestContentNames (IList<string> collection, bool useSeparator)
+    public void RequestContentNames (IList<string> collection, bool useSeparator = true)
     {
       Content.Request (collection, useSeparator);
     }

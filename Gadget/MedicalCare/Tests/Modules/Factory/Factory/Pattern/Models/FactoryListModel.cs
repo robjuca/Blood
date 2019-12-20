@@ -194,7 +194,7 @@ namespace Gadget.Factory.Pattern.Models
       get
       {
         var names = new Collection<string> ();
-        Gadget.RequestContentNames (names, useSeparator: true);
+        Gadget.RequestContentNames (names);
 
         return (names);
       }
