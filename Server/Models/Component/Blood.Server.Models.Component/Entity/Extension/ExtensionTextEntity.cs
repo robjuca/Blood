@@ -18,6 +18,7 @@ namespace Server.Models.Component
       Text = string.Empty;
       Description = string.Empty;
       Reference = string.Empty;
+      Extension = string.Empty;
       Value = string.Empty;
       ExternalLink = string.Empty;
       IsCommit = false;
@@ -39,6 +40,7 @@ namespace Server.Models.Component
         Text = alias.Text;
         Description = alias.Description;
         Reference = alias.Reference;
+        Extension = alias.Extension;
         Value = alias.Value;
         ExternalLink = alias.ExternalLink;
         IsCommit = alias.IsCommit;
@@ -52,6 +54,7 @@ namespace Server.Models.Component
         Text = alias.Text;
         Description = alias.Description;
         Reference = alias.Reference;
+        Extension = alias.Extension;
         Value = alias.Value;
         ExternalLink = alias.ExternalLink;
         IsCommit = alias.IsCommit;

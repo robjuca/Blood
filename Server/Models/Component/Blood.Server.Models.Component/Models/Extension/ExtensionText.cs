@@ -18,6 +18,7 @@ namespace Server.Models.Component
     public string       Text { get; set; }
     public string       Description { get; set; }
     public string       Reference { get; set; }
+    public string       Extension { get; set; }
     public string       Value { get; set; }
     public string       ExternalLink { get; set; }
     public bool         IsCommit { get; set; }

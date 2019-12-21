@@ -507,6 +507,7 @@ namespace Server.Models.Component
       Id = Guid.Empty;
 
       Test = string.Empty;
+      Material = string.Empty;
       Description = string.Empty;
       ExternalLink = string.Empty;
       Enabled = false;
@@ -563,6 +564,7 @@ namespace Server.Models.Component
         Id = alias.Id;
 
         Test = alias.Test;
+        Material = alias.Material;
         Description = alias.Description;
         ExternalLink = alias.ExternalLink;
         Enabled = alias.Enabled;
@@ -610,6 +612,7 @@ namespace Server.Models.Component
     {
       if (alias.NotNull ()) {
         Test = alias.Test;
+        Material = alias.Material;
         Description = alias.Description;
         ExternalLink = alias.ExternalLink;
         Enabled = alias.Enabled;
@@ -748,6 +751,7 @@ namespace Server.Models.Component
 
       Test = modelAction.ExtensionTextModel.Text;
       Description = modelAction.ExtensionTextModel.Description;
+      Material = modelAction.ExtensionTextModel.Extension;
       ExternalLink = modelAction.ExtensionTextModel.ExternalLink;
       Enabled = modelAction.ComponentInfoModel.Enabled;
     }

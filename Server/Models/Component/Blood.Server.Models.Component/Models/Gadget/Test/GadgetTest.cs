@@ -5,7 +5,6 @@
 
 //----- Include
 using System;
-using System.Collections.ObjectModel;
 //---------------------------//
 
 namespace Server.Models.Component
@@ -15,6 +14,7 @@ namespace Server.Models.Component
     public Guid                           Id { get; set; }
 
     public string                         Test { get; set; }
+    public string                         Material { get; set; }
     public string                         Description { get; set; }
     public string                         ExternalLink { get; set; }
     public bool                           Enabled { get; set; }

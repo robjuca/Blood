@@ -251,6 +251,7 @@ namespace Gadget.Factory.Pattern.ViewModels
       Model.Edit (action);
 
       TDispatcher.Invoke (RefreshAllDispatcher);
+      //RaiseChanged ();
     }
     #endregion
 

@@ -84,6 +84,8 @@
                     <ComboBox x:Name="MaterialList"
                               ItemsSource="{Binding Source={StaticResource MaterialModelItemsViewSource}}"
                               DisplayMemberPath="Name"
+                              IsEnabled="{Binding Model.GadgetSelectionEnabled, Mode=TwoWay}"
+                              SelectedIndex="{Binding Model.GadgetSelectionSelectedIndex, Mode=TwoWay}"
                               SelectedItem="{Binding Model.GadgetSelectionCurrent}"
                               caliburn:Message.Attach="[Event SelectionChanged] = [OnGadgetSelectionChanged (MaterialList.SelectedIndex)]" />
                 </StackPanel>
