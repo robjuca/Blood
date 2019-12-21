@@ -98,14 +98,14 @@ namespace Gadget.Factory.Pattern.ViewModels
 
     public void OnTestItemChecked (object obj)
     {
-      if (obj is TComponentModelItem item) {
+      if (obj is TGadgetTestInfo item) {
         TDispatcher.BeginInvoke (TestItemCheckedDispatcher, item);
       }
     }
 
     public void OnTestItemUnchecked (object obj)
     {
-      if (obj is TComponentModelItem item) {
+      if (obj is TGadgetTestInfo item) {
         TDispatcher.BeginInvoke (TestItemUncheckedDispatcher, item);
       }
     }
@@ -115,8 +115,7 @@ namespace Gadget.Factory.Pattern.ViewModels
     #region Dispatcher
     void RefreshAllDispatcher ()
     {
-      RaiseChanged ();
-
+      
       RefreshCollection ("TestModelItemsViewSource");
       RefreshCollection ("RegistrationModelItemsViewSource");
     }
@@ -182,14 +181,14 @@ namespace Gadget.Factory.Pattern.ViewModels
       RaiseChanged ();
     }
 
-    void TestItemCheckedDispatcher (TComponentModelItem item)
+    void TestItemCheckedDispatcher (TGadgetTestInfo item)
     {
       Model.TestSelected (item, isChecked:true);
 
       RaiseChanged ();
     }
 
-    void TestItemUncheckedDispatcher (TComponentModelItem item)
+    void TestItemUncheckedDispatcher (TGadgetTestInfo item)
     {
       Model.TestSelected (item, isChecked: false);
 

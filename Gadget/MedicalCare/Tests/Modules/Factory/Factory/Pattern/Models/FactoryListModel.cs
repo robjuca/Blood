@@ -6,6 +6,7 @@
 //----- Include
 using System;
 using System.Collections.ObjectModel;
+using System.Windows;
 
 using Shared.ViewModel;
 //---------------------------//
@@ -71,7 +72,7 @@ namespace Gadget.Factory.Pattern.Models
 
       RegistrationCurrent = TComponentModelItem.CreateDefault;
 
-      m_TestCheckedItems = new Collection<TComponentModelItem> ();
+      m_TestCheckedItems = new Collection<TGadgetTestInfo> ();
     }
     #endregion
 
@@ -149,7 +150,7 @@ namespace Gadget.Factory.Pattern.Models
       RegistrationCurrent.CopyFrom (item);
     }
 
-    internal void TestSelected (TComponentModelItem item, bool isChecked)
+    internal void TestSelected (TGadgetTestInfo item, bool isChecked)
     {
       item.ThrowNull ();
 
@@ -164,7 +165,7 @@ namespace Gadget.Factory.Pattern.Models
     #endregion
 
     #region Fields
-    readonly Collection<TComponentModelItem>                    m_TestCheckedItems;
+    readonly Collection<TGadgetTestInfo>                        m_TestCheckedItems;
     #endregion
   };
   //---------------------------//
@@ -177,7 +178,15 @@ namespace Gadget.Factory.Pattern.Models
     {
       get
       {
-        return (Gadget.RequestCategory().ToString ());
+        return (ContentCategory.ToString ());
+      }
+    }
+
+    public Server.Models.Infrastructure.TCategory ContentCategory
+    {
+      get
+      {
+        return (Gadget.RequestCategory ());
       }
     }
 
@@ -203,6 +212,22 @@ namespace Gadget.Factory.Pattern.Models
     public Server.Models.Component.GadgetTest Gadget
     {
       get; 
+    }
+
+    public Visibility GadgetTestVisibility
+    {
+      get
+      {
+        return (ContentCategory.Equals (Server.Models.Infrastructure.TCategory.Test) ? Visibility.Visible : Visibility.Collapsed);
+      }
+    }
+
+    public Visibility GadgetTargetVisibility
+    {
+      get
+      {
+        return (ContentCategory.Equals (Server.Models.Infrastructure.TCategory.Target) ? Visibility.Visible : Visibility.Collapsed);
+      }
     }
     #endregion
 
