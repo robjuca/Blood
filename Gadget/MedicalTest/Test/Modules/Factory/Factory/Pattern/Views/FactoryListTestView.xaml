@@ -29,66 +29,46 @@
         </DataTemplate>
     </UserControl.Resources>
 
-    <Border>
+    <!--test list-->
+    <Border Padding="0 6 0 0">
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition />
                 <RowDefinition Height="Auto" />
+                <RowDefinition />
             </Grid.RowDefinitions>
 
-            <Border Grid.Row="0"
-                    Padding="0 6 0 0">
+            <!-- test-->
+            <Border Grid.Row="0">
                 <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
 
-                    <!-- test-->
-                    <Border Grid.Row="0">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition />
-                                <ColumnDefinition />
-                            </Grid.ColumnDefinitions>
+                    <Border Grid.Column="0">
+                        <StackPanel Orientation="Horizontal">
+                            <ContentControl Padding="3 0 0 0"
+                                            Style="{DynamicResource GadgetTestIcon}" />
 
-                            <Border Grid.Column="0">
-                                <StackPanel Orientation="Horizontal">
-                                    <ContentControl Padding="3 0 0 0"
-                                                    Style="{DynamicResource GadgetTestIcon}" />
-
-                                    <TextBlock Padding="6 0 0 0"
-                                               VerticalAlignment="Center"
-                                               Text="test" />
-                                </StackPanel>
-                            </Border>
-
-                            <Border Grid.Column="1">
-                                <TextBlock HorizontalAlignment="Right"
-                                           Text="{Binding Model.GadgetCount}" />
-                            </Border>
-                        </Grid>
+                            <TextBlock Padding="6 0 0 0"
+                                       VerticalAlignment="Center"
+                                       Text="test" />
+                        </StackPanel>
                     </Border>
 
-                    <!--list-->
-                    <Border Grid.Row="1"
-                            Padding="2">
-                        <ListBox x:Name="List"
-                                 ItemsSource="{Binding Source={StaticResource TestModelItemsViewSource}}"
-                                 ItemTemplate="{StaticResource ListDataTemplate}"
-                                  />
+                    <Border Grid.Column="1">
+                        <TextBlock HorizontalAlignment="Right"
+                                   Text="{Binding Model.GadgetCount}" />
                     </Border>
                 </Grid>
             </Border>
 
-            <!--target list button-->
+            <!--list-->
             <Border Grid.Row="1"
-                    Padding="0 0 4 0">
-                <Button HorizontalAlignment="Right"
-                        IsEnabled="{Binding Model.IsListButtonEnabled}"
-                        caliburn:Message.Attach="[Event Click] = [OnTargetListCommadClicked ()]">
-                    <ContentControl Style="{DynamicResource GadgetTargetIcon}" />
-                </Button>
+                    Padding="2">
+                <ListBox x:Name="List"
+                         ItemsSource="{Binding Source={StaticResource TestModelItemsViewSource}}"
+                         ItemTemplate="{StaticResource ListDataTemplate}" />
             </Border>
         </Grid>
     </Border>

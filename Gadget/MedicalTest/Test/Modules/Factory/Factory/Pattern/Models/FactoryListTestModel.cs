@@ -6,6 +6,7 @@
 //----- Include
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 using Shared.ViewModel;
 //---------------------------//
@@ -25,14 +26,6 @@ namespace Gadget.Factory.Pattern.Models
       get
       {
         return ($"[{GadgetItemsSource.Count}] [{GadgetCheckedCollection.Count}]");
-      }
-    }
-
-    public bool IsListButtonEnabled
-    {
-      get
-      {
-        return (GadgetCheckedCollection.Count.Equals (0));
       }
     }
     #endregion
@@ -105,6 +98,64 @@ namespace Gadget.Factory.Pattern.Models
       }
     }
 
+    internal void MaterialItemChanged (string materialName)
+    {
+      GadgetItemsSource.Clear ();
+
+      foreach (var gadgetItem in GadgetFullCollection) {
+        if (gadgetItem.GadgetTestModel.Material.Equals (materialName)) {
+          var checkedItem = IsChecked (gadgetItem.Id);
+
+          if (checkedItem.IsEmpty) {
+            if (gadgetItem.Enabled) {
+              if (gadgetItem.Busy.IsFalse ()) {
+                GadgetItemsSource.Add (TFactoryListItemInfo.Create (gadgetItem));
+              }
+            }
+          }
+
+          else {
+            GadgetItemsSource.Add (checkedItem);
+          }
+        }
+      }
+    }
+
+    //internal void RefreshModel (Server.Models.Component.TEntityAction action)
+    //{
+    //  // for gadget Material
+    //  GadgetSelectionItemsSource.Clear ();
+
+    //  var list = action.CollectionAction.GadgetMaterialCollection
+    //    .OrderBy (p => p.Material)
+    //    .ToList ()
+    //  ;
+
+    //  foreach (var gadget in list) {
+    //    if (gadget.Enabled) {
+    //      var modelAction = action.CollectionAction.ModelCollection [gadget.Id];
+    //      modelAction.GadgetMaterialModel.CopyFrom (gadget);
+
+    //      action.ModelAction.CopyFrom (modelAction);
+
+    //      GadgetSelectionItemsSource.Add (TComponentModelItem.Create (action));
+
+    //      foreach (var item in GadgetFullCollection) {
+    //        // Node reverse here
+    //        if (item.NodeModel.ParentId.Equals (gadget.Id)) {
+    //          item.GadgetMaterialModel.CopyFrom (gadget);
+    //        }
+    //      }
+    //    }
+    //  }
+
+    //  if (GadgetSelectionItemsSource.Count > 0) {
+    //    GadgetSelectionCurrent = GadgetSelectionItemsSource [0];
+    //  }
+
+    //  GadgetSelectionEnabled = GadgetCheckedCollection.Count.Equals (0);
+    //}
+
     internal void RequestModel (Server.Models.Component.TEntityAction action)
     {
       action.ThrowNull ();
@@ -119,6 +170,11 @@ namespace Gadget.Factory.Pattern.Models
         action.CollectionAction.ComponentRelationCollection.Add (componentRelation);
       }
 
+      // Extension 
+      if (string.IsNullOrEmpty (action.ModelAction.ExtensionTextModel.Extension)) {
+        //action.ModelAction.ExtensionTextModel.Extension = GadgetSelectionCurrent.GadgetMaterialModel.Material;
+      }
+
       // update rule
       action.SupportAction.Rule.Pump ("gadget");
     }
@@ -127,18 +183,28 @@ namespace Gadget.Factory.Pattern.Models
     {
       action.ThrowNull ();
 
-      var gadgetId = action.ModelAction.GadgetTestModel.Id;
-      var gadgetItem = GadgetById (gadgetId);
+      var gadgetTest = action.ModelAction.GadgetTestModel;
+      
+
+      // update gadget selection (material)
+      //for (int index = 0; index < GadgetSelectionItemsSource.Count; index++) {
+      //  if (GadgetSelectionItemsSource [index].GadgetMaterialModel.Material.Equals (gadgetTest.Material)) {
+      //    GadgetSelectionSelectedIndex = index;
+      //    break;
+      //  }
+      //}
+
+      var gadgetItem = GadgetById (gadgetTest.Id);
 
       // found
       if (gadgetItem.Id.NotEmpty ()) {
         if (gadgetItem.Category.Equals (Server.Models.Infrastructure.TCategory.Test)) {
           gadgetItem.GadgetTestModel.CopyFrom (action.ModelAction.GadgetTestModel);
-          var gadgetTest = gadgetItem.GadgetTestModel;
+          var gadget = gadgetItem.GadgetTestModel;
 
-          if (gadgetTest.RequestCategory ().Equals (Server.Models.Infrastructure.TCategory.Test)) {
+          if (gadget.RequestCategory ().Equals (Server.Models.Infrastructure.TCategory.Test)) {
             var contents = new Collection<Server.Models.Component.GadgetTest> ();
-            gadgetTest.RequestContent (contents);
+            gadget.RequestContent (contents);
 
             foreach (var gadgetContent in contents) {
               var item = GadgetById (gadgetContent.Id);
@@ -159,7 +225,7 @@ namespace Gadget.Factory.Pattern.Models
       }
 
       // remove my self
-      var itemSource = ItemSourceById (gadgetId);
+      var itemSource = ItemSourceById (gadgetTest.Id);
 
       if (itemSource.Id.NotEmpty ()) {
         GadgetItemsSource.Remove (itemSource);

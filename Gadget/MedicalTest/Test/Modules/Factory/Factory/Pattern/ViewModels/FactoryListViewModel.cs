@@ -4,7 +4,9 @@
 ----------------------------------------------------------------*/
 
 //----- Include
+using System;
 using System.ComponentModel.Composition;
+using System.Collections.ObjectModel;
 
 using rr.Library.Infrastructure;
 using rr.Library.Helper;
@@ -40,7 +42,24 @@ namespace Gadget.Factory.Pattern.ViewModels
       if (message.IsModule (TResource.TModule.Factory)) {
         // from parent
         if (message.Node.IsParentToMe (TChild.List)) {
-          
+          // DatabaseValidated
+          if (message.IsAction (TInternalMessageAction.DatabaseValidated)) {
+            TDispatcher.Invoke (RequestDataDispatcher);
+          }
+
+          // Response
+          if (message.IsAction (TInternalMessageAction.Response)) {
+            // Collection-Full
+            if (message.Support.Argument.Types.IsOperation (Server.Models.Infrastructure.TOperation.Collection, Server.Models.Infrastructure.TExtension.Full)) {
+              if (message.Result.IsValid) {
+                // Gadget Material
+                if (message.Support.Argument.Types.IsOperationCategory (Server.Models.Infrastructure.TCategory.Material)) {
+                  var action = Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction);
+                  TDispatcher.BeginInvoke (MaterialCollectionFullDispatcher, action);
+                }
+              }
+            }
+          }
         }
 
         // from sibilig
@@ -63,22 +82,60 @@ namespace Gadget.Factory.Pattern.ViewModels
     #endregion
 
     #region Event
-    public void OnTestListCommadClicked ()
+    public void OnMaterialSelectionChanged (int selectedIndex)
     {
-      Model.SlideIndex = 1;
+      if (selectedIndex.Equals (-1).IsFalse ()) {
+        TDispatcher.Invoke (MaterialSelectionChangedDispatcher);
+      }
+    }
+
+    public void OnSelectorTargetCommadClicked ()
+    {
+      Model.SlideIndex = 0;
 
       RaiseChanged ();
     }
 
-    public void OnTargetListCommadClicked ()
+    public void OnSelectorTestCommadClicked ()
     {
-      Model.SlideIndex = 0;
+      Model.SlideIndex = 1;
 
       RaiseChanged ();
     }
     #endregion
 
     #region Dispatcher
+    void RefreshAllDispatcher ()
+    {
+      RaiseChanged ();
+
+      RefreshCollection ("MaterialModelItemsViewSource");
+    }
+
+    void RequestDataDispatcher ()
+    {
+      // to parent
+      // Collection - Full (Material list - used to send RefreshModel)
+      var entityAction = Server.Models.Component.TEntityAction.Create (
+        Server.Models.Infrastructure.TCategory.Material,
+        Server.Models.Infrastructure.TOperation.Collection,
+        Server.Models.Infrastructure.TExtension.Full
+      );
+
+      var message = new TFactoryMessageInternal (TInternalMessageAction.Request, TChild.List, TypeInfo);
+      message.Support.Argument.Types.Select (entityAction);
+
+      DelegateCommand.PublishInternalMessage.Execute (message);
+    }
+
+    void MaterialCollectionFullDispatcher (Server.Models.Component.TEntityAction action)
+    {
+      // refresh model
+      Model.MaterialRefreshModel (action);
+      
+      TDispatcher.Invoke (RefreshAllDispatcher);
+    }
+
     void EditDispatcher (Server.Models.Component.TEntityAction action)
     {
       var relationCategory = action.ModelAction.GadgetTestModel.RequestCategory ();
@@ -90,7 +147,15 @@ namespace Gadget.Factory.Pattern.ViewModels
       ;
 
       RaiseChanged ();
-    } 
+    }
+
+    void MaterialSelectionChangedDispatcher ()
+    {
+      var message = new TFactoryMessageInternal (TInternalMessageAction.Select, TChild.List, TypeInfo);
+      message.Support.Argument.Types.Item.CopyFrom (Model.MaterialSelectionCurrent);
+
+      NotifyChildViewModel (message);
+    }
     #endregion
 
     #region Property

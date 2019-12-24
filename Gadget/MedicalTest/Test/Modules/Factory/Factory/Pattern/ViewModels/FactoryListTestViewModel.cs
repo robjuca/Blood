@@ -21,7 +21,7 @@ using Gadget.Factory.Pattern.Models;
 namespace Gadget.Factory.Pattern.ViewModels
 {
   [Export ("ModuleFactoryListTestViewModel", typeof (IFactoryListTestViewModel))]
-  public class TFactoryListTestViewModel : TViewModelAware<TFactoryListTestModel>, IHandleMessageInternal, IFactoryListTestViewModel
+  public class TFactoryListTestViewModel : TViewModelAware<TFactoryListTestModel>, IHandleMessageInternal, IInternalHandle, IFactoryListTestViewModel
   {
     #region Constructor
     [ImportingConstructor]
@@ -32,6 +32,8 @@ namespace Gadget.Factory.Pattern.ViewModels
 
       presentation.RequestPresentationCommand (this);
       presentation.EventSubscribe (this);
+
+      UseChildViewModel = true;
     }
     #endregion
 
@@ -56,6 +58,12 @@ namespace Gadget.Factory.Pattern.ViewModels
                   var action = Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction);
                   TDispatcher.BeginInvoke (ResponseDataDispatcher, action);
                 }
+
+                // Gadget Material
+                if (message.Support.Argument.Types.IsOperationCategory (Server.Models.Infrastructure.TCategory.Material)) {
+                  var action = Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction);
+                  TDispatcher.BeginInvoke (RefreshModelDispatcher, action);
+                }
               }
             }
 
@@ -76,7 +84,7 @@ namespace Gadget.Factory.Pattern.ViewModels
         if (message.Node.IsSiblingToMe (TChild.List)) {
           // PropertySelect
           if (message.IsAction (TInternalMessageAction.PropertySelect)) {
-            if (message.Support.Argument.Args.PropertyName.Equals ("all")) {
+            if (message.Support.Argument.Args.PropertyName.Equals ("Edit")) {
               TDispatcher.BeginInvoke (EditDispatcher, Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction));
             }
           }
@@ -92,6 +100,24 @@ namespace Gadget.Factory.Pattern.ViewModels
 
             TDispatcher.Invoke (RefreshAllDispatcher);
             TDispatcher.Invoke (RequestDataDispatcher);
+          }
+        }
+      }
+    }
+
+    public void InternalHandle (object message)
+    {
+      // used to parentView comunicate with childView (UseChildViewModel = true)
+      if (message.NotNull ()) {
+        if (message is TFactoryMessageInternal msg) {
+          // Select
+          if (msg.IsAction (TInternalMessageAction.Select)) {
+            // material
+            if (msg.Support.Argument.Types.Item.Category.Equals (Server.Models.Infrastructure.TCategory.Material)) {
+              Model.MaterialItemChanged (msg.Support.Argument.Types.Item.GadgetMaterialModel.Material);
+
+              TDispatcher.Invoke (RefreshAllDispatcher);
+            }
           }
         }
       }
@@ -170,6 +196,19 @@ namespace Gadget.Factory.Pattern.ViewModels
 
         DelegateCommand.PublishInternalMessage.Execute (message);
       }
+    }
+
+    void RefreshModelDispatcher (Server.Models.Component.TEntityAction action)
+    {
+      // refresh model
+      //Model.RefreshModel (action);
+      TDispatcher.Invoke (RefreshAllDispatcher);
+
+      // to parent (RefreshModel)
+      var message = new TFactoryMessageInternal (TInternalMessageAction.RefreshModel, TChild.List, TypeInfo);
+      message.Support.Argument.Types.Select (action);
+
+      DelegateCommand.PublishInternalMessage.Execute (message);
     }
 
     void ItemCheckedChangedDispatcher (TFactoryListItemInfo itemInfo)

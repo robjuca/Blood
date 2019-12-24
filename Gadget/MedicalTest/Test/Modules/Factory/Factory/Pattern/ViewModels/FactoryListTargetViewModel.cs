@@ -21,7 +21,7 @@ using Gadget.Factory.Pattern.Models;
 namespace Gadget.Factory.Pattern.ViewModels
 {
   [Export ("ModuleFactoryListTargetViewModel", typeof (IFactoryListTargetViewModel))]
-  public class TFactoryListTargetViewModel : TViewModelAware<TFactoryListTargetModel>, IHandleMessageInternal, IFactoryListTargetViewModel
+  public class TFactoryListTargetViewModel : TViewModelAware<TFactoryListTargetModel>, IHandleMessageInternal, IInternalHandle, IFactoryListTargetViewModel
   {
     #region Constructor
     [ImportingConstructor]
@@ -32,6 +32,8 @@ namespace Gadget.Factory.Pattern.ViewModels
 
       presentation.RequestPresentationCommand (this);
       presentation.EventSubscribe (this);
+
+      UseChildViewModel = true;
     }
     #endregion
 
@@ -85,7 +87,9 @@ namespace Gadget.Factory.Pattern.ViewModels
         if (message.Node.IsSiblingToMe (TChild.List)) {
           // PropertySelect
           if (message.IsAction (TInternalMessageAction.PropertySelect)) {
-            if (message.Support.Argument.Args.PropertyName.Equals ("all")) {
+            var propertyName = message.Support.Argument.Args.PropertyName;
+
+            if (propertyName.Equals ("Edit")) {
               TDispatcher.BeginInvoke (EditDispatcher, Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction));
             }
           }
@@ -105,14 +109,27 @@ namespace Gadget.Factory.Pattern.ViewModels
         }
       }
     }
+
+    public void InternalHandle (object message)
+    {
+      // used to parentView comunicate with childView (UseChildViewModel = true)
+      if (message.NotNull ()) {
+        if (message is TFactoryMessageInternal msg) {
+          // Select
+          if (msg.IsAction (TInternalMessageAction.Select)) {
+            // material
+            if (msg.Support.Argument.Types.Item.Category.Equals (Server.Models.Infrastructure.TCategory.Material)) {
+              Model.MaterialItemChanged (msg.Support.Argument.Types.Item.GadgetMaterialModel.Id);
+
+              TDispatcher.Invoke (RefreshAllDispatcher);
+            }
+          }
+        }
+      }
+    }
     #endregion
 
     #region View Event
-    public void OnGadgetSelectionChanged (int selectedIndex)
-    {
-      TDispatcher.BeginInvoke (GadgedSelectionChangedDispatcher, selectedIndex);
-    }
-
     public void OnGadgetChanged (TComponentModelItem item)
     {
       TDispatcher.BeginInvoke (GadgetChangedDispatcher, item);
@@ -134,7 +151,6 @@ namespace Gadget.Factory.Pattern.ViewModels
     {
       RaiseChanged ();
 
-      RefreshCollection ("MaterialModelItemsViewSource");
       RefreshCollection ("TargetModelItemsViewSource");
     }
 
@@ -160,19 +176,6 @@ namespace Gadget.Factory.Pattern.ViewModels
       Model.Select (action);
 
       TDispatcher.Invoke (RefreshAllDispatcher);
-
-      // to parent
-      // Collection - Full (Material list - used to send RefreshModel)
-      var entityAction = Server.Models.Component.TEntityAction.Create (
-        Server.Models.Infrastructure.TCategory.Material,
-        Server.Models.Infrastructure.TOperation.Collection,
-        Server.Models.Infrastructure.TExtension.Full
-      );
-
-      var message = new TFactoryMessageInternal (TInternalMessageAction.Request, TChild.List, TypeInfo);
-      message.Support.Argument.Types.Select (entityAction);
-
-      DelegateCommand.PublishInternalMessage.Execute (message);
     }
 
     void ResponseModelDispatcher (Server.Models.Component.TEntityAction action)
@@ -187,7 +190,7 @@ namespace Gadget.Factory.Pattern.ViewModels
     void RefreshModelDispatcher (Server.Models.Component.TEntityAction action)
     {
       // refresh model
-      Model.RefreshModel (action);
+      //Model.RefreshModel (action);
       TDispatcher.Invoke (RefreshAllDispatcher);
 
       // to parent (RefreshModel)
@@ -197,11 +200,11 @@ namespace Gadget.Factory.Pattern.ViewModels
       DelegateCommand.PublishInternalMessage.Execute (message);
     }
 
-    void GadgedSelectionChangedDispatcher (int selectedIndex)
+    void GadgetMaterialSelectedDispatcher (TComponentModelItem item)
     {
-      Model.GadgetSelectionItemChanged (selectedIndex);
+      if (item.NotNull ()) {
 
-      TDispatcher.Invoke (RefreshAllDispatcher);
+      }
     }
 
     void GadgetChangedDispatcher (TComponentModelItem item)

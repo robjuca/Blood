@@ -11,10 +11,6 @@
     <UserControl.Resources>
         <converters:TCollectionToBitmapImageConverter  x:Key="CollectionToBitmapImageConverter" />
 
-        <CollectionViewSource x:Key="MaterialModelItemsViewSource"
-                              Source="{Binding Model.GadgetSelectionItemsSource}">
-        </CollectionViewSource>
-
         <CollectionViewSource x:Key="TargetModelItemsViewSource"
                               Source="{Binding Model.GadgetItemsSource}">
             <CollectionViewSource.SortDescriptions>
@@ -47,103 +43,47 @@
         </DataTemplate>
     </UserControl.Resources>
 
-    <Border>
+    <!--target list-->
+    <Border Grid.Row="1"
+            Padding="0 6 0 0">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition />
-                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <!--Material-->
+            <!--target-->
             <Border Grid.Row="0">
-                <StackPanel>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-
-                        <Border Grid.Column="0">
-                            <StackPanel Orientation="Horizontal">
-                                <ContentControl Padding="3 0 0 0"
-                                                Style="{DynamicResource GadgetMaterialIcon}" />
-
-                                <TextBlock Padding="6 0 0 0"
-                                           VerticalAlignment="Center"
-                                           Text="material" />
-                            </StackPanel>
-                        </Border>
-
-                        <Border Grid.Column="1">
-                            <TextBlock HorizontalAlignment="Right"
-                                       Text="{Binding Model.GadgetSelectionItemsSourceCount}" />
-                        </Border>
-                    </Grid>
-
-                    <ComboBox x:Name="MaterialList"
-                              ItemsSource="{Binding Source={StaticResource MaterialModelItemsViewSource}}"
-                              DisplayMemberPath="Name"
-                              IsEnabled="{Binding Model.GadgetSelectionEnabled, Mode=TwoWay}"
-                              SelectedIndex="{Binding Model.GadgetSelectionSelectedIndex, Mode=TwoWay}"
-                              SelectedItem="{Binding Model.GadgetSelectionCurrent}"
-                              caliburn:Message.Attach="[Event SelectionChanged] = [OnGadgetSelectionChanged (MaterialList.SelectedIndex)]" />
-                </StackPanel>
-            </Border>
-
-            <!--target list-->
-            <Border Grid.Row="1"
-                    Padding="0 6 0 0">
                 <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
 
-                    <!--target-->
-                    <Border Grid.Row="0">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition />
-                                <ColumnDefinition />
-                            </Grid.ColumnDefinitions>
+                    <Border Grid.Column="0">
+                        <StackPanel Orientation="Horizontal">
+                            <ContentControl Padding="3 0 0 0"
+                                            Style="{DynamicResource GadgetTargetIcon}" />
 
-                            <Border Grid.Column="0">
-                                <StackPanel Orientation="Horizontal">
-                                    <ContentControl Padding="3 0 0 0"
-                                                    Style="{DynamicResource GadgetTargetIcon}" />
-
-                                    <TextBlock Padding="6 0 0 0"
-                                               VerticalAlignment="Center"
-                                               Text="target" />
-                                </StackPanel>
-                            </Border>
-
-                            <Border Grid.Column="1">
-                                <TextBlock HorizontalAlignment="Right"
-                                           Text="{Binding Model.GadgetCount}" />
-                            </Border>
-                        </Grid>
+                            <TextBlock Padding="6 0 0 0"
+                                       VerticalAlignment="Center"
+                                       Text="target" />
+                        </StackPanel>
                     </Border>
 
-                    <!--list-->
-                    <Border Grid.Row="1">
-                        <ListBox x:Name="TargetList"
-                                 ItemsSource="{Binding Source={StaticResource TargetModelItemsViewSource}}"
-                                 ItemTemplate="{StaticResource TargetListDataTemplate}"
-                                 caliburn:Message.Attach="[Event SelectionChanged] = [OnGadgetChanged (TargetList.SelectedItem)]" />
+                    <Border Grid.Column="1">
+                        <TextBlock HorizontalAlignment="Right"
+                                   Text="{Binding Model.GadgetCount}" />
                     </Border>
                 </Grid>
             </Border>
 
-            <!--test list button-->
-            <Border Grid.Row="2"
-                    Padding="0 0 4 0">
-                <Button HorizontalAlignment="Right"
-                        IsEnabled="{Binding Model.IsListButtonEnabled}"
-                        caliburn:Message.Attach="[Event Click] = [OnTestListCommadClicked ()]">
-                    <ContentControl Style="{DynamicResource GadgetTestIcon}" />
-                </Button>
+            <!--list-->
+            <Border Grid.Row="1">
+                <ListBox x:Name="TargetList"
+                         ItemsSource="{Binding Source={StaticResource TargetModelItemsViewSource}}"
+                         ItemTemplate="{StaticResource TargetListDataTemplate}"
+                         caliburn:Message.Attach="[Event SelectionChanged] = [OnGadgetChanged (TargetList.SelectedItem)]" />
             </Border>
         </Grid>
     </Border>

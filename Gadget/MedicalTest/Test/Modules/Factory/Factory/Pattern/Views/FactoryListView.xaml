@@ -4,31 +4,130 @@
                     xmlns:base="clr-namespace:rr.Library.Infrastructure;assembly=rr.Library.Infrastructure"
                     xmlns:views="clr-namespace:Gadget.Factory.Pattern.Views"
                     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+                    xmlns:caliburn="http://www.caliburnproject.org"
                     DataContext="{x:Null}"
                     x:Name="ModuleFactoryListViewModel">
+
+    <UserControl.Resources>
+        <CollectionViewSource x:Key="MaterialModelItemsViewSource"
+                              Source="{Binding Model.MaterialSelectionItemsSource}">
+        </CollectionViewSource>
+    </UserControl.Resources>
 
     <Border Padding="6"
             Width="210">
 
-        <materialDesign:Transitioner SelectedIndex="{Binding Model.SlideIndex}">
-            <!-- target-->
-            <materialDesign:TransitionerSlide OpeningEffect="{materialDesign:TransitionEffect FadeIn}">
-                <materialDesign:TransitionerSlide.BackwardWipe>
-                    <materialDesign:CircleWipe />
-                </materialDesign:TransitionerSlide.BackwardWipe>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
 
-                <views:TFactoryListTargetView />
-            </materialDesign:TransitionerSlide>
+            <!--gadget selector (target or test), material selection-->
+            <Border Grid.Row="0">
+                <StackPanel>
+                    <!--gadget selector (target or test)-->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
 
-            <!--test-->
-            <materialDesign:TransitionerSlide OpeningEffect="{materialDesign:TransitionEffect FadeIn}">
-                <materialDesign:TransitionerSlide.BackwardWipe>
-                    <materialDesign:SlideOutWipe />
-                </materialDesign:TransitionerSlide.BackwardWipe>
+                        <!--selector-->
+                        <Border Grid.Column="0">
+                            <TextBlock Text="selector ->"
+                                       VerticalAlignment="Center" />
+                        </Border>
 
-                <views:TFactoryListTestView />
-            </materialDesign:TransitionerSlide>
-        </materialDesign:Transitioner>
+                        <!--target button-->
+                        <Border Grid.Column="1">
+                            <RadioButton GroupName="selector"
+                                         IsChecked="{Binding Model.SelectorTargetChecked}"
+                                         caliburn:Message.Attach="[Event Click] = [OnSelectorTargetCommadClicked ()]">
+                                <ContentControl Style="{DynamicResource GadgetTargetIcon}" />
+                            </RadioButton>
+                        </Border>
+
+                        <!--test button-->
+                        <Border Grid.Column="2">
+                            <RadioButton GroupName="selector"
+                                         IsChecked="{Binding Model.SelectorTestChecked}"
+                                         caliburn:Message.Attach="[Event Click] = [OnSelectorTestCommadClicked ()]">
+                                <ContentControl Style="{DynamicResource GadgetTestIcon}" />
+                            </RadioButton>
+                        </Border>
+                    </Grid>
+
+                    <!--separator-->
+                    <Border Margin="0 5 0 5">
+                        <Separator />
+                    </Border>
+
+                    <!--material selection-->
+                    <Border>
+                        <StackPanel>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+
+                                <Border Grid.Column="0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <ContentControl Padding="3 0 0 0"
+                                                        Style="{DynamicResource GadgetMaterialIcon}" />
+
+                                        <TextBlock Padding="6 0 0 0"
+                                                   VerticalAlignment="Center"
+                                                   Text="material" />
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Grid.Column="1">
+                                    <TextBlock HorizontalAlignment="Right"
+                                               Text="{Binding Model.MaterialSelectionItemsSourceCount}" />
+                                </Border>
+                            </Grid>
+
+                            <ComboBox x:Name="MaterialList"
+                                      ItemsSource="{Binding Source={StaticResource MaterialModelItemsViewSource}}"
+                                      DisplayMemberPath="Name"
+                                      IsEnabled="{Binding Model.MaterialSelectionEnabled, Mode=TwoWay}"
+                                      SelectedIndex="{Binding Model.MaterialSelectionSelectedIndex, Mode=TwoWay}"
+                                      SelectedItem="{Binding Model.MaterialSelectionCurrent}"
+                                      caliburn:Message.Attach="[Event SelectionChanged] = [OnMaterialSelectionChanged (MaterialList.SelectedIndex)]" />
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Border>
+
+            <!--target or test views-->
+            <Border Grid.Row="1"
+                    Margin="0 10 0 0">
+                <materialDesign:Transitioner SelectedIndex="{Binding Model.SlideIndex}">
+                     <!--target-->
+                    <materialDesign:TransitionerSlide OpeningEffect="{materialDesign:TransitionEffect FadeIn}">
+                        <materialDesign:TransitionerSlide.BackwardWipe>
+                            <materialDesign:CircleWipe />
+                        </materialDesign:TransitionerSlide.BackwardWipe>
+
+                        <views:TFactoryListTargetView Tag="{Binding  ElementName=ModuleFactoryListViewModel, Path=DataContext}" />
+                        
+                    </materialDesign:TransitionerSlide>
+
+                    <!--test-->
+                    <materialDesign:TransitionerSlide OpeningEffect="{materialDesign:TransitionEffect FadeIn}">
+                        <materialDesign:TransitionerSlide.BackwardWipe>
+                            <materialDesign:SlideOutWipe />
+                        </materialDesign:TransitionerSlide.BackwardWipe>
+
+                        <views:TFactoryListTestView Tag="{Binding  ElementName=ModuleFactoryListViewModel, Path=DataContext}" />
+                        
+                    </materialDesign:TransitionerSlide>
+                </materialDesign:Transitioner>
+            </Border>
+        </Grid>
     </Border>
 
 </base:ViewChildBase>

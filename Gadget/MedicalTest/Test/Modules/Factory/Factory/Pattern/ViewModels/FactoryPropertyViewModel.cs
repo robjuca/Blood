@@ -170,8 +170,8 @@ namespace Gadget.Factory.Pattern.ViewModels
 
       if (action.SupportAction.Rule.IsCommit ("gadget")) {
         action.SupportAction.Rule.Remove ("gadget");
-        
-        TDispatcher.BeginInvoke (ApplyDispatcher, action);  
+
+        TDispatcher.BeginInvoke (ApplyDispatcher, action);
       }
     }
 
@@ -241,8 +241,8 @@ namespace Gadget.Factory.Pattern.ViewModels
 
         // to Sibling
         var message = new TFactorySiblingMessageInternal (TInternalMessageAction.PropertySelect, TChild.Property, TypeInfo);
+        message.Support.Argument.Args.Select ("Edit");
         message.Support.Argument.Types.Select (action);
-        message.Support.Argument.Args.Select ("all");
 
         DelegateCommand.PublishInternalMessage.Execute (message);
       }
