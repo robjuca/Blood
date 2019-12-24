@@ -6,7 +6,6 @@
 //----- Include
 using System;
 using System.ComponentModel.Composition;
-using System.Collections.ObjectModel;
 
 using rr.Library.Infrastructure;
 using rr.Library.Helper;
@@ -66,7 +65,7 @@ namespace Gadget.Factory.Pattern.ViewModels
         if (message.Node.IsSiblingToMe (TChild.List)) {
           // PropertySelect
           if (message.IsAction (TInternalMessageAction.PropertySelect)) {
-            if (message.Support.Argument.Args.PropertyName.Equals ("all")) {
+            if (message.Support.Argument.Args.PropertyName.Equals ("Edit")) {
               TDispatcher.BeginInvoke (EditDispatcher, Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction));
             }
           }
@@ -153,15 +152,9 @@ namespace Gadget.Factory.Pattern.ViewModels
 
     void EditDispatcher (Server.Models.Component.TEntityAction action)
     {
-      var relationCategory = action.ModelAction.GadgetTestModel.RequestCategory ();
+      Model.EditEnter (action);
 
-      Model.SlideIndex =
-        relationCategory.Equals (Server.Models.Infrastructure.TCategory.Test) ? 1 :
-        relationCategory.Equals (Server.Models.Infrastructure.TCategory.Target) ? 0 :
-        Model.SlideIndex
-      ;
-
-      RaiseChanged ();
+      TDispatcher.Invoke (RefreshAllDispatcher);
     }
 
     void MaterialSelectionChangedDispatcher ()
