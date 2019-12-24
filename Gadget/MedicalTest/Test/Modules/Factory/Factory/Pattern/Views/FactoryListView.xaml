@@ -41,8 +41,9 @@
                         </Border>
 
                         <!--target button-->
-                        <Border Grid.Column="1">
+                        <Border Grid.Column="1" >
                             <RadioButton GroupName="selector"
+                                         IsEnabled="{Binding Model.IsEnabledSelector, Mode=TwoWay}"
                                          IsChecked="{Binding Model.SelectorTargetChecked}"
                                          caliburn:Message.Attach="[Event Click] = [OnSelectorTargetCommadClicked ()]">
                                 <ContentControl Style="{DynamicResource GadgetTargetIcon}" />
@@ -52,6 +53,7 @@
                         <!--test button-->
                         <Border Grid.Column="2">
                             <RadioButton GroupName="selector"
+                                         IsEnabled="{Binding Model.IsEnabledSelector, Mode=TwoWay}"
                                          IsChecked="{Binding Model.SelectorTestChecked}"
                                          caliburn:Message.Attach="[Event Click] = [OnSelectorTestCommadClicked ()]">
                                 <ContentControl Style="{DynamicResource GadgetTestIcon}" />

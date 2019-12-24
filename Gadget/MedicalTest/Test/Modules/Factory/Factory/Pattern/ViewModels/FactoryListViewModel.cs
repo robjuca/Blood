@@ -22,7 +22,7 @@ using Gadget.Factory.Pattern.Models;
 namespace Gadget.Factory.Pattern.ViewModels
 {
   [Export ("ModuleFactoryListViewModel", typeof (IFactoryListViewModel))]
-  public class TFactoryListViewModel : TViewModelAware<TFactoryListModel>, IHandleMessageInternal, IFactoryListViewModel
+  public class TFactoryListViewModel : TViewModelAware<TFactoryListModel>, IHandleMessageInternal, IInternalHandleParent, IFactoryListViewModel
   {
     #region Constructor
     [ImportingConstructor]
@@ -75,6 +75,21 @@ namespace Gadget.Factory.Pattern.ViewModels
           if (message.IsAction (TInternalMessageAction.Reload)) {
             // to parent
             DelegateCommand.PublishInternalMessage.Execute (message);
+          }
+        }
+      }
+    }
+
+    public void InternalHandle (object message)
+    {
+      // used to childView comunicate with parentView
+      if (message.NotNull ()) {
+        if (message is TFactorySiblingMessageInternal msg) {
+          // PropertySelect
+          if (msg.IsAction (TInternalMessageAction.PropertySelect)) {
+            Model.PropertyChanged (msg.Support.Argument.Args.PropertyName, msg.Support.Argument.Types.ReportData.Locked);
+
+            TDispatcher.Invoke (RefreshAllDispatcher);
           }
         }
       }

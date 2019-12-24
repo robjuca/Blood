@@ -21,7 +21,7 @@ using Gadget.Factory.Pattern.Models;
 namespace Gadget.Factory.Pattern.ViewModels
 {
   [Export ("ModuleFactoryListTestViewModel", typeof (IFactoryListTestViewModel))]
-  public class TFactoryListTestViewModel : TViewModelAware<TFactoryListTestModel>, IHandleMessageInternal, IInternalHandle, IFactoryListTestViewModel
+  public class TFactoryListTestViewModel : TViewModelAware<TFactoryListTestModel>, IHandleMessageInternal, IInternalHandleChild, IFactoryListTestViewModel
   {
     #region Constructor
     [ImportingConstructor]
@@ -194,7 +194,14 @@ namespace Gadget.Factory.Pattern.ViewModels
         message.Support.Argument.Types.Item.CopyFrom (itemInfo.ModelItem);
         message.Support.Argument.Args.Select (itemInfo.IsChecked ? "GadgetAdd" : "GadgetRemove");
 
+        if (Model.HasGadgetChecked) {
+          message.Support.Argument.Types.ReportData.SelectLock ();
+        }
+
         DelegateCommand.PublishInternalMessage.Execute (message);
+
+        // to parent view
+        NotifyParentViewModel (message);
       }
     }
 

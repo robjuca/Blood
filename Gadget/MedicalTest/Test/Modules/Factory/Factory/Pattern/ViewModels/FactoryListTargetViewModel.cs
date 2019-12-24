@@ -21,7 +21,7 @@ using Gadget.Factory.Pattern.Models;
 namespace Gadget.Factory.Pattern.ViewModels
 {
   [Export ("ModuleFactoryListTargetViewModel", typeof (IFactoryListTargetViewModel))]
-  public class TFactoryListTargetViewModel : TViewModelAware<TFactoryListTargetModel>, IHandleMessageInternal, IInternalHandle, IFactoryListTargetViewModel
+  public class TFactoryListTargetViewModel : TViewModelAware<TFactoryListTargetModel>, IHandleMessageInternal, IInternalHandleChild, IFactoryListTargetViewModel
   {
     #region Constructor
     [ImportingConstructor]
@@ -198,13 +198,6 @@ namespace Gadget.Factory.Pattern.ViewModels
       message.Support.Argument.Types.Select (action);
 
       DelegateCommand.PublishInternalMessage.Execute (message);
-    }
-
-    void GadgetMaterialSelectedDispatcher (TComponentModelItem item)
-    {
-      if (item.NotNull ()) {
-
-      }
     }
 
     void GadgetChangedDispatcher (TComponentModelItem item)

@@ -25,7 +25,23 @@ namespace Gadget.Factory.Pattern.Models
     {
       get
       {
-        return ($"[{GadgetItemsSource.Count}] [{GadgetCheckedCollection.Count}]");
+        return ($"[{GadgetItemsSource.Count}] [{GadgetCheckedCount}]");
+      }
+    }
+
+    public int GadgetCheckedCount
+    {
+      get
+      {
+        return (GadgetCheckedCollection.Count);
+      }
+    }
+
+    public bool HasGadgetChecked
+    {
+      get
+      {
+        return (GadgetCheckedCount.Equals (0).IsFalse ());
       }
     }
     #endregion

@@ -59,6 +59,12 @@ namespace Gadget.Factory.Pattern.Models
       set;
     }
 
+    public bool IsEnabledSelector
+    {
+      get; 
+      set;
+    }
+
     public int SlideIndex
     {
       get;
@@ -79,7 +85,7 @@ namespace Gadget.Factory.Pattern.Models
 
       SlideIndex = 0;
 
-      //GadgetFullCollection = new Collection<TComponentModelItem> ();
+      IsEnabledSelector = true;
     }
     #endregion
 
@@ -141,6 +147,23 @@ namespace Gadget.Factory.Pattern.Models
       //GadgetSelectionEnabled = GadgetCheckedCollection.Count.Equals (0);
     }
 
+    internal void PropertyChanged (string propertyName, bool locked)
+    {
+      switch (propertyName) {
+        case "GadgetAdd":
+          IsEnabledSelector = false;
+          MaterialSelectionEnabled = false;
+          break;
+
+        case "GadgetRemove":
+          if (locked.IsFalse ()) {
+            IsEnabledSelector = true;
+            MaterialSelectionEnabled = true;
+          }
+          break;
+      }
+    }
+
     //internal void MaterialSelectionItemChanged (int selectdIndex)
     //{
     //  //GadgetItemsSource.Clear ();
@@ -168,13 +191,6 @@ namespace Gadget.Factory.Pattern.Models
     //      //}
     //    //}
     //  }
-    //}
-    #endregion
-
-    #region property
-    //Collection<TComponentModelItem> GadgetFullCollection
-    //{
-    //  get;
     //}
     #endregion
   };
