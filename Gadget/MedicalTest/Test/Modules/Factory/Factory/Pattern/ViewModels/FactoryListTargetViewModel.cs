@@ -21,7 +21,7 @@ using Gadget.Factory.Pattern.Models;
 namespace Gadget.Factory.Pattern.ViewModels
 {
   [Export ("ModuleFactoryListTargetViewModel", typeof (IFactoryListTargetViewModel))]
-  public class TFactoryListTargetViewModel : TViewModelAware<TFactoryListTargetModel>, IHandleMessageInternal, IInternalHandleChild, IFactoryListTargetViewModel
+  public class TFactoryListTargetViewModel : TViewModelAware<TFactoryListTargetModel>, IHandleMessageInternal, IInternalHandle<TFactoryMessageInternal>, IFactoryListTargetViewModel
   {
     #region Constructor
     [ImportingConstructor]
@@ -110,7 +110,7 @@ namespace Gadget.Factory.Pattern.ViewModels
       }
     }
 
-    public void InternalHandle (object message)
+    public void InternalHandle (TFactoryMessageInternal message)
     {
       // used to parentView comunicate with childView (UseChildViewModel = true)
       if (message.NotNull ()) {
