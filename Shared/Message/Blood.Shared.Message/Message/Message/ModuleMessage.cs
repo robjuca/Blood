@@ -19,7 +19,7 @@ namespace Shared.Message
   {
     #region Constructor
     public TShellMessage (TMessageAction messageAction, TTypeInfo typeInfo)
-      : base (TResource.TModule.Shell, messageAction, TNode.CreateDefault, typeInfo)
+      : base (TResource.TModule.Shell, messageAction, TNode.Create (typeInfo), typeInfo)
     {
     }
     #endregion
@@ -31,12 +31,12 @@ namespace Shared.Message
   {
     #region Constructor
     public TCollectionMessage (TMessageAction messageAction, TTypeInfo typeInfo)
-      : base (TResource.TModule.Collection, messageAction, TNode.CreateDefault, typeInfo)
+      : base (TResource.TModule.Collection, messageAction, TNode.Create (typeInfo), typeInfo)
     {
     }
 
     public TCollectionMessage (TValidationResult result, TMessageAction messageAction, TTypeInfo typeInfo)
-      : base (TResource.TModule.Collection, messageAction, TNode.CreateDefault, typeInfo)
+      : base (TResource.TModule.Collection, messageAction, TNode.Create (typeInfo), typeInfo)
     {
       CopyResult (result);
     }
@@ -49,12 +49,12 @@ namespace Shared.Message
   {
     #region Constructor
     public TFactoryMessage (TMessageAction messageAction, TTypeInfo typeInfo)
-      : base (TResource.TModule.Factory, messageAction, TNode.CreateDefault, typeInfo)
+      : base (TResource.TModule.Factory, messageAction, TNode.Create (typeInfo), typeInfo)
     {
     }
 
     public TFactoryMessage (TValidationResult result, TMessageAction messageAction, TTypeInfo typeInfo)
-      : base (TResource.TModule.Factory, messageAction, TNode.CreateDefault, typeInfo)
+      : base (TResource.TModule.Factory, messageAction, TNode.Create (typeInfo), typeInfo)
     {
       CopyResult (result);
     }
@@ -67,12 +67,12 @@ namespace Shared.Message
   {
     #region Constructor
     public TServicesMessage (TMessageAction messageAction, TTypeInfo typeInfo)
-      : base (TResource.TModule.Services, messageAction, TNode.CreateDefault, typeInfo)
+      : base (TResource.TModule.Services, messageAction, TNode.Create (typeInfo), typeInfo)
     {
     }
 
     public TServicesMessage (TValidationResult result, TMessageAction messageAction, TTypeInfo typeInfo)
-      : base (TResource.TModule.Services, messageAction, TNode.CreateDefault, typeInfo)
+      : base (TResource.TModule.Services, messageAction, TNode.Create (typeInfo), typeInfo)
     {
       CopyResult (result);
     }

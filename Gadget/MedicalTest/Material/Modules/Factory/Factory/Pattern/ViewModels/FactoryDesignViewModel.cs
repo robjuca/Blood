@@ -42,7 +42,7 @@ namespace Gadget.Factory.Pattern.ViewModels
     {
       if (message.IsModule (TResource.TModule.Factory)) {
         // from Sibling
-        if (message.Node.IsSiblingToMe (TChild.Design)) {
+        if (message.Node.IsSiblingToMe (TChild.Design, TypeInfo)) {
           // Edit
           if (message.IsAction (TInternalMessageAction.Edit)) {
             var action = Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction);

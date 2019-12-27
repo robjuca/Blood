@@ -21,7 +21,7 @@ using Gadget.Factory.Pattern.Models;
 namespace Gadget.Factory.Pattern.ViewModels
 {
   [Export ("ModuleFactoryListViewModel", typeof (IFactoryListViewModel))]
-  public class TFactoryListViewModel : TViewModelAware<TFactoryListModel>, IHandleMessageInternal, IInternalHandle<TFactorySiblingMessageInternal>, IFactoryListViewModel
+  public class TFactoryListViewModel : TViewModelAware<TFactoryListModel>, IHandleMessageInternal, IFactoryListViewModel
   {
     #region Constructor
     [ImportingConstructor]
@@ -62,11 +62,19 @@ namespace Gadget.Factory.Pattern.ViewModels
         }
 
         // from sibilig
-        if (message.Node.IsSiblingToMe (TChild.List)) {
+        if (message.Node.IsSiblingToMe (TChild.List, TypeInfo)) {
           // PropertySelect
           if (message.IsAction (TInternalMessageAction.PropertySelect)) {
-            if (message.Support.Argument.Args.PropertyName.Equals ("Edit")) {
+            var propertyName = message.Support.Argument.Args.PropertyName;
+
+            if (propertyName.Equals ("Edit")) {
               TDispatcher.BeginInvoke (EditDispatcher, Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction));
+            }
+
+            if (propertyName.Equals ("GadgetAdd") || propertyName.Equals ("GadgetRemove")) {
+              Model.PropertyChanged (message.Support.Argument.Args.PropertyName, message.Support.Argument.Types.ReportData.Locked);
+
+              TDispatcher.Invoke (RefreshAllDispatcher);
             }
           }
 
@@ -74,21 +82,6 @@ namespace Gadget.Factory.Pattern.ViewModels
           if (message.IsAction (TInternalMessageAction.Reload)) {
             // to parent
             DelegateCommand.PublishInternalMessage.Execute (message);
-          }
-        }
-      }
-    }
-
-    public void InternalHandle (TFactorySiblingMessageInternal message)
-    {
-      // used to childView comunicate with parentView
-      if (message.NotNull ()) {
-        if (message is TFactorySiblingMessageInternal msg) {
-          // PropertySelect
-          if (msg.IsAction (TInternalMessageAction.PropertySelect)) {
-            Model.PropertyChanged (msg.Support.Argument.Args.PropertyName, msg.Support.Argument.Types.ReportData.Locked);
-
-            TDispatcher.Invoke (RefreshAllDispatcher);
           }
         }
       }
@@ -159,10 +152,11 @@ namespace Gadget.Factory.Pattern.ViewModels
 
     void MaterialSelectionChangedDispatcher ()
     {
-      var message = new TFactoryMessageInternal (TInternalMessageAction.Select, TChild.List, TypeInfo);
+      // to sibling
+      var message = new TFactorySiblingMessageInternal (TInternalMessageAction.Select, TChild.List, TypeInfo);
       message.Support.Argument.Types.Item.CopyFrom (Model.MaterialSelectionCurrent);
 
-      NotifyChildViewModel (message);
+      DelegateCommand.PublishInternalMessage.Execute (message);
     }
     #endregion
 

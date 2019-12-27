@@ -46,7 +46,7 @@ namespace Module.Settings.Factory.Database.Pattern.ViewModels
       }
 
       // from sibiling
-      if (message.Node.IsSiblingToMe (TChild.Front)) {
+      if (message.Node.IsSiblingToMe (TChild.Front, TypeInfo)) {
         if (message.Support.Argument.Types.Authentication.Equals (TAuthentication.Windows)) {
           if (message.IsAction (TInternalMessageAction.Request)) {
             TDispatcher.Invoke (ResponseDataDispatcher);

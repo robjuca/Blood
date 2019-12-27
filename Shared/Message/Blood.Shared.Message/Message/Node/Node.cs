@@ -4,7 +4,10 @@
 ----------------------------------------------------------------*/
 
 //----- Include
+using System;
+
 using rr.Library.Message;
+using rr.Library.Types;
 
 using Shared.Types;
 //---------------------------//
@@ -30,8 +33,8 @@ namespace Shared.Message
     #endregion
 
     #region Constructor
-    public TNode ()
-      : base (TChild.None)
+    TNode (TTypeInfo typeInfo)
+      : base (TChild.None, typeInfo)
     {
       ModuleName = TModuleName.None;
     }
@@ -43,9 +46,13 @@ namespace Shared.Message
       return (Child.Equals (child));
     }
 
-    public bool NotMe (TChild child)
+    public bool NotMe (TChild child, TTypeInfo typeInfo)
     {
-      return (Child.Equals (child) == false);
+      if (Child.Equals (child)) {
+        return (TypeInfo.IsSame (typeInfo).IsFalse ());
+      }
+
+      return (Child.Equals (child).IsFalse ());
     }
 
     public bool IsParentToMe (TChild child)
@@ -61,12 +68,12 @@ namespace Shared.Message
       return (res);
     }
 
-    public bool IsSiblingToMe (TChild child)
+    public bool IsSiblingToMe (TChild child, TTypeInfo typeInfo)
     {
       bool res = false;
 
       if (IsRelationSibling) {
-        if (NotMe (child)) {
+        if (NotMe (child, typeInfo)) {
           res = true;
         }
       }
@@ -88,7 +95,7 @@ namespace Shared.Message
     #endregion
 
     #region Property
-    public static TNode CreateDefault => (new TNode ()); 
+    public static TNode Create (TTypeInfo typeInfo) => (new TNode (typeInfo));
     #endregion
   };
   //---------------------------//

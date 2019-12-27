@@ -42,7 +42,7 @@ namespace Gadget.Factory.Pattern.ViewModels
     {
       if (message.IsModule (TResource.TModule.Factory)) {
         // from Sibling
-        if (message.Node.IsSiblingToMe (TChild.Design)) {
+        if (message.Node.IsSiblingToMe (TChild.Design, TypeInfo)) {
           // PropertySelect
           if (message.IsAction (TInternalMessageAction.PropertySelect)) {
             var propertyName = message.Support.Argument.Args.PropertyName;

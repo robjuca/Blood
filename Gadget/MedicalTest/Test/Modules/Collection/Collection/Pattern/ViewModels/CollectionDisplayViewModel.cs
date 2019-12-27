@@ -56,7 +56,7 @@ namespace Gadget.Collection.Pattern.ViewModels
         }
 
         // from sibilig
-        if (message.Node.IsSiblingToMe (TChild.Display)) {
+        if (message.Node.IsSiblingToMe (TChild.Display, TypeInfo)) {
           // Select
           if (message.IsAction (TInternalMessageAction.Select)) {
             var action = Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction);

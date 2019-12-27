@@ -57,7 +57,7 @@ namespace Gadget.Collection.Pattern.ViewModels
         }
 
         // from sibilig
-        if (message.Node.IsSiblingToMe (TChild.Display)) {
+        if (message.Node.IsSiblingToMe (TChild.Display, TypeInfo)) {
           // Select
           if (message.IsAction (TInternalMessageAction.Select)) {
             TDispatcher.BeginInvoke (SelectDispatcher, message.Support.Argument.Types.Item);

@@ -36,7 +36,7 @@ namespace Module.Settings.Factory.Database.Pattern.ViewModels
     public void Handle (TMessageInternal message)
     {
       // from sibiling
-      if (message.Node.IsSiblingToMe (TChild.Back)) {
+      if (message.Node.IsSiblingToMe (TChild.Back, TypeInfo)) {
         if (message.Support.Argument.Types.Authentication.Equals (TAuthentication.SQL)) {
           if (message.IsAction (TInternalMessageAction.Select)) {
             Model.ClearCheck ();

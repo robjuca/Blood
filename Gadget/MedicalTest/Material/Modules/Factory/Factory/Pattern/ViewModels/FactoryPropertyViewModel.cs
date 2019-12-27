@@ -79,7 +79,7 @@ namespace Gadget.Factory.Pattern.ViewModels
         }
 
         // from Sibling
-        if (message.Node.IsSiblingToMe (TChild.Property)) {
+        if (message.Node.IsSiblingToMe (TChild.Property, TypeInfo)) {
           // Response
           if (message.IsAction (TInternalMessageAction.Response)) {
             TDispatcher.BeginInvoke (ResponseModelDispatcher, action);

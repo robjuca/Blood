@@ -114,7 +114,7 @@
                             <materialDesign:CircleWipe />
                         </materialDesign:TransitionerSlide.BackwardWipe>
 
-                        <views:TFactoryListTargetView Tag="{Binding  ElementName=ModuleFactoryListViewModel, Path=DataContext}" />
+                        <views:TFactoryListTargetView />
                         
                     </materialDesign:TransitionerSlide>
 
@@ -124,7 +124,7 @@
                             <materialDesign:SlideOutWipe />
                         </materialDesign:TransitionerSlide.BackwardWipe>
 
-                        <views:TFactoryListTestView Tag="{Binding  ElementName=ModuleFactoryListViewModel, Path=DataContext}" />
+                        <views:TFactoryListTestView />
                         
                     </materialDesign:TransitionerSlide>
                 </materialDesign:Transitioner>
