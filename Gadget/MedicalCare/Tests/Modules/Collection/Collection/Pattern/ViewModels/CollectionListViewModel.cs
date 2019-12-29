@@ -76,7 +76,7 @@ namespace Gadget.Collection.Pattern.ViewModels
         }
 
         // from sibilig
-        if (message.Node.IsSiblingToMe (TChild.List)) {
+        if (message.Node.IsSiblingToMe (TChild.List, TypeInfo)) {
           // Reload
           if (message.IsAction (TInternalMessageAction.Reload)) {
             TDispatcher.Invoke (RefreshAllDispatcher);

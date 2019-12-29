@@ -6,6 +6,7 @@
 //----- Include
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 using Shared.ViewModel;
 //---------------------------//
@@ -52,6 +53,10 @@ namespace Gadget.Factory.Pattern.Models
 
       GadgetFullCollection = new Collection<TComponentModelItem> ();
       GadgetCheckedCollection = new Collection<TFactoryListItemInfo> ();
+
+      m_CurrentMaterialId = Guid.Empty;
+      m_CurrentMaterialName = string.Empty;
+      m_CurrentEditGadget = Server.Models.Component.GadgetTest.CreateDefault;
     }
     #endregion
 
@@ -59,79 +64,38 @@ namespace Gadget.Factory.Pattern.Models
     internal void Select (Server.Models.Component.TEntityAction action)
     {
       // DATA IN:
-      // action.CollectionAction.ModelCollection
+      // action.CollectionAction.ModelCollection (Target collection)
 
       action.ThrowNull ();
 
+      Cleanup ();
       GadgetFullCollection.Clear ();
 
       foreach (var gadget in action.CollectionAction.GadgetTargetCollection) {
-        var modelAction = action.CollectionAction.ModelCollection [gadget.Id];
-        modelAction.GadgetTargetModel.CopyFrom (gadget);
+        if (action.CollectionAction.ModelCollection.ContainsKey (gadget.Id)) {
+          var modelAction = action.CollectionAction.ModelCollection [gadget.Id];
+          modelAction.GadgetTargetModel.CopyFrom (gadget);
 
-        action.ModelAction.CopyFrom (modelAction);
+          action.ModelAction.CopyFrom (modelAction);
 
-        GadgetFullCollection.Add (TComponentModelItem.Create (action));
+          GadgetFullCollection.Add (TComponentModelItem.Create (action));
+        }
       }
+
+      MaterialItemChanged (m_CurrentMaterialId, m_CurrentMaterialName);
     }
 
-    internal void MaterialItemChanged (Guid materialId)
+    internal void MaterialItemChanged (Guid materialId, string materialName)
     {
-      GadgetItemsSource.Clear ();
+      if (materialId.IsEmpty ().IsFalse ()) {
+        if (materialId.Equals (m_CurrentMaterialId).IsFalse ()) {
+          m_CurrentMaterialId = materialId;
+          m_CurrentMaterialName = materialName;
 
-      foreach (var gadgetItem in GadgetFullCollection) {
-        if (gadgetItem.GadgetTargetModel.MaterialId.Equals (materialId)) {
-          var checkedItem = IsChecked (gadgetItem.Id);
-
-          if (checkedItem.IsEmpty) {
-            if (gadgetItem.Enabled) {
-              if (gadgetItem.Busy.IsFalse ()) {
-                GadgetItemsSource.Add (TFactoryListItemInfo.Create (gadgetItem));
-              }
-            }
-          }
-
-          else {
-            GadgetItemsSource.Add (checkedItem);
-          }
+          MaterialChanged ();
         }
       }
     }
-
-    //internal void RefreshModel (Server.Models.Component.TEntityAction action)
-    //{
-    //  // for gadget Material
-    //  GadgetSelectionItemsSource.Clear ();
-
-    //  var list = action.CollectionAction.GadgetMaterialCollection
-    //    .OrderBy (p => p.Material)
-    //    .ToList ()
-    //  ;
-
-    //  foreach (var gadget in list) {
-    //    if (gadget.Enabled) {
-    //      var modelAction = action.CollectionAction.ModelCollection [gadget.Id];
-    //      modelAction.GadgetMaterialModel.CopyFrom (gadget);
-
-    //      action.ModelAction.CopyFrom (modelAction);
-
-    //      GadgetSelectionItemsSource.Add (TComponentModelItem.Create (action));
-
-    //      foreach (var item in GadgetFullCollection) {
-    //        // Node reverse here
-    //        if (item.NodeModel.ParentId.Equals (gadget.Id)) {
-    //          item.GadgetMaterialModel.CopyFrom (gadget);
-    //        }
-    //      }
-    //    }
-    //  }
-
-    //  if (GadgetSelectionItemsSource.Count > 0) {
-    //    GadgetSelectionCurrent = GadgetSelectionItemsSource [0];
-    //  }
-
-    //  GadgetSelectionEnabled = GadgetCheckedCollection.Count.Equals (0);
-    //}
 
     internal void GadgetItemChecked (TFactoryListItemInfo itemInfo)
     {
@@ -179,41 +143,24 @@ namespace Gadget.Factory.Pattern.Models
     {
       action.ThrowNull ();
 
-      var gadgetTest = action.ModelAction.GadgetTestModel;
+      Cleanup ();
 
-      // update gadget selection (material)
-      //for (int index = 0; index < GadgetSelectionItemsSource.Count; index++) {
-      //  if (GadgetSelectionItemsSource[index].GadgetMaterialModel.Material.Equals (gadgetTest.Material)) {
-      //    GadgetSelectionSelectedIndex = index;
-      //    break;
-      //  }
-      //}
+      m_CurrentEditGadget.CopyFrom (action.ModelAction.GadgetTestModel);
 
       // found
-      if (gadgetTest.Id.NotEmpty ()) {
-        if (gadgetTest.RequestCategory ().Equals (Server.Models.Infrastructure.TCategory.Target)) {
-          var contents = new Collection<Server.Models.Component.GadgetTarget> ();
-          gadgetTest.RequestContent (contents);
-
-          foreach (var gadgetContent in contents) {
-            var item = GadgetById (gadgetContent.Id);
-
-            if (item.Id.NotEmpty ()) {
-              var itemInfo = TFactoryListItemInfo.Create (item, isChecked: true);
-
-              GadgetItemsSource.Add (itemInfo);
-              AddChecked (itemInfo);
-            }
-          }
+      if (m_CurrentEditGadget.Id.NotEmpty ()) {
+        if (m_CurrentEditGadget.Material.Equals (m_CurrentMaterialName)) {
+          MaterialChanged ();
         }
       }
-
-      //GadgetSelectionEnabled = GadgetCheckedCollection.Count.Equals (0);
     }
 
     internal void Cleanup ()
     {
+      GadgetItemsSource.Clear ();
       GadgetCheckedCollection.Clear ();
+
+      m_CurrentEditGadget = Server.Models.Component.GadgetTest.CreateDefault;
     }
     #endregion
 
@@ -227,6 +174,12 @@ namespace Gadget.Factory.Pattern.Models
     {
       get;
     }
+    #endregion
+
+    #region Fields
+    Guid                                              m_CurrentMaterialId;
+    string                                            m_CurrentMaterialName;
+    Server.Models.Component.GadgetTest                m_CurrentEditGadget;
     #endregion
 
     #region Support
@@ -263,8 +216,6 @@ namespace Gadget.Factory.Pattern.Models
     void AddChecked (TFactoryListItemInfo itemInfo)
     {
       GadgetCheckedCollection.Add (itemInfo);
-
-      //GadgetSelectionEnabled = GadgetCheckedCollection.Count.Equals (0);
     }
 
     void RemoveChecked (Guid id)
@@ -275,8 +226,6 @@ namespace Gadget.Factory.Pattern.Models
           break;
         }
       }
-
-      //GadgetSelectionEnabled = GadgetCheckedCollection.Count.Equals (0);
     }
 
     TComponentModelItem GadgetById (Guid id)
@@ -291,6 +240,69 @@ namespace Gadget.Factory.Pattern.Models
       }
 
       return (itemModel);
+    }
+
+    void SortItemsSourceCollection ()
+    {
+      var list = GadgetItemsSource
+        .OrderBy (p => p.Name)
+        .ToList ()
+      ;
+
+      GadgetItemsSource.Clear ();
+
+      foreach (var item in list) {
+        GadgetItemsSource.Add (item);
+      }
+    }
+
+    void UpdateCurrentEditGadget ()
+    {
+      if (m_CurrentEditGadget.Id.NotEmpty ()) {
+        if (m_CurrentEditGadget.RequestCategory ().Equals (Server.Models.Infrastructure.TCategory.Target)) {
+          var contents = new Collection<Server.Models.Component.GadgetTarget> ();
+          m_CurrentEditGadget.RequestContent (contents);
+
+          foreach (var gadgetContent in contents) {
+            var item = GadgetById (gadgetContent.Id);
+
+            if (item.Id.NotEmpty ()) {
+              var itemInfo = TFactoryListItemInfo.Create (item, isChecked: true);
+
+              GadgetItemsSource.Add (itemInfo);
+              AddChecked (itemInfo);
+            }
+          }
+        }
+      }
+    }
+
+    void MaterialChanged ()
+    {
+      if (m_CurrentMaterialId.NotEmpty ()) {
+        GadgetItemsSource.Clear ();
+
+        foreach (var gadgetItem in GadgetFullCollection) {
+          if (gadgetItem.GadgetTargetModel.MaterialId.Equals (m_CurrentMaterialId)) {
+            var checkedItem = IsChecked (gadgetItem.Id);
+
+            if (checkedItem.IsEmpty) {
+              if (gadgetItem.Enabled) {
+                if (gadgetItem.Busy.IsFalse ()) {
+                  GadgetItemsSource.Add (TFactoryListItemInfo.Create (gadgetItem));
+                }
+              }
+            }
+
+            else {
+              GadgetItemsSource.Add (checkedItem);
+            }
+          }
+        }
+
+        UpdateCurrentEditGadget ();
+        SortItemsSourceCollection ();
+      }
     }
     #endregion
   };

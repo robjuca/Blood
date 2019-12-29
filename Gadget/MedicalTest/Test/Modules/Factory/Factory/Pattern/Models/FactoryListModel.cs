@@ -169,6 +169,12 @@ namespace Gadget.Factory.Pattern.Models
         }
       }
     }
+
+    internal void Cleanup ()
+    {
+      MaterialSelectionEnabled = true;
+      IsEnabledSelector = true;
+    }
     #endregion
   };
   //---------------------------//

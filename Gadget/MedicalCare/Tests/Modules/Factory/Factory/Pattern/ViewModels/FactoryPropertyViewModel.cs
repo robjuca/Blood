@@ -77,7 +77,7 @@ namespace Gadget.Factory.Pattern.ViewModels
         }
 
         // from Sibling
-        if (message.Node.IsSiblingToMe (TChild.Property)) {
+        if (message.Node.IsSiblingToMe (TChild.Property, TypeInfo)) {
           // Response
           if (message.IsAction (TInternalMessageAction.Response)) {
             TDispatcher.BeginInvoke (ResponseModelDispatcher, Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction));

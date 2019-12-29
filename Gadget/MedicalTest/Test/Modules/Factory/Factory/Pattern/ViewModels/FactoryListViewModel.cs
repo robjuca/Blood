@@ -83,6 +83,12 @@ namespace Gadget.Factory.Pattern.ViewModels
             // to parent
             DelegateCommand.PublishInternalMessage.Execute (message);
           }
+
+          // Cleanup
+          if (message.IsAction (TInternalMessageAction.Cleanup)) {
+            Model.Cleanup ();
+            TDispatcher.Invoke (RefreshAllDispatcher);
+          }
         }
       }
     }

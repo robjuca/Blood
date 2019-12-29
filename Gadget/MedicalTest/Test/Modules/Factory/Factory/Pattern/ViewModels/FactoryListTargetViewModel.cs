@@ -56,12 +56,6 @@ namespace Gadget.Factory.Pattern.ViewModels
                   var action = Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction);
                   TDispatcher.BeginInvoke (ResponseDataDispatcher, action);
                 }
-
-                // Gadget Material
-                if (message.Support.Argument.Types.IsOperationCategory (Server.Models.Infrastructure.TCategory.Material)) {
-                  var action = Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction);
-                  TDispatcher.BeginInvoke (RefreshModelDispatcher, action);
-                }
               }
             }
 
@@ -81,13 +75,15 @@ namespace Gadget.Factory.Pattern.ViewModels
           }
         }
 
-        // from sibilig
+        // from sibling
         if (message.Node.IsSiblingToMe (TChild.List, TypeInfo)) {
           // Select
           if (message.IsAction (TInternalMessageAction.Select)) {
             // material
             if (message.Support.Argument.Types.Item.Category.Equals (Server.Models.Infrastructure.TCategory.Material)) {
-              Model.MaterialItemChanged (message.Support.Argument.Types.Item.GadgetMaterialModel.Id);
+              var model = message.Support.Argument.Types.Item.GadgetMaterialModel;
+
+              Model.MaterialItemChanged (model.Id, model.Material);
 
               TDispatcher.Invoke (RefreshAllDispatcher);
             }
@@ -170,22 +166,9 @@ namespace Gadget.Factory.Pattern.ViewModels
 
     void ResponseModelDispatcher (Server.Models.Component.TEntityAction action)
     {
-      // to Sibling (Select)
+      // to Sibling (Select By Id)
       var message = new TFactorySiblingMessageInternal (TInternalMessageAction.Select, TChild.List, TypeInfo);
       message.Support.Argument.Types.Item.CopyFrom (TComponentModelItem.Create (action));
-
-      DelegateCommand.PublishInternalMessage.Execute (message);
-    }
-
-    void RefreshModelDispatcher (Server.Models.Component.TEntityAction action)
-    {
-      // refresh model
-      //Model.RefreshModel (action);
-      TDispatcher.Invoke (RefreshAllDispatcher);
-
-      // to parent (RefreshModel)
-      var message = new TFactoryMessageInternal (TInternalMessageAction.RefreshModel, TChild.List, TypeInfo);
-      message.Support.Argument.Types.Select (action);
 
       DelegateCommand.PublishInternalMessage.Execute (message);
     }
@@ -241,7 +224,6 @@ namespace Gadget.Factory.Pattern.ViewModels
       Model.Edit (action);
 
       TDispatcher.Invoke (RefreshAllDispatcher);
-      //RaiseChanged ();
     }
     #endregion
 
