@@ -2,15 +2,12 @@
                     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:base="clr-namespace:rr.Library.Infrastructure;assembly=rr.Library.Infrastructure"
-                    xmlns:converters="clr-namespace:rr.Library.Converter;assembly=rr.Library.Converter"
                     xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
                     xmlns:caliburn="http://www.caliburnproject.org"
                     DataContext="{x:Null}"
                     x:Name="ModuleCollectionListViewModel">
 
     <UserControl.Resources>
-        <converters:TCollectionToBitmapImageConverter  x:Key="CollectionToBitmapImageConverter" />
-
         <CollectionViewSource x:Key="TestsModelItemsViewSource"
                               Source="{Binding Model.TestsItemsSource}">
             <CollectionViewSource.GroupDescriptions>

@@ -5,6 +5,7 @@
 
 //----- Include
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 
@@ -73,6 +74,7 @@ namespace Gadget.Factory.Pattern.Models
       RegistrationCurrent = TComponentModelItem.CreateDefault;
 
       m_TestCheckedItems = new Collection<TGadgetTestInfo> ();
+      m_MaterialFullCollection = new Dictionary<string, Server.Models.Component.GadgetMaterial> ();
     }
     #endregion
 
@@ -84,6 +86,17 @@ namespace Gadget.Factory.Pattern.Models
 
       action.ThrowNull ();
 
+      // Material
+      if (action.CategoryType.IsCategory (Server.Models.Infrastructure.TCategory.Material)) {
+        m_MaterialFullCollection.Clear ();
+
+        foreach (var gadget in action.CollectionAction.GadgetMaterialCollection) {
+          if (gadget.Enabled) {
+            m_MaterialFullCollection.Add (gadget.Material, gadget);
+          }
+        }
+      }
+
       // Test
       if (action.CategoryType.IsCategory (Server.Models.Infrastructure.TCategory.Test)) {
         TestItemsSource.Clear ();
@@ -94,9 +107,11 @@ namespace Gadget.Factory.Pattern.Models
               var modelAction = action.CollectionAction.ModelCollection [gadget.Id];
 
               if (modelAction.ComponentStatusModel.Busy.IsFalse ()) {
-                TestItemsSource.Add (TGadgetTestInfo.Create (gadget));
+                if (m_MaterialFullCollection.ContainsKey (gadget.Material)) {
+                  TestItemsSource.Add (TGadgetTestInfo.Create (gadget, m_MaterialFullCollection [gadget.Material]));
 
-                action.IdCollection.Add (gadget.Id); // for future uodate
+                  action.IdCollection.Add (gadget.Id); // for future uodate
+                }
               }
             }
           }
@@ -165,7 +180,8 @@ namespace Gadget.Factory.Pattern.Models
     #endregion
 
     #region Fields
-    readonly Collection<TGadgetTestInfo>                        m_TestCheckedItems;
+    readonly Collection<TGadgetTestInfo>                                            m_TestCheckedItems;
+    readonly Dictionary<string, Server.Models.Component.GadgetMaterial>             m_MaterialFullCollection;
     #endregion
   };
   //---------------------------//
@@ -186,7 +202,7 @@ namespace Gadget.Factory.Pattern.Models
     {
       get
       {
-        return (Gadget.RequestCategory ());
+        return (GadgetTest.RequestCategory ());
       }
     }
 
@@ -194,7 +210,7 @@ namespace Gadget.Factory.Pattern.Models
     {
       get
       {
-        return (Gadget.Test);
+        return (GadgetTest.Test);
       }
     }
 
@@ -203,13 +219,34 @@ namespace Gadget.Factory.Pattern.Models
       get
       {
         var names = new Collection<string> ();
-        Gadget.RequestContentNames (names);
+        GadgetTest.RequestContentNames (names);
 
         return (names);
       }
     }
 
-    public Server.Models.Component.GadgetTest Gadget
+    public Server.Models.Component.GadgetMaterial GadgetMaterial
+    {
+      get;
+    }
+
+    public string GadgetMaterialName
+    {
+      get
+      {
+        return (GadgetMaterial.Material);
+      }
+    }
+
+    public Collection<byte> GadgetMaterialImage
+    {
+      get
+      {
+        return (GadgetMaterial.Image);
+      }
+    }
+
+    public Server.Models.Component.GadgetTest GadgetTest
     {
       get; 
     }
@@ -232,36 +269,38 @@ namespace Gadget.Factory.Pattern.Models
     #endregion
 
     #region Constructor
-    TGadgetTestInfo (Server.Models.Component.GadgetTest gadget)
+    TGadgetTestInfo (Server.Models.Component.GadgetTest gadgetTest, Server.Models.Component.GadgetMaterial gadgetMaterial)
       : this ()
     {
-      if (gadget.NotNull ()) {
-        Gadget.CopyFrom (gadget.Clone ());
+      if (gadgetTest.NotNull () && gadgetMaterial.NotNull ()) {
+        GadgetMaterial.CopyFrom (gadgetMaterial);
+        GadgetTest.CopyFrom (gadgetTest.Clone ());
       }
     }
 
     TGadgetTestInfo ()
     {
-      Gadget = Server.Models.Component.GadgetTest.CreateDefault;
+      GadgetMaterial= Server.Models.Component.GadgetMaterial.CreateDefault;
+      GadgetTest = Server.Models.Component.GadgetTest.CreateDefault;
     }
     #endregion
 
     #region Members
     public bool Contains (Guid id)
     {
-      return (Gadget.Id.Equals (id));
+      return (GadgetTest.Id.Equals (id));
     }
 
     public void UpdateContents (Server.Models.Component.TEntityAction action)
     {
       if (action.NotNull ()) {
-        Gadget.UpdateContents (action);
+        GadgetTest.UpdateContents (action);
       }
     } 
     #endregion
 
     #region Static
-    public static TGadgetTestInfo Create (Server.Models.Component.GadgetTest gadget) => new TGadgetTestInfo (gadget); 
+    public static TGadgetTestInfo Create (Server.Models.Component.GadgetTest gadgetTest, Server.Models.Component.GadgetMaterial gadgetMaterial) => new TGadgetTestInfo (gadgetTest, gadgetMaterial); 
     #endregion
   };
   //---------------------------//

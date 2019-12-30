@@ -53,14 +53,20 @@ namespace Gadget.Factory.Pattern.ViewModels
             // Collection-Full
             if (message.Support.Argument.Types.IsOperation (Server.Models.Infrastructure.TOperation.Collection, Server.Models.Infrastructure.TExtension.Full)) {
               if (message.Result.IsValid) {
-                // Gadget Test
-                if (message.Support.Argument.Types.IsOperationCategory (Server.Models.Infrastructure.TCategory.Test)) {
+                // Gadget Material
+                if (message.Support.Argument.Types.IsOperationCategory (Server.Models.Infrastructure.TCategory.Material)) {
                   var action = Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction);
                   TDispatcher.BeginInvoke (ResponseDataDispatcher, action);
                 }
 
                 // Gadget Registration
                 if (message.Support.Argument.Types.IsOperationCategory (Server.Models.Infrastructure.TCategory.Registration)) {
+                  var action = Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction);
+                  TDispatcher.BeginInvoke (ResponseDataDispatcher, action);
+                }
+
+                // Gadget Test
+                if (message.Support.Argument.Types.IsOperationCategory (Server.Models.Infrastructure.TCategory.Test)) {
                   var action = Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction);
                   TDispatcher.BeginInvoke (ResponseDataDispatcher, action);
                 }
@@ -135,6 +141,18 @@ namespace Gadget.Factory.Pattern.ViewModels
 
       DelegateCommand.PublishInternalMessage.Execute (message);
 
+      // Material - Collection - Full 
+      action = Server.Models.Component.TEntityAction.Create (
+        Server.Models.Infrastructure.TCategory.Material,
+        Server.Models.Infrastructure.TOperation.Collection,
+        Server.Models.Infrastructure.TExtension.Full
+      );
+
+      message = new TFactoryMessageInternal (TInternalMessageAction.Request, TChild.List, TypeInfo);
+      message.Support.Argument.Types.Select (action);
+
+      DelegateCommand.PublishInternalMessage.Execute (message);
+
       // Test - Collection - Full 
       action = Server.Models.Component.TEntityAction.Create (
         Server.Models.Infrastructure.TCategory.Test,
@@ -150,7 +168,7 @@ namespace Gadget.Factory.Pattern.ViewModels
 
     void ResponseDataDispatcher (Server.Models.Component.TEntityAction action)
     {
-      // Collection - Full (Registration list, Test list)
+      // Collection - Full (Material, Registration, Test)
       Model.Select (action);
 
       TDispatcher.Invoke (RefreshAllDispatcher);
