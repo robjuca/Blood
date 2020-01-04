@@ -88,7 +88,19 @@ namespace Gadget.Factory.Pattern.ViewModels
 
         // from Sibling
         if (message.Node.IsSiblingToMe (TChild.List, TypeInfo)) {
-          
+          // PropertySelect
+          if (message.IsAction (TInternalMessageAction.PropertySelect)) {
+            var propertyName = message.Support.Argument.Args.PropertyName;
+
+            if (propertyName.Equals ("edit")) {
+              TDispatcher.BeginInvoke (EditDispatcher, Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction));
+            }
+          }
+
+          // Request
+          if (message.IsAction (TInternalMessageAction.Request)) {
+            TDispatcher.BeginInvoke (RequestModelDispatcher, Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction));
+          }
         }
       }
     }
@@ -97,7 +109,7 @@ namespace Gadget.Factory.Pattern.ViewModels
     #region Event
     public void OnCheckedRegistrationCommadClicked (object obj)
     {
-      if (obj is TComponentModelItem item) {
+      if (obj is TRegistrationInfo item) {
         TDispatcher.BeginInvoke (RegistrationItemSelectedDispatcher, item);
       }
     }
@@ -121,7 +133,8 @@ namespace Gadget.Factory.Pattern.ViewModels
     #region Dispatcher
     void RefreshAllDispatcher ()
     {
-      
+      RaiseChanged ();
+
       RefreshCollection ("TestModelItemsViewSource");
       RefreshCollection ("RegistrationModelItemsViewSource");
     }
@@ -185,6 +198,17 @@ namespace Gadget.Factory.Pattern.ViewModels
       }
     }
 
+    void RequestModelDispatcher (Server.Models.Component.TEntityAction action)
+    {
+      Model.RequestModel (action);
+
+      // to Sibling
+      var message = new TFactorySiblingMessageInternal (TInternalMessageAction.Response, TChild.List, TypeInfo);
+      message.Support.Argument.Types.Select (action);
+
+      DelegateCommand.PublishInternalMessage.Execute (message);
+    }
+
     void SelectManyDispatcher (Server.Models.Component.TEntityAction action)
     {
       Model.SelectMany (action);
@@ -192,7 +216,7 @@ namespace Gadget.Factory.Pattern.ViewModels
       RaiseChanged ();
     }
 
-    void RegistrationItemSelectedDispatcher (TComponentModelItem item)
+    void RegistrationItemSelectedDispatcher (TRegistrationInfo item)
     {
       Model.RegistrationCurrentSelected (item);
 
@@ -211,6 +235,13 @@ namespace Gadget.Factory.Pattern.ViewModels
       Model.TestSelected (item, isChecked: false);
 
       RaiseChanged ();
+    }
+
+    void EditDispatcher (Server.Models.Component.TEntityAction action)
+    {
+      Model.EditEnter (action);
+
+      TDispatcher.Invoke (RefreshAllDispatcher);
     }
     #endregion
 

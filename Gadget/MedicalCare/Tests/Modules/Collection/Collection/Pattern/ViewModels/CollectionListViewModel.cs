@@ -51,6 +51,12 @@ namespace Gadget.Collection.Pattern.ViewModels
             // Collection-Full
             if (message.Support.Argument.Types.IsOperation (Server.Models.Infrastructure.TOperation.Collection, Server.Models.Infrastructure.TExtension.Full)) {
               if (message.Result.IsValid) {
+                // Gadget Registration
+                if (message.Support.Argument.Types.IsOperationCategory (Server.Models.Infrastructure.TCategory.Registration)) {
+                  var action = Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction);
+                  TDispatcher.BeginInvoke (ResponseDataDispatcher, action);
+                }
+
                 // Gadget Tests
                 if (message.Support.Argument.Types.IsOperationCategory (Server.Models.Infrastructure.TCategory.Tests)) {
                   var action = Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction);
@@ -89,6 +95,13 @@ namespace Gadget.Collection.Pattern.ViewModels
     #endregion
 
     #region View Event
+    public void OnRegistrationSelectionChanged (TComponentModelItem item)
+    {
+      Model.RegistrationChanged (item);
+
+      TDispatcher.Invoke (RefreshAllDispatcher);
+    }
+
     public void OnTestsSelectionChanged (TComponentModelItem item)
     {
       TDispatcher.BeginInvoke (TestsItemSelectedDispatcher, item);
@@ -106,9 +119,9 @@ namespace Gadget.Collection.Pattern.ViewModels
     void RequestDataDispatcher ()
     {
       // to parent
-      // Collection - Full 
+      // Collection - Full (Registration)
       var action = Server.Models.Component.TEntityAction.Create (
-        Server.Models.Infrastructure.TCategory.Tests,
+        Server.Models.Infrastructure.TCategory.Registration,
         Server.Models.Infrastructure.TOperation.Collection,
         Server.Models.Infrastructure.TExtension.Full
       );
@@ -117,13 +130,26 @@ namespace Gadget.Collection.Pattern.ViewModels
       message.Support.Argument.Types.Select (action);
 
       DelegateCommand.PublishInternalMessage.Execute (message);
+
+      // to parent
+      // Collection - Full (Tests)
+      action = Server.Models.Component.TEntityAction.Create (
+        Server.Models.Infrastructure.TCategory.Tests,
+        Server.Models.Infrastructure.TOperation.Collection,
+        Server.Models.Infrastructure.TExtension.Full
+      ); 
+
+      message = new TCollectionMessageInternal (TInternalMessageAction.Request, TChild.List, TypeInfo);
+      message.Support.Argument.Types.Select (action);
+
+      DelegateCommand.PublishInternalMessage.Execute (message);
     }
 
     void ResponseDataDispatcher (Server.Models.Component.TEntityAction action)
     {
-      // Collection - Full (Tests list)
+      // Collection - Full (Registration or Tests )
       Model.Select (action);
-
+      
       TDispatcher.Invoke (RefreshAllDispatcher);
     }
 

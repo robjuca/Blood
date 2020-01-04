@@ -123,18 +123,21 @@ namespace Gadget.Factory.Pattern.Models
       action.ThrowNull ();
 
       foreach (var item in GadgetCheckedCollection) {
-        var componentRelation = Server.Models.Component.ComponentRelation.CreateDefault;
-        componentRelation.ChildId = item.Id;
-        componentRelation.ChildCategory = item.CategoryValue;
-        componentRelation.ParentId = action.Id;
-        componentRelation.ParentCategory = Server.Models.Infrastructure.TCategoryType.ToValue (action.CategoryType.Category);
+        // ensure ChildId diferent from ParentId
+        if (item.Id.NotEquals (action.Id)) {
+          var componentRelation = Server.Models.Component.ComponentRelation.CreateDefault;
+          componentRelation.ChildId = item.Id;
+          componentRelation.ChildCategory = item.CategoryValue;
+          componentRelation.ParentId = action.Id;
+          componentRelation.ParentCategory = Server.Models.Infrastructure.TCategoryType.ToValue (action.CategoryType.Category);
 
-        action.CollectionAction.ComponentRelationCollection.Add (componentRelation);
-      }
+          // Extension 
+          if (string.IsNullOrEmpty (action.ModelAction.ExtensionTextModel.Extension)) {
+            action.ModelAction.ExtensionTextModel.Extension = m_CurrentMaterialName;
+          }
 
-      // Extension 
-      if (string.IsNullOrEmpty (action.ModelAction.ExtensionTextModel.Extension)) {
-        //action.ModelAction.ExtensionTextModel.Extension = GadgetSelectionCurrent.GadgetMaterialModel.Material;
+          action.CollectionAction.ComponentRelationCollection.Add (componentRelation);
+        }
       }
 
       // update rule

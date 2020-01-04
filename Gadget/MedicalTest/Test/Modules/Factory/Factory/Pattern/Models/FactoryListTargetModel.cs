@@ -132,7 +132,7 @@ namespace Gadget.Factory.Pattern.Models
 
       // Extension 
       if (string.IsNullOrEmpty (action.ModelAction.ExtensionTextModel.Extension)) {
-        //action.ModelAction.ExtensionTextModel.Extension = GadgetSelectionCurrent.GadgetMaterialModel.Material;
+        action.ModelAction.ExtensionTextModel.Extension = m_CurrentMaterialName;
       }
 
       // update rule

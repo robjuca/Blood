@@ -109,6 +109,11 @@ namespace Server.Models.Infrastructure
       ConnectionString = connectionString;
     }
 
+    public void SelectCategoryType (T categoryType)
+    {
+      CategoryType.CopyFrom (categoryType);
+    }
+
     public void CopyFrom (IList<Guid> alias)
     {
       if (alias.NotNull ()) {

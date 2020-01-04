@@ -207,6 +207,20 @@ namespace Server.Context.Component
         if (infoList.Count.Equals (1)) {
           var model = infoList [0];
           modelAction.ComponentInfoModel.CopyFrom (model);
+
+          // update category
+          if (action.CategoryType.IsCategory (TCategory.None)) {
+            var descList = context.ComponentDescriptor
+              .Where (p => p.Id.Equals (action.Id))
+              .ToList ()
+            ;
+
+            // found
+            if (descList.Count.Equals (1)) {
+              var desc = descList [0];
+              action.SelectCategoryType (TCategoryType.Create (TCategoryType.FromValue (desc.Category)));
+            }
+          }
         }
 
         // status
@@ -225,7 +239,7 @@ namespace Server.Context.Component
       }
 
       catch (Exception exception) {
-        Server.Models.Infrastructure.THelper.FormatException ("RequestComponent - TOperationSupport", exception, action);
+        THelper.FormatException ("RequestComponent - TOperationSupport", exception, action);
       }
 
       return (res);

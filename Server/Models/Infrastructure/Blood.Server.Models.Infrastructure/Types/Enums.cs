@@ -44,6 +44,7 @@ namespace Server.Models.Infrastructure
   public enum TCategory
   {
     None                = 0,
+    Dummy               = 1,
 
     // gadget Test
     Material            = 200,
@@ -76,7 +77,7 @@ namespace Server.Models.Infrastructure
 
   // gadget Care
   //  Registration      = 00100100 binary -> 24 hex -> 36 decimal
-  //  Tests             = 00000000 binary -> 00 hex -> 00 decimal
+  //  Tests             = 00100000 binary -> 20 hex -> 32 decimal
   //  Report            = 00000000 binary -> 00 hex -> 00 decimal
 
 

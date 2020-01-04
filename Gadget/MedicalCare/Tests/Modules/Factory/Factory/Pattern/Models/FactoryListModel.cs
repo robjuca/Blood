@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 
 using Shared.ViewModel;
@@ -22,17 +23,14 @@ namespace Gadget.Factory.Pattern.Models
       get;
     }
 
-    public ObservableCollection<TComponentModelItem> RegistrationItemsSource
+    public ObservableCollection<TRegistrationInfo> RegistrationItemsSource
     {
       get;
     }
 
-    public string TestCount
+    public TComponentModelItem RegistrationCurrent
     {
-      get
-      {
-        return ($"[ {TestItemsSource.Count} ]");
-      }
+      get;
     }
 
     public string RegistrationCount
@@ -43,17 +41,20 @@ namespace Gadget.Factory.Pattern.Models
       }
     }
 
+    public string TestCount
+    {
+      get
+      {
+        return ($"[ {TestItemsSource.Count} ]");
+      }
+    }
+
     public string TestCheckedCount
     {
       get
       {
         return ($"[ {m_TestCheckedItems.Count} ]");
       }
-    }
-
-    public TComponentModelItem RegistrationCurrent
-    {
-      get;
     }
 
     public bool TestListEnabled
@@ -69,7 +70,7 @@ namespace Gadget.Factory.Pattern.Models
     public TFactoryListModel ()
     {
       TestItemsSource = new ObservableCollection<TGadgetTestInfo> ();
-      RegistrationItemsSource = new ObservableCollection<TComponentModelItem> ();
+      RegistrationItemsSource = new ObservableCollection<TRegistrationInfo> ();
 
       RegistrationCurrent = TComponentModelItem.CreateDefault;
 
@@ -103,16 +104,10 @@ namespace Gadget.Factory.Pattern.Models
 
         foreach (var gadget in action.CollectionAction.GadgetTestCollection) {
           if (gadget.Enabled) {
-            if (action.CollectionAction.ModelCollection.ContainsKey (gadget.Id)) {
-              var modelAction = action.CollectionAction.ModelCollection [gadget.Id];
+            if (m_MaterialFullCollection.ContainsKey (gadget.Material)) {
+              TestItemsSource.Add (TGadgetTestInfo.Create (gadget, m_MaterialFullCollection [gadget.Material]));
 
-              if (modelAction.ComponentStatusModel.Busy.IsFalse ()) {
-                if (m_MaterialFullCollection.ContainsKey (gadget.Material)) {
-                  TestItemsSource.Add (TGadgetTestInfo.Create (gadget, m_MaterialFullCollection [gadget.Material]));
-
-                  action.IdCollection.Add (gadget.Id); // for future uodate
-                }
-              }
+              action.IdCollection.Add (gadget.Id); // for future uodate
             }
           }
         }
@@ -122,7 +117,12 @@ namespace Gadget.Factory.Pattern.Models
       if (action.CategoryType.IsCategory (Server.Models.Infrastructure.TCategory.Registration)) {
         RegistrationItemsSource.Clear ();
 
-        foreach (var gadget in action.CollectionAction.GadgetRegistrationCollection) {
+        var list = action.CollectionAction.GadgetRegistrationCollection
+          .OrderBy (p => p.Name)
+          .ToList ()
+        ;
+
+        foreach (var gadget in list) {
           if (gadget.Enabled) {
             if (action.CollectionAction.ModelCollection.ContainsKey (gadget.Id)) {
               var modelAction = action.CollectionAction.ModelCollection [gadget.Id];
@@ -131,7 +131,7 @@ namespace Gadget.Factory.Pattern.Models
               action.ModelAction.CopyFrom (modelAction);
 
               var item = TComponentModelItem.Create (action);
-              RegistrationItemsSource.Add (item);
+              RegistrationItemsSource.Add (TRegistrationInfo.Create (item));
             }
           }
         }
@@ -158,11 +158,11 @@ namespace Gadget.Factory.Pattern.Models
       }
     }
 
-    internal void RegistrationCurrentSelected (TComponentModelItem item)
+    internal void RegistrationCurrentSelected (TRegistrationInfo item)
     {
       item.ThrowNull ();
 
-      RegistrationCurrent.CopyFrom (item);
+      RegistrationCurrent.CopyFrom (item.ModelItem);
     }
 
     internal void TestSelected (TGadgetTestInfo item, bool isChecked)
@@ -177,6 +177,79 @@ namespace Gadget.Factory.Pattern.Models
         m_TestCheckedItems.Remove (item);
       }
     }
+
+    internal void RequestModel (Server.Models.Component.TEntityAction action)
+    {
+      action.ThrowNull ();
+
+      var parentId = action.Id;
+      var parentCategory = Server.Models.Infrastructure.TCategoryType.ToValue (action.CategoryType.Category);
+
+      //registration
+      if (RegistrationCurrent.ValidateId) {
+        var componentRelation = Server.Models.Component.ComponentRelation.CreateDefault;
+        componentRelation.ChildId = RegistrationCurrent.Id;
+        componentRelation.ChildCategory = Server.Models.Infrastructure.TCategoryType.ToValue (RegistrationCurrent.Category);
+        componentRelation.ParentId = parentId;
+        componentRelation.ParentCategory = parentCategory;
+
+        action.CollectionAction.ComponentRelationCollection.Add (componentRelation);
+      }
+
+      //test
+      foreach (var item in m_TestCheckedItems) {
+        if (item.Id.NotEquals (action.Id)) {
+          var componentRelation = Server.Models.Component.ComponentRelation.CreateDefault;
+          componentRelation.ChildId = item.Id;
+          componentRelation.ChildCategory = item.CategoryValue;
+          componentRelation.ParentId = parentId;
+          componentRelation.ParentCategory = parentCategory;
+
+          action.CollectionAction.ComponentRelationCollection.Add (componentRelation);
+        }
+      }
+    }
+
+    internal void EditEnter (Server.Models.Component.TEntityAction action)
+    {
+      action.ThrowNull ();
+
+      m_TestCheckedItems.Clear ();
+
+      var registration = Server.Models.Component.GadgetRegistration.CreateDefault;
+      var idList = new List<Guid> ();
+
+      var gadget = action.ModelAction.GadgetTestsModel;
+      gadget.RequestContent (registration); // registration
+      gadget.RequestContent (idList); // content id (Test)
+
+      // update Registration
+      for (int index = 0; index < RegistrationItemsSource.Count; index++) {
+        var registrationItem = RegistrationItemsSource [index];
+
+        if (registrationItem.Select (registration.Id)) {
+          RegistrationCurrentSelected (registrationItem);
+          break;
+        }
+      }
+
+      // update Test
+      foreach (var id in idList) {
+        foreach (var info in TestItemsSource) {
+          info.Unselect ();
+
+          if (info.Id.Equals (id)) {
+            m_TestCheckedItems.Add (info);
+          }
+        }
+      }
+
+      foreach (var itemChecked in m_TestCheckedItems) {
+        foreach (var item in TestItemsSource) {
+          item.Select (itemChecked.Id);
+        }
+      }
+    }
     #endregion
 
     #region Fields
@@ -186,11 +259,67 @@ namespace Gadget.Factory.Pattern.Models
   };
   //---------------------------//
 
+  //----- TRegistrationInfo
+  public class TRegistrationInfo
+  {
+    #region Property
+    public TComponentModelItem ModelItem
+    {
+      get;
+    }
+
+    public bool IsChecked
+    {
+      get; 
+      set;
+    }
+    #endregion
+
+    #region Constructor
+    TRegistrationInfo (TComponentModelItem modelItem)
+    {
+      ModelItem = TComponentModelItem.CreateDefault;
+      ModelItem.CopyFrom (modelItem);
+
+      IsChecked = false;
+    }
+    #endregion
+
+    #region Members
+    internal bool Select (Guid id)
+    {
+      bool res = false;
+
+      IsChecked = false;
+
+      if (ModelItem.Id.Equals (id)) {
+        IsChecked = true;
+        res = true;
+      }
+
+      return (res);
+    } 
+    #endregion
+
+    #region Static
+    public static TRegistrationInfo Create (TComponentModelItem modeItem) => new TRegistrationInfo (modeItem); 
+    #endregion
+  };
+  //---------------------------//
+
   //----- TGadgetTestInfo
   public class TGadgetTestInfo
   {
     #region Property
-    public string Category
+    public int CategoryValue
+    {
+      get
+      {
+        return (Server.Models.Infrastructure.TCategoryType.ToValue (Server.Models.Infrastructure.TCategory.Test));
+      }
+    }
+
+    public string ContentCategoryString
     {
       get
       {
@@ -211,6 +340,14 @@ namespace Gadget.Factory.Pattern.Models
       get
       {
         return (GadgetTest.Test);
+      }
+    }
+
+    public Guid Id
+    {
+      get
+      {
+        return (GadgetTest.Id);
       }
     }
 
@@ -266,6 +403,12 @@ namespace Gadget.Factory.Pattern.Models
         return (ContentCategory.Equals (Server.Models.Infrastructure.TCategory.Target) ? Visibility.Visible : Visibility.Collapsed);
       }
     }
+
+    public bool IsChecked
+    {
+      get; 
+      set;
+    }
     #endregion
 
     #region Constructor
@@ -282,21 +425,40 @@ namespace Gadget.Factory.Pattern.Models
     {
       GadgetMaterial= Server.Models.Component.GadgetMaterial.CreateDefault;
       GadgetTest = Server.Models.Component.GadgetTest.CreateDefault;
+
+      IsChecked = false;
     }
     #endregion
 
     #region Members
-    public bool Contains (Guid id)
+    internal bool Contains (Guid id)
     {
       return (GadgetTest.Id.Equals (id));
     }
 
-    public void UpdateContents (Server.Models.Component.TEntityAction action)
+    internal void UpdateContents (Server.Models.Component.TEntityAction action)
     {
       if (action.NotNull ()) {
         GadgetTest.UpdateContents (action);
       }
-    } 
+    }
+
+    internal bool Select (Guid id)
+    {
+      bool res = false;
+
+      if (Id.Equals (id)) {
+        IsChecked = true;
+        res = true;
+      }
+
+      return (res);
+    }
+
+    internal void Unselect ()
+    {
+      IsChecked = false;
+    }
     #endregion
 
     #region Static

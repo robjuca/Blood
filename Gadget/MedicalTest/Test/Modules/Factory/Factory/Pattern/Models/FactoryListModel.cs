@@ -92,6 +92,8 @@ namespace Gadget.Factory.Pattern.Models
     #region Members
     internal void MaterialRefreshModel (Server.Models.Component.TEntityAction action)
     {
+      action.ThrowNull ();
+
       // for gadget Material
       MaterialSelectionItemsSource.Clear ();
 
@@ -137,6 +139,8 @@ namespace Gadget.Factory.Pattern.Models
 
     internal void EditEnter (Server.Models.Component.TEntityAction action)
     {
+      action.ThrowNull ();
+
       var gadget = action.ModelAction.GadgetTestModel;
       var relationCategory = gadget.RequestCategory ();
 

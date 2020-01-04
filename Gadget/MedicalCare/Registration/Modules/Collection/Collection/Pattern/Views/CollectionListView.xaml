@@ -13,12 +13,8 @@
 
         <CollectionViewSource x:Key="RegistrationModelItemsViewSource"
                               Source="{Binding Model.RegistrationItemsSource}">
-            <CollectionViewSource.GroupDescriptions>
-                <PropertyGroupDescription PropertyName="Busy" />
-            </CollectionViewSource.GroupDescriptions>
-
             <CollectionViewSource.SortDescriptions>
-                <scm:SortDescription PropertyName="GadgetRegistrationModel.Registration"
+                <scm:SortDescription PropertyName="GadgetRegistrationModel.Name"
                                      Direction="Ascending" />
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>

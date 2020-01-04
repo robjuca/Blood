@@ -40,6 +40,15 @@ namespace Gadget.Factory.Pattern.Models
     #endregion
 
     #region Members
+    internal void EditEnter (Server.Models.Component.TEntityAction action)
+    {
+      if (action.NotNull ()) {
+        ComponentModelProperty.SelectModel (action);
+
+        ValidateProperty ("TextProperty");
+      }
+    }
+
     internal void RequestModel (Server.Models.Component.TEntityAction action)
     {
       if (action.NotNull ()) {
@@ -67,6 +76,31 @@ namespace Gadget.Factory.Pattern.Models
     {
       RaisePropertyChanged (e.PropertyName);
     }
+    #endregion
+
+    #region Support
+    internal void ValidateProperty (string propertyName)
+    {
+      if (propertyName.Equals ("TextProperty")) {
+        AlertsModel.Select (isOpen: false); // default
+
+        var textProperty = ComponentModelProperty.ExtensionModel.TextProperty;
+        bool validateModel = string.IsNullOrEmpty (textProperty).IsFalse ();
+
+        ComponentModelProperty.ValidateModel (validateModel);
+
+        // show alerts
+        if (validateModel.IsFalse ()) {
+          var message = $"Test (Text = EMPTY)";
+
+          AlertsModel.Select (TAlertsModel.TKind.Warning);
+          AlertsModel.Select ("ENTRY EMPTY", message);
+          AlertsModel.Select (isOpen: true);
+        }
+
+        AlertsModel.Refresh ();
+      }
+    } 
     #endregion
   };
   //---------------------------//

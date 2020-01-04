@@ -84,6 +84,14 @@ namespace Server.Models.Infrastructure
       Extension = extension;
     }
 
+    public void Select (TOperation operation, TExtension extension)
+    {
+      CategoryType.Select (TCategory.Dummy);
+
+      Operation = operation;
+      Extension = extension;
+    }
+
     public bool IsCategory (TCategory category)
     {
       return (CategoryType.IsCategory (category));

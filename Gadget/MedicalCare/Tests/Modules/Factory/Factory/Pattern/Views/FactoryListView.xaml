@@ -16,7 +16,7 @@
         <CollectionViewSource x:Key="TestModelItemsViewSource"
                               Source="{Binding Model.TestItemsSource}">
             <CollectionViewSource.GroupDescriptions>
-                <PropertyGroupDescription PropertyName="Category" />
+                <PropertyGroupDescription PropertyName="ContentCategoryString" />
             </CollectionViewSource.GroupDescriptions>
 
             <CollectionViewSource.SortDescriptions>
@@ -28,10 +28,6 @@
         <!--registration-->
         <CollectionViewSource x:Key="RegistrationModelItemsViewSource"
                               Source="{Binding Model.RegistrationItemsSource}">
-            <CollectionViewSource.SortDescriptions>
-                <scm:SortDescription PropertyName="GadgetRegistrationModel.Registration"
-                                     Direction="Ascending" />
-            </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
 
         <!--test-->
@@ -44,6 +40,7 @@
                     <StackPanel Orientation="Horizontal">
                         <!--check-->
                         <CheckBox Margin="0 0 5 0"
+                                  IsChecked="{Binding IsChecked, Mode=TwoWay}"
                                   caliburn:Message.Attach="[Event Checked] = [OnTestItemChecked ($dataContext)]; [Event Unchecked] = [OnTestItemUnchecked ($dataContext)]" />
 
                         <!--material image-->
@@ -86,18 +83,19 @@
                         <!--image-->
                         <Image Stretch="UniformToFill"
                                Height="140"
-                               Source="{Binding GadgetRegistrationModel.Image, Converter={StaticResource CollectionToBitmapImageConverter}}" />
+                               Source="{Binding ModelItem.GadgetRegistrationModel.Image, Converter={StaticResource CollectionToBitmapImageConverter}}" />
 
                         <!--registration-->
                         <TextBlock FontWeight="DemiBold"
                                    Margin="3"
-                                   Text="{Binding GadgetRegistrationModel.Name}" />
+                                   Text="{Binding ModelItem.GadgetRegistrationModel.Name}" />
 
                         <!--name-->
                         <RadioButton GroupName="Registration"
                                      Margin="3"
+                                     IsChecked="{Binding IsChecked, Mode=TwoWay}"
                                      caliburn:Message.Attach="[Event Checked] = [OnCheckedRegistrationCommadClicked ($dataContext)]">
-                            <TextBlock Text="{Binding Name}" />
+                            <TextBlock Text="{Binding ModelItem.Name}" />
                         </RadioButton>
                     </StackPanel>
                 </materialDesign:Card>

@@ -122,7 +122,7 @@ namespace Gadget.Factory.Pattern.ViewModels
 
       Model.RequestModel (action);
 
-      TDispatcher.BeginInvoke (ApplyDispatcher, action);
+      TDispatcher.BeginInvoke (RequestModelDispatcher, action);
     }
 
     public void OnCancelCommadClicked ()
@@ -157,9 +157,20 @@ namespace Gadget.Factory.Pattern.ViewModels
       PropertySelect ("all");
     }
 
+    void RequestModelDispatcher (Server.Models.Component.TEntityAction action)
+    {
+      // request from Sibling
+      var message = new TFactorySiblingMessageInternal (TInternalMessageAction.Request, TChild.Property, TypeInfo);
+      message.Support.Argument.Types.Select (action);
+
+      DelegateCommand.PublishInternalMessage.Execute (message);
+    }
+
     void ResponseModelDispatcher (Server.Models.Component.TEntityAction action)
     {
-      TDispatcher.BeginInvoke (ApplyDispatcher, action);  
+      action.ModelAction.GadgetTestsModel.CopyFrom (action);
+
+      TDispatcher.BeginInvoke (ApplyDispatcher, action);
     }
 
     void ApplyDispatcher (Server.Models.Component.TEntityAction action)
@@ -221,7 +232,7 @@ namespace Gadget.Factory.Pattern.ViewModels
       if (action.Id.NotEmpty ()) {
         SelectViewMode (TViewMode.Edit);
 
-        //Model.SelectModel (action);
+        Model.EditEnter (action);
 
         TDispatcher.Invoke (RefreshAllDispatcher);
         TDispatcher.Invoke (EditEnterDispatcher);
@@ -229,7 +240,7 @@ namespace Gadget.Factory.Pattern.ViewModels
         // to Sibling
         var message = new TFactorySiblingMessageInternal (TInternalMessageAction.PropertySelect, TChild.Property, TypeInfo);
         message.Support.Argument.Types.Select (action);
-        message.Support.Argument.Args.Select ("all");
+        message.Support.Argument.Args.Select ("edit");
 
         DelegateCommand.PublishInternalMessage.Execute (message);
       }

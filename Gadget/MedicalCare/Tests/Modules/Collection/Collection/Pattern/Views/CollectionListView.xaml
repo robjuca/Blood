@@ -8,12 +8,16 @@
                     x:Name="ModuleCollectionListViewModel">
 
     <UserControl.Resources>
+        <CollectionViewSource x:Key="RegistrationModelItemsViewSource"
+                              Source="{Binding Model.RegistrationSelectionItemsSource}">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="GadgetRegistrationModel.Name"
+                                     Direction="Ascending" />
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+
         <CollectionViewSource x:Key="TestsModelItemsViewSource"
                               Source="{Binding Model.TestsItemsSource}">
-            <CollectionViewSource.GroupDescriptions>
-                <PropertyGroupDescription PropertyName="Busy" />
-            </CollectionViewSource.GroupDescriptions>
-
             <CollectionViewSource.SortDescriptions>
                 <scm:SortDescription PropertyName="GadgetTestsModel.Tests"
                                      Direction="Ascending" />
@@ -57,17 +61,16 @@
 
     <Border Padding="2"
             Width="210">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
 
-        <!--Tests list-->
-        <Border Padding="0 6 0 0">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-
-                <!--Tests-->
-                <Border Grid.Row="0">
+            <Border Grid.Row="0"
+                    Padding="4">
+                <!--registration selection-->
+                <StackPanel>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
@@ -75,27 +78,71 @@
                         </Grid.ColumnDefinitions>
 
                         <Border Grid.Column="0">
-                            <TextBlock Padding="3 0 0 0"
-                                       Text="Tests" />
+                            <StackPanel Orientation="Horizontal">
+                                <ContentControl Padding="3 0 0 0"
+                                                Style="{DynamicResource GadgetRegistrationIcon}" />
+
+                                <TextBlock Padding="6 0 0 0"
+                                           VerticalAlignment="Center"
+                                           Text="registration" />
+                            </StackPanel>
                         </Border>
 
                         <Border Grid.Column="1">
                             <TextBlock HorizontalAlignment="Right"
-                                       Text="{Binding Model.TestsCount}" />
+                                       Text="{Binding Model.RegistrationSelectionItemsSourceCount}" />
                         </Border>
                     </Grid>
-                </Border>
 
-                <!--list-->
-                <Border Grid.Row="1">
-                    <ListBox x:Name="TestsList"
-                             SelectedIndex="{Binding Model.TestsSelectedIndex}"
-                             ItemsSource="{Binding Source={StaticResource TestsModelItemsViewSource}}"
-                             ItemTemplate="{StaticResource TestsListDataTemplate}"
-                             caliburn:Message.Attach="[Event SelectionChanged] = [OnTestsSelectionChanged (TestsList.SelectedItem)]" />
-                </Border>
-            </Grid>
-        </Border>
+                    <ComboBox x:Name="Registration"
+                              Margin="10 0 0 0"
+                              ItemsSource="{Binding Source={StaticResource RegistrationModelItemsViewSource}}"
+                              DisplayMemberPath="GadgetRegistrationModel.Name"
+                              SelectedIndex="{Binding Model.RegistrationSelectionSelectedIndex, Mode=TwoWay}"
+                              caliburn:Message.Attach="[Event SelectionChanged] = [OnRegistrationSelectionChanged (Registration.SelectedItem)]" />
+                </StackPanel>
+            </Border>
+
+            <!--tests views-->
+            <Border Grid.Row="1"
+                    Margin="0 10 0 0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+
+                    <!--Tests-->
+                    <Border Grid.Row="0">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+
+                            <Border Grid.Column="0">
+                                <TextBlock Padding="3 0 0 0"
+                                           Text="Tests" />
+                            </Border>
+
+                            <Border Grid.Column="1">
+                                <TextBlock HorizontalAlignment="Right"
+                                           Text="{Binding Model.TestsCount}" />
+                            </Border>
+                        </Grid>
+                    </Border>
+
+                    <!--list-->
+                    <Border Grid.Row="1">
+                        <ListBox x:Name="TestsList"
+                                 SelectedIndex="{Binding Model.TestsSelectedIndex}"
+                                 ItemsSource="{Binding Source={StaticResource TestsModelItemsViewSource}}"
+                                 ItemTemplate="{StaticResource TestsListDataTemplate}"
+                                 caliburn:Message.Attach="[Event SelectionChanged] = [OnTestsSelectionChanged (TestsList.SelectedItem)]" />
+                    </Border>
+                </Grid>
+            </Border>
+        </Grid>
     </Border>
 
 </base:ViewChildBase>
