@@ -4,6 +4,11 @@
 ----------------------------------------------------------------*/
 
 //----- Include
+using Server.Models.Infrastructure;
+using Server.Models.Component;
+using Server.Models.Action;
+using Server.Models.Gadget;
+
 using Shared.Gadget.Material;
 //---------------------------//
 
@@ -27,7 +32,7 @@ namespace Gadget.Factory.Pattern.Models
     #endregion
 
     #region Members
-    internal void SelectModel (Server.Models.Component.TEntityAction action)
+    internal void SelectModel (TEntityAction action)
     {
       ComponentControlModel.SelectModel (action);
     }

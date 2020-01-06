@@ -8,6 +8,8 @@ using System;
 using System.Collections.ObjectModel;
 
 using rr.Library.Types;
+
+using Server.Models.Action;
 //---------------------------//
 
 namespace Shared.Types
@@ -57,7 +59,7 @@ namespace Shared.Types
     #endregion
 
     #region Members
-    public void Select (Server.Models.Component.TEntityAction action)
+    public void Select (TEntityAction action)
     {
       ItemsSource.Clear ();
 
@@ -88,7 +90,7 @@ namespace Shared.Types
       }
     }
 
-    public void SelectModel (Server.Models.Component.TEntityAction action)
+    public void SelectModel (TEntityAction action)
     {
       if (action.NotNull ()) {
         var name = action.SupportAction.SelectionInfo.Name;
@@ -104,7 +106,7 @@ namespace Shared.Types
       }
     }
 
-    public void Request (Server.Models.Component.TEntityAction action)
+    public void Request (TEntityAction action)
     {
       if (action.NotNull ()) {
         if (HasSelection) {

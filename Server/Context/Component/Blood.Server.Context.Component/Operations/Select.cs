@@ -11,6 +11,7 @@ using System.Linq;
 using rr.Library.Helper;
 
 using Server.Models.Infrastructure;
+using Server.Models.Action;
 //---------------------------//
 
 namespace Server.Context.Component
@@ -26,7 +27,7 @@ namespace Server.Context.Component
         .ToList ()
       ;
 
-      var action = Server.Models.Component.TEntityAction.Request (entityAction);
+      var action = TEntityAction.Request (entityAction);
       action.CollectionAction.SetCollection (relationList);
 
       if (action.Operation.HasExtension) {
@@ -85,7 +86,7 @@ namespace Server.Context.Component
     #endregion
 
     #region Support
-    void SelectSettings (TModelContext context, Server.Models.Component.TEntityAction action)
+    void SelectSettings (TModelContext context, TEntityAction action)
     {
       try {
         var modelList = context.Settings
@@ -118,7 +119,7 @@ namespace Server.Context.Component
       }
     }
 
-    void SelectById (TModelContext context, Server.Models.Component.TEntityAction action)
+    void SelectById (TModelContext context, TEntityAction action)
     {
       /*
       DATA IN
@@ -141,7 +142,7 @@ namespace Server.Context.Component
           action.Result = TValidationResult.Success; // desired result DO NOT MOVE FROM HERE
 
           // relation by id (use parent)
-          action.CollectionAction.SelectComponentOperation (Server.Models.Component.TComponentOperation.TInternalOperation.Id);
+          action.CollectionAction.SelectComponentOperation (TComponentOperation.TInternalOperation.Id);
           action.ComponentOperation.SelectById (action.Id);
 
           var operationSupport = new TOperationSupport (context, action);
@@ -155,7 +156,7 @@ namespace Server.Context.Component
             var componentRelationList = action.ComponentOperation.ParentIdCollection [action.Id];
 
             foreach (var relation in componentRelationList) {
-              var entityAction = Server.Models.Component.TEntityAction.Create (TCategoryType.FromValue (relation.ChildCategory));
+              var entityAction = TEntityAction.Create (TCategoryType.FromValue (relation.ChildCategory));
               entityAction.CollectionAction.SetCollection (action.CollectionAction.CategoryRelationCollection);
               entityAction.Id = relation.ChildId;
 
@@ -175,7 +176,7 @@ namespace Server.Context.Component
       }
     }
 
-    void SelectNode (TModelContext context, Server.Models.Component.TEntityAction action)
+    void SelectNode (TModelContext context, TEntityAction action)
     {
       /*
       DATA IN
@@ -199,7 +200,7 @@ namespace Server.Context.Component
       }
     }
 
-    void SelectRelation (TModelContext context, Server.Models.Component.TEntityAction action)
+    void SelectRelation (TModelContext context, TEntityAction action)
     {
       /*
        DATA IN
@@ -221,7 +222,7 @@ namespace Server.Context.Component
       }
     }
 
-    void SelectZap (TModelContext context, Server.Models.Component.TEntityAction action)
+    void SelectZap (TModelContext context, TEntityAction action)
     {
       /* 
        DATA IN:
@@ -403,7 +404,7 @@ namespace Server.Context.Component
           // component
           // Info
           var id = item.Id;
-          var models = Server.Models.Component.TModelAction.CreateDefault;
+          var models = TModelAction.CreateDefault;
 
           models.ComponentInfoModel.CopyFrom (item);
 
@@ -507,7 +508,7 @@ namespace Server.Context.Component
       }
     }
 
-    void SelectMany (TModelContext context, Server.Models.Component.TEntityAction action)
+    void SelectMany (TModelContext context, TEntityAction action)
     {
       /*
        DATA IN
@@ -522,7 +523,7 @@ namespace Server.Context.Component
         action.CollectionAction.ModelCollection.Clear ();
 
         foreach (var id in action.IdCollection) {
-          var entityAction = Server.Models.Component.TEntityAction.CreateDefault;
+          var entityAction = TEntityAction.CreateDefault;
           entityAction.Id = id;
           entityAction.CollectionAction.SetCollection (action.CollectionAction.CategoryRelationCollection);
 
@@ -539,7 +540,7 @@ namespace Server.Context.Component
       }
     }
 
-    void SelectSummary (TModelContext context, Server.Models.Component.TEntityAction action)
+    void SelectSummary (TModelContext context, TEntityAction action)
     {
       /*
        DATA IN
@@ -691,7 +692,7 @@ namespace Server.Context.Component
 
 
 
-    //void SelectIdle (TModelContext context, Server.Models.Component.TEntityAction action)
+    //void SelectIdle (TModelContext context, TEntityAction action)
     //{
     //  /* 
     //   DATA OUT:

@@ -7,6 +7,8 @@
 using System;
 using System.Collections.ObjectModel;
 
+using Server.Models.Action;
+
 using Shared.ViewModel;
 //---------------------------//
 
@@ -51,7 +53,7 @@ namespace Gadget.Collection.Pattern.Models
     #endregion
 
     #region Members
-    internal void Select (Server.Models.Component.TEntityAction action)
+    internal void Select (TEntityAction action)
     {
       // DATA IN:
       // action.CollectionAction.ModelCollection
@@ -60,15 +62,15 @@ namespace Gadget.Collection.Pattern.Models
 
       ItemsSource.Clear ();
 
-      foreach (var gadget in action.CollectionAction.GadgetMaterialCollection) {
-        var modelAction = action.CollectionAction.ModelCollection [gadget.Id];
-        action.ModelAction.CopyFrom (modelAction);
+      //foreach (var gadget in action.CollectionAction.GadgetMaterialCollection) {
+      //  var modelAction = action.CollectionAction.ModelCollection [gadget.Id];
+      //  action.ModelAction.CopyFrom (modelAction);
 
-        var item = TComponentModelItem.Create (action);
-        item.GadgetMaterialModel.Refresh (action);
+      //  var item = TComponentModelItem.Create (action);
+      //  item.GadgetMaterialModel.Refresh (action);
 
-        ItemsSource.Add (item);
-      }
+      //  ItemsSource.Add (item);
+      //}
 
       if (ItemsSource.Count > 0) {
         SelectedIndex = 0;

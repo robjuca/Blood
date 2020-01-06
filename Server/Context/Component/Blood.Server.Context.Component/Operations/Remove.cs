@@ -10,6 +10,8 @@ using System.Linq;
 using rr.Library.Helper;
 
 using Server.Models.Infrastructure;
+using Server.Models.Component;
+using Server.Models.Action;
 //---------------------------//
 
 namespace Server.Context.Component
@@ -25,7 +27,7 @@ namespace Server.Context.Component
         .ToList ()
       ;
 
-      var action = Server.Models.Component.TEntityAction.Request (entityAction);
+      var action = TEntityAction.Request (entityAction);
       action.CollectionAction.SetCollection (relationList);
 
       if (action.Operation.HasExtension) {
@@ -39,7 +41,7 @@ namespace Server.Context.Component
     #endregion
 
     #region Support
-    void Remove (TModelContext context, Server.Models.Component.TEntityAction action)
+    void Remove (TModelContext context, TEntityAction action)
     {
       /*
       DATA IN
@@ -83,7 +85,7 @@ namespace Server.Context.Component
                 .ToList ()
               ;
 
-              var compStatus = Server.Models.Component.ComponentStatus.CreateDefault;
+              var compStatus = ComponentStatus.CreateDefault;
 
               // Status found
               if (statusList.Count.Equals (1)) {

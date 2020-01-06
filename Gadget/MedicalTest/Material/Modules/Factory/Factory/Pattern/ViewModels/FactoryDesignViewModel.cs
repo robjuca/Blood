@@ -10,6 +10,11 @@ using System.ComponentModel.Composition;
 using rr.Library.Infrastructure;
 using rr.Library.Helper;
 
+using Server.Models.Infrastructure;
+using Server.Models.Component;
+using Server.Models.Action;
+using Server.Models.Gadget;
+
 using Shared.Types;
 using Shared.Resources;
 using Shared.ViewModel;
@@ -45,7 +50,7 @@ namespace Gadget.Factory.Pattern.ViewModels
         if (message.Node.IsSiblingToMe (TChild.Design, TypeInfo)) {
           // Edit
           if (message.IsAction (TInternalMessageAction.Edit)) {
-            var action = Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction);
+            var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
             Model.SelectModel (action);
 
             TDispatcher.Invoke (RefreshDesignDispatcher);
@@ -53,13 +58,13 @@ namespace Gadget.Factory.Pattern.ViewModels
 
           // PropertySelect
           if (message.IsAction (TInternalMessageAction.PropertySelect)) {
-            Model.SelectModel (Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction));
+            Model.SelectModel (TEntityAction.Request (message.Support.Argument.Types.EntityAction));
             TDispatcher.Invoke (RefreshDesignDispatcher);
           }
 
           // Request
           if (message.IsAction (TInternalMessageAction.Request)) {
-            TDispatcher.BeginInvoke (RequestDesignDispatcher, Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction));
+            TDispatcher.BeginInvoke (RequestDesignDispatcher, TEntityAction.Request (message.Support.Argument.Types.EntityAction));
           }
 
           // Cleanup
@@ -89,7 +94,7 @@ namespace Gadget.Factory.Pattern.ViewModels
       }
     }
 
-    void RequestDesignDispatcher (Server.Models.Component.TEntityAction action)
+    void RequestDesignDispatcher (TEntityAction action)
     {
       // to sibling
       var message = new TFactorySiblingMessageInternal (TInternalMessageAction.Response, TChild.Design, TypeInfo);

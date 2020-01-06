@@ -6,6 +6,8 @@
 //----- Include
 using System;
 
+using Server.Models.Action;
+
 using Shared.ViewModel;
 using Shared.Types;
 //---------------------------//
@@ -36,7 +38,7 @@ namespace Module.Settings.Shell.Pattern.Models
     #endregion
 
     #region Members
-    internal void Select (Server.Models.Component.TEntityAction action)
+    internal void Select (TEntityAction action)
     {
       action.ThrowNull ();
 

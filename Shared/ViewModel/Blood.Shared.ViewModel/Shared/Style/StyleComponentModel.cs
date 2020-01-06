@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
+using Server.Models.Action;
+
 using Shared.Types;
 //---------------------------//
 
@@ -65,7 +67,7 @@ namespace Shared.ViewModel
     #endregion
 
     #region Members
-    public void Select (Server.Models.Component.TEntityAction action)
+    public void Select (TEntityAction action)
     {
       // DATA IN:
       // action.CollectionAction.ModelCollection
@@ -78,7 +80,7 @@ namespace Shared.ViewModel
         ItemsCollection.Clear ();
 
         foreach (var modelAction in action.CollectionAction.ModelCollection) {
-          var componentModel = Server.Models.Component.TComponentModel.Create (modelAction.Value);
+          var componentModel = TComponentModel.Create (modelAction.Value);
 
           var componentModelItem = TComponentModelItem.Create (componentModel);
           componentModelItem.Select (action.CategoryType.Category); 

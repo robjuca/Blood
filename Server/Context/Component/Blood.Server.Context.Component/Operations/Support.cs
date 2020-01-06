@@ -8,6 +8,7 @@ using System;
 using System.Linq;
 
 using Server.Models.Infrastructure;
+using Server.Models.Action;
 //---------------------------//
 
 namespace Server.Context.Component
@@ -27,7 +28,7 @@ namespace Server.Context.Component
     #endregion
 
     #region Constructor
-    public TOperationSupport (TModelContext context, Server.Models.Component.TEntityAction action)
+    public TOperationSupport (TModelContext context, TEntityAction action)
       : this ()
     {
       /*
@@ -61,17 +62,17 @@ namespace Server.Context.Component
     #endregion
 
     #region Members
-    public void RequestComponent (TModelContext context, Server.Models.Component.TEntityAction action)
+    public void RequestComponent (TModelContext context, TEntityAction action)
     {
       RequestComponent (Id, context, action, action.ModelAction);
     }
 
-    public void RequestExtension (TModelContext context, Server.Models.Component.TEntityAction action)
+    public void RequestExtension (TModelContext context, TEntityAction action)
     {
       RequestExtension (CategoryValue, Id, context, action, action.ModelAction);
     }
 
-    public void RequestNode (TModelContext context, Server.Models.Component.TEntityAction action)
+    public void RequestNode (TModelContext context, TEntityAction action)
     {
       /*
        DATA IN
@@ -104,7 +105,7 @@ namespace Server.Context.Component
           var id = nodeReverse ? node.ParentId : node.ChildId;
           var categoryValue = nodeReverse ? node.ParentCategory : node.ChildCategory;
 
-          var modelAction = Server.Models.Component.TModelAction.CreateDefault;
+          var modelAction = TModelAction.CreateDefault;
 
           if (RequestComponent (id, context, action, modelAction)) {
             if (RequestExtension (categoryValue, id, context, action, modelAction)) {
@@ -119,7 +120,7 @@ namespace Server.Context.Component
       }
     }
 
-    public void RequestRelation (TModelContext context, Server.Models.Component.TEntityAction action)
+    public void RequestRelation (TModelContext context, TEntityAction action)
     {
       /*
        DATA IN
@@ -135,7 +136,7 @@ namespace Server.Context.Component
         ;
 
       // by Category
-      if (action.ComponentOperation.IsComponentOperation (Server.Models.Component.TComponentOperation.TInternalOperation.Category)) {
+      if (action.ComponentOperation.IsComponentOperation (TComponentOperation.TInternalOperation.Category)) {
         foreach (var categoryValue in action.ComponentOperation.CategoryCollection) {
           // parent 
           var parentList = componentRelationFullList
@@ -160,7 +161,7 @@ namespace Server.Context.Component
       }
 
       // by Id
-      if (action.ComponentOperation.IsComponentOperation (Server.Models.Component.TComponentOperation.TInternalOperation.Id)) {
+      if (action.ComponentOperation.IsComponentOperation (TComponentOperation.TInternalOperation.Id)) {
         foreach (var id in action.ComponentOperation.IdCollection) {
           // parent 
           var parentList = componentRelationFullList
@@ -187,7 +188,7 @@ namespace Server.Context.Component
     #endregion
 
     #region Support
-    bool RequestComponent (Guid id, TModelContext context, Server.Models.Component.TEntityAction action, Server.Models.Component.TModelAction modelAction)
+    bool RequestComponent (Guid id, TModelContext context, TEntityAction action, TModelAction modelAction)
     {
       /*
       DATA OUT
@@ -245,7 +246,7 @@ namespace Server.Context.Component
       return (res);
     }
 
-    bool RequestExtension (int categoryValue, Guid id, TModelContext context, Server.Models.Component.TEntityAction action, Server.Models.Component.TModelAction modelAction)
+    bool RequestExtension (int categoryValue, Guid id, TModelContext context, TEntityAction action, TModelAction modelAction)
     {
       /*
       DATA OUT

@@ -9,7 +9,9 @@ using System.Collections.Generic;
 
 using rr.Library.Types;
 
-using Server.Models.Component;
+using Server.Models.Infrastructure;
+using Server.Models.Action;
+using Server.Models.Gadget;
 
 using Shared.Resources;
 using Shared.Types;
@@ -35,7 +37,7 @@ namespace Gadget.Factory.Pattern.Models
     #region Constructor
     public TFactoryPropertyModel ()
     {
-      ComponentModelProperty = TModelProperty.Create (Server.Models.Infrastructure.TCategory.Material);
+      ComponentModelProperty = TModelProperty.Create (TCategory.Material);
       ComponentModelProperty.PropertyChanged += OnModelPropertyChanged;
 
       AlertsModel = TAlertsModel.CreateDefault;
@@ -51,26 +53,26 @@ namespace Gadget.Factory.Pattern.Models
 
       m_Gadgets.Clear ();
 
-      foreach (var model in action.CollectionAction.GadgetMaterialCollection) {
-        m_Gadgets.Add (model.Id, model);
-      }
+      //foreach (var model in action.CollectionAction.GadgetMaterialCollection) {
+      //  m_Gadgets.Add (model.Id, model);
+      //}
     }
 
-    internal void SelectModel (Server.Models.Component.TEntityAction action)
+    internal void SelectModel (TEntityAction action)
     {
       action.ThrowNull ();
 
       ComponentModelProperty.SelectModel (action);
     }
 
-    internal void RequestModel (Server.Models.Component.TEntityAction action)
+    internal void RequestModel (TEntityAction action)
     {
       action.ThrowNull ();
 
       ComponentModelProperty.RequestModel (action);
 
       // update model
-      action.ModelAction.GadgetMaterialModel.CopyFrom (action);
+      //action.ModelAction.GadgetMaterialModel.CopyFrom (action);
     }
 
     internal void ShowPanels ()
@@ -127,7 +129,7 @@ namespace Gadget.Factory.Pattern.Models
     #endregion
 
     #region Fields
-    readonly Dictionary<Guid, Server.Models.Component.GadgetMaterial>                         m_Gadgets;
+    readonly Dictionary<Guid, GadgetMaterial>                         m_Gadgets;
     #endregion
   };
   //---------------------------//

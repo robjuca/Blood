@@ -10,6 +10,8 @@ using System.Linq;
 using rr.Library.Helper;
 
 using Server.Models.Infrastructure;
+using Server.Models.Component;
+using Server.Models.Action;
 //---------------------------//
 
 namespace Server.Context.Component
@@ -25,7 +27,7 @@ namespace Server.Context.Component
         .ToList ()
       ;
 
-      var action = Server.Models.Component.TEntityAction.Request (entityAction);
+      var action = TEntityAction.Request (entityAction);
       action.CollectionAction.SetCollection (relationList);
 
       if (action.Operation.HasExtension) {
@@ -57,7 +59,7 @@ namespace Server.Context.Component
     #endregion
 
     #region Support
-    void CollectionFull (TModelContext context, Server.Models.Component.TEntityAction action)
+    void CollectionFull (TModelContext context, TEntityAction action)
     {
       /* 
         DATA IN:
@@ -109,7 +111,7 @@ namespace Server.Context.Component
           // Component Relation
           // by Category
           action.CollectionAction.ComponentOperation.Clear ();
-          action.CollectionAction.SelectComponentOperation (Models.Component.TComponentOperation.TInternalOperation.Category);
+          action.CollectionAction.SelectComponentOperation (TComponentOperation.TInternalOperation.Category);
           action.CollectionAction.ComponentOperation.SelectByCategory (categoryValue);
 
           var componentRelationFullList = context.ComponentRelation
@@ -266,12 +268,12 @@ namespace Server.Context.Component
             // component
             // Info
             var id = item.Id;
-            var models = Server.Models.Component.TModelAction.CreateDefault;
+            var models = TModelAction.CreateDefault;
 
             models.ComponentInfoModel.CopyFrom (item);
 
             // Status
-            var compStatus = Server.Models.Component.ComponentStatus.CreateDefault;
+            var compStatus = ComponentStatus.CreateDefault;
 
             var statusList = action.CollectionAction.ComponentStatusCollection
               .Where (p => p.Id.Equals (id))
@@ -384,7 +386,7 @@ namespace Server.Context.Component
       }
     }
 
-    void CollectionMinimum (TModelContext context, Server.Models.Component.TEntityAction action)
+    void CollectionMinimum (TModelContext context, TEntityAction action)
     {
       /* 
         DATA IN:
@@ -479,7 +481,7 @@ namespace Server.Context.Component
             // component
             // Info
             var id = item.Id;
-            var models = Server.Models.Component.TModelAction.CreateDefault;
+            var models = TModelAction.CreateDefault;
 
             models.ComponentInfoModel.CopyFrom (item);
 

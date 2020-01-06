@@ -11,6 +11,7 @@ using System.ComponentModel.DataAnnotations;
 using rr.Library.Types;
 
 using Server.Models.Component;
+using Server.Models.Action;
 //---------------------------//
 
 namespace Shared.Types

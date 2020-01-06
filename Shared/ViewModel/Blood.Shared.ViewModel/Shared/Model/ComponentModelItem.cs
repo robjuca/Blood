@@ -10,7 +10,8 @@ using System.Windows;
 
 using rr.Library.Types;
 
-using Server.Models.Component;
+using Server.Models.Action;
+
 using Shared.Types;
 //---------------------------//
 
@@ -224,7 +225,7 @@ namespace Shared.ViewModel
     {
       get
       {
-        return (Enabled.IsFalse () && HasChild.IsFalse () && ValidateId && GadgetCanRemove ());
+        return (Enabled.IsFalse () && HasChild.IsFalse () && ValidateId);
       }
     }
 
@@ -436,21 +437,21 @@ namespace Shared.ViewModel
       return (alias);
     }
 
-    public bool GadgetCanRemove ()
-    {
-      var res = true;
+    //public bool GadgetCanRemove ()
+    //{
+    //  var res = true;
 
-      if (HasRelation) {
-        switch (Category) {
-          case Server.Models.Infrastructure.TCategory.Test: {
-              res = GadgetTestModel.CanRemove;
-            }
-            break;
-        }
-      }
+    //  if (HasRelation) {
+    //    switch (Category) {
+    //      case Server.Models.Infrastructure.TCategory.Test: {
+    //          res = GadgetTestModel.CanRemove;
+    //        }
+    //        break;
+    //    }
+    //  }
 
-      return (res);
-    }
+    //  return (res);
+    //}
     #endregion
 
     #region Static
@@ -481,12 +482,12 @@ namespace Shared.ViewModel
             break;
 
           case Server.Models.Infrastructure.TCategory.Target: {
-              modelItem.GadgetTargetModel.UpdateModel (modelItem, action);
+              //modelItem.GadgetTargetModel.UpdateModel (modelItem, action);
             }
             break;
 
           case Server.Models.Infrastructure.TCategory.Test: {
-              modelItem.GadgetTestModel.UpdateModel (action);
+              //modelItem.GadgetTestModel.UpdateModel (action);
             }
             break;
         }

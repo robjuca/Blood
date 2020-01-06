@@ -10,6 +10,8 @@ using System.Linq;
 using rr.Library.Helper;
 
 using Server.Models.Infrastructure;
+using Server.Models.Component;
+using Server.Models.Action;
 //---------------------------//
 
 namespace Server.Context.Component
@@ -25,7 +27,7 @@ namespace Server.Context.Component
         .ToList ()
       ;
 
-      var action = Server.Models.Component.TEntityAction.Request (entityAction);
+      var action = TEntityAction.Request (entityAction);
       action.CollectionAction.SetCollection (relationList);
 
       if (action.Operation.HasExtension) {
@@ -39,7 +41,7 @@ namespace Server.Context.Component
     #endregion
 
     #region Support
-    void Insert (TModelContext context, Server.Models.Component.TEntityAction action)
+    void Insert (TModelContext context, TEntityAction action)
     {
       /*
        DATA IN:
@@ -60,7 +62,7 @@ namespace Server.Context.Component
           action.ModelAction.ComponentDescriptorModel.Id = id;
           action.ModelAction.ComponentDescriptorModel.Category = categoryValue;
 
-          var compDescriptor = Server.Models.Component.ComponentDescriptor.CreateDefault;
+          var compDescriptor = ComponentDescriptor.CreateDefault;
           compDescriptor.CopyFrom (action.ModelAction.ComponentDescriptorModel);
 
           context.ComponentDescriptor.Add (compDescriptor);
@@ -68,7 +70,7 @@ namespace Server.Context.Component
           // Info
           action.ModelAction.ComponentInfoModel.Id = id;
 
-          var compInfo = Server.Models.Component.ComponentInfo.CreateDefault;
+          var compInfo = ComponentInfo.CreateDefault;
           compInfo.CopyFrom (action.ModelAction.ComponentInfoModel);
 
           context.ComponentInfo.Add (compInfo);
@@ -76,7 +78,7 @@ namespace Server.Context.Component
           // Status
           action.ModelAction.ComponentStatusModel.Id = id;
 
-          var compStatus = Server.Models.Component.ComponentStatus.CreateDefault;
+          var compStatus = ComponentStatus.CreateDefault;
           compStatus.CopyFrom (action.ModelAction.ComponentStatusModel);
 
           context.ComponentStatus.Add (compStatus);
@@ -142,7 +144,7 @@ namespace Server.Context.Component
                 case TComponentExtensionName.Document: {
                     //action.ModelAction.ExtensionDocumentModel.Id = id;
 
-                    //var extDocument = Server.Models.Component.ExtensionDocument.CreateDefault;
+                    //var extDocument = ExtensionDocument.CreateDefault;
                     //extDocument.CopyFrom (action.ModelAction.ExtensionDocumentModel);
 
                     //context.ExtensionDocument.Add (extDocument);
@@ -152,7 +154,7 @@ namespace Server.Context.Component
                 case TComponentExtensionName.Geometry: {
                     action.ModelAction.ExtensionGeometryModel.Id = id;
 
-                    var extGeometry = Server.Models.Component.ExtensionGeometry.CreateDefault;
+                    var extGeometry = ExtensionGeometry.CreateDefault;
                     extGeometry.CopyFrom (action.ModelAction.ExtensionGeometryModel);
 
                     context.ExtensionGeometry.Add (extGeometry);
@@ -162,7 +164,7 @@ namespace Server.Context.Component
                 case TComponentExtensionName.Image: {
                     action.ModelAction.ExtensionImageModel.Id = id;
 
-                    var extImage = Server.Models.Component.ExtensionImage.CreateDefault;
+                    var extImage = ExtensionImage.CreateDefault;
                     extImage.CopyFrom (action.ModelAction.ExtensionImageModel);
 
                     context.ExtensionImage.Add (extImage);
@@ -172,7 +174,7 @@ namespace Server.Context.Component
                 case TComponentExtensionName.Layout: {
                     action.ModelAction.ExtensionLayoutModel.Id = id;
 
-                    var extLayout = Server.Models.Component.ExtensionLayout.CreateDefault;
+                    var extLayout = ExtensionLayout.CreateDefault;
                     extLayout.CopyFrom (action.ModelAction.ExtensionLayoutModel);
 
                     context.ExtensionLayout.Add (extLayout);
@@ -253,7 +255,7 @@ namespace Server.Context.Component
                 case TComponentExtensionName.Text: {
                     action.ModelAction.ExtensionTextModel.Id = id;
 
-                    var extText = Server.Models.Component.ExtensionText.CreateDefault;
+                    var extText = ExtensionText.CreateDefault;
                     extText.CopyFrom (action.ModelAction.ExtensionTextModel);
 
                     context.ExtensionText.Add (extText);
@@ -274,7 +276,7 @@ namespace Server.Context.Component
       }
     }
 
-    bool ValidateString (Server.Models.Component.TEntityAction action)
+    bool ValidateString (TEntityAction action)
     {
       if (string.IsNullOrEmpty (action.ModelAction.ComponentInfoModel.Name.Trim ())) {
         action.Result = new TValidationResult ($"[{action.Operation.CategoryType.Category} - Insert] Name can NOT be NULL or EMPTY!");

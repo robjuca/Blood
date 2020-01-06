@@ -12,7 +12,7 @@ namespace Shared.Gadget.Material
   public class TComponentControlModel
   {
     #region Property
-    public Server.Models.Component.GadgetMaterial ControlModel
+    public Server.Models.Gadget.GadgetMaterial ControlModel
     {
       get;
     }
@@ -21,15 +21,15 @@ namespace Shared.Gadget.Material
     #region Constructor
     TComponentControlModel ()
     {
-      ControlModel = Server.Models.Component.GadgetMaterial.CreateDefault;
+      ControlModel = Server.Models.Gadget.GadgetMaterial.CreateDefault;
     }
     #endregion
 
     #region Members
-    public void SelectModel (Server.Models.Component.TEntityAction action)
+    public void SelectModel (Server.Models.Action.TEntityAction action)
     {
       if (action.NotNull ()) {
-        ControlModel.CopyFrom (action.ModelAction.GadgetMaterialModel);
+        //ControlModel.CopyFrom (action.ModelAction.GadgetMaterialModel);
       }
     }
     #endregion

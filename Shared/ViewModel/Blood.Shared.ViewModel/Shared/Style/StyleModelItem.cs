@@ -8,6 +8,7 @@ using System;
 using System.Linq;
 
 using Server.Models.Infrastructure;
+using Server.Models.Action;
 
 using Shared.Types;
 //---------------------------//
@@ -25,7 +26,7 @@ namespace Shared.ViewModel
 
     #region Overrides
     // TODO: serve para que????
-    public override void SelectItem (Server.Models.Component.TEntityAction action)
+    public override void SelectItem (TEntityAction action)
     {
       if (action.NotNull ()) {
         var categoryValue = TCategoryType.ToValue (action.CategoryType.Category);

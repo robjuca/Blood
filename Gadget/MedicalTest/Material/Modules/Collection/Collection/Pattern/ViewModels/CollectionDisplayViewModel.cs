@@ -10,6 +10,11 @@ using System.ComponentModel.Composition;
 using rr.Library.Infrastructure;
 using rr.Library.Helper;
 
+using Server.Models.Infrastructure;
+using Server.Models.Component;
+using Server.Models.Action;
+using Server.Models.Gadget;
+
 using Shared.Resources;
 using Shared.Types;
 using Shared.ViewModel;
@@ -44,7 +49,7 @@ namespace Gadget.Collection.Pattern.ViewModels
           // Response
           if (message.IsAction (TInternalMessageAction.Response)) {
             // Remove
-            if (message.Support.Argument.Types.IsOperation (Server.Models.Infrastructure.TOperation.Remove)) {
+            if (message.Support.Argument.Types.IsOperation (TOperation.Remove)) {
               if (message.Result.IsValid) {
                 Model.Cleanup ();
                 RaiseChanged ();
@@ -100,7 +105,7 @@ namespace Gadget.Collection.Pattern.ViewModels
 
     void EditDispatcher ()
     {
-      var action = Server.Models.Component.TEntityAction.CreateDefault;
+      var action = TEntityAction.CreateDefault;
       Model.RequestModel (action);
 
       // to parent
@@ -112,7 +117,7 @@ namespace Gadget.Collection.Pattern.ViewModels
 
     void RemoveDispatcher ()
     {
-      var action = Server.Models.Component.TEntityAction.Create (Server.Models.Infrastructure.TCategory.Material, Server.Models.Infrastructure.TOperation.Remove);
+      var action = TEntityAction.Create (TCategory.Material, TOperation.Remove);
       Model.RequestModel (action);
 
       // to parent

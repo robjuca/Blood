@@ -4,6 +4,8 @@
 ----------------------------------------------------------------*/
 
 //----- Include
+using Server.Models.Action;
+
 using Shared.Types;
 //---------------------------//
 
@@ -25,7 +27,7 @@ namespace Shared.ViewModel
     #endregion
 
     #region Overrides
-    public override void SelectItem (TStyleModelItem styleItem, Server.Models.Component.TEntityAction action)
+    public override void SelectItem (TStyleModelItem styleItem, TEntityAction action)
     {
       styleItem.SelectItem (action);
     }

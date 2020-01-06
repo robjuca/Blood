@@ -12,6 +12,9 @@ using rr.Library.Types;
 using rr.Library.Helper;
 using rr.Library.Message;
 
+using Server.Models.Infrastructure;
+using Server.Models.Action;
+
 using Shared.Types;
 using Shared.Resources;
 using Shared.Message;
@@ -82,15 +85,15 @@ namespace Module.Settings.Shell.Pattern.ViewModels
         // Response
         if (message.IsAction (TMessageAction.Response)) {
           // (Select - Settings)
-          if (message.Support.Argument.Types.IsOperation (Server.Models.Infrastructure.TOperation.Select, Server.Models.Infrastructure.TExtension.Settings)) {
-            var action = Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction);
+          if (message.Support.Argument.Types.IsOperation (TOperation.Select, Server.Models.Infrastructure.TExtension.Settings)) {
+            var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
 
             TDispatcher.BeginInvoke (SelectSettingsDispatcher, action);
           }
 
           // (Change - Settings)
-          if (message.Support.Argument.Types.IsOperation (Server.Models.Infrastructure.TOperation.Change, Server.Models.Infrastructure.TExtension.Settings)) {
-            var action = Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction);
+          if (message.Support.Argument.Types.IsOperation (TOperation.Change, Server.Models.Infrastructure.TExtension.Settings)) {
+            var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
 
             TDispatcher.BeginInvoke (SelectSettingsDispatcher, action);
           }
@@ -130,7 +133,7 @@ namespace Module.Settings.Shell.Pattern.ViewModels
 
           TDispatcher.Invoke (OpenSnackbarDispatcher);
 
-          var action = Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction);
+          var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
 
           var msg = new TShellMessage (TMessageAction.Request, TypeInfo);
           msg.Support.Argument.Types.Select (action);
@@ -287,7 +290,7 @@ namespace Module.Settings.Shell.Pattern.ViewModels
         // open and validate current database (for sure)
         if (DatabaseConnection.IsAuthentication) {
           // to services (Select - Settings)
-          var action = Server.Models.Component.TEntityAction.Create (Server.Models.Infrastructure.TCategory.Settings, Server.Models.Infrastructure.TOperation.Select, Server.Models.Infrastructure.TExtension.Settings);
+          var action = TEntityAction.Create (TCategory.Settings, TOperation.Select, Server.Models.Infrastructure.TExtension.Settings);
 
           var message = new TShellMessage (TMessageAction.Request, TypeInfo);
           message.Support.Argument.Types.Select (action);
@@ -304,7 +307,7 @@ namespace Module.Settings.Shell.Pattern.ViewModels
       RaiseChanged ();
     }
 
-    void SelectSettingsDispatcher (Server.Models.Component.TEntityAction action)
+    void SelectSettingsDispatcher (TEntityAction action)
     {
       m_DatabaseValidatingInProgress = false;
 
@@ -315,7 +318,7 @@ namespace Module.Settings.Shell.Pattern.ViewModels
         Model.Select (action);
 
         // to module
-        var entityAction = Server.Models.Component.TEntityAction.CreateDefault;
+        var entityAction = TEntityAction.CreateDefault;
         entityAction.Param1 = Model.ComponentModelItem;
 
         var message = new TShellMessage (TMessageAction.DatabaseValidated, TypeInfo);

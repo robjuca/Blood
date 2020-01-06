@@ -10,6 +10,8 @@ using System.Linq;
 using rr.Library.Helper;
 
 using Server.Models.Infrastructure;
+using Server.Models.Component;
+using Server.Models.Action;
 //---------------------------//
 
 namespace Server.Context.Component
@@ -25,7 +27,7 @@ namespace Server.Context.Component
         .ToList ()
       ;
 
-      var action = Server.Models.Component.TEntityAction.Request (entityAction);
+      var action = TEntityAction.Request (entityAction);
       action.CollectionAction.SetCollection (relationList);
 
       if (action.Operation.HasExtension) {
@@ -62,7 +64,7 @@ namespace Server.Context.Component
     #endregion
 
     #region Support
-    void ChangeSettings (TModelContext context, Server.Models.Component.TEntityAction action)
+    void ChangeSettings (TModelContext context, TEntityAction action)
     {
       /*
       DATA IN
@@ -96,7 +98,7 @@ namespace Server.Context.Component
       }
     }
 
-    void ChangeFull (TModelContext context, Server.Models.Component.TEntityAction action)
+    void ChangeFull (TModelContext context, TEntityAction action)
     {
       /*
       DATA IN
@@ -140,7 +142,7 @@ namespace Server.Context.Component
               }
 
               // Status 
-              var compStatus = Server.Models.Component.ComponentStatus.CreateDefault;
+              var compStatus = ComponentStatus.CreateDefault;
 
               var statusList = context.ComponentStatus
                 .Where (p => p.Id.Equals (id))
@@ -455,7 +457,7 @@ namespace Server.Context.Component
       }
     }
 
-    void ChangeActive (TModelContext context, Server.Models.Component.TEntityAction action)
+    void ChangeActive (TModelContext context, TEntityAction action)
     {
       /*
       DATA IN
@@ -556,7 +558,7 @@ namespace Server.Context.Component
       
     }
 
-    bool ValidateString (Server.Models.Component.TEntityAction action)
+    bool ValidateString (TEntityAction action)
     {
       if (string.IsNullOrEmpty (action.ModelAction.ComponentInfoModel.Name.Trim ())) {
         action.Result = new TValidationResult ($"[{action.Operation.CategoryType.Category} - Change] Name can NOT be NULL or EMPTY!");

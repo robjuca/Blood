@@ -53,27 +53,11 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entity\Gadget\Care\GadgetReportEntity.cs" />
-    <Compile Include="Entity\Gadget\Care\GadgetTestsEntity.cs" />
-    <Compile Include="Entity\Gadget\Care\GadgetRegistrationEntity.cs" />
-    <Compile Include="Entity\Gadget\Test\GadgetTestEntity.cs" />
-    <Compile Include="Entity\Gadget\Test\GadgetTargetEntity.cs" />
-    <Compile Include="Infrastructure\CollectionAction.cs" />
-    <Compile Include="Infrastructure\ComponentOperation.cs" />
-    <Compile Include="Infrastructure\EntityAction.cs" />
-    <Compile Include="Infrastructure\ModelAction.cs" />
-    <Compile Include="Infrastructure\Model\ComponentModel.cs" />
     <Compile Include="Models\CategoryRelation.cs" />
     <Compile Include="Models\Component\ComponentDescriptor.cs" />
     <Compile Include="Models\Component\ComponentInfo.cs" />
     <Compile Include="Models\Component\ComponentRelation.cs" />
     <Compile Include="Models\Component\ComponentStatus.cs" />
-    <Compile Include="Models\Gadget\Care\GadgetReport.cs" />
-    <Compile Include="Models\Gadget\Care\GadgetTests.cs" />
-    <Compile Include="Models\Gadget\Care\GadgetRegistration.cs" />
-    <Compile Include="Models\Gadget\Test\GadgetTest.cs" />
-    <Compile Include="Models\Gadget\Test\GadgetTarget.cs" />
-    <Compile Include="Models\Gadget\Test\GadgetMaterial.cs" />
     <Compile Include="Models\Extension\ExtensionGeometry.cs" />
     <Compile Include="Models\Extension\ExtensionImage.cs" />
     <Compile Include="Models\Extension\ExtensionLayout.cs" />
@@ -84,7 +68,6 @@
     <Compile Include="Entity\Component\ComponentInfoEntity.cs" />
     <Compile Include="Entity\Component\ComponentRelationEntity.cs" />
     <Compile Include="Entity\Component\ComponentStatusEntity.cs" />
-    <Compile Include="Entity\Gadget\Test\GadgetMaterialEntity.cs" />
     <Compile Include="Entity\Extension\ExtensionGeometryEntity.cs" />
     <Compile Include="Entity\Extension\ExtensionImageEntity.cs" />
     <Compile Include="Entity\Extension\ExtensionLayoutEntity.cs" />

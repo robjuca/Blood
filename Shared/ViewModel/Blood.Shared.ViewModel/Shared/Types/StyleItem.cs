@@ -4,6 +4,8 @@
 ----------------------------------------------------------------*/
 
 //----- Include
+using Server.Models.Action;
+
 using Shared.Types;
 //---------------------------//
 
@@ -33,7 +35,7 @@ namespace Shared.ViewModel
     #endregion
 
     #region Virtual Members
-    public virtual void SelectItem (Server.Models.Component.TEntityAction entityAction)
+    public virtual void SelectItem (TEntityAction entityAction)
     {
     }
     #endregion

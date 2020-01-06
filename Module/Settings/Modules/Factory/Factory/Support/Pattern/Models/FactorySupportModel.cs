@@ -8,6 +8,8 @@ using System;
 using System.Collections.ObjectModel;
 using System.Windows;
 
+using Server.Models.Action;
+
 using Shared.ViewModel;
 //---------------------------//
 
@@ -81,7 +83,7 @@ namespace Module.Settings.Factory.Support.Pattern.Models
       return (true);
     }
 
-    internal void Request (Server.Models.Component.TEntityAction action)
+    internal void Request (TEntityAction action)
     {
       if (action.NotNull ()) {
         foreach (var info in SupportInfoCollection) {

@@ -6,6 +6,8 @@
 //----- Include
 using System;
 
+using Server.Models.Action;
+
 using Shared.ViewModel;
 //---------------------------//
 
@@ -84,7 +86,7 @@ namespace Module.Settings.Factory.Support.Pattern.Models
       return (false);
     }
 
-    public void Request (Server.Models.Component.TEntityAction action)
+    public void Request (TEntityAction action)
     {
       //action.ModelAction.SettingsModel.ColumnWidth = int.Parse (PropertyValue.ToString ());
     }

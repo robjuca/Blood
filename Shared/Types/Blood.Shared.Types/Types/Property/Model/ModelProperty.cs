@@ -9,7 +9,7 @@ using System.Windows;
 
 using rr.Library.Types;
 
-using Server.Models.Component;
+using Server.Models.Action;
 //---------------------------//
 
 namespace Shared.Types

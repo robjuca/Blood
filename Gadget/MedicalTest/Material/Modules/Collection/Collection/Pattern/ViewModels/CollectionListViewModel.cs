@@ -10,6 +10,9 @@ using System.ComponentModel.Composition;
 using rr.Library.Infrastructure;
 using rr.Library.Helper;
 
+using Server.Models.Infrastructure;
+using Server.Models.Action;
+
 using Shared.Types;
 using Shared.Resources;
 using Shared.ViewModel;
@@ -49,11 +52,11 @@ namespace Gadget.Collection.Pattern.ViewModels
           // Response
           if (message.IsAction (TInternalMessageAction.Response)) {
             // Collection - Full
-            if (message.Support.Argument.Types.IsOperation (Server.Models.Infrastructure.TOperation.Collection, Server.Models.Infrastructure.TExtension.Full)) {
+            if (message.Support.Argument.Types.IsOperation (TOperation.Collection, Server.Models.Infrastructure.TExtension.Full)) {
               if (message.Result.IsValid) {
                 // Gadget
                 if (message.Support.Argument.Types.IsOperationCategory (Server.Models.Infrastructure.TCategory.Material)) {
-                  var action = Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction);
+                  var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
                   TDispatcher.BeginInvoke (ResponseDataDispatcher, action);
                 }
               }
@@ -98,7 +101,7 @@ namespace Gadget.Collection.Pattern.ViewModels
     {
       // to parent
       // Collection - Full
-      var action = Server.Models.Component.TEntityAction.Create (
+      var action = TEntityAction.Create (
         Server.Models.Infrastructure.TCategory.Material,
         Server.Models.Infrastructure.TOperation.Collection,
         Server.Models.Infrastructure.TExtension.Full
@@ -110,7 +113,7 @@ namespace Gadget.Collection.Pattern.ViewModels
       DelegateCommand.PublishInternalMessage.Execute (message);
     }
 
-    void ResponseDataDispatcher (Server.Models.Component.TEntityAction action)
+    void ResponseDataDispatcher (TEntityAction action)
     {
       // operation: [Collection-Full], Gadget: Material
       Model.Select (action);

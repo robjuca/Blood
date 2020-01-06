@@ -7,6 +7,8 @@
 using System;
 using System.Collections.Generic;
 
+using Server.Models.Action;
+
 using Shared.Types;
 //---------------------------//
 
@@ -77,11 +79,11 @@ namespace Shared.ViewModel
     #endregion
     
     #region Virtual Members
-    public virtual void SelectItem (S styleItem, Server.Models.Component.TEntityAction action)
+    public virtual void SelectItem (S styleItem, TEntityAction action)
     {
     }
 
-    public virtual void SelectContent (S styleItem, Server.Models.Component.TEntityAction action)
+    public virtual void SelectContent (S styleItem, TEntityAction action)
     {
     }
     #endregion
@@ -104,7 +106,7 @@ namespace Shared.ViewModel
       return (res);
     }
 
-    public void SelectItem (Server.Models.Component.TEntityAction action)
+    public void SelectItem (TEntityAction action)
     {
       if (action.NotNull ()) {
         foreach (var item in m_Styles) {
@@ -113,7 +115,7 @@ namespace Shared.ViewModel
       }
     }
 
-    public void SelectContent (Server.Models.Component.TEntityAction action)
+    public void SelectContent (TEntityAction action)
     {
       if (action.NotNull ()) {
         foreach (var item in m_Styles) {

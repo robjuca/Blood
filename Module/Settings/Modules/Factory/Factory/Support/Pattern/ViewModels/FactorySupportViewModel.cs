@@ -9,6 +9,9 @@ using System.ComponentModel.Composition;
 using rr.Library.Infrastructure;
 using rr.Library.Helper;
 
+using Server.Models.Infrastructure;
+using Server.Models.Action;
+
 using Shared.Types;
 using Shared.Resources;
 using Shared.Message;
@@ -63,7 +66,7 @@ namespace Module.Settings.Factory.Support.Pattern.ViewModels
     #region Dispatcher
     void ApplyDispatcher ()
     {
-      var action = Server.Models.Component.TEntityAction.Create (Server.Models.Infrastructure.TCategory.Settings, Server.Models.Infrastructure.TOperation.Change, Server.Models.Infrastructure.TExtension.Settings);
+      var action = TEntityAction.Create (TCategory.Settings, TOperation.Change, TExtension.Settings);
 
       Model.Request (action);
 

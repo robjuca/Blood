@@ -34,6 +34,9 @@ CALL :error "Could not find Visual Studio directory."
 	echo --- Blood SERVER MODELS COMPONENT . . .
     msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Server\Models\Component\Blood Server Models Component.sln" -t:rebuild -verbosity:minimal -nologo
 	
+	echo --- Blood SERVER MODELS ACTION . . .
+    msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Server\Models\Action\Blood Server Models Action.sln" -t:rebuild -verbosity:minimal -nologo
+
 
 	echo Blood SERVER CONTEXT
 	echo --- Blood SERVER CONTEXT COMPONENT . . .
@@ -46,6 +49,12 @@ CALL :error "Could not find Visual Studio directory."
 
 
 	echo Blood SHARED
+	echo --- Blood SHARED MODELS GADGET . . .
+    msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\Models\Gadget\Blood Shared Models Gadget.sln" -t:rebuild -verbosity:minimal -nologo
+	
+	echo --- Blood SHARED MODELS ACTION . . .
+    msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\Models\Action\Blood Shared Models Action.sln" -t:rebuild -verbosity:minimal -nologo
+	
 	echo --- Blood SHARED RESOURCE . . .
 	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\Resources\Blood Shared Resources.sln" -t:rebuild -verbosity:minimal -nologo
 
@@ -55,12 +64,15 @@ CALL :error "Could not find Visual Studio directory."
 	echo --- Blood SHARED MESSAGE . . .
 	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\Message\Blood Shared Message.sln" -t:rebuild -verbosity:minimal -nologo
 
-	echo --- COMMUNICATION . . .
+	echo --- Blood SHARED COMMUNICATION . . .
 	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\Communication\Blood Shared Communication.sln" -t:rebuild -verbosity:minimal -nologo
 	
 	echo --- Blood SHARED VIEWMODEL . . .
 	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\ViewModel\Blood Shared ViewModel.sln" -t:rebuild -verbosity:minimal -nologo
 	
+	echo --- Blood SHARED SERVICES . . .
+	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\Services\Blood Shared Services.sln" -t:rebuild -verbosity:minimal -nologo
+
 	
 	echo Blood SHARED GADGET MEDICAL TEST
 	echo --- Blood SHARED GADGET MATERIAL . . .
@@ -82,10 +94,6 @@ CALL :error "Could not find Visual Studio directory."
 	
 	echo --- Blood SHARED GADGET REPORT . . .
 	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\MedicalCare\Report\Blood Shared Gadget Report.sln" -t:rebuild -verbosity:minimal -nologo
-	
-	
-	echo --- Blood SHARED SERVICES . . .
-	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\Services\Blood Shared Services.sln" -t:rebuild -verbosity:minimal -nologo
 	
 	
 	echo  -- Blood LAUNCHER
