@@ -25,6 +25,14 @@ namespace Shared.Gadget.Models.Action
       }
     }
 
+    public bool Enabled
+    {
+      get
+      {
+        return (Model.Enabled);
+      }
+    }
+
     public bool ValidateId
     {
       get
@@ -72,13 +80,8 @@ namespace Shared.Gadget.Models.Action
     {
       if (alias.NotNull ()) {
         Select (alias.Name, alias.Busy);
-
-        Model.Id = alias.Model.Id;
-        Model.Material = alias.Model.Material;
-        Model.Description = alias.Model.Description;
-        Model.ExternalLink = alias.Model.ExternalLink;
-        Model.SetImage (alias.Model.Image);
-        Model.Enabled = alias.Model.Enabled;
+        
+        Model.CopyFrom (alias.Model);
       }
     } 
     #endregion

@@ -165,9 +165,6 @@ namespace Server.Context.Component
               action.CollectionAction.EntityCollection.Add (relation.ChildId, entityAction);
             }
           }
-
-          
-          action.RefreshComponentModel (); // refresh model
         }
       }
 

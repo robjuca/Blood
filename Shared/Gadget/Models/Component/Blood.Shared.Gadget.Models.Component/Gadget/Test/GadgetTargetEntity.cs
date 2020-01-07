@@ -85,14 +85,6 @@ namespace Shared.Gadget.Models.Component
     #endregion
 
     #region Members
-    //public void CopyFrom (TEntityAction action)
-    //{
-    //  if (action.NotNull ()) {
-    //    CopyFrom (action.ModelAction);
-    //    CopyNode (action);
-    //  }
-    //}
-
     public void CopyFrom (GadgetTarget alias)
     {
       if (alias.NotNull ()) {

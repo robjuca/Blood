@@ -87,46 +87,6 @@ namespace Server.Models.Action
       private set;
     }
     #endregion
-
-    #region Gadget Medical Test
-    //public GadgetMaterial GadgetMaterialModel
-    //{
-    //  get;
-    //  private set;
-    //}
-
-    //public GadgetTarget GadgetTargetModel
-    //{
-    //  get;
-    //  private set;
-    //}
-
-    //public GadgetTest GadgetTestModel
-    //{
-    //  get;
-    //  private set;
-    //}
-    #endregion
-
-    #region Gadget Medical Care
-    //public GadgetRegistration GadgetRegistrationModel
-    //{
-    //  get;
-    //  private set;
-    //}
-
-    //public GadgetTests GadgetTestsModel
-    //{
-    //  get;
-    //  private set;
-    //}
-
-    //public GadgetReport GadgetReportModel
-    //{
-    //  get;
-    //  private set;
-    //}
-    #endregion
     #endregion
 
     #region Constructor
@@ -150,16 +110,6 @@ namespace Server.Models.Action
       ExtensionLayoutModel = ExtensionLayout.CreateDefault;
       ExtensionNodeModel = ExtensionNode.CreateDefault;
       ExtensionTextModel = ExtensionText.CreateDefault;
-
-      // Gadget Medical Test
-      //GadgetMaterialModel = GadgetMaterial.CreateDefault;
-      //GadgetTargetModel = GadgetTarget.CreateDefault;
-      //GadgetTestModel = GadgetTest.CreateDefault;
-
-      // Gadget Medical Care
-      //GadgetRegistrationModel = GadgetRegistration.CreateDefault;
-      //GadgetTestsModel = GadgetTests.CreateDefault;
-      //GadgetReportModel = GadgetReport.CreateDefault;
     }
     #endregion
 
@@ -181,14 +131,6 @@ namespace Server.Models.Action
         ExtensionLayoutModel.CopyFrom (alias.ExtensionLayoutModel);
         ExtensionNodeModel.CopyFrom (alias.ExtensionNodeModel);
         ExtensionTextModel.CopyFrom (alias.ExtensionTextModel);
-
-        //GadgetMaterialModel.CopyFrom (alias.GadgetMaterialModel);
-        //GadgetTargetModel.CopyFrom (alias.GadgetTargetModel);
-        //GadgetTestModel.CopyFrom (alias.GadgetTestModel);
-
-        //GadgetRegistrationModel.CopyFrom (alias.GadgetRegistrationModel);
-        //GadgetTestsModel.CopyFrom (alias.GadgetTestsModel);
-        //GadgetReportModel.CopyFrom (alias.GadgetReportModel);
       }
     }
     #endregion

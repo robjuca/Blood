@@ -58,15 +58,13 @@ namespace Gadget.Collection.Pattern.Models
     {
       entityAction.ThrowNull ();
 
-      TActionComponent.Select (ItemsSource, entityAction);
+      TGadgetMaterialActionComponent.Select (ItemsSource, entityAction);
 
       if (ItemsSource.Count > 0) {
         SelectedIndex = 0;
       }
     }
     #endregion
-
-    
   };
   //---------------------------//
 

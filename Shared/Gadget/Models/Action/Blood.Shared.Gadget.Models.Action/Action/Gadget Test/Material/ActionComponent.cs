@@ -14,10 +14,9 @@ using Server.Models.Infrastructure;
 
 namespace Shared.Gadget.Models.Action
 {
-  public static class TActionComponent
+  public static class TGadgetMaterialActionComponent
   {
     #region Static Members
-    #region Gadget Material
     public static void Select (Collection<TGadgetMaterialModel> gadgets, TEntityAction entityAction)
     {
       if (gadgets.NotNull () && entityAction.NotNull ()) {
@@ -84,7 +83,6 @@ namespace Shared.Gadget.Models.Action
         entityAction.ModelAction.ExtensionImageModel.Image = gadget.Model.GetImage ();
       }
     }
-    #endregion
     #endregion
   };
   //---------------------------//

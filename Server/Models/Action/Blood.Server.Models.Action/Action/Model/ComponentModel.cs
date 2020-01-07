@@ -76,46 +76,6 @@ namespace Server.Models.Action
     }
     #endregion
 
-    #region Gadget Medical Test
-    //public GadgetMaterial GadgetMaterialModel
-    //{
-    //  get;
-    //  private set;
-    //}
-
-    //public GadgetTarget GadgetTargetModel
-    //{
-    //  get;
-    //  private set;
-    //}
-
-    //public GadgetTest GadgetTestModel
-    //{
-    //  get;
-    //  private set;
-    //}
-    #endregion
-
-    #region Gadget Medical Care
-    //public GadgetRegistration GadgetRegistrationModel
-    //{
-    //  get;
-    //  private set;
-    //}
-
-    //public GadgetTests GadgetTestsModel
-    //{
-    //  get;
-    //  private set;
-    //}
-
-    //public GadgetReport GadgetReportModel
-    //{
-    //  get;
-    //  private set;
-    //}
-    #endregion
-
     public Guid Id
     {
       get
@@ -164,14 +124,6 @@ namespace Server.Models.Action
       TextModel = ExtensionText.CreateDefault;
 
       NodeModelCollection = new Collection<ExtensionNode> ();
-
-      //GadgetMaterialModel = GadgetMaterial.CreateDefault;
-      //GadgetTargetModel = GadgetTarget.CreateDefault;
-      //GadgetTestModel = GadgetTest.CreateDefault;
-
-      //GadgetRegistrationModel = GadgetRegistration.CreateDefault;
-      //GadgetTestsModel = GadgetTests.CreateDefault;
-      //GadgetReportModel = GadgetReport.CreateDefault;
     }
     #endregion
 
@@ -221,36 +173,6 @@ namespace Server.Models.Action
       TextModel.CopyFrom (text);
     }
 
-    //public void Select (GadgetMaterial gadget)
-    //{
-    //  GadgetMaterialModel.CopyFrom (gadget);
-    //}
-
-    //public void Select (GadgetTarget gadget)
-    //{
-    //  GadgetTargetModel.CopyFrom (gadget);
-    //}
-
-    //public void Select (GadgetTest gadget)
-    //{
-    //  GadgetTestModel.CopyFrom (gadget);
-    //}
-
-    //public void Select (GadgetRegistration gadget)
-    //{
-    //  GadgetRegistrationModel.CopyFrom (gadget);
-    //}
-
-    //public void Select (GadgetTests gadget)
-    //{
-    //  GadgetTestsModel.CopyFrom (gadget);
-    //}
-
-    //public void Select (GadgetReport gadget)
-    //{
-    //  GadgetReportModel.CopyFrom (gadget);
-    //}
-
     public void Select (TEntityAction action)
     {
       if (action.NotNull ()) {
@@ -273,28 +195,7 @@ namespace Server.Models.Action
       modelAction.ExtensionTextModel.CopyFrom (TextModel);
       modelAction.ExtensionNodeModel.CopyFrom (NodeModel);
 
-      //modelAction.GadgetMaterialModel.CopyFrom (GadgetMaterialModel);
-      //modelAction.GadgetTargetModel.CopyFrom (GadgetTargetModel);
-      //modelAction.GadgetTestModel.CopyFrom (GadgetTestModel);
-
-      //modelAction.GadgetRegistrationModel.CopyFrom (GadgetRegistrationModel);
-      //modelAction.GadgetTestsModel.CopyFrom (GadgetTestsModel);
-      //modelAction.GadgetReportModel.CopyFrom (GadgetReportModel);
-
       return (modelAction);
-    }
-
-    public void RefreshModel (TEntityAction action)
-    {
-      if (action.NotNull ()) {
-        //GadgetMaterialModel.RefreshModel (action);
-        //GadgetTargetModel.RefreshModel (action);
-        //GadgetTestModel.RefreshModel (action);
-
-        //GadgetRegistrationModel.RefreshModel (action);
-        //GadgetTestsModel.RefreshModel (action);
-        //GadgetReportModel.RefreshModel (action);
-      }
     }
     #endregion
 
@@ -314,14 +215,6 @@ namespace Server.Models.Action
         NodeModel.CopyFrom (alias.NodeModel);
 
         NodeModelCollection = new Collection<ExtensionNode> (alias.NodeModelCollection);
-
-        //GadgetMaterialModel.CopyFrom (alias.GadgetMaterialModel);
-        //GadgetTargetModel.CopyFrom (alias.GadgetTargetModel);
-        //GadgetTestModel.CopyFrom (alias.GadgetTestModel);
-
-        //GadgetRegistrationModel.CopyFrom (alias.GadgetRegistrationModel);
-        //GadgetTestsModel.CopyFrom (alias.GadgetTestsModel);
-        //GadgetReportModel.CopyFrom (alias.GadgetReportModel);
       }
     }
     #endregion
@@ -342,14 +235,6 @@ namespace Server.Models.Action
         model.LayoutModel.CopyFrom (modelAction.ExtensionLayoutModel);
         model.TextModel.CopyFrom (modelAction.ExtensionTextModel);
         model.NodeModel.CopyFrom (modelAction.ExtensionNodeModel);
-
-        //model.GadgetMaterialModel.CopyFrom (modelAction.GadgetMaterialModel);
-        //model.GadgetTargetModel.CopyFrom (modelAction.GadgetTargetModel);
-        //model.GadgetTestModel.CopyFrom (modelAction.GadgetTestModel);
-
-        //model.GadgetRegistrationModel.CopyFrom (modelAction.GadgetRegistrationModel);
-        //model.GadgetTestsModel.CopyFrom (modelAction.GadgetTestsModel);
-        //model.GadgetReportModel.CopyFrom (modelAction.GadgetReportModel);
       }
 
       return (model);

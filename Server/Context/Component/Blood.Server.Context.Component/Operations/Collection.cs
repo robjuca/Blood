@@ -376,8 +376,6 @@ namespace Server.Context.Component
           }
         }
 
-        action.RefreshComponentModel (); // refresh model
-
         action.Result = TValidationResult.Success;
       }
 
@@ -516,8 +514,6 @@ namespace Server.Context.Component
             action.CollectionAction.ModelCollection.Add (id, models);
           }
         }
-
-        action.RefreshComponentModel (); // refresh model
 
         action.Result = TValidationResult.Success;
       }

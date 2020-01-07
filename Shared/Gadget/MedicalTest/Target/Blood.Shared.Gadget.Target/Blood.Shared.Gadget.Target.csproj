@@ -32,13 +32,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Blood.Server.Models.Component, Version=1.0.2019.10, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Blood.Shared.Gadget.Models.Action, Version=1.0.2020.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Bin\Blood.Server.Models.Component.dll</HintPath>
+      <HintPath>..\..\..\..\..\Bin\Blood.Shared.Gadget.Models.Action.dll</HintPath>
     </Reference>
-    <Reference Include="Blood.Server.Models.Infrastructure, Version=1.0.2019.10, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Blood.Shared.Gadget.Models.Component, Version=1.0.2020.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Bin\Blood.Server.Models.Infrastructure.dll</HintPath>
+      <HintPath>..\..\..\..\..\Bin\Blood.Shared.Gadget.Models.Component.dll</HintPath>
     </Reference>
     <Reference Include="Blood.Shared.Types, Version=1.0.2019.10, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

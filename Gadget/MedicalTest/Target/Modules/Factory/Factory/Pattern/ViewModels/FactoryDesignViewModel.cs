@@ -10,6 +10,8 @@ using System.ComponentModel.Composition;
 using rr.Library.Infrastructure;
 using rr.Library.Helper;
 
+using Server.Models.Action;
+
 using Shared.Types;
 using Shared.Resources;
 using Shared.ViewModel;
@@ -45,7 +47,7 @@ namespace Gadget.Factory.Pattern.ViewModels
         if (message.Node.IsSiblingToMe (TChild.Design, TypeInfo)) {
           // PropertySelect
           if (message.IsAction (TInternalMessageAction.PropertySelect)) {
-            var action = Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction);
+            var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
             var propertyName = message.Support.Argument.Args.PropertyName;
 
             Model.SelectModel (propertyName, action);
@@ -55,7 +57,7 @@ namespace Gadget.Factory.Pattern.ViewModels
 
           // Request
           if (message.IsAction (TInternalMessageAction.Request)) {
-            TDispatcher.BeginInvoke (RequestDesignDispatcher, Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction));
+            TDispatcher.BeginInvoke (RequestDesignDispatcher, TEntityAction.Request (message.Support.Argument.Types.EntityAction));
           }
 
           // Cleanup
@@ -85,7 +87,7 @@ namespace Gadget.Factory.Pattern.ViewModels
       }
     }
 
-    void RequestDesignDispatcher (Server.Models.Component.TEntityAction action)
+    void RequestDesignDispatcher (TEntityAction action)
     {
       // to Sibling
       var message = new TFactorySiblingMessageInternal (TInternalMessageAction.Response, TChild.Design, TypeInfo);

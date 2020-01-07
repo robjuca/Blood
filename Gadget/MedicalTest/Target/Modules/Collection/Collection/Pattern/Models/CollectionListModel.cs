@@ -6,8 +6,11 @@
 //----- Include
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 
-using Shared.ViewModel;
+using Server.Models.Action;
+
+using Shared.Gadget.Models.Action;
 //---------------------------//
 
 namespace Gadget.Collection.Pattern.Models
@@ -15,12 +18,12 @@ namespace Gadget.Collection.Pattern.Models
   public sealed class TCollectionListModel
   {
     #region Property
-    public ObservableCollection<TComponentModelItem> MaterialItemsSource
+    public ObservableCollection<TGadgetMaterialModel> MaterialItemsSource
     {
       get;
     }
 
-    public ObservableCollection<TComponentModelItem> TargetItemsSource
+    public ObservableCollection<TGadgetTargetModel> TargetItemsSource
     {
       get;
     }
@@ -41,7 +44,7 @@ namespace Gadget.Collection.Pattern.Models
       }
     }
 
-    public TComponentModelItem MaterialSelected
+    public TGadgetMaterialModel MaterialSelected
     {
       get;
       set;
@@ -53,7 +56,7 @@ namespace Gadget.Collection.Pattern.Models
       set;
     }
 
-    public TComponentModelItem TargetCurrent
+    public TGadgetTargetModel TargetCurrent
     {
       get;
     }
@@ -62,61 +65,49 @@ namespace Gadget.Collection.Pattern.Models
     #region Constructor
     public TCollectionListModel ()
     {
-      MaterialItemsSource = new ObservableCollection<TComponentModelItem> ();
-      TargetItemsSource = new ObservableCollection<TComponentModelItem> ();
+      MaterialItemsSource = new ObservableCollection<TGadgetMaterialModel> ();
+      TargetItemsSource = new ObservableCollection<TGadgetTargetModel> ();
 
       TargetSelectedIndex = -1;
 
-      TargetCurrent = TComponentModelItem.CreateDefault;
+      TargetCurrent = TGadgetTargetModel.CreateDefault;
 
-      Targets = new Collection<TComponentModelItem> ();
+      Targets = new Collection<TGadgetTargetModel> ();
     }
     #endregion
 
     #region Members
-    internal void Select (Server.Models.Component.TEntityAction action)
+    internal void Select (TEntityAction entityAction)
     {
-      // DATA IN:
-      // action.CollectionAction.ModelCollection
+      entityAction.ThrowNull ();
 
-      action.ThrowNull ();
-
-      Targets.Clear ();
-
-      foreach (var gadget in action.CollectionAction.GadgetTargetCollection) {
-        var modelAction = action.CollectionAction.ModelCollection [gadget.Id];
-        modelAction.GadgetTargetModel.CopyFrom (gadget);
-
-        action.ModelAction.CopyFrom (modelAction);
-
-        Targets.Add (TComponentModelItem.Create (action));
-      }
+      TGadgetTargetActionComponent.Select (Targets, entityAction);
     }
 
-    internal void RefreshModel (Server.Models.Component.TEntityAction action)
+    internal void RefreshModel (TEntityAction entityAction)
     {
-      // for gadget Material
+      entityAction.ThrowNull ();
+
       MaterialItemsSource.Clear ();
+      
+      // for gadget Material
+      var list = new Collection<TGadgetMaterialModel> ();
+      TGadgetMaterialActionComponent.Select (list, entityAction);
 
-      foreach (var gadget in action.CollectionAction.GadgetMaterialCollection) {
-        if (gadget.Enabled) {
-          var modelAction = action.CollectionAction.ModelCollection [gadget.Id];
-          modelAction.GadgetMaterialModel.CopyFrom (gadget);
+      foreach (var gadgetMaterial in list) {
+        if (gadgetMaterial.Enabled) {
+          MaterialItemsSource.Add (gadgetMaterial);
 
-          action.ModelAction.CopyFrom (modelAction);
-
-          MaterialItemsSource.Add (TComponentModelItem.Create (action));
-
-          foreach (var item in Targets) {
-            // Node reverse here
-            if (item.NodeModel.ParentId.Equals (gadget.Id)) {
-              item.GadgetMaterialModel.CopyFrom (gadget);
+          foreach (var gadgetTarget in Targets) {
+            // Node reverse here 
+            if (gadgetTarget.Model.MaterialId.Equals (gadgetMaterial.Id)) {
+              gadgetTarget.MaterialModel.CopyFrom (gadgetMaterial);
             }
           }
         }
       }
 
-      if (MaterialItemsSource.Count > 0) {
+      if (MaterialItemsSource.Any ()) {
         MaterialSelected = MaterialItemsSource [0];
       }
     }
@@ -131,12 +122,12 @@ namespace Gadget.Collection.Pattern.Models
 
       else {
         foreach (var item in Targets) {
-          if (item.GadgetTargetModel.MaterialId.Equals (MaterialSelected.GadgetMaterialModel.Id)) {
+          if (item.Model.MaterialId.Equals (MaterialSelected.Id)) {
             TargetItemsSource.Add (item);
           }
         }
 
-        if (TargetItemsSource.Count > 0) {
+        if (TargetItemsSource.Any ()) {
           TargetSelectedIndex = 0;
         }
       }
@@ -144,7 +135,7 @@ namespace Gadget.Collection.Pattern.Models
     #endregion
 
     #region property
-    Collection<TComponentModelItem> Targets
+    Collection<TGadgetTargetModel> Targets
     {
       get;
     } 

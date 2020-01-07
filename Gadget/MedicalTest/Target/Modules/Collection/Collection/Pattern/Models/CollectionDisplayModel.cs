@@ -7,6 +7,8 @@
 using System;
 using System.Windows;
 
+using Server.Models.Action;
+
 using Shared.ViewModel;
 
 using Shared.Gadget.Target;
@@ -82,16 +84,16 @@ namespace Gadget.Collection.Pattern.Models
     {
       ComponentModelItem = item ?? throw new System.ArgumentNullException (nameof (item));
 
-      var action = Server.Models.Component.TEntityAction.CreateDefault;
-      action.ModelAction.GadgetMaterialModel.CopyFrom (item.GadgetMaterialModel);
-      action.ModelAction.GadgetTargetModel.CopyFrom (item.GadgetTargetModel);
+      var action = TEntityAction.CreateDefault;
+      //action.ModelAction.GadgetMaterialModel.CopyFrom (item.GadgetMaterialModel);
+      //action.ModelAction.GadgetTargetModel.CopyFrom (item.GadgetTargetModel);
 
-      ComponentControlModel.SelectModel (action);
+      //ComponentControlModel.SelectModel (action);
 
       BusyVisibility = ComponentModelItem.BusyVisibility;
     }
 
-    internal void RequestModel (Server.Models.Component.TEntityAction action)
+    internal void RequestModel (TEntityAction action)
     {
       action.ThrowNull ();
 

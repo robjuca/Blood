@@ -17,14 +17,6 @@
 
         <CollectionViewSource x:Key="TargetModelItemsViewSource"
                               Source="{Binding Model.TargetItemsSource}">
-            <CollectionViewSource.GroupDescriptions>
-                <PropertyGroupDescription PropertyName="Busy" />
-            </CollectionViewSource.GroupDescriptions>
-
-            <CollectionViewSource.SortDescriptions>
-                <scm:SortDescription PropertyName="GadgetTargetModel.Target"
-                                     Direction="Ascending" />
-            </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
 
         <DataTemplate x:Key="TargetListDataTemplate">
@@ -57,7 +49,7 @@
                             <Image Margin="0 0 5 0"
                                    Width="16"
                                    Height="16"
-                                   Source="{Binding GadgetMaterialModel.Image, Converter={StaticResource CollectionToBitmapImageConverter}}" />
+                                   Source="{Binding MaterialImage, Converter={StaticResource CollectionToBitmapImageConverter}}" />
 
                             <TextBlock Text="{Binding Name}"
                                        FontWeight="Bold"

@@ -82,10 +82,6 @@ namespace Server.Models.Action
         ModelAction.ExtensionTextModel.CopyFrom (ComponentModel.TextModel);
         ModelAction.ExtensionNodeModel.CopyFrom (ComponentModel.NodeModel);
 
-        //ModelAction.GadgetMaterialModel.CopyFrom (ComponentModel.GadgetMaterialModel);
-        //ModelAction.GadgetTargetModel.CopyFrom (ComponentModel.GadgetTargetModel);
-        //ModelAction.GadgetTestModel.CopyFrom (ComponentModel.GadgetTestModel);
-
         CollectionAction.SetCollection (ComponentModel.NodeModelCollection);
       }
     }
@@ -121,11 +117,6 @@ namespace Server.Models.Action
           componentExtension.CopyFrom (extension);
         }
       }
-    }
-
-    public void RefreshComponentModel ()
-    {
-      ComponentModel.RefreshModel (this);
     }
 
     public static TEntityAction Request (IEntityAction action)

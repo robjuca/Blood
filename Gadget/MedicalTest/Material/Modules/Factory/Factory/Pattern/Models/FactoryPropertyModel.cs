@@ -73,7 +73,7 @@ namespace Gadget.Factory.Pattern.Models
       GadgetModel.CopyFrom (model);
 
       var entityAction = TEntityAction.CreateDefault;
-      TActionComponent.Request (model, entityAction);
+      TGadgetMaterialActionComponent.Request (model, entityAction);
 
       ComponentModelProperty.SelectModel (entityAction);
     }
@@ -149,7 +149,7 @@ namespace Gadget.Factory.Pattern.Models
         AlertsModel.Refresh ();
 
         if (res) {
-          TActionComponent.Select (GadgetModel, entityAction);
+          TGadgetMaterialActionComponent.Select (GadgetModel, entityAction);
         }
       }
 

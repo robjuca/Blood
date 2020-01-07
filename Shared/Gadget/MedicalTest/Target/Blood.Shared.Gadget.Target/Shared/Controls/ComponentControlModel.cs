@@ -5,6 +5,9 @@
 
 //----- Include
 using System;
+
+using Shared.Gadget.Models.Component;
+using Shared.Gadget.Models.Action;
 //---------------------------//
 
 namespace Shared.Gadget.Target
@@ -12,12 +15,12 @@ namespace Shared.Gadget.Target
   public class TComponentControlModel
   {
     #region Property
-    public Server.Models.Component.GadgetTarget ControlModel
+    public GadgetTarget ControlModel
     {
       get;
     }
 
-    public Server.Models.Component.GadgetMaterial ChildControlModel
+    public GadgetMaterial ChildControlModel
     {
       get;
     }
@@ -26,25 +29,25 @@ namespace Shared.Gadget.Target
     #region Constructor
     TComponentControlModel ()
     {
-      ControlModel = Server.Models.Component.GadgetTarget.CreateDefault;
-      ChildControlModel= Server.Models.Component.GadgetMaterial.CreateDefault;
+      ControlModel = GadgetTarget.CreateDefault;
+      ChildControlModel= GadgetMaterial.CreateDefault;
     }
     #endregion
 
     #region Members
-    public void SelectModel (Server.Models.Component.TEntityAction action)
+    public void SelectModel (TGadgetTargetModel model)
     {
-      if (action.NotNull ()) {
-        ControlModel.CopyFrom (action.ModelAction.GadgetTargetModel);
-        ChildControlModel.CopyFrom (action.ModelAction.GadgetMaterialModel);
+      if (model.NotNull ()) {
+        //ControlModel.CopyFrom (action.ModelAction.GadgetTargetModel);
+        //ChildControlModel.CopyFrom (action.ModelAction.GadgetMaterialModel);
 
-        if (ControlModel.Id.IsEmpty ()) {
-          if (action.SupportAction.SelectionInfo.Tag is Guid id) {
-            ChildControlModel.Id = id;
-            ChildControlModel.Material = action.SupportAction.SelectionInfo.Name;
-            ChildControlModel.SetImage (action.SupportAction.SelectionInfo.GetImage ());
-          }
-        }
+        //if (ControlModel.Id.IsEmpty ()) {
+        //  if (action.SupportAction.SelectionInfo.Tag is Guid id) {
+        //    ChildControlModel.Id = id;
+        //    ChildControlModel.Material = action.SupportAction.SelectionInfo.Name;
+        //    ChildControlModel.SetImage (action.SupportAction.SelectionInfo.GetImage ());
+        //  }
+        //}
       }
     }
     #endregion

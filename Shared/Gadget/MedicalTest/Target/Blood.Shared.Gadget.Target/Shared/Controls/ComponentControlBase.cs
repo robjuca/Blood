@@ -12,6 +12,9 @@ using System.Windows.Media;
 using MaterialDesignThemes.Wpf;
 
 using Shared.Types;
+
+using Shared.Gadget.Models.Component;
+using Shared.Gadget.Models.Action;
 //---------------------------//
 
 namespace Shared.Gadget.Target

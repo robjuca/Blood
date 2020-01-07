@@ -68,9 +68,11 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Action\ActionComponent.cs" />
     <Compile Include="Action\ActionModelBase.cs" />
-    <Compile Include="Action\ActionModel.cs" />
+    <Compile Include="Action\Gadget Test\Material\ActionComponent.cs" />
+    <Compile Include="Action\Gadget Test\Material\ActionModel.cs" />
+    <Compile Include="Action\Gadget Test\Target\ActionComponent.cs" />
+    <Compile Include="Action\Gadget Test\Target\ActionModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
