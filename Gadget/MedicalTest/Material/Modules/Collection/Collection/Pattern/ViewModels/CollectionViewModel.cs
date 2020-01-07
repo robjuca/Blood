@@ -112,7 +112,7 @@ namespace Gadget.Collection.Pattern.ViewModels
             // to module
             var messageModule = new TCollectionMessage (TMessageAction.Edit, TypeInfo);
             messageModule.Node.SelectRelationModule (TChild.None);
-            messageModule.Support.Argument.Types.CopyFrom (message.Support.Argument.Types);
+            messageModule.Support.Argument.Args.Select (message.Support.Argument.Args.Param1);
 
             DelegateCommand.PublishMessage.Execute (messageModule);
           }

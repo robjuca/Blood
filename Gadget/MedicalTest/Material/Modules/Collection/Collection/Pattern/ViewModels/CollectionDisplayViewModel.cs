@@ -13,11 +13,12 @@ using rr.Library.Helper;
 using Server.Models.Infrastructure;
 using Server.Models.Component;
 using Server.Models.Action;
-using Server.Models.Gadget;
+using Shared.Gadget.Models.Component;
 
 using Shared.Resources;
 using Shared.Types;
 using Shared.ViewModel;
+using Shared.Gadget.Models.Action;
 
 using Gadget.Collection.Presentation;
 using Gadget.Collection.Pattern.Models;
@@ -65,7 +66,9 @@ namespace Gadget.Collection.Pattern.ViewModels
         if (message.Node.IsSiblingToMe (TChild.Display, TypeInfo)) {
           // Select
           if (message.IsAction (TInternalMessageAction.Select)) {
-            TDispatcher.BeginInvoke (SelectDispatcher, message.Support.Argument.Types.Item);
+            if (message.Support.Argument.Args.Param1 is TGadgetMaterialModel model) {
+              TDispatcher.BeginInvoke (SelectDispatcher, model);
+            }
           }
 
           // Cleanup
@@ -90,11 +93,11 @@ namespace Gadget.Collection.Pattern.ViewModels
     #endregion
 
     #region Dispatcher
-    void SelectDispatcher (TComponentModelItem item)
+    void SelectDispatcher (TGadgetMaterialModel model)
     {
-      item.ThrowNull ();
+      model.ThrowNull ();
 
-      Model.Select (item);
+      Model.Select (model);
 
       if (FrameworkElementView.FindName ("DisplayControl") is Shared.Gadget.Material.TComponentDisplayControl control) {
         control.RefreshDesign ();
@@ -105,25 +108,27 @@ namespace Gadget.Collection.Pattern.ViewModels
 
     void EditDispatcher ()
     {
-      var action = TEntityAction.CreateDefault;
-      Model.RequestModel (action);
+      var model = TGadgetMaterialModel.CreateDefault;
+      Model.RequestModel (model);
 
       // to parent
       var message = new TCollectionMessageInternal (TInternalMessageAction.Edit, TChild.Display, TypeInfo);
-      message.Support.Argument.Types.Select (action);
+      message.Support.Argument.Args.Select (model);
 
       DelegateCommand.PublishInternalMessage.Execute (message);
     }
 
     void RemoveDispatcher ()
     {
+      var model = TGadgetMaterialModel.CreateDefault;
+      Model.RequestModel (model);
+
       var action = TEntityAction.Create (TCategory.Material, TOperation.Remove);
-      Model.RequestModel (action);
+      action.Param2 = model;
 
       // to parent
       var message = new TCollectionMessageInternal (TInternalMessageAction.Request, TChild.Display, TypeInfo);
       message.Support.Argument.Types.Select (action);
-      //message.Support.Argument.Types.Item.ContentLocked = Model.ComponentModelItem.ContentLocked;
 
       DelegateCommand.PublishInternalMessage.Execute (message);
     }

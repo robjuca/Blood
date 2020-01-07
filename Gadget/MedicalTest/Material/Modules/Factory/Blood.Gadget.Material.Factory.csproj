@@ -40,10 +40,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Bin\Blood.Server.Models.Component.dll</HintPath>
     </Reference>
-    <Reference Include="Blood.Server.Models.Gadget, Version=1.0.2020.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\Bin\Blood.Server.Models.Gadget.dll</HintPath>
-    </Reference>
     <Reference Include="Blood.Server.Models.Infrastructure, Version=1.0.2019.10, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Bin\Blood.Server.Models.Infrastructure.dll</HintPath>
@@ -51,6 +47,14 @@
     <Reference Include="Blood.Shared.Gadget.Material, Version=1.0.2019.10, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Bin\Blood.Shared.Gadget.Material.dll</HintPath>
+    </Reference>
+    <Reference Include="Blood.Shared.Gadget.Models.Action, Version=1.0.2020.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Bin\Blood.Shared.Gadget.Models.Action.dll</HintPath>
+    </Reference>
+    <Reference Include="Blood.Shared.Gadget.Models.Component, Version=1.0.2020.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Bin\Blood.Shared.Gadget.Models.Component.dll</HintPath>
     </Reference>
     <Reference Include="Blood.Shared.Message, Version=1.0.2019.10, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

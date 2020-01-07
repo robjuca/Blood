@@ -209,12 +209,28 @@ namespace Shared.Message
       get;
       private set;
     }
+
+
+    public object Param1
+    {
+      get;
+      private set;
+    }
+
+    public object Param2
+    {
+      get;
+      private set;
+    }
     #endregion
 
     #region Constructor
     public TModuleArgs ()
     {
       Where = TWhere.None;
+
+      Param1 = null;
+      Param2 = null;
     }
     #endregion
 
@@ -222,6 +238,12 @@ namespace Shared.Message
     public void Select (TWhere where)
     {
       Where = where;
+    }
+
+    public void Select (object param1, object param2 = null)
+    {
+      Param1 = param1;
+      Param2 = param2;
     }
 
     public bool IsWhere (TWhere where)
@@ -329,7 +351,7 @@ namespace Shared.Message
       Id = id;
     }
 
-    public void Select (object param1, object param2)
+    public void Select (object param1, object param2 = null)
     {
       Param1 = param1;
       Param2 = param2;

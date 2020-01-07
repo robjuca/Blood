@@ -10,10 +10,8 @@ using System.ComponentModel.Composition;
 using rr.Library.Infrastructure;
 using rr.Library.Helper;
 
-using Server.Models.Infrastructure;
-using Server.Models.Component;
 using Server.Models.Action;
-using Server.Models.Gadget;
+using Shared.Gadget.Models.Action;
 
 using Shared.Types;
 using Shared.Resources;
@@ -50,15 +48,19 @@ namespace Gadget.Factory.Pattern.ViewModels
         if (message.Node.IsSiblingToMe (TChild.Design, TypeInfo)) {
           // Edit
           if (message.IsAction (TInternalMessageAction.Edit)) {
-            var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
-            Model.SelectModel (action);
+            if (message.Support.Argument.Args.Param1 is TGadgetMaterialModel model) {
+              Model.SelectModel (model);
+            }
 
             TDispatcher.Invoke (RefreshDesignDispatcher);
           }
 
           // PropertySelect
           if (message.IsAction (TInternalMessageAction.PropertySelect)) {
-            Model.SelectModel (TEntityAction.Request (message.Support.Argument.Types.EntityAction));
+            if (message.Support.Argument.Args.Param1 is TGadgetMaterialModel model) {
+              Model.SelectModel (model);
+            }
+            
             TDispatcher.Invoke (RefreshDesignDispatcher);
           }
 

@@ -49,11 +49,11 @@ CALL :error "Could not find Visual Studio directory."
 
 
 	echo Blood SHARED
-	echo --- Blood SHARED MODELS GADGET . . .
-    msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\Models\Gadget\Blood Shared Models Gadget.sln" -t:rebuild -verbosity:minimal -nologo
+	echo --- Blood SHARED GADGET MODELS COMPONENT . . .
+    msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\Gadget\Models\Component\Blood Shared Gadget Models Component.sln" -t:rebuild -verbosity:minimal -nologo
 	
-	echo --- Blood SHARED MODELS ACTION . . .
-    msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\Models\Action\Blood Shared Models Action.sln" -t:rebuild -verbosity:minimal -nologo
+	echo --- Blood SHARED GADGET MODELS ACTION . . .
+    msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\Gadget\Models\Action\Blood Shared Gadget Models Action.sln" -t:rebuild -verbosity:minimal -nologo
 	
 	echo --- Blood SHARED RESOURCE . . .
 	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\Resources\Blood Shared Resources.sln" -t:rebuild -verbosity:minimal -nologo
@@ -76,24 +76,25 @@ CALL :error "Could not find Visual Studio directory."
 	
 	echo Blood SHARED GADGET MEDICAL TEST
 	echo --- Blood SHARED GADGET MATERIAL . . .
-	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\MedicalTest\Material\Blood Shared Gadget Material.sln" -t:rebuild -verbosity:minimal -nologo
+	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\Gadget\MedicalTest\Material\Blood Shared Gadget Material.sln" -t:rebuild -verbosity:minimal -nologo
+	
 	
 	echo --- Blood SHARED GADGET TARGET . . .
-	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\MedicalTest\Target\Blood Shared Gadget Target.sln" -t:rebuild -verbosity:minimal -nologo
+	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\Gadget\MedicalTest\Target\Blood Shared Gadget Target.sln" -t:rebuild -verbosity:minimal -nologo
 	
 	echo --- Blood SHARED GADGET TEST . . .
-	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\MedicalTest\Test\Blood Shared Gadget Test.sln" -t:rebuild -verbosity:minimal -nologo
+	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\Gadget\MedicalTest\Test\Blood Shared Gadget Test.sln" -t:rebuild -verbosity:minimal -nologo
 	
 	
 	echo Blood SHARED GADGET MEDICAL CARE
 	echo --- Blood SHARED GADGET REGISTRATION . . .
-	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\MedicalCare\Registration\Blood Shared Gadget Registration.sln" -t:rebuild -verbosity:minimal -nologo
+	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\Gadget\MedicalCare\Registration\Blood Shared Gadget Registration.sln" -t:rebuild -verbosity:minimal -nologo
 	
 	echo --- Blood SHARED GADGET TESTS . . .
-	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\MedicalCare\Tests\Blood Shared Gadget Tests.sln" -t:rebuild -verbosity:minimal -nologo
+	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\Gadget\MedicalCare\Tests\Blood Shared Gadget Tests.sln" -t:rebuild -verbosity:minimal -nologo
 	
 	echo --- Blood SHARED GADGET REPORT . . .
-	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\MedicalCare\Report\Blood Shared Gadget Report.sln" -t:rebuild -verbosity:minimal -nologo
+	msbuild.exe "D:\Documents\GitHub\Source\Repository\WPF\Blood\Shared\Gadget\MedicalCare\Report\Blood Shared Gadget Report.sln" -t:rebuild -verbosity:minimal -nologo
 	
 	
 	echo  -- Blood LAUNCHER

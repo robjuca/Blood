@@ -11,7 +11,8 @@ using rr.Library.Types;
 
 using Server.Models.Infrastructure;
 using Server.Models.Action;
-using Server.Models.Gadget;
+using Shared.Gadget.Models.Action;
+using Shared.Gadget.Models.Component;
 
 using Shared.Resources;
 using Shared.Types;
@@ -28,6 +29,11 @@ namespace Gadget.Factory.Pattern.Models
       set;
     }
 
+    public TGadgetMaterialModel GadgetModel
+    {
+      get; 
+    }
+
     public TAlertsModel AlertsModel
     {
       get;
@@ -40,6 +46,8 @@ namespace Gadget.Factory.Pattern.Models
       ComponentModelProperty = TModelProperty.Create (TCategory.Material);
       ComponentModelProperty.PropertyChanged += OnModelPropertyChanged;
 
+      GadgetModel = TGadgetMaterialModel.CreateDefault;
+
       AlertsModel = TAlertsModel.CreateDefault;
 
       m_Gadgets = new Dictionary<Guid, GadgetMaterial> ();
@@ -47,9 +55,9 @@ namespace Gadget.Factory.Pattern.Models
     #endregion
 
     #region Members
-    internal void RefreshModel (TEntityAction action)
+    internal void RefreshModel (TEntityAction entityAction)
     {
-      action.ThrowNull ();
+      entityAction.ThrowNull ();
 
       m_Gadgets.Clear ();
 
@@ -58,21 +66,23 @@ namespace Gadget.Factory.Pattern.Models
       //}
     }
 
-    internal void SelectModel (TEntityAction action)
+    internal void SelectModel (TGadgetMaterialModel model)
     {
-      action.ThrowNull ();
+      model.ThrowNull ();
 
-      ComponentModelProperty.SelectModel (action);
+      GadgetModel.CopyFrom (model);
+
+      var entityAction = TEntityAction.CreateDefault;
+      TActionComponent.Request (model, entityAction);
+
+      ComponentModelProperty.SelectModel (entityAction);
     }
 
-    internal void RequestModel (TEntityAction action)
+    internal void RequestModel (TEntityAction entityAction)
     {
-      action.ThrowNull ();
+      entityAction.ThrowNull ();
 
-      ComponentModelProperty.RequestModel (action);
-
-      // update model
-      //action.ModelAction.GadgetMaterialModel.CopyFrom (action);
+      ComponentModelProperty.RequestModel (entityAction);
     }
 
     internal void ShowPanels ()
@@ -80,36 +90,70 @@ namespace Gadget.Factory.Pattern.Models
       ComponentModelProperty.ShowPanels ();
     }
 
-    internal void ValidateProperty (string propertyName)
+    internal bool ValidateProperty (string propertyName)
     {
+      bool res = true;
+
       if (propertyName.Equals ("TextProperty")) {
         AlertsModel.Select (isOpen: false); // default
 
-        foreach (var gadget in m_Gadgets) {
-          var material = gadget.Value.Material;
-          var item = ComponentModelProperty.ExtensionModel.TextProperty;
+        ComponentModelProperty.ValidateModel (true);
 
-          bool validateModel = string.Compare (material, item, true).Equals (0).IsFalse ();
+        var entityAction = TEntityAction.CreateDefault;
+        entityAction.CategoryType.Select (TCategory.Material);
 
-          // check same gadget (change)
-          if (gadget.Value.Id.Equals (ComponentModelProperty.Id).IsFalse ()) {
-            ComponentModelProperty.ValidateModel (validateModel);
+        RequestModel (entityAction);
 
-            // show alerts
-            if (validateModel.IsFalse ()) {
-              var message = $"Material (Text = {material})";
+        // test empty
+        if (string.IsNullOrEmpty (entityAction.ModelAction.ExtensionTextModel.Text)) {
+          ComponentModelProperty.ValidateModel (false);
 
-              AlertsModel.Select (TAlertsModel.TKind.Warning);
-              AlertsModel.Select ("DUPLICATED ENTRY", message);
-              AlertsModel.Select (isOpen: true);
+          // show alerts
+          var message = $"Material (Text = EMPTY)";
 
-              break;
+          AlertsModel.Select (TAlertsModel.TKind.Warning);
+          AlertsModel.Select ("EMPTY ENTRY", message);
+          AlertsModel.Select (isOpen: true);
+
+          res = false;
+        }
+
+        // test duplicated
+        else {
+          foreach (var gadget in m_Gadgets) {
+            var material = gadget.Value.Material;
+            var item = ComponentModelProperty.ExtensionModel.TextProperty;
+
+            bool validateModel = string.Compare (material, item, true).Equals (0).IsFalse ();
+
+            // check same gadget (change)
+            if (gadget.Value.Id.Equals (ComponentModelProperty.Id).IsFalse ()) {
+              ComponentModelProperty.ValidateModel (validateModel);
+
+              // show alerts
+              if (validateModel.IsFalse ()) {
+                var message = $"Material (Text = {material})";
+
+                AlertsModel.Select (TAlertsModel.TKind.Warning);
+                AlertsModel.Select ("DUPLICATED ENTRY", message);
+                AlertsModel.Select (isOpen: true);
+
+                res = false;
+
+                break;
+              }
             }
           }
         }
 
         AlertsModel.Refresh ();
+
+        if (res) {
+          TActionComponent.Select (GadgetModel, entityAction);
+        }
       }
+
+      return (res);
     }
 
     internal void Cleanup ()

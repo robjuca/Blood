@@ -16,6 +16,7 @@ using Server.Models.Action;
 using Shared.Types;
 using Shared.Resources;
 using Shared.ViewModel;
+using Shared.Gadget.Models.Action;
 
 using Gadget.Collection.Presentation;
 using Gadget.Collection.Pattern.Models;
@@ -52,10 +53,10 @@ namespace Gadget.Collection.Pattern.ViewModels
           // Response
           if (message.IsAction (TInternalMessageAction.Response)) {
             // Collection - Full
-            if (message.Support.Argument.Types.IsOperation (TOperation.Collection, Server.Models.Infrastructure.TExtension.Full)) {
+            if (message.Support.Argument.Types.IsOperation (TOperation.Collection, TExtension.Full)) {
               if (message.Result.IsValid) {
-                // Gadget
-                if (message.Support.Argument.Types.IsOperationCategory (Server.Models.Infrastructure.TCategory.Material)) {
+                // Material
+                if (message.Support.Argument.Types.IsOperationCategory (TCategory.Material)) {
                   var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
                   TDispatcher.BeginInvoke (ResponseDataDispatcher, action);
                 }
@@ -83,7 +84,7 @@ namespace Gadget.Collection.Pattern.ViewModels
     #endregion
 
     #region View Event
-    public void OnSelectionChanged (TComponentModelItem item)
+    public void OnSelectionChanged (TGadgetMaterialModel item)
     {
       TDispatcher.BeginInvoke (ItemSelectedDispatcher, item);
     }
@@ -100,11 +101,11 @@ namespace Gadget.Collection.Pattern.ViewModels
     void RequestDataDispatcher ()
     {
       // to parent
-      // Collection - Full
+      // Collection - Full (Material)
       var action = TEntityAction.Create (
-        Server.Models.Infrastructure.TCategory.Material,
-        Server.Models.Infrastructure.TOperation.Collection,
-        Server.Models.Infrastructure.TExtension.Full
+        TCategory.Material,
+        TOperation.Collection,
+        TExtension.Full
       );
 
       var message = new TCollectionMessageInternal (TInternalMessageAction.Request, TChild.List, TypeInfo);
@@ -127,7 +128,7 @@ namespace Gadget.Collection.Pattern.ViewModels
       TDispatcher.Invoke (RefreshAllDispatcher);
     }
 
-    void ItemSelectedDispatcher (TComponentModelItem item)
+    void ItemSelectedDispatcher (TGadgetMaterialModel item)
     {
       if (item.IsNull ()) {
         // to Sibling (Cleanup)
@@ -138,7 +139,7 @@ namespace Gadget.Collection.Pattern.ViewModels
       else {
         // to Sibling (Select)
         var message = new TCollectionSiblingMessageInternal (TInternalMessageAction.Select, TChild.List, TypeInfo);
-        message.Support.Argument.Types.Item.CopyFrom (item);
+        message.Support.Argument.Args.Select (item, null);
 
         DelegateCommand.PublishInternalMessage.Execute (message);
       }
