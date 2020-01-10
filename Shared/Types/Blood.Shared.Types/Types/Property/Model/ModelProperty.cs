@@ -191,6 +191,11 @@ namespace Shared.Types
       }
     }
 
+    public void SelectionLock (bool lockCurrent)
+    {
+      ExtensionModel.SelectionLock (lockCurrent);
+    }
+
     public void ValidateModel (bool validated)
     {
       m_ValidateModel = validated;

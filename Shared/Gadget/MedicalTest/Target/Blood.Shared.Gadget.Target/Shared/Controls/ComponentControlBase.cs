@@ -80,6 +80,10 @@ namespace Shared.Gadget.Target
       // material image
       var materialImage = new Image
       {
+        Margin = new Thickness (3),
+        Stretch = Stretch.Uniform,
+        Width = 16,
+        Height = 16,
         Source = rr.Library.Helper.THelper.ByteArrayToBitmapImage (Model.ChildControlModel.Image)
       };
 

@@ -38,16 +38,8 @@ namespace Shared.Gadget.Target
     public void SelectModel (TGadgetTargetModel model)
     {
       if (model.NotNull ()) {
-        //ControlModel.CopyFrom (action.ModelAction.GadgetTargetModel);
-        //ChildControlModel.CopyFrom (action.ModelAction.GadgetMaterialModel);
-
-        //if (ControlModel.Id.IsEmpty ()) {
-        //  if (action.SupportAction.SelectionInfo.Tag is Guid id) {
-        //    ChildControlModel.Id = id;
-        //    ChildControlModel.Material = action.SupportAction.SelectionInfo.Name;
-        //    ChildControlModel.SetImage (action.SupportAction.SelectionInfo.GetImage ());
-        //  }
-        //}
+        ControlModel.CopyFrom (model.Model);
+        ChildControlModel.CopyFrom (model.MaterialModel.Model);
       }
     }
     #endregion

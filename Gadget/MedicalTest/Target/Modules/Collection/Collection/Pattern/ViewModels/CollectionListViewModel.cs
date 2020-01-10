@@ -15,6 +15,7 @@ using Server.Models.Action;
 using Shared.Types;
 using Shared.Resources;
 using Shared.ViewModel;
+using Shared.Gadget.Models.Action;
 
 using Gadget.Collection.Presentation;
 using Gadget.Collection.Pattern.Models;
@@ -102,9 +103,9 @@ namespace Gadget.Collection.Pattern.ViewModels
       TDispatcher.BeginInvoke (MaterialItemSelectedDispatcher, selectedIndex);
     }
 
-    public void OnTargetSelectionChanged (TComponentModelItem item)
+    public void OnTargetSelectionChanged (TGadgetTargetModel model)
     {
-      TDispatcher.BeginInvoke (TargetItemSelectedDispatcher, item);
+      TDispatcher.BeginInvoke (TargetItemSelectedDispatcher, model);
     }
     #endregion
 
@@ -183,9 +184,9 @@ namespace Gadget.Collection.Pattern.ViewModels
       TDispatcher.Invoke (RefreshAllDispatcher);
     }
 
-    void TargetItemSelectedDispatcher (TComponentModelItem item)
+    void TargetItemSelectedDispatcher (TGadgetTargetModel model)
     {
-      if (item.IsNull ()) {
+      if (model.IsNull ()) {
         // to Sibling (Cleanup)
         var message = new TCollectionSiblingMessageInternal (TInternalMessageAction.Cleanup, TChild.List, TypeInfo);
         DelegateCommand.PublishInternalMessage.Execute (message);
@@ -194,7 +195,7 @@ namespace Gadget.Collection.Pattern.ViewModels
       else {
         // to Sibling (Select)
         var message = new TCollectionSiblingMessageInternal (TInternalMessageAction.Select, TChild.List, TypeInfo);
-        message.Support.Argument.Types.Item.CopyFrom (item);
+        message.Support.Argument.Args.Select (model);
 
         DelegateCommand.PublishInternalMessage.Execute (message);
       }

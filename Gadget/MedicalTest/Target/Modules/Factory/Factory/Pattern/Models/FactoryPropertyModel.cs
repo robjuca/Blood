@@ -5,13 +5,17 @@
 
 //----- Include
 using System;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 using rr.Library.Types;
 
+using Server.Models.Infrastructure;
 using Server.Models.Action;
 
 using Shared.Resources;
 using Shared.Types;
+using Shared.Gadget.Models.Action;
 //---------------------------//
 
 namespace Gadget.Factory.Pattern.Models
@@ -42,44 +46,53 @@ namespace Gadget.Factory.Pattern.Models
     #endregion
 
     #region Members
-    internal void RefreshModel (TEntityAction action)
+    internal void RefreshModel (TEntityAction entityAction)
     {
-      if (action.NotNull ()) {
-        //if (action.CollectionAction.GadgetMaterialCollection.Count.Equals (0)) {
-        //  ComponentModelProperty.ValidateModel (false);
+      if (entityAction.NotNull ()) {
+        var gadgets = new Collection<TGadgetMaterialModel> ();
+        TGadgetMaterialActionComponent.Select (gadgets, entityAction);
 
-        //  // show alerts
-        //  var message = $"Material list is EMPTY!";
+        if (gadgets.Any ()) {
+          foreach (var item in gadgets) {
+            var selection = Server.Models.Infrastructure.TSelectionInfo.Create (item.Model.Material, item.Id, item.Enabled);
+            selection.SetImage (item.Model.GetImage ());
 
-        //  AlertsModel.Select (TAlertsModel.TKind.Warning);
-        //  AlertsModel.Select ("EMPTY", message);
-        //  AlertsModel.Select (isOpen: true);
-        //}
+            entityAction.SupportAction.SelectionCollection.Add (selection);
+          }
 
-        //else {
-        //  foreach (var item in action.CollectionAction.GadgetMaterialCollection) {
-        //    var selection = Server.Models.Infrastructure.TSelectionInfo.Create (item.Material, item.Id, item.Enabled);
-        //    selection.SetImage (item.GetImage ());
+          ComponentModelProperty.ValidateModel (true);
+          ComponentModelProperty.ExtensionModel.SelectModel (Server.Models.Infrastructure.TCategory.Target, entityAction); // update Selection Property (Material list)
 
-        //    action.SupportAction.SelectionCollection.Add (selection);
-        //  }
+          AlertsModel.Select (isOpen: false); // default
+        }
 
-        //  ComponentModelProperty.ValidateModel (true);
-        //  ComponentModelProperty.ExtensionModel.SelectModel (Server.Models.Infrastructure.TCategory.Target, action); // update Selection Property (Material list)
+        else {
+          ComponentModelProperty.ValidateModel (false);
 
-        //  AlertsModel.Select (isOpen: false); // default
-        //}
+          // show alerts
+          var message = $"Material list is EMPTY!";
+
+          AlertsModel.Select (TAlertsModel.TKind.Warning);
+          AlertsModel.Select ("EMPTY", message);
+          AlertsModel.Select (isOpen: true);
+        }
       }
     }
 
-    internal void SelectModel (TEntityAction action)
+    internal void SelectModel (TGadgetTargetModel model)
     {
+      model.ThrowNull ();
+
+      var entityAction = TEntityAction.CreateDefault;
+      TGadgetTargetActionComponent.Request (model, entityAction);
+
       // update Material selection
-      //var tag = action.ModelAction.GadgetTargetModel.MaterialId;
+      var tag = model.Model.MaterialId;
+      entityAction.SupportAction.SelectionInfo.Select (model.MaterialModel.Model.Material, tag, enabled: model.Enabled);
+      entityAction.SupportAction.SelectionInfo.SetImage (model.MaterialModel.Model.GetImage ());
 
-      //action.SupportAction.SelectionInfo.Select (string.Empty, tag, enabled: true);
-
-      //ComponentModelProperty.SelectModel (action);
+      ComponentModelProperty.SelectModel (entityAction);
+      ComponentModelProperty.SelectionLock (model.Busy);
     }
 
     internal void RequestModel (TEntityAction action)
@@ -102,10 +115,41 @@ namespace Gadget.Factory.Pattern.Models
           // update collection
           action.CollectionAction.ExtensionNodeCollection.Add (action.ModelAction.ExtensionNodeModel);
         }
-
-        // update model
-        //action.ModelAction.GadgetTargetModel.CopyFrom (action);
       }
+    }
+
+    internal bool ValidateProperty (string propertyName)
+    {
+      bool res = true;
+
+      if (propertyName.Equals ("TextProperty")) {
+        AlertsModel.Select (isOpen: false); // default
+
+        ComponentModelProperty.ValidateModel (true);
+
+        var entityAction = TEntityAction.CreateDefault;
+        entityAction.CategoryType.Select (TCategory.Material);
+
+        RequestModel (entityAction);
+
+        // test empty
+        if (string.IsNullOrEmpty (entityAction.ModelAction.ExtensionTextModel.Text)) {
+          ComponentModelProperty.ValidateModel (false);
+
+          // show alerts
+          var message = $"Material (Text = EMPTY)";
+
+          AlertsModel.Select (TAlertsModel.TKind.Warning);
+          AlertsModel.Select ("EMPTY ENTRY", message);
+          AlertsModel.Select (isOpen: true);
+
+          res = false;
+        }
+
+        AlertsModel.Refresh ();
+      }
+
+      return (res);
     }
 
     internal void ShowPanels ()

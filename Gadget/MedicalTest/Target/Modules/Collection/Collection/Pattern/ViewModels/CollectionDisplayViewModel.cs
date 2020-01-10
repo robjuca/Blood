@@ -14,6 +14,7 @@ using Server.Models.Action;
 using Shared.Resources;
 using Shared.Types;
 using Shared.ViewModel;
+using Shared.Gadget.Models.Action;
 
 using Gadget.Collection.Presentation;
 using Gadget.Collection.Pattern.Models;
@@ -61,7 +62,9 @@ namespace Gadget.Collection.Pattern.ViewModels
         if (message.Node.IsSiblingToMe (TChild.Display, TypeInfo)) {
           // Select
           if (message.IsAction (TInternalMessageAction.Select)) {
-            TDispatcher.BeginInvoke (SelectDispatcher, message.Support.Argument.Types.Item);
+            if (message.Support.Argument.Args.Param1 is TGadgetTargetModel model) {
+              TDispatcher.BeginInvoke (SelectDispatcher, model);
+            }
           }
 
           // Cleanup
@@ -86,9 +89,9 @@ namespace Gadget.Collection.Pattern.ViewModels
     #endregion
 
     #region Dispatcher
-    void SelectDispatcher (TComponentModelItem item)
+    void SelectDispatcher (TGadgetTargetModel model)
     {
-      Model.Select (item);
+      Model.Select (model);
 
       if (FrameworkElementView.FindName ("DisplayControl") is Shared.Gadget.Target.TComponentDisplayControl control) {
         control.RefreshDesign ();
@@ -99,12 +102,9 @@ namespace Gadget.Collection.Pattern.ViewModels
 
     void EditDispatcher ()
     {
-      var action = TEntityAction.CreateDefault;
-      Model.RequestModel (action);
-
-      // to parent
+      // to parent (Edit)
       var message = new TCollectionMessageInternal (TInternalMessageAction.Edit, TChild.Display, TypeInfo);
-      message.Support.Argument.Types.Select (action);
+      message.Support.Argument.Args.Select (Model.GadgetModel);
 
       DelegateCommand.PublishInternalMessage.Execute (message);
     }
@@ -113,7 +113,7 @@ namespace Gadget.Collection.Pattern.ViewModels
     {
       // Remove
       var action = TEntityAction.Create (Server.Models.Infrastructure.TCategory.Target, Server.Models.Infrastructure.TOperation.Remove);
-      Model.RequestModel (action);
+      action.Id = Model.Id;
 
       // to parent
       var message = new TCollectionMessageInternal (TInternalMessageAction.Request, TChild.Display, TypeInfo);

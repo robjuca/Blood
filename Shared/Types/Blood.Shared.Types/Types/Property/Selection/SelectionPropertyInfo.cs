@@ -6,6 +6,7 @@
 //----- Include
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 using rr.Library.Types;
 
@@ -55,6 +56,8 @@ namespace Shared.Types
       m_SelectedIndex = -1;
 
       ItemsSource = new Collection<TSelectionItem> ();
+
+      m_SelectionAllCollection = new Collection<TSelectionItem> ();
     }
     #endregion
 
@@ -62,6 +65,7 @@ namespace Shared.Types
     public void Select (TEntityAction action)
     {
       ItemsSource.Clear ();
+      m_SelectionAllCollection.Clear ();
 
       if (action.NotNull ()) {
         foreach (var item in action.SupportAction.SelectionCollection) {
@@ -69,11 +73,13 @@ namespace Shared.Types
             var selectionItem = TSelectionItem.Create (item.Name, item.Tag, item.GetImage (), item.Enabled);
 
             ItemsSource.Add (selectionItem);
+
+            m_SelectionAllCollection.Add (selectionItem);
           }
         }
       }
 
-      if (ItemsSource.Count > 0) {
+      if (ItemsSource.Any ()) {
         SelectedIndex = 0;
       }
     }
@@ -115,6 +121,26 @@ namespace Shared.Types
         }
       }
     }
+
+    public void Lock (bool lockCurrent)
+    {
+      var current = Selection;  // preserve
+
+      ItemsSource.Clear ();
+
+      if (lockCurrent) {
+        ItemsSource.Add (current);
+      }
+
+      // restore
+      else {
+        foreach (var item in m_SelectionAllCollection) {
+          ItemsSource.Add (item);
+        }
+      }
+
+      Select (current);
+    }
     #endregion
 
     #region Overrides
@@ -128,11 +154,12 @@ namespace Shared.Types
       {
         return (SelectedIndex > -1);
       }
-    } 
+    }
     #endregion
 
     #region Fields
-    int                                     m_SelectedIndex;
+    readonly Collection<TSelectionItem>               m_SelectionAllCollection;
+    int                                               m_SelectedIndex;
     #endregion
 
     #region Static

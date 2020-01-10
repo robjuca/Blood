@@ -536,6 +536,11 @@ namespace Shared.Types
       }
     }
 
+    public void SelectionLock (bool lockCurrent)
+    {
+      SelectionProperty.Lock (lockCurrent);
+    }
+
     public void SelectReport (TReportData reportData)
     {
       if (reportData.NotNull ()) {

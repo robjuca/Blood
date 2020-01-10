@@ -15,6 +15,7 @@ using Server.Models.Action;
 using Shared.Types;
 using Shared.Resources;
 using Shared.ViewModel;
+using Shared.Gadget.Models.Action;
 
 using Shared.Gadget.Target;
 
@@ -50,7 +51,11 @@ namespace Gadget.Factory.Pattern.ViewModels
             var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
             var propertyName = message.Support.Argument.Args.PropertyName;
 
-            Model.SelectModel (propertyName, action);
+            if (propertyName.Equals ("edit")) {
+              if (message.Support.Argument.Args.Param1 is TGadgetTargetModel model) {
+                Model.SelectModel (model);
+              }
+            }
 
             TDispatcher.Invoke (RefreshDesignDispatcher);
           }

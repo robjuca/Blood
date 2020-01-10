@@ -114,11 +114,16 @@ namespace Shared.Gadget.Models.Action
         entityAction.ModelAction.ComponentStatusModel.Busy = gadget.Busy;
 
         entityAction.ModelAction.ComponentInfoModel.Id = gadget.Model.Id;
+        entityAction.ModelAction.ExtensionNodeModel.ChildId = gadget.Id;
+        entityAction.ModelAction.ExtensionNodeModel.ChildCategory = TCategoryType.ToValue (TCategory.Target);
+        entityAction.ModelAction.ExtensionNodeModel.ParentId = gadget.Model.MaterialId;
+        entityAction.ModelAction.ExtensionNodeModel.ParentCategory = TCategoryType.ToValue (TCategory.Material);
         entityAction.ModelAction.ExtensionTextModel.Text = gadget.Model.Target;
         entityAction.ModelAction.ExtensionTextModel.Description = gadget.Model.Description;
+        entityAction.ModelAction.ExtensionTextModel.Reference = gadget.Model.Reference;
+        entityAction.ModelAction.ExtensionTextModel.Value = gadget.Model.Value;
         entityAction.ModelAction.ExtensionTextModel.ExternalLink = gadget.Model.ExternalLink;
         entityAction.ModelAction.ComponentInfoModel.Enabled = gadget.Model.Enabled;
-        
       }
     }
     #endregion
