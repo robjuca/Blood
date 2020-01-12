@@ -39,7 +39,7 @@ namespace Shared.Gadget.Models.Action
     #endregion
 
     #region Constructor
-    public TActionModelBase (TGadgetModel gadgetModel)
+    protected TActionModelBase (TGadgetModel gadgetModel)
     {
       Model = gadgetModel;
       Name = string.Empty;

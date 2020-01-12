@@ -6,7 +6,7 @@
 //----- Include
 using System;
 
-using Shared.ViewModel;
+using Shared.Gadget.Models.Action;
 //---------------------------//
 
 namespace Gadget.Factory.Pattern.Models
@@ -14,7 +14,7 @@ namespace Gadget.Factory.Pattern.Models
   public class TFactoryListItemInfo
   {
     #region Property
-    public TComponentModelItem ModelItem
+    public TGadgetTestModel GadgetModel
     {
       get;
     }
@@ -23,7 +23,7 @@ namespace Gadget.Factory.Pattern.Models
     {
       get
       {
-        return (ModelItem.Id);
+        return (GadgetModel.Id);
       }
     }
 
@@ -45,7 +45,7 @@ namespace Gadget.Factory.Pattern.Models
     {
       get
       {
-        return (ModelItem.Name);
+        return (GadgetModel.Name);
       }
     }
 
@@ -53,7 +53,7 @@ namespace Gadget.Factory.Pattern.Models
     {
       get
       {
-        return (Server.Models.Infrastructure.TCategoryType.ToValue (ModelItem.Category));
+        return (Server.Models.Infrastructure.TCategoryType.ToValue (GadgetModel.Model.RequestCategory ()));
       }
     }
     #endregion
@@ -61,19 +61,19 @@ namespace Gadget.Factory.Pattern.Models
     #region Constructor
     TFactoryListItemInfo ()
     {
-      ModelItem = TComponentModelItem.CreateDefault;
+      GadgetModel = TGadgetTestModel.CreateDefault;
     }
 
-    TFactoryListItemInfo (TComponentModelItem item)
+    TFactoryListItemInfo (TGadgetTestModel gadget)
       : this ()
     {
-      ModelItem.CopyFrom (item);
+      GadgetModel.CopyFrom (gadget);
     }
 
-    TFactoryListItemInfo (TComponentModelItem item, bool isChecked)
+    TFactoryListItemInfo (TGadgetTestModel gadget, bool isChecked)
       : this ()
     {
-      ModelItem.CopyFrom (item);
+      GadgetModel.CopyFrom (gadget);
 
       IsChecked = isChecked;
     }
@@ -93,15 +93,15 @@ namespace Gadget.Factory.Pattern.Models
     internal void CopyFrom (TFactoryListItemInfo alias)
     {
       if (alias.NotNull ()) {
-        ModelItem.CopyFrom (alias.ModelItem);
+        GadgetModel.CopyFrom (alias.GadgetModel);
         IsChecked = alias.IsChecked;
       }
     }
     #endregion
 
     #region Static
-    public static TFactoryListItemInfo Create (TComponentModelItem item) => new TFactoryListItemInfo (item);
-    public static TFactoryListItemInfo Create (TComponentModelItem item, bool isChecked) => new TFactoryListItemInfo (item,isChecked);
+    public static TFactoryListItemInfo Create (TGadgetTestModel gadget) => new TFactoryListItemInfo (gadget);
+    public static TFactoryListItemInfo Create (TGadgetTestModel gadget, bool isChecked) => new TFactoryListItemInfo (gadget, isChecked);
     public static TFactoryListItemInfo CreateDefault => new TFactoryListItemInfo ();
     #endregion
   };

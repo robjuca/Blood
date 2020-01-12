@@ -6,9 +6,11 @@
 //----- Include
 using System;
 using System.Collections.ObjectModel;
-using System.Windows;
+using System.Linq;
 
-using Shared.ViewModel;
+using Server.Models.Action;
+
+using Shared.Gadget.Models.Action;
 //---------------------------//
 
 namespace Gadget.Collection.Pattern.Models
@@ -16,7 +18,7 @@ namespace Gadget.Collection.Pattern.Models
   public sealed class TCollectionListModel
   {
     #region Property
-    public ObservableCollection<TModelItemInfo> ItemsSource
+    public ObservableCollection<TGadgetTestModel> ItemsSource
     {
       get; 
     }
@@ -27,7 +29,7 @@ namespace Gadget.Collection.Pattern.Models
       set;
     }
 
-    public TComponentModelItem Current
+    public TGadgetTestModel Current
     {
       get;
     }
@@ -46,123 +48,27 @@ namespace Gadget.Collection.Pattern.Models
     {
       SelectedIndex = -1;
 
-      ItemsSource = new ObservableCollection<TModelItemInfo> ();
-      Current = TComponentModelItem.CreateDefault;
+      ItemsSource = new ObservableCollection<TGadgetTestModel> ();
+      Current = TGadgetTestModel.CreateDefault;
     }
     #endregion
 
     #region Members
-    internal void Select (Server.Models.Component.TEntityAction action)
+    internal void Select (TEntityAction entityAction)
     {
       // DATA IN:
       // action.CollectionAction.ModelCollection
 
-      action.ThrowNull ();
+      entityAction.ThrowNull ();
 
       ItemsSource.Clear ();
 
-      foreach (var modelAction in action.CollectionAction.ModelCollection) {
-        action.ModelAction.CopyFrom (modelAction.Value);
-        
-        var model = action.ModelAction.GadgetTestModel;
-        model.CopyFrom (action); // set gadget model
+      TGadgetTestActionComponent.Select (ItemsSource, entityAction);
 
-        ItemsSource.Add (TModelItemInfo.Create (action));
-      }
-
-      if (ItemsSource.Count > 0) {
+      if (ItemsSource.Any ()) {
         SelectedIndex = 0;
       }
     }
-    #endregion
-  };
-  //---------------------------//
-
-  //----- TModelItemInfo
-  public class TModelItemInfo
-  {
-    #region Property
-    public TComponentModelItem ModelItem
-    {
-      get;
-    }
-
-    public Guid Id
-    {
-      get
-      {
-        return (ModelItem.Id);
-      }
-    }
-
-    public string Name
-    {
-      get
-      {
-        return (ModelItem.Name);
-      }
-    }
-
-    public int TargetCount
-    {
-      get
-      {
-        return (ModelItem.GadgetTestModel.ContentCount);
-      }
-    }
-
-    public Server.Models.Infrastructure.TCategory RelationCategory
-    {
-      get
-      {
-        return (ModelItem.GadgetTestModel.RequestCategory ());
-      }
-    }
-
-    public Visibility TestRelationVisibility
-    {
-      get
-      {
-        return (HasTarget ? RelationCategory.Equals (Server.Models.Infrastructure.TCategory.Test) ? Visibility.Visible : Visibility.Collapsed : Visibility.Collapsed);
-      }
-    }
-
-    public Visibility TargetRelationVisibility
-    {
-      get
-      {
-        return (HasTarget ? RelationCategory.Equals (Server.Models.Infrastructure.TCategory.Target) ? Visibility.Visible : Visibility.Collapsed : Visibility.Collapsed);
-      }
-    }
-    #endregion
-
-    #region Constructor
-    TModelItemInfo (Server.Models.Component.TEntityAction action)
-      : this ()
-    {
-      if (action.NotNull ()) {
-        ModelItem = TComponentModelItem.Create (action);
-      }
-    }
-
-    TModelItemInfo ()
-    {
-      ModelItem = TComponentModelItem.CreateDefault;
-    }
-    #endregion
-
-    #region property
-    public bool HasTarget
-    {
-      get
-      {
-        return (TargetCount.Equals (0).IsFalse ());
-      }
-    } 
-    #endregion
-
-    #region Static
-    public static TModelItemInfo Create (Server.Models.Component.TEntityAction action) => new TModelItemInfo (action); 
     #endregion
   };
   //---------------------------//

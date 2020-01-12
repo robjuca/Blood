@@ -32,18 +32,19 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Blood.Server.Models.Component">
-      <HintPath>..\..\..\Bin\Blood.Server.Models.Component.dll</HintPath>
-    </Reference>
     <Reference Include="Blood.Server.Models.Infrastructure">
       <HintPath>..\..\..\Bin\Blood.Server.Models.Infrastructure.dll</HintPath>
     </Reference>
+    <Reference Include="Blood.Shared.Gadget.Models.Action, Version=1.0.2020.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Bin\Blood.Shared.Gadget.Models.Action.dll</HintPath>
+    </Reference>
+    <Reference Include="Blood.Shared.Gadget.Models.Component, Version=1.0.2020.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Bin\Blood.Shared.Gadget.Models.Component.dll</HintPath>
+    </Reference>
     <Reference Include="Blood.Shared.Types">
       <HintPath>..\..\..\Bin\Blood.Shared.Types.dll</HintPath>
-    </Reference>
-    <Reference Include="Blood.Shared.ViewModel, Version=1.0.2019.10, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Bin\Blood.Shared.ViewModel.dll</HintPath>
     </Reference>
     <Reference Include="MaterialDesignColors, Version=1.2.0.325, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignColors.1.2.0\lib\net45\MaterialDesignColors.dll</HintPath>

@@ -13,7 +13,6 @@ using Shared.Gadget.Models.Component;
 
 namespace Shared.Gadget.Models.Action
 {
-  //----- TGadgetTargetModel
   public sealed class TGadgetTargetModel : TActionModelBase<GadgetTarget>
   {
     #region Property
@@ -30,6 +29,14 @@ namespace Shared.Gadget.Models.Action
       get
       {
         return (Model.Enabled);
+      }
+    }
+
+    public bool CanRemove
+    {
+      get
+      {
+        return (Busy.IsFalse () && Model.Enabled.IsFalse () && ValidateId);
       }
     }
 

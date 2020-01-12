@@ -10,6 +10,8 @@ using System.ComponentModel.Composition;
 using rr.Library.Infrastructure;
 using rr.Library.Helper;
 
+using Server.Models.Action;
+
 using Shared.Types;
 using Shared.Resources;
 using Shared.ViewModel;
@@ -57,7 +59,7 @@ namespace Gadget.Factory.Pattern.ViewModels
               TDispatcher.Invoke (RefreshDesignDispatcher);
             }
 
-            var action = Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction);
+            var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
 
             if (action.NotNull ()) {
               action.Param1 = propertyName;
@@ -94,7 +96,7 @@ namespace Gadget.Factory.Pattern.ViewModels
       }
     }
 
-    void PropertySelectDispatcher (Server.Models.Component.TEntityAction action)
+    void PropertySelectDispatcher (TEntityAction action)
     {
       if (action.Param1 is string propertyName) {
         if (propertyName.Equals ("Edit") || propertyName.Equals ("DescriptionProperty") || propertyName.Equals ("TextProperty") || propertyName.Equals ("ExternalLinkProperty")) {

@@ -15,7 +15,7 @@ using MaterialDesignThemes.Wpf;
 using Server.Models.Infrastructure;
 
 using Shared.Types;
-using Shared.ViewModel;
+using Shared.Gadget.Models.Component;
 //---------------------------//
 
 namespace Shared.Gadget.Test
@@ -80,7 +80,7 @@ namespace Shared.Gadget.Test
       {
         Margin = new Thickness (10, 0, 0, 0),
         VerticalAlignment = VerticalAlignment.Center,
-        Text = Model.ControlModel.Test,
+        Text = Model.ControlModel.Model.Test,
         FontWeight = FontWeights.UltraBold,
         FontSize = 14,
       };
@@ -105,7 +105,7 @@ namespace Shared.Gadget.Test
         TextAlignment = TextAlignment.Left,
         VerticalAlignment = VerticalAlignment.Top,
         VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
-        Text = Model.ControlModel.Description,
+        Text = Model.ControlModel.Model.Description,
       };
       
 
@@ -113,11 +113,11 @@ namespace Shared.Gadget.Test
       m_Grid.Children.Add (textBox);
 
       // external link (row 2)
-      if (string.IsNullOrEmpty (Model.ControlModel.ExternalLink).IsFalse ()) {
+      if (string.IsNullOrEmpty (Model.ControlModel.Model.ExternalLink).IsFalse ()) {
         try {
           var externalLink = new System.Windows.Documents.Hyperlink (new System.Windows.Documents.Run ("more info"))
           {
-            NavigateUri = new Uri (Model.ControlModel.ExternalLink),
+            NavigateUri = new Uri (Model.ControlModel.Model.ExternalLink),
             TargetName = "_blanc",
           };
 
@@ -177,27 +177,17 @@ namespace Shared.Gadget.Test
     void InsertTargetRelation ()
     {
       if (Model.RequestCategory ().Equals (TCategory.Target)) {
-        var targets = new Collection<Server.Models.Component.GadgetTarget> ();
-        Model.ControlModel.RequestContent (targets);
-
-        var targetsItemSource = new Collection<TComponentModelItem> ();
-
-        foreach (var item in targets) {
-          var modelItem = TComponentModelItem.CreateDefault;
-          modelItem.Select (item.Id, TCategory.Target);
-          modelItem.GadgetTargetModel.CopyFrom (item);
-
-          targetsItemSource.Add (modelItem);
-        }
+        var targetsItemSource = new Collection<GadgetTarget> ();
+        Model.ControlModel.Model.RequestContent (targetsItemSource);
 
         string itemTemplate = @"
           <DataTemplate
               xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'
               xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml'>
                 <StackPanel>
-                  <TextBlock FontWeight='Bold' Foreground='DarkBlue' Text='{Binding GadgetTargetModel.Target}' />
-                  <TextBox FontSize='10px' IsReadOnly='true' MaxWidth='680' TextWrapping='Wrap' Text='{Binding GadgetTargetModel.Description}' />
-                  <TextBlock Foreground='DarkGreen' Text='{Binding GadgetTargetModel.Reference}' />
+                  <TextBlock FontWeight='Bold' Foreground='DarkBlue' Text='{Binding Target}' />
+                  <TextBox FontSize='10px' IsReadOnly='true' MaxWidth='680' TextWrapping='Wrap' Text='{Binding Description}' />
+                  <TextBlock Foreground='DarkGreen' Text='{Binding Reference}' />
                 </StackPanel>
           </DataTemplate>"
         ;

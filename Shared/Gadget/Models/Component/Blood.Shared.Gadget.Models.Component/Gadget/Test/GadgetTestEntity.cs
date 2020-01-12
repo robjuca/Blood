@@ -121,6 +121,14 @@ namespace Shared.Gadget.Models.Component
 
             res = true;
           }
+
+          else {
+            if (IsCategoryTest) {
+              if (ContainsTest (gadget.Id).IsFalse ()) {
+                TestCollection.Add (gadget);
+              }
+            }
+          }
         }
 
         return (res);
@@ -138,6 +146,14 @@ namespace Shared.Gadget.Models.Component
             TargetCollection.Add (gadget);
 
             res = true;
+          }
+
+          else {
+            if (IsCategoryTarget) {
+              if (ContainsTarget (gadget.Id).IsFalse ()) {
+                TargetCollection.Add (gadget);
+              }
+            }
           }
         }
 
@@ -263,6 +279,19 @@ namespace Shared.Gadget.Models.Component
               foreach (var item in list) {
                 collection.Add (separator + item.Target);
               }
+            }
+          }
+        }
+      }
+
+      public void Request (IList<Guid> collection)
+      {
+        if (collection.NotNull ()) {
+          collection.Clear ();
+
+          if (IsEmpty.IsFalse ()) {
+            foreach (var id in IdCollection) {
+              collection.Add (id);
             }
           }
         }
@@ -576,11 +605,6 @@ namespace Shared.Gadget.Models.Component
       return (Content.Add (gadget));
     }
 
-    //public void AddContent (TEntityAction action)
-    //{
-    //  Content.Add (action);
-    //}
-
     public bool RemoveContentId (Guid id)
     {
       return (Content.Remove (id));
@@ -611,41 +635,6 @@ namespace Shared.Gadget.Models.Component
       }
     }
 
-    //public void CopyFrom (TEntityAction action)
-    //{
-    //  /*
-    //   action.ModelAction
-    //   action.CollectionAction.ComponentRelationCollection
-    //  */
-
-    //  if (action.NotNull ()) {
-    //    Content.Cleanup ();
-
-    //    CopyFrom (action.ModelAction);
-
-    //    // update
-    //    if (action.CollectionAction.ComponentRelationCollection.Count.Equals (0)) {
-    //      foreach (var item in action.CollectionAction.ComponentOperation.ParentCategoryCollection) {
-    //        foreach (var relation in item.Value) {
-    //          action.CollectionAction.ComponentRelationCollection.Add (relation);
-    //        }
-    //      }
-    //    }
-
-    //    foreach (var item in action.CollectionAction.ComponentRelationCollection) {
-    //      if (item.ParentId.IsEmpty ()) {
-    //        Content.Add (item.ChildId, Server.Models.Infrastructure.TCategoryType.FromValue (item.ChildCategory));
-    //      }
-
-    //      else {
-    //        if (item.ParentId.Equals (Id)) {
-    //          Content.Add (item.ChildId, Server.Models.Infrastructure.TCategoryType.FromValue (item.ChildCategory));
-    //        }
-    //      }
-    //    }
-    //  }
-    //}
-
     public void Change (GadgetTest alias)
     {
       if (alias.NotNull ()) {
@@ -658,69 +647,7 @@ namespace Shared.Gadget.Models.Component
         Content.CopyFrom (alias.Content);
       }
     }
-
-    //public void RefreshModel (TEntityAction action)
-    //{
-    //  if (action.NotNull ()) {
-    //    if (action.CategoryType.IsCategory (Infrastructure.TCategory.Test)) {
-    //      // collection
-    //      if (action.ModelAction.ComponentInfoModel.Id.IsEmpty ()) {
-    //        // action.CollectionAction.ModelCollection [Id(GadgetTest)]
-    //        foreach (var modelAction in action.CollectionAction.ModelCollection) {
-    //          var gadget = GadgetTest.CreateDefault;
-    //          gadget.CopyFrom (modelAction.Value);
-
-    //          foreach (var item in action.ComponentOperation.ParentCategoryCollection) {
-    //            var relationList = item.Value
-    //              .Where (p => p.ParentId.Equals (gadget.Id))
-    //              .ToList ()
-    //            ;
-
-    //            foreach (var relation in relationList) {
-    //              gadget.AddContentId (relation.ChildId, Server.Models.Infrastructure.TCategoryType.FromValue (relation.ChildCategory));
-    //            }
-    //          }
-
-    //          action.CollectionAction.GadgetTestCollection.Add (gadget);
-    //        }
-    //      }
-          
-    //      // just me
-    //      else {
-    //        // update model action
-    //        CopyFrom (action.ModelAction); // my self
-
-    //        // content list
-    //        foreach (var item in action.ComponentOperation.ParentIdCollection) {
-    //          foreach (var relation in item.Value) {
-    //            Content.Add (relation.ChildId, Server.Models.Infrastructure.TCategoryType.FromValue (relation.ChildCategory));
-    //          }
-    //        }
-
-    //        // update
-    //        action.ModelAction.GadgetTestModel.CopyFrom (this);
-
-    //        action.CollectionAction.GadgetTestCollection.Clear ();
-
-    //        // update model collection
-    //        foreach (var modelAction in action.CollectionAction.ModelCollection) {
-    //          action.ModelAction.CopyFrom (modelAction.Value);
-
-    //          var gadget = GadgetTest.CreateDefault;
-    //          gadget.CopyFrom (action);
-
-    //          modelAction.Value.GadgetTestModel.CopyFrom (gadget); // update colection
-
-    //          action.CollectionAction.GadgetTestCollection.Add (gadget);
-    //        }
-
-    //        // update contents
-    //        Content.Update (action);
-    //      }
-    //    }
-    //  }
-    //}
-
+    
     public TCategory RequestCategory ()
     {
       return (Content.Category);
@@ -741,21 +668,10 @@ namespace Shared.Gadget.Models.Component
       Content.Request (collection, useSeparator);
     }
 
-    //public void UpdateModel (TEntityAction action)
-    //{
-    //  if (action.NotNull ()) {
-    //    if (action.CategoryType.IsCategory (Server.Models.Infrastructure.TCategory.Test)) {
-    //      if (action.ModelAction.GadgetTestModel.Id.Equals (Id)) {
-    //        Content.Update (action);
-    //      }
-    //    }
-    //  }
-    //}
-
-    //public void UpdateContents (TEntityAction action)
-    //{
-    //  Content.Update (action);
-    //}
+    public void RequestContentId (IList<Guid> collection)
+    {
+      Content.Request (collection);
+    }
 
     public void UpdateContents (Collection <GadgetTest> list)
     {
@@ -780,19 +696,6 @@ namespace Shared.Gadget.Models.Component
 
     #region Static
     public static GadgetTest CreateDefault => (new GadgetTest ());
-    #endregion
-
-    #region Support
-    //void CopyFrom (TModelAction modelAction)
-    //{
-    //  Id = modelAction.ComponentInfoModel.Id;
-
-    //  Test = modelAction.ExtensionTextModel.Text;
-    //  Description = modelAction.ExtensionTextModel.Description;
-    //  Material = modelAction.ExtensionTextModel.Extension;
-    //  ExternalLink = modelAction.ExtensionTextModel.ExternalLink;
-    //  Enabled = modelAction.ComponentInfoModel.Enabled;
-    //}
     #endregion
   };
   //---------------------------//

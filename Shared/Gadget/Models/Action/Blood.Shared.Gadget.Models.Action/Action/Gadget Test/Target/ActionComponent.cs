@@ -10,8 +10,6 @@ using System.Linq;
 
 using Server.Models.Action;
 using Server.Models.Infrastructure;
-
-using Shared.Gadget.Models.Component;
 //---------------------------//
 
 namespace Shared.Gadget.Models.Action
@@ -71,35 +69,33 @@ namespace Shared.Gadget.Models.Action
     {
       if (gadget.NotNull () && entityAction.NotNull ()) {
         if (entityAction.CategoryType.IsCategory (TCategory.Target)) {
-          var someGadget = TGadgetTargetModel.Create (entityAction.ModelAction.ComponentInfoModel.Name, entityAction.ModelAction.ComponentStatusModel.Busy);
+          var modelAction = entityAction.ModelAction;
 
-          someGadget.Model.Id = entityAction.ModelAction.ComponentInfoModel.Id;
-          someGadget.Model.Target = entityAction.ModelAction.ExtensionTextModel.Text;
-          someGadget.Model.Description = entityAction.ModelAction.ExtensionTextModel.Description;
-          someGadget.Model.ExternalLink = entityAction.ModelAction.ExtensionTextModel.ExternalLink;
-          
-          someGadget.Model.Enabled = entityAction.ModelAction.ComponentInfoModel.Enabled;
+          gadget.CopyFrom (TGadgetTargetModel.Create (modelAction.ComponentInfoModel.Name, modelAction.ComponentStatusModel.Busy));
 
-          gadget.CopyFrom (someGadget);
+          gadget.Model.Id = modelAction.ComponentInfoModel.Id;
+          gadget.Model.MaterialId = modelAction.ExtensionNodeModel.ParentId;
+          gadget.Model.Target = modelAction.ExtensionTextModel.Text;
+          gadget.Model.Description = modelAction.ExtensionTextModel.Description;
+          gadget.Model.Reference = modelAction.ExtensionTextModel.Reference;
+          gadget.Model.Value = modelAction.ExtensionTextModel.Value;
+          gadget.Model.ExternalLink = modelAction.ExtensionTextModel.ExternalLink;
+          gadget.Model.Enabled = modelAction.ComponentInfoModel.Enabled;
 
-          // TOperation.Select
-          //if (entityAction.Operation.IsOperation (TOperation.Select)) {
-          //  if (entityAction.ModelAction.ExtensionNodeModel.ParentId.Equals (gadget.Id)) {
-          //    // only GadgetMaterial as node
-          //    var childGadgetId = entityAction.ModelAction.ExtensionNodeModel.ChildId;
+          //  // Has only one child node (GadgetMaterial)
+          foreach (var node in entityAction.CollectionAction.ExtensionNodeCollection) {
+            // gadget Target must be child here
+            if (node.ChildId.Equals (gadget.Id)) {
+              entityAction.ModelAction.ExtensionNodeModel.ChildId = node.ChildId;
+              entityAction.ModelAction.ExtensionNodeModel.ChildCategory = node.ChildCategory;
+              entityAction.ModelAction.ExtensionNodeModel.ParentId = node.ParentId;
+              entityAction.ModelAction.ExtensionNodeModel.ParentCategory = node.ParentCategory;
 
-          //    if (entityAction.CollectionAction.ModelCollection.ContainsKey (childGadgetId)) {
-          //      var childModelAction = entityAction.CollectionAction.ModelCollection [childGadgetId];
-          //      var action = TEntityAction.CreateDefault;
-          //      action.ModelAction.CopyFrom (childModelAction);
+              gadget.Model.MaterialId = gadget.Model.MaterialId.IsEmpty () ? node.ParentId : gadget.Model.MaterialId;  // must be child
 
-          //      var gadgetMaterial = GadgetMaterial.CreateDefault;
-          //      //gadget.CopyFrom (entityAction);
-
-          //      //action.CollectionAction.GadgetMaterialCollection.Add (gadgetMaterial); // child node
-          //    }
-          //  }
-          //}
+              break;
+            }
+          }
         }
       }
     }

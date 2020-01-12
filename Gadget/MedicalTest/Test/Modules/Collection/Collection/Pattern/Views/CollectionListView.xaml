@@ -36,11 +36,11 @@
                     <Border Grid.Column="0">
                         <StackPanel Orientation="Horizontal">
                             <!--busy-->
-                            <ContentControl Visibility="{Binding ModelItem.BusyVisibility}"
+                            <ContentControl Visibility="{Binding BusyVisibility}"
                                             Style="{DynamicResource ContentBusyIcon}" />
                             
                             <!--disable-->
-                            <ContentControl Visibility="{Binding ModelItem.DisableVisibility}"
+                            <ContentControl Visibility="{Binding DisableVisibility}"
                                             Style="{DynamicResource DisableIcon}" />
                         </StackPanel>
 

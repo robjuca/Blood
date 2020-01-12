@@ -8,8 +8,11 @@ using System;
 
 using rr.Library.Types;
 
+using Server.Models.Action;
+
 using Shared.Resources;
 using Shared.Types;
+using Shared.Gadget.Models.Action;
 //---------------------------//
 
 namespace Gadget.Factory.Pattern.Models
@@ -40,26 +43,29 @@ namespace Gadget.Factory.Pattern.Models
     #endregion
 
     #region Members
-    internal void EditEnter (Server.Models.Component.TEntityAction action)
+    internal void EditEnter (TGadgetTestModel gadget)
     {
-      if (action.NotNull ()) {
-        ComponentModelProperty.SelectModel (action);
+      if (gadget.NotNull ()) {
+        var entityAction = TEntityAction.CreateDefault;
+        TGadgetTestActionComponent.Request (gadget, entityAction);
+
+        ComponentModelProperty.SelectModel (entityAction);
 
         ValidateProperty ("TextProperty");
       }
     }
 
-    internal void SelectModel (Server.Models.Component.TEntityAction action)
+    internal void SelectModel (TEntityAction action)
     {
       ComponentModelProperty.SelectModel (action);
     }
 
-    internal void RequestModel (Server.Models.Component.TEntityAction action)
+    internal void RequestModel (TEntityAction action)
     {
       ComponentModelProperty.RequestModel (action);
 
       // update model
-      action.ModelAction.GadgetTargetModel.CopyFrom (action);
+      //action.ModelAction.GadgetTargetModel.CopyFrom (action);
     }
 
     internal void ShowPanels ()

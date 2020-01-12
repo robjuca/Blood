@@ -12,9 +12,12 @@ using rr.Library.Controls;
 using rr.Library.Helper;
 using rr.Library.Types;
 
+using Server.Models.Action;
+
 using Shared.Resources;
 using Shared.Types;
 using Shared.ViewModel;
+using Shared.Gadget.Models.Action;
 
 using Gadget.Factory.Presentation;
 using Gadget.Factory.Pattern.Models;
@@ -47,12 +50,14 @@ namespace Gadget.Factory.Pattern.ViewModels
         if (message.Node.IsParentToMe (TChild.Property)) {
           // RefreshModel
           if (message.IsAction (TInternalMessageAction.RefreshModel)) {
-            TDispatcher.BeginInvoke (RefreshModelDispatcher, Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction));
+            TDispatcher.BeginInvoke (RefreshModelDispatcher, TEntityAction.Request (message.Support.Argument.Types.EntityAction));
           }
 
           // Edit
           if (message.IsAction (TInternalMessageAction.Edit)) {
-            TDispatcher.BeginInvoke (EditDispatcher, Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction));
+            if (message.Support.Argument.Args.Param1 is TGadgetTestModel gadget) {
+              TDispatcher.BeginInvoke (EditDispatcher, gadget);
+            }
           }
 
           // EditLeave
@@ -80,7 +85,7 @@ namespace Gadget.Factory.Pattern.ViewModels
         if (message.Node.IsSiblingToMe (TChild.Property, TypeInfo)) {
           // Response
           if (message.IsAction (TInternalMessageAction.Response)) {
-            TDispatcher.BeginInvoke (ResponseModelDispatcher, Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction));
+            TDispatcher.BeginInvoke (ResponseModelDispatcher, TEntityAction.Request (message.Support.Argument.Types.EntityAction));
           }
         }
       }
@@ -112,10 +117,10 @@ namespace Gadget.Factory.Pattern.ViewModels
       Model.ShowPanels ();
       RaiseChanged ();
 
-      var action = Server.Models.Component.TEntityAction.Create (Server.Models.Infrastructure.TCategory.Test, Server.Models.Infrastructure.TOperation.Insert);
+      var action = TEntityAction.Create (Server.Models.Infrastructure.TCategory.Test, Server.Models.Infrastructure.TOperation.Insert);
 
       if (IsViewModeEdit) {
-        action = Server.Models.Component.TEntityAction.Create (Server.Models.Infrastructure.TCategory.Test, Server.Models.Infrastructure.TOperation.Change, Server.Models.Infrastructure.TExtension.Full);
+        action = TEntityAction.Create (Server.Models.Infrastructure.TCategory.Test, Server.Models.Infrastructure.TOperation.Change, Server.Models.Infrastructure.TExtension.Full);
       }
 
       Model.RequestModel (action);
@@ -153,7 +158,7 @@ namespace Gadget.Factory.Pattern.ViewModels
       DelegateCommand.PublishInternalMessage.Execute (message);
     }
 
-    void RequestModelDispatcher (Server.Models.Component.TEntityAction action)
+    void RequestModelDispatcher (TEntityAction action)
     {
       action.SupportAction.Rule.Add (TRuleInfo.Create ("gadget", 2));
 
@@ -164,18 +169,18 @@ namespace Gadget.Factory.Pattern.ViewModels
       DelegateCommand.PublishInternalMessage.Execute (message);
     }
 
-    void ResponseModelDispatcher (Server.Models.Component.TEntityAction action)
+    void ResponseModelDispatcher (TEntityAction action)
     {
-      action.ModelAction.GadgetTestModel.CopyFrom (action);
+      //action.ModelAction.GadgetTestModel.CopyFrom (action);
 
-      if (action.SupportAction.Rule.IsCommit ("gadget")) {
-        action.SupportAction.Rule.Remove ("gadget");
+      //if (action.SupportAction.Rule.IsCommit ("gadget")) {
+      //  action.SupportAction.Rule.Remove ("gadget");
 
-        TDispatcher.BeginInvoke (ApplyDispatcher, action);
-      }
+      //  TDispatcher.BeginInvoke (ApplyDispatcher, action);
+      //}
     }
 
-    void ApplyDispatcher (Server.Models.Component.TEntityAction action)
+    void ApplyDispatcher (TEntityAction action)
     {
       // to parent
       var message = new TFactoryMessageInternal (TInternalMessageAction.Request, TChild.Property, TypeInfo);
@@ -228,28 +233,28 @@ namespace Gadget.Factory.Pattern.ViewModels
       DelegateCommand.PublishInternalMessage.Execute (msg);
     }
 
-    void EditDispatcher (Server.Models.Component.TEntityAction action)
+    void EditDispatcher (TGadgetTestModel gadget)
     {
       // Id must exist
-      if (action.Id.NotEmpty ()) {
+      if (gadget.ValidateId) {
         SelectViewMode (TViewMode.Edit);
 
-        Model.EditEnter (action);
+        Model.EditEnter (gadget);
 
         TDispatcher.Invoke (RefreshAllDispatcher);
         TDispatcher.Invoke (EditEnterDispatcher);
 
         // to Sibling
         var message = new TFactorySiblingMessageInternal (TInternalMessageAction.PropertySelect, TChild.Property, TypeInfo);
-        message.Support.Argument.Args.Select ("Edit");
-        message.Support.Argument.Types.Select (action);
+        message.Support.Argument.Args.Select ("edit");
+        message.Support.Argument.Args.Select (gadget);
 
         DelegateCommand.PublishInternalMessage.Execute (message);
       }
     }
 
     //TODO: what for??
-    void RefreshModelDispatcher (Server.Models.Component.TEntityAction action)
+    void RefreshModelDispatcher (TEntityAction action)
     {
       action.ThrowNull ();
 
@@ -285,10 +290,10 @@ namespace Gadget.Factory.Pattern.ViewModels
     {
       Model.ValidateProperty (propertyName);
 
-      var action = Server.Models.Component.TEntityAction.CreateDefault;
+      var action = TEntityAction.CreateDefault;
       Model.ComponentModelProperty.RequestModel (action);
 
-      action.ModelAction.GadgetTestModel.CopyFrom (action); // set model
+      //action.ModelAction.GadgetTestModel.CopyFrom (action); // set model
 
       // to Sibling
       var message = new TFactorySiblingMessageInternal (TInternalMessageAction.PropertySelect, TChild.Property, TypeInfo);

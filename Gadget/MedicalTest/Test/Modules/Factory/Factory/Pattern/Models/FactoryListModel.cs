@@ -8,7 +8,10 @@ using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 
+using Server.Models.Action;
+
 using Shared.ViewModel;
+using Shared.Gadget.Models.Action;
 //---------------------------//
 
 namespace Gadget.Factory.Pattern.Models
@@ -90,30 +93,30 @@ namespace Gadget.Factory.Pattern.Models
     #endregion
 
     #region Members
-    internal void MaterialRefreshModel (Server.Models.Component.TEntityAction action)
+    internal void MaterialRefreshModel (TEntityAction action)
     {
       action.ThrowNull ();
 
       // for gadget Material
       MaterialSelectionItemsSource.Clear ();
 
-      var list = action.CollectionAction.GadgetMaterialCollection
-        .OrderBy (p => p.Material)
-        .ToList ()
-      ;
+      //var list = action.CollectionAction.GadgetMaterialCollection
+      //  .OrderBy (p => p.Material)
+      //  .ToList ()
+      //;
 
-      foreach (var gadget in list) {
-        if (gadget.Enabled) {
-          if (action.CollectionAction.ModelCollection.ContainsKey (gadget.Id)) {
-            var modelAction = action.CollectionAction.ModelCollection [gadget.Id];
-            modelAction.GadgetMaterialModel.CopyFrom (gadget);
+      //foreach (var gadget in list) {
+      //  if (gadget.Enabled) {
+      //    if (action.CollectionAction.ModelCollection.ContainsKey (gadget.Id)) {
+      //      var modelAction = action.CollectionAction.ModelCollection [gadget.Id];
+      //      modelAction.GadgetMaterialModel.CopyFrom (gadget);
 
-            action.ModelAction.CopyFrom (modelAction);
+      //      action.ModelAction.CopyFrom (modelAction);
 
-            MaterialSelectionItemsSource.Add (TComponentModelItem.Create (action));
-          }
-        }
-      }
+      //      MaterialSelectionItemsSource.Add (TComponentModelItem.Create (action));
+      //    }
+      //  }
+      //}
 
       if (MaterialSelectionItemsSource.Count > 0) {
         MaterialSelectionCurrent = MaterialSelectionItemsSource [0];
@@ -137,40 +140,40 @@ namespace Gadget.Factory.Pattern.Models
       }
     }
 
-    internal void EditEnter (Server.Models.Component.TEntityAction action)
+    internal void EditEnter (TGadgetTestModel gadget)
     {
-      action.ThrowNull ();
+      gadget.ThrowNull ();
 
-      var gadget = action.ModelAction.GadgetTestModel;
-      var relationCategory = gadget.RequestCategory ();
+      //var gadget = action.ModelAction.GadgetTestModel;
+      //var relationCategory = gadget.RequestCategory ();
 
-      MaterialSelectionItemChanged (gadget.Material);
+      //MaterialSelectionItemChanged (gadget.Material);
 
-      IsEnabledSelector = gadget.ContentCount.Equals (0);
-      MaterialSelectionEnabled = gadget.ContentCount.Equals (0);
+      //IsEnabledSelector = gadget.ContentCount.Equals (0);
+      //MaterialSelectionEnabled = gadget.ContentCount.Equals (0);
 
-      switch (relationCategory) {
-        case Server.Models.Infrastructure.TCategory.Target: {
-            SlideIndex = 0;
-            SelectorTargetChecked = true;
-          }
-          break;
+      //switch (relationCategory) {
+      //  case Server.Models.Infrastructure.TCategory.Target: {
+      //      SlideIndex = 0;
+      //      SelectorTargetChecked = true;
+      //    }
+      //    break;
 
-        case Server.Models.Infrastructure.TCategory.Test: {
-            SlideIndex = 1;
-            SelectorTestChecked = true;
-          }
-          break;
-      }
+      //  case Server.Models.Infrastructure.TCategory.Test: {
+      //      SlideIndex = 1;
+      //      SelectorTestChecked = true;
+      //    }
+      //    break;
+      //}
     }
 
     internal void MaterialSelectionItemChanged (string materialName)
     {
       for (int index = 0; index < MaterialSelectionItemsSource.Count; index++) {
-        if (MaterialSelectionItemsSource [index].GadgetMaterialModel.Material.Equals (materialName)) {
-          MaterialSelectionSelectedIndex = index;
-          break;
-        }
+        //if (MaterialSelectionItemsSource [index].GadgetMaterialModel.Material.Equals (materialName)) {
+        //  MaterialSelectionSelectedIndex = index;
+        //  break;
+        //}
       }
     }
 

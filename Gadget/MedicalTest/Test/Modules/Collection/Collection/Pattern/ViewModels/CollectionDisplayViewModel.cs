@@ -9,9 +9,15 @@ using System.ComponentModel.Composition;
 using rr.Library.Infrastructure;
 using rr.Library.Helper;
 
+using Server.Models.Action;
+using Server.Models.Infrastructure;
+
 using Shared.Resources;
 using Shared.Types;
 using Shared.ViewModel;
+using Shared.Gadget.Models.Action;
+
+using Shared.Gadget.Test;
 
 using Gadget.Collection.Presentation;
 using Gadget.Collection.Pattern.Models;
@@ -43,7 +49,7 @@ namespace Gadget.Collection.Pattern.ViewModels
           // Response
           if (message.IsAction (TInternalMessageAction.Response)) {
             // Remove
-            if (message.Support.Argument.Types.IsOperation (Server.Models.Infrastructure.TOperation.Remove)) {
+            if (message.Support.Argument.Types.IsOperation (TOperation.Remove)) {
               if (message.Result.IsValid) {
                 Model.Cleanup ();
                 RaiseChanged ();
@@ -59,8 +65,9 @@ namespace Gadget.Collection.Pattern.ViewModels
         if (message.Node.IsSiblingToMe (TChild.Display, TypeInfo)) {
           // Select
           if (message.IsAction (TInternalMessageAction.Select)) {
-            var action = Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction);
-            TDispatcher.BeginInvoke (SelectDispatcher, action);
+            if (message.Support.Argument.Args.Param1 is TGadgetTestModel gadget) {
+              TDispatcher.BeginInvoke (SelectDispatcher, gadget);
+            }
           }
 
           // Cleanup
@@ -85,11 +92,11 @@ namespace Gadget.Collection.Pattern.ViewModels
     #endregion
 
     #region Dispatcher
-    void SelectDispatcher (Server.Models.Component.TEntityAction action)
+    void SelectDispatcher (TGadgetTestModel gadget)
     {
-      Model.Select (action);
+      Model.Select (gadget);
 
-      if (FrameworkElementView.FindName ("DisplayControl") is Shared.Gadget.Test.TComponentDisplayControl control) {
+      if (FrameworkElementView.FindName ("DisplayControl") is TComponentDisplayControl control) {
         control.RefreshDesign ();
       }
 
@@ -98,25 +105,21 @@ namespace Gadget.Collection.Pattern.ViewModels
 
     void EditDispatcher ()
     {
-      var action = Server.Models.Component.TEntityAction.CreateDefault;
-      Model.RequestModel (action);
-
       // to parent
       var message = new TCollectionMessageInternal (TInternalMessageAction.Edit, TChild.Display, TypeInfo);
-      message.Support.Argument.Types.Select (action);
+      message.Support.Argument.Args.Select (Model.GadgetModel);
 
       DelegateCommand.PublishInternalMessage.Execute (message);
     }
 
     void RemoveDispatcher ()
     {
-      var action = Server.Models.Component.TEntityAction.Create (Server.Models.Infrastructure.TCategory.Target, Server.Models.Infrastructure.TOperation.Remove);
-      Model.RequestModel (action);
+      var entityAction = TEntityAction.Create (TCategory.Test, TOperation.Remove);
+      entityAction.Id = Model.GadgetModel.Id;
 
       // to parent
       var message = new TCollectionMessageInternal (TInternalMessageAction.Request, TChild.Display, TypeInfo);
-      message.Support.Argument.Types.Select (action);
-      //message.Support.Argument.Types.Item.ContentLocked = Model.ComponentModelItem.ContentLocked;
+      message.Support.Argument.Types.Select (entityAction);
 
       DelegateCommand.PublishInternalMessage.Execute (message);
     }

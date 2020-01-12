@@ -6,6 +6,8 @@
 //----- Include
 using System;
 
+using Server.Models.Action;
+
 using Shared.ViewModel;
 
 using Shared.Gadget.Test;
@@ -31,23 +33,23 @@ namespace Gadget.Factory.Pattern.Models
     #endregion
 
     #region Members
-    internal void SelectModel (Server.Models.Component.TEntityAction action)
+    internal void SelectModel (TEntityAction action)
     {
-      ComponentControlModel.SelectModel (action);
+      //ComponentControlModel.SelectModel (action);
     }
 
     internal void AddModel (TComponentModelItem item) 
     {
       item.ThrowNull ();
 
-      ComponentControlModel.AddComponent (item);
+      //ComponentControlModel.AddComponent (item);
     }
 
     internal void RemoveModel (TComponentModelItem item)
     {
       item.ThrowNull ();
 
-      ComponentControlModel.RemoveComponent (item);
+      //ComponentControlModel.RemoveComponent (item);
     }
 
     internal void Cleanup ()

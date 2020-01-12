@@ -10,9 +10,12 @@ using System.ComponentModel.Composition;
 using rr.Library.Infrastructure;
 using rr.Library.Helper;
 
+using Server.Models.Action;
+
 using Shared.Types;
 using Shared.Resources;
 using Shared.ViewModel;
+using Shared.Gadget.Models.Action;
 
 using Gadget.Factory.Presentation;
 using Gadget.Factory.Pattern.Models;
@@ -53,7 +56,7 @@ namespace Gadget.Factory.Pattern.ViewModels
               if (message.Result.IsValid) {
                 // Gadget Material
                 if (message.Support.Argument.Types.IsOperationCategory (Server.Models.Infrastructure.TCategory.Material)) {
-                  var action = Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction);
+                  var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
                   TDispatcher.BeginInvoke (MaterialCollectionFullDispatcher, action);
                 }
               }
@@ -67,8 +70,10 @@ namespace Gadget.Factory.Pattern.ViewModels
           if (message.IsAction (TInternalMessageAction.PropertySelect)) {
             var propertyName = message.Support.Argument.Args.PropertyName;
 
-            if (propertyName.Equals ("Edit")) {
-              TDispatcher.BeginInvoke (EditDispatcher, Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction));
+            if (propertyName.Equals ("edit")) {
+              if (message.Support.Argument.Args.Param1 is TGadgetTestModel gadget) {
+                TDispatcher.BeginInvoke (EditDispatcher, gadget);
+              }
             }
 
             if (propertyName.Equals ("GadgetAdd") || propertyName.Equals ("GadgetRemove")) {
@@ -129,7 +134,7 @@ namespace Gadget.Factory.Pattern.ViewModels
     {
       // to parent
       // Collection - Full (Material list - used to send RefreshModel)
-      var entityAction = Server.Models.Component.TEntityAction.Create (
+      var entityAction = TEntityAction.Create (
         Server.Models.Infrastructure.TCategory.Material,
         Server.Models.Infrastructure.TOperation.Collection,
         Server.Models.Infrastructure.TExtension.Full
@@ -141,7 +146,7 @@ namespace Gadget.Factory.Pattern.ViewModels
       DelegateCommand.PublishInternalMessage.Execute (message);
     }
 
-    void MaterialCollectionFullDispatcher (Server.Models.Component.TEntityAction action)
+    void MaterialCollectionFullDispatcher (TEntityAction action)
     {
       // refresh model
       Model.MaterialRefreshModel (action);
@@ -149,9 +154,9 @@ namespace Gadget.Factory.Pattern.ViewModels
       TDispatcher.Invoke (RefreshAllDispatcher);
     }
 
-    void EditDispatcher (Server.Models.Component.TEntityAction action)
+    void EditDispatcher (TGadgetTestModel gadget)
     {
-      Model.EditEnter (action);
+      Model.EditEnter (gadget);
 
       TDispatcher.Invoke (RefreshAllDispatcher);
     }

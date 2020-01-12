@@ -73,6 +73,8 @@
     <Compile Include="Action\Gadget Test\Material\ActionModel.cs" />
     <Compile Include="Action\Gadget Test\Target\ActionComponent.cs" />
     <Compile Include="Action\Gadget Test\Target\ActionModel.cs" />
+    <Compile Include="Action\Gadget Test\Test\ActionComponent.cs" />
+    <Compile Include="Action\Gadget Test\Test\ActionModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

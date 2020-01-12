@@ -61,7 +61,7 @@ namespace Gadget.Factory.Pattern.Models
           }
 
           ComponentModelProperty.ValidateModel (true);
-          ComponentModelProperty.ExtensionModel.SelectModel (Server.Models.Infrastructure.TCategory.Target, entityAction); // update Selection Property (Material list)
+          ComponentModelProperty.ExtensionModel.SelectModel (TCategory.Target, entityAction); // update Selection Property (Material list)
 
           AlertsModel.Select (isOpen: false); // default
         }
@@ -108,9 +108,9 @@ namespace Gadget.Factory.Pattern.Models
 
           //  Here gadget Material must be Parent
           action.ModelAction.ExtensionNodeModel.ChildId = ComponentModelProperty.Id;
-          action.ModelAction.ExtensionNodeModel.ChildCategory = Server.Models.Infrastructure.TCategoryType.ToValue (Server.Models.Infrastructure.TCategory.Target);
+          action.ModelAction.ExtensionNodeModel.ChildCategory = TCategoryType.ToValue (TCategory.Target);
           action.ModelAction.ExtensionNodeModel.ParentId = materialId;
-          action.ModelAction.ExtensionNodeModel.ParentCategory = Server.Models.Infrastructure.TCategoryType.ToValue (Server.Models.Infrastructure.TCategory.Material);
+          action.ModelAction.ExtensionNodeModel.ParentCategory = TCategoryType.ToValue (TCategory.Material);
 
           // update collection
           action.CollectionAction.ExtensionNodeCollection.Add (action.ModelAction.ExtensionNodeModel);
