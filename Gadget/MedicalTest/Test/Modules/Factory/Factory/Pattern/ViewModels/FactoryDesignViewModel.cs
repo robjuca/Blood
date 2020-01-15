@@ -15,7 +15,7 @@ using Server.Models.Action;
 using Shared.Types;
 using Shared.Resources;
 using Shared.ViewModel;
-
+using Shared.Gadget.Models.Action;
 using Shared.Gadget.Test;
 
 using Gadget.Factory.Presentation;
@@ -50,12 +50,26 @@ namespace Gadget.Factory.Pattern.ViewModels
             var propertyName = message.Support.Argument.Args.PropertyName;
 
             if (propertyName.Equals ("GadgetAdd")) {
-              Model.AddModel (message.Support.Argument.Types.Item);
+              if (message.Support.Argument.Args.Param1 is TGadgetTestComponent gadget) {
+                Model.AddModel (gadget);
+              }
+
               TDispatcher.Invoke (RefreshDesignDispatcher);
             }
 
             if (propertyName.Equals ("GadgetRemove")) {
-              Model.RemoveModel (message.Support.Argument.Types.Item);
+              if (message.Support.Argument.Args.Param1 is TGadgetTestComponent gadget) {
+                Model.RemoveModel (gadget);
+              }
+
+              TDispatcher.Invoke (RefreshDesignDispatcher);
+            }
+
+            if (propertyName.Equals ("edit")) {
+              if (message.Support.Argument.Args.Param1 is TGadgetTestModel gadget) {
+                Model.Edit (gadget);
+              }
+              
               TDispatcher.Invoke (RefreshDesignDispatcher);
             }
 
@@ -63,7 +77,6 @@ namespace Gadget.Factory.Pattern.ViewModels
 
             if (action.NotNull ()) {
               action.Param1 = propertyName;
-
               TDispatcher.BeginInvoke (PropertySelectDispatcher, action);
             }
           }
@@ -99,7 +112,7 @@ namespace Gadget.Factory.Pattern.ViewModels
     void PropertySelectDispatcher (TEntityAction action)
     {
       if (action.Param1 is string propertyName) {
-        if (propertyName.Equals ("Edit") || propertyName.Equals ("DescriptionProperty") || propertyName.Equals ("TextProperty") || propertyName.Equals ("ExternalLinkProperty")) {
+        if (propertyName.Equals ("DescriptionProperty") || propertyName.Equals ("TextProperty") || propertyName.Equals ("ExternalLinkProperty")) {
           Model.SelectModel (action);
           TDispatcher.Invoke (RefreshDesignDispatcher);
         }

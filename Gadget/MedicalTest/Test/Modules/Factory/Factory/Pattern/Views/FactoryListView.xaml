@@ -24,6 +24,7 @@
                 <RowDefinition />
             </Grid.RowDefinitions>
 
+            <!--material, gadget selector-->
             <Border Grid.Row="0">
                 <StackPanel>
                     <!--material selection-->
@@ -57,8 +58,7 @@
                                       DisplayMemberPath="Name"
                                       IsEnabled="{Binding Model.MaterialSelectionEnabled, Mode=TwoWay}"
                                       SelectedIndex="{Binding Model.MaterialSelectionSelectedIndex, Mode=TwoWay}"
-                                      SelectedItem="{Binding Model.MaterialSelectionCurrent}"
-                                      caliburn:Message.Attach="[Event SelectionChanged] = [OnMaterialSelectionChanged (MaterialList.SelectedIndex)]" />
+                                      caliburn:Message.Attach="[Event SelectionChanged] = [OnMaterialSelectionChanged ()]" />
                         </StackPanel>
                     </Border>
 

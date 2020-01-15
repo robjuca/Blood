@@ -83,6 +83,11 @@ namespace Shared.Gadget.Models.Action
     #endregion
 
     #region Members
+    public bool Contains (Guid id)
+    {
+      return (Id.Equals (id));
+    }
+
     public void CopyFrom (TGadgetMaterialModel alias)
     {
       if (alias.NotNull ()) {

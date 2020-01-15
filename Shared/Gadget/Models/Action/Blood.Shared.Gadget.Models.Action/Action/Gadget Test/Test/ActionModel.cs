@@ -117,12 +117,24 @@ namespace Shared.Gadget.Models.Action
     #endregion
 
     #region Members
+    public bool Contains (Guid id)
+    {
+      return (Id.Equals (id));
+    }
+
     public void CopyFrom (TGadgetTestModel alias)
     {
       if (alias.NotNull ()) {
         Select (alias.Name, alias.Busy);
 
         Model.CopyFrom (alias.Model);
+      }
+    }
+
+    public void CopyFrom (GadgetTest gadget)
+    {
+      if (gadget.NotNull ()) {
+        Model.CopyFrom (gadget);
       }
     }
     #endregion

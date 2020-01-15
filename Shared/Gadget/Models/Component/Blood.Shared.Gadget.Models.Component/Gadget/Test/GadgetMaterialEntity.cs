@@ -48,6 +48,14 @@ namespace Shared.Gadget.Models.Component
       get; 
       set;
     }
+
+    public bool ValidateId
+    {
+      get
+      {
+        return (Id.NotEmpty ());
+      }
+    }
     #endregion
 
     #region Constructor
@@ -70,13 +78,6 @@ namespace Shared.Gadget.Models.Component
     #endregion
 
     #region Members
-    //public void CopyFrom (TEntityAction action)
-    //{
-    //  if (action.NotNull ()) {
-    //    CopyFrom (action.ModelAction);
-    //  }
-    //}
-
     public void CopyFrom (GadgetMaterial alias)
     {
       if (alias.NotNull ()) {
@@ -130,6 +131,11 @@ namespace Shared.Gadget.Models.Component
       return (model);
     }
 
+    public bool Contains (Guid id)
+    {
+      return (Id.Equals (id));
+    }
+
     //public void RefreshModel (TEntityAction action)
     //{
     //  if (action.NotNull ()) {
@@ -165,18 +171,6 @@ namespace Shared.Gadget.Models.Component
 
     #region Static
     public static GadgetMaterial CreateDefault => (new GadgetMaterial ());
-    #endregion
-
-    #region Support
-    //void CopyFrom (TModelAction modelAction)
-    //{
-    //  Id = modelAction.ComponentInfoModel.Id;
-    //  Material = modelAction.ExtensionTextModel.Text;
-    //  Description = modelAction.ExtensionTextModel.Description;
-    //  ExternalLink = modelAction.ExtensionTextModel.ExternalLink;
-    //  SetImage (modelAction.ExtensionImageModel.Image);
-    //  Enabled = modelAction.ComponentInfoModel.Enabled;
-    //} 
     #endregion
   };
   //---------------------------//

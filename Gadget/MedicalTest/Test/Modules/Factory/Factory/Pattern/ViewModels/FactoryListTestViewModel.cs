@@ -11,6 +11,7 @@ using rr.Library.Infrastructure;
 using rr.Library.Helper;
 
 using Server.Models.Action;
+using Server.Models.Infrastructure;
 
 using Shared.Types;
 using Shared.Resources;
@@ -52,10 +53,10 @@ namespace Gadget.Factory.Pattern.ViewModels
           // Response
           if (message.IsAction (TInternalMessageAction.Response)) {
             // Collection - Full
-            if (message.Support.Argument.Types.IsOperation (Server.Models.Infrastructure.TOperation.Collection, Server.Models.Infrastructure.TExtension.Full)) {
+            if (message.Support.Argument.Types.IsOperation (TOperation.Collection, TExtension.Full)) {
               if (message.Result.IsValid) {
                 // Gadget Test
-                if (message.Support.Argument.Types.IsOperationCategory (Server.Models.Infrastructure.TCategory.Test)) {
+                if (message.Support.Argument.Types.IsOperationCategory (TCategory.Test)) {
                   var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
                   TDispatcher.BeginInvoke (ResponseDataDispatcher, action);
                 }
@@ -63,10 +64,10 @@ namespace Gadget.Factory.Pattern.ViewModels
             }
 
             // Select - ById
-            if (message.Support.Argument.Types.IsOperation (Server.Models.Infrastructure.TOperation.Select, Server.Models.Infrastructure.TExtension.ById)) {
+            if (message.Support.Argument.Types.IsOperation (TOperation.Select, TExtension.ById)) {
               if (message.Result.IsValid) {
                 // Gadget Test
-                if (message.Support.Argument.Types.IsOperationCategory (Server.Models.Infrastructure.TCategory.Test)) {
+                if (message.Support.Argument.Types.IsOperationCategory (TCategory.Test)) {
                   var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
                   TDispatcher.BeginInvoke (ResponseSelectByIdDispatcher, action);
                 }
@@ -80,13 +81,11 @@ namespace Gadget.Factory.Pattern.ViewModels
           // Select
           if (message.IsAction (TInternalMessageAction.Select)) {
             // material
-            if (message.Support.Argument.Types.Item.Category.Equals (Server.Models.Infrastructure.TCategory.Material)) {
-              //var model = message.Support.Argument.Types.Item.GadgetMaterialModel;
-
-              //Model.MaterialItemChanged (model.Id, model.Material);
-
-              TDispatcher.Invoke (RefreshAllDispatcher);
+            if (message.Support.Argument.Args.Param1 is TGadgetMaterialModel gadget) {
+              Model.MaterialItemChanged (gadget);
             }
+
+            TDispatcher.Invoke (RefreshAllDispatcher);
           }
 
           // PropertySelect
@@ -116,14 +115,14 @@ namespace Gadget.Factory.Pattern.ViewModels
     #endregion
 
     #region View Event
-    public void OnGadgetItemChecked (TFactoryListItemInfo itemInfo)
+    public void OnGadgetItemChecked (TGadgetTestComponent gadgetComponent)
     {
-      TDispatcher.BeginInvoke (ItemCheckedChangedDispatcher, itemInfo);
+      TDispatcher.BeginInvoke (ItemCheckedChangedDispatcher, gadgetComponent);
     }
 
-    public void OnGadgetItemUnchecked (TFactoryListItemInfo itemInfo)
+    public void OnGadgetItemUnchecked (TGadgetTestComponent gadgetComponent)
     {
-      TDispatcher.BeginInvoke (ItemCheckedChangedDispatcher, itemInfo);
+      TDispatcher.BeginInvoke (ItemCheckedChangedDispatcher, gadgetComponent);
     }
     #endregion
 
@@ -140,9 +139,9 @@ namespace Gadget.Factory.Pattern.ViewModels
       // to parent
       // Collection - Full 
       var action = TEntityAction.Create (
-        Server.Models.Infrastructure.TCategory.Test,
-        Server.Models.Infrastructure.TOperation.Collection,
-        Server.Models.Infrastructure.TExtension.Full
+        TCategory.Test,
+        TOperation.Collection,
+        TExtension.Full
       );
 
       var message = new TFactoryMessageInternal (TInternalMessageAction.Request, TChild.List, TypeInfo);
@@ -169,42 +168,47 @@ namespace Gadget.Factory.Pattern.ViewModels
       DelegateCommand.PublishInternalMessage.Execute (message);
     }
 
-    void ResponseSelectByIdDispatcher (TEntityAction action)
+    void ResponseSelectByIdDispatcher (TEntityAction entityAction)
     {
-      action.ThrowNull ();
+      entityAction.ThrowNull ();
 
-      if (action.Param2 is TFactoryListItemInfo itemInfo) {
-        //itemInfo.ModelItem.GadgetTestModel.UpdateContents (action);
+      if (entityAction.Param2 is TGadgetTestComponent gadgetComponent) {
+        if (gadgetComponent.CurrentGadgetCategory.Equals(TCategory.Test)) {
+          var gadgetTest = TGadgetTestModel.Create (gadgetComponent.GadgetTestModel);
+          TGadgetTestActionComponent.Select (gadgetTest, entityAction);
 
-        //Model.GadgetItemChecked (itemInfo, isChecked: itemInfo.IsChecked);
+          gadgetComponent.GadgetTestModel.CopyFrom (gadgetTest.Model); // update
+
+          Model.GadgetItemChecked (gadgetComponent, isChecked: gadgetComponent.IsChecked);
+
+          // to Sibling
+          var message = new TFactorySiblingMessageInternal (TInternalMessageAction.PropertySelect, TChild.List, TypeInfo);
+          message.Support.Argument.Args.Select (gadgetComponent);
+          message.Support.Argument.Args.Select (gadgetComponent.IsChecked ? "GadgetAdd" : "GadgetRemove");
+
+          if (Model.HasGadgetChecked) {
+            message.Support.Argument.Types.ReportData.SelectLock ();
+          }
+
+          DelegateCommand.PublishInternalMessage.Execute (message);
+        }
 
         TDispatcher.Invoke (RefreshAllDispatcher);
-
-        // to Sibling
-        var message = new TFactorySiblingMessageInternal (TInternalMessageAction.PropertySelect, TChild.List, TypeInfo);
-        //message.Support.Argument.Types.Item.CopyFrom (itemInfo.ModelItem);
-        //message.Support.Argument.Args.Select (itemInfo.IsChecked ? "GadgetAdd" : "GadgetRemove");
-
-        //if (Model.HasGadgetChecked) {
-        //  message.Support.Argument.Types.ReportData.SelectLock ();
-        //}
-
-        DelegateCommand.PublishInternalMessage.Execute (message);
       }
     }
 
-    void ItemCheckedChangedDispatcher (TFactoryListItemInfo itemInfo)
+    void ItemCheckedChangedDispatcher (TGadgetTestComponent gadgetComponent)
     {
       // to parent
       // Collection - Full 
       var action = TEntityAction.Create (
-        Server.Models.Infrastructure.TCategory.Test,
-        Server.Models.Infrastructure.TOperation.Select,
-        Server.Models.Infrastructure.TExtension.ById
+        TCategory.Test,
+        TOperation.Select,
+        TExtension.ById
       );
 
-      action.Id = itemInfo.Id;
-      action.Param2 = itemInfo; // preserve
+      action.Id = gadgetComponent.Id;
+      action.Param2 = gadgetComponent; // preserve
 
       var message = new TFactoryMessageInternal (TInternalMessageAction.Request, TChild.List, TypeInfo);
       message.Support.Argument.Types.Select (action);

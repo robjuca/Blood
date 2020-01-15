@@ -100,11 +100,9 @@ namespace Gadget.Factory.Pattern.ViewModels
     #endregion
 
     #region Event
-    public void OnMaterialSelectionChanged (int selectedIndex)
+    public void OnMaterialSelectionChanged ()
     {
-      if (selectedIndex.Equals (-1).IsFalse ()) {
-        TDispatcher.Invoke (MaterialSelectionChangedDispatcher);
-      }
+      TDispatcher.Invoke (MaterialSelectionChangedDispatcher);
     }
 
     public void OnSelectorTargetCommadClicked ()
@@ -165,7 +163,7 @@ namespace Gadget.Factory.Pattern.ViewModels
     {
       // to sibling
       var message = new TFactorySiblingMessageInternal (TInternalMessageAction.Select, TChild.List, TypeInfo);
-      message.Support.Argument.Types.Item.CopyFrom (Model.MaterialSelectionCurrent);
+      message.Support.Argument.Args.Select (Model.MaterialSelectionCurrent);
 
       DelegateCommand.PublishInternalMessage.Execute (message);
     }

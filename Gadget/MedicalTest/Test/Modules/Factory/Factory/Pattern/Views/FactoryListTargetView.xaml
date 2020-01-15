@@ -33,9 +33,9 @@
                     <Image Margin="0 0 5 0"
                            Width="16"
                            Height="16"
-                           Source="{Binding ModelItem.GadgetMaterialModel.Image, Converter={StaticResource CollectionToBitmapImageConverter}}" />
+                           Source="{Binding MaterialImage, Converter={StaticResource CollectionToBitmapImageConverter}}" />
 
-                    <TextBlock Text="{Binding ModelItem.Name}"
+                    <TextBlock Text="{Binding Name}"
                                FontWeight="Bold"
                                VerticalAlignment="Center" />
                 </StackPanel>

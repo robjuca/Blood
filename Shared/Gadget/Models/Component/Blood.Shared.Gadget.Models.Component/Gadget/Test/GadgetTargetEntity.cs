@@ -58,7 +58,15 @@ namespace Shared.Gadget.Models.Component
     {
       get; 
       set;
-    } 
+    }
+
+    public bool ValidateId
+    {
+      get
+      {
+        return (Id.NotEmpty ());
+      }
+    }
     #endregion
 
     #region Constructor
@@ -118,6 +126,11 @@ namespace Shared.Gadget.Models.Component
       model.CopyFrom (this);
 
       return (model);
+    }
+
+    public bool Contains (Guid id)
+    {
+      return (Id.Equals (id));
     }
 
     //public void RefreshModel (TEntityAction action)

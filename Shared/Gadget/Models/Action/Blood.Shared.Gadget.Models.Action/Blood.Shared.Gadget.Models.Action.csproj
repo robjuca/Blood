@@ -69,6 +69,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Action\ActionModelBase.cs" />
+    <Compile Include="Action\Gadget Care\GadgetComponent.cs" />
+    <Compile Include="Action\Gadget Test\GadgetComponent.cs" />
     <Compile Include="Action\Gadget Test\Material\ActionComponent.cs" />
     <Compile Include="Action\Gadget Test\Material\ActionModel.cs" />
     <Compile Include="Action\Gadget Test\Target\ActionComponent.cs" />
@@ -79,6 +81,10 @@
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Action\Gadget Care\Registration\" />
+    <Folder Include="Action\Gadget Care\Report\" />
+    <Folder Include="Action\Gadget Care\Tests\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

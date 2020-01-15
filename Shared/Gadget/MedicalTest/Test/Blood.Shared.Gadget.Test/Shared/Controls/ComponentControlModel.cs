@@ -130,76 +130,76 @@ namespace Shared.Gadget.Test
     //  }
     //}
 
-    //public void AddComponent (TComponentModelItem item)
-    //{
-    //  if (item.NotNull ()) {
-    //    switch (item.Category) {
-    //      case Server.Models.Infrastructure.TCategory.Test: {
-    //          ControlModel.AddContent (item.GadgetTestModel);
+    public void AddComponent (TGadgetTestComponent gadgetComponent)
+    {
+      if (gadgetComponent.NotNull ()) {
+        switch (gadgetComponent.CurrentGadgetCategory) {
+          case TCategory.Test: {
+              ControlModel.Model.AddContent (gadgetComponent.GadgetTestModel);
 
-    //          var contents = new Collection<Server.Models.Component.GadgetTest> ();
-    //          ControlModel.RequestContent (contents);
+              var contents = new Collection<GadgetTest> ();
+              ControlModel.Model.RequestContent (contents);
 
-    //          ComponentControlModels.Clear ();
+              ComponentControlModels.Clear ();
 
-    //          foreach (var gadgetContent in contents) {
-    //            var componentControlModel = TComponentControlModel.CreateDefault;
-    //            componentControlModel.ControlModel.CopyFrom (gadgetContent);
+              foreach (var gadgetContent in contents) {
+                var componentControlModel = TComponentControlModel.CreateDefault;
+                componentControlModel.ControlModel.CopyFrom (gadgetContent);
 
-    //            if (componentControlModel.ControlModel.RequestCategory ().Equals (Server.Models.Infrastructure.TCategory.Test)) {
-    //              var internalContents = new Collection<Server.Models.Component.GadgetTest> ();
-    //              componentControlModel.ControlModel.RequestContent (internalContents);
+                if (componentControlModel.ControlModel.RelationCategory.Equals (TCategory.Test)) {
+                  var internalContents = new Collection<GadgetTest> ();
+                  componentControlModel.ControlModel.Model.RequestContent (internalContents);
 
-    //              foreach (var gadgetInternalContent in internalContents) {
-    //                var internalComponentControlModel = TComponentControlModel.CreateDefault;
-    //                internalComponentControlModel.ControlModel.CopyFrom (gadgetInternalContent);
+                  foreach (var gadgetInternalContent in internalContents) {
+                    var internalComponentControlModel = TComponentControlModel.CreateDefault;
+                    internalComponentControlModel.ControlModel.CopyFrom (gadgetInternalContent);
 
-    //                componentControlModel.ComponentControlModels.Add (internalComponentControlModel);
-    //              }
-    //            }
+                    componentControlModel.ComponentControlModels.Add (internalComponentControlModel);
+                  }
+                }
 
-    //            ComponentControlModels.Add (componentControlModel);
-    //          }
-    //        }
-    //        break;
+                ComponentControlModels.Add (componentControlModel);
+              }
+            }
+            break;
 
-    //      case Server.Models.Infrastructure.TCategory.Target:
-    //        ControlModel.AddContent (item.GadgetTargetModel);
-    //        break;
-    //    }
-    //  }
-    //}
+          case TCategory.Target:
+            ControlModel.Model.AddContent (gadgetComponent.GadgetTargetModel);
+            break;
+        }
+      }
+    }
 
-    //public void RemoveComponent (TComponentModelItem item)
-    //{
-    //  if (item.NotNull ()) {
-    //    if (ControlModelId.Equals (item.Id)) {
-    //      Cleanup ();
-    //    }
+    public void RemoveComponent (TGadgetTestComponent gadgetComponent)
+    {
+      if (gadgetComponent.NotNull ()) {
+        if (gadgetComponent.Contains (ControlModelId)) {
+          Cleanup ();
+        }
 
-    //    else {
-    //      switch (item.Category) {
-    //        case Server.Models.Infrastructure.TCategory.Test: {
-    //            ControlModel.RemoveContent (item.GadgetTestModel);
+        else {
+          switch (gadgetComponent.CurrentGadgetCategory) {
+            case TCategory.Test: {
+                ControlModel.Model.RemoveContent (gadgetComponent.GadgetTestModel);
 
-    //            if (HasComponentControlModels) {
-    //              foreach (var controlModelItem in ComponentControlModels) {
-    //                if (controlModelItem.ControlModelId.Equals (item.Id)) {
-    //                  ComponentControlModels.Remove (controlModelItem);
-    //                  break;
-    //                }
-    //              }
-    //            }
-    //          }
-    //          break;
+                if (HasComponentControlModels) {
+                  foreach (var controlModelItem in ComponentControlModels) {
+                    if (gadgetComponent.Contains (controlModelItem.ControlModelId)) {
+                      ComponentControlModels.Remove (controlModelItem);
+                      break;
+                    }
+                  }
+                }
+              }
+              break;
 
-    //        case Server.Models.Infrastructure.TCategory.Target:
-    //          ControlModel.RemoveContent (item.GadgetTargetModel);
-    //          break;
-    //      }
-    //    }
-    //  }
-    //}
+            case TCategory.Target:
+              ControlModel.Model.RemoveContent (gadgetComponent.GadgetTargetModel);
+              break;
+          }
+        }
+      }
+    }
 
     public void CopyFrom (TComponentControlModel alias)
     {

@@ -10,7 +10,6 @@ using System.Linq;
 
 using Server.Models.Action;
 
-using Shared.ViewModel;
 using Shared.Gadget.Models.Action;
 //---------------------------//
 
@@ -19,7 +18,7 @@ namespace Gadget.Factory.Pattern.Models
   public class TFactoryListModel
   {
     #region Property
-    public ObservableCollection<TComponentModelItem> MaterialSelectionItemsSource
+    public ObservableCollection<TGadgetMaterialModel> MaterialSelectionItemsSource
     {
       get;
     }
@@ -32,10 +31,12 @@ namespace Gadget.Factory.Pattern.Models
       }
     }
 
-    public TComponentModelItem MaterialSelectionCurrent
+    public TGadgetMaterialModel MaterialSelectionCurrent
     {
-      get;
-      set;
+      get
+      {
+        return (MaterialSelectionSelectedIndex.Equals (-1) ? TGadgetMaterialModel.CreateDefault : MaterialSelectionItemsSource [MaterialSelectionSelectedIndex]);
+      }
     }
 
     public int MaterialSelectionSelectedIndex
@@ -78,7 +79,7 @@ namespace Gadget.Factory.Pattern.Models
     #region Constructor
     public TFactoryListModel ()
     {
-      MaterialSelectionItemsSource = new ObservableCollection<TComponentModelItem> ();
+      MaterialSelectionItemsSource = new ObservableCollection<TGadgetMaterialModel> ();
       
       MaterialSelectionSelectedIndex = -1;
       MaterialSelectionEnabled = true;
@@ -93,33 +94,15 @@ namespace Gadget.Factory.Pattern.Models
     #endregion
 
     #region Members
-    internal void MaterialRefreshModel (TEntityAction action)
+    internal void MaterialRefreshModel (TEntityAction entityAction)
     {
-      action.ThrowNull ();
+      entityAction.ThrowNull ();
 
       // for gadget Material
-      MaterialSelectionItemsSource.Clear ();
+      TGadgetMaterialActionComponent.Select (MaterialSelectionItemsSource, entityAction);
 
-      //var list = action.CollectionAction.GadgetMaterialCollection
-      //  .OrderBy (p => p.Material)
-      //  .ToList ()
-      //;
-
-      //foreach (var gadget in list) {
-      //  if (gadget.Enabled) {
-      //    if (action.CollectionAction.ModelCollection.ContainsKey (gadget.Id)) {
-      //      var modelAction = action.CollectionAction.ModelCollection [gadget.Id];
-      //      modelAction.GadgetMaterialModel.CopyFrom (gadget);
-
-      //      action.ModelAction.CopyFrom (modelAction);
-
-      //      MaterialSelectionItemsSource.Add (TComponentModelItem.Create (action));
-      //    }
-      //  }
-      //}
-
-      if (MaterialSelectionItemsSource.Count > 0) {
-        MaterialSelectionCurrent = MaterialSelectionItemsSource [0];
+      if (MaterialSelectionItemsSource.Any ()) {
+        MaterialSelectionSelectedIndex = 0;
       }
     }
 
@@ -144,36 +127,29 @@ namespace Gadget.Factory.Pattern.Models
     {
       gadget.ThrowNull ();
 
-      //var gadget = action.ModelAction.GadgetTestModel;
-      //var relationCategory = gadget.RequestCategory ();
+      MaterialSelectionItemChanged (gadget.Model.Material);
 
-      //MaterialSelectionItemChanged (gadget.Material);
+      IsEnabledSelector = gadget.Model.IsContentEmpty;
+      MaterialSelectionEnabled = gadget.Model.IsContentEmpty;
 
-      //IsEnabledSelector = gadget.ContentCount.Equals (0);
-      //MaterialSelectionEnabled = gadget.ContentCount.Equals (0);
+      if (gadget.Model.IsContentTarget) {
+        SlideIndex = 0;
+        SelectorTargetChecked = true;
+      }
 
-      //switch (relationCategory) {
-      //  case Server.Models.Infrastructure.TCategory.Target: {
-      //      SlideIndex = 0;
-      //      SelectorTargetChecked = true;
-      //    }
-      //    break;
-
-      //  case Server.Models.Infrastructure.TCategory.Test: {
-      //      SlideIndex = 1;
-      //      SelectorTestChecked = true;
-      //    }
-      //    break;
-      //}
+      if (gadget.Model.IsContentTest) {
+        SlideIndex = 1;
+        SelectorTestChecked = true;
+      }
     }
 
     internal void MaterialSelectionItemChanged (string materialName)
     {
       for (int index = 0; index < MaterialSelectionItemsSource.Count; index++) {
-        //if (MaterialSelectionItemsSource [index].GadgetMaterialModel.Material.Equals (materialName)) {
-        //  MaterialSelectionSelectedIndex = index;
-        //  break;
-        //}
+        if (MaterialSelectionItemsSource [index].Model.Material.Equals (materialName)) {
+          MaterialSelectionSelectedIndex = index;
+          break;
+        }
       }
     }
 

@@ -559,11 +559,51 @@ namespace Shared.Gadget.Models.Component
       }
     }
 
+    public bool HasContent
+    {
+      get
+      {
+        return (IsContentEmpty.IsFalse ());
+      }
+    }
+
+    public bool IsContentEmpty
+    {
+      get
+      {
+        return (ContentCount.Equals (0));
+      }
+    }
+
+    public bool IsContentTarget
+    {
+      get
+      {
+        return (RequestCategory ().Equals (TCategory.Target));
+      }
+    }
+
+    public bool IsContentTest
+    {
+      get
+      {
+        return (RequestCategory ().Equals (TCategory.Test));
+      }
+    }
+
     public bool CanRemove
     {
       get
       {
         return (Enabled.IsFalse () && Content.IsEmpty);
+      }
+    }
+
+    public bool ValidateId
+    {
+      get
+      {
+        return (Id.NotEmpty ());
       }
     }
     #endregion
@@ -684,6 +724,11 @@ namespace Shared.Gadget.Models.Component
       model.CopyFrom (this);
 
       return (model);
+    }
+
+    public bool Contains (Guid id)
+    {
+      return (Id.Equals (id));
     }
     #endregion
 

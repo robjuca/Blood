@@ -8,7 +8,7 @@ using System;
 
 using Server.Models.Action;
 
-using Shared.ViewModel;
+using Shared.Gadget.Models.Action;
 
 using Shared.Gadget.Test;
 //---------------------------//
@@ -38,23 +38,30 @@ namespace Gadget.Factory.Pattern.Models
       //ComponentControlModel.SelectModel (action);
     }
 
-    internal void AddModel (TComponentModelItem item) 
+    internal void AddModel (TGadgetTestComponent gadgetComponent) 
     {
-      item.ThrowNull ();
+      gadgetComponent.ThrowNull ();
 
-      //ComponentControlModel.AddComponent (item);
+      ComponentControlModel.AddComponent (gadgetComponent);
     }
 
-    internal void RemoveModel (TComponentModelItem item)
+    internal void RemoveModel (TGadgetTestComponent gadgetComponent)
     {
-      item.ThrowNull ();
+      gadgetComponent.ThrowNull ();
 
-      //ComponentControlModel.RemoveComponent (item);
+      ComponentControlModel.RemoveComponent (gadgetComponent);
     }
 
     internal void Cleanup ()
     {
       ComponentControlModel.Cleanup ();
+    }
+
+    internal void Edit (TGadgetTestModel gadget)
+    {
+      gadget.ThrowNull ();
+
+      ComponentControlModel.SelectModel (gadget);
     }
     #endregion
   };
