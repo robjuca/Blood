@@ -19,7 +19,7 @@ namespace Shared.Resources
       GadgetTarget,
       GadgetTest,
       GadgetRegistration,
-      GadgetTests,
+      GadgetResult,
       GadgetReport,
     };
     #endregion
@@ -43,7 +43,7 @@ namespace Shared.Resources
 
     public static string GADGETREGISTRATION => TName.GadgetRegistration.ToString ();
 
-    public static string GADGETTESTS => TName.GadgetTests.ToString ();
+    public static string GADGETRESULT => TName.GadgetResult.ToString ();
 
     public static string GADGETREPORT => TName.GadgetReport.ToString ();
 
@@ -70,7 +70,7 @@ namespace Shared.Resources
         { TName.GadgetTarget, "Gadget.Target" },
         { TName.GadgetTest, "Gadget.Test" },
         { TName.GadgetRegistration, "Gadget.Registration" },
-        { TName.GadgetTests, "Gadget.Tests" },
+        { TName.GadgetResult, "Gadget.Result" },
         { TName.GadgetReport, "Gadget.Report" },
       };
 

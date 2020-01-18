@@ -56,32 +56,32 @@ namespace Launcher.Shell.Pattern.ViewModels
       THelper.DispatcherLater (StartSettingsProcessDispatcher);
     }
 
-    public void OnMedicalTestMaterialCommadClicked ()
+    public void OnGadgetMaterialCommadClicked ()
     {
       TDispatcher.BeginInvoke (StartProcessDispatcher, TProcess.TName.GadgetMaterial);
     }
 
-    public void OnMedicalTestTargetCommadClicked ()
+    public void OnGadgetTargetCommadClicked ()
     {
       TDispatcher.BeginInvoke (StartProcessDispatcher, TProcess.TName.GadgetTarget);
     }
 
-    public void OnMedicalTestCommadClicked ()
+    public void OnGadgetTestCommadClicked ()
     {
       TDispatcher.BeginInvoke (StartProcessDispatcher, TProcess.TName.GadgetTest);
     }
 
-    public void OnMedicalCareRegistrationCommadClicked ()
+    public void OnGadgetRegistrationCommadClicked ()
     {
       TDispatcher.BeginInvoke (StartProcessDispatcher, TProcess.TName.GadgetRegistration);
     }
 
-    public void OnMedicalCareTestsCommadClicked ()
+    public void OnGadgetResultCommadClicked ()
     {
-      TDispatcher.BeginInvoke (StartProcessDispatcher, TProcess.TName.GadgetTests);
+      TDispatcher.BeginInvoke (StartProcessDispatcher, TProcess.TName.GadgetResult);
     }
 
-    public void OnMedicalCareReportCommadClicked ()
+    public void OnGadgetReportCommadClicked ()
     {
       TDispatcher.BeginInvoke (StartProcessDispatcher, TProcess.TName.GadgetReport);
     }
@@ -209,7 +209,7 @@ namespace Launcher.Shell.Pattern.ViewModels
           }
           break;
 
-        case TProcess.TName.GadgetTests: {
+        case TProcess.TName.GadgetResult: {
             switch (e.Data.Command) {
               case TCommandComm.Closed: {
                   RemoveProcess (module);

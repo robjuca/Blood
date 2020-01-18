@@ -116,22 +116,22 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\MedicalTestTarget.ico" />
+    <Resource Include="Images\GadgetTarget.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\MedicalTestMaterial.ico" />
+    <Resource Include="Images\GadgetMaterial.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\MedicalTest.ico" />
+    <Resource Include="Images\GadgetTest.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\MedicalCareRegistration.ico" />
+    <Resource Include="Images\GadgetRegistration.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\MedicalCareReport.ico" />
+    <Resource Include="Images\GadgetReport.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\MedicalCareTests.ico" />
+    <Resource Include="Images\GadgetResult.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

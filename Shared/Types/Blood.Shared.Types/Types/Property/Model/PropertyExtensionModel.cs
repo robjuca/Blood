@@ -345,7 +345,7 @@ namespace Shared.Types
         // remove property not required
 
         switch (modelCategory) {
-          //  Medical Test: Gadget Material
+          //   Gadget Material
           case Server.Models.Infrastructure.TCategory.Material: {
               m_Names.Add ("LinkProperty");
               m_Names.Add ("ImagePositionProperty");
@@ -362,7 +362,7 @@ namespace Shared.Types
             }
             break;
 
-          //  Medical Test: Gadget Target
+          //   Gadget Target
           case Server.Models.Infrastructure.TCategory.Target: {
               m_Names.Add ("LinkProperty");
               m_Names.Add ("ImagePositionProperty");
@@ -378,7 +378,7 @@ namespace Shared.Types
             }
             break;
 
-          //  Medical Test: Gadget Test
+          //   Gadget Test
           case Server.Models.Infrastructure.TCategory.Test: {
               m_Names.Add ("LinkProperty");
               m_Names.Add ("ImagePositionProperty");
@@ -396,7 +396,7 @@ namespace Shared.Types
             }
             break;
 
-          //  Medical Care: Gadget Registration
+          //   Gadget Registration
           case Server.Models.Infrastructure.TCategory.Registration: {
               m_Names.Add ("LinkProperty");
               m_Names.Add ("ExternalLinkProperty");
@@ -413,8 +413,8 @@ namespace Shared.Types
             }
             break;
 
-          //  Medical Care: Gadget Tests
-          case Server.Models.Infrastructure.TCategory.Tests: {
+          //   Gadget Result
+          case Server.Models.Infrastructure.TCategory.Result: {
               m_Names.Add ("LinkProperty");
               m_Names.Add ("ExternalLinkProperty");
               m_Names.Add ("ImagePositionProperty");
@@ -431,7 +431,7 @@ namespace Shared.Types
             }
             break;
 
-          //  Medical Care: Gadget Report
+          //   Gadget Report
           case Server.Models.Infrastructure.TCategory.Report: {
               m_Names.Add ("LinkProperty");
               m_Names.Add ("ExternalLinkProperty");

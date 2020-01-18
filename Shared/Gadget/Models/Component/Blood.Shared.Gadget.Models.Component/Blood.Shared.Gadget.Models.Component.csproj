@@ -56,12 +56,13 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Gadget\Care\GadgetRegistrationEntity.cs" />
-    <Compile Include="Gadget\Care\GadgetReportEntity.cs" />
-    <Compile Include="Gadget\Care\GadgetTestsEntity.cs" />
-    <Compile Include="Gadget\Test\GadgetMaterialEntity.cs" />
-    <Compile Include="Gadget\Test\GadgetTargetEntity.cs" />
-    <Compile Include="Gadget\Test\GadgetTestEntity.cs" />
+    <Compile Include="Gadget\GadgetBase.cs" />
+    <Compile Include="Gadget\GadgetRegistrationEntity.cs" />
+    <Compile Include="Gadget\GadgetReportEntity.cs" />
+    <Compile Include="Gadget\GadgetResultEntity.cs" />
+    <Compile Include="Gadget\GadgetMaterialEntity.cs" />
+    <Compile Include="Gadget\GadgetTargetEntity.cs" />
+    <Compile Include="Gadget\GadgetTestEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

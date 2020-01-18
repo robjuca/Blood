@@ -233,8 +233,8 @@
         </Setter>
     </Style>
 
-    <!--MenuMedicalTestMaterialIcon-->
-    <Style x:Key="MenuMedicalTestMaterialIcon"
+    <!--MenuGadgetMaterialIcon-->
+    <Style x:Key="MenuGadgetMaterialIcon"
            TargetType="{x:Type ContentControl}">
         <Setter Property="ToolTip"
                 Value="material" />
@@ -248,7 +248,7 @@
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
-                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/MedicalTestMaterial.ico"
+                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/GadgetMaterial.ico"
                                Width="28"
                                Height="28" />
                     </Border>
@@ -257,8 +257,8 @@
         </Setter>
     </Style>
 
-    <!--MenuMedicalTestTargetIcon-->
-    <Style x:Key="MenuMedicalTestTargetIcon"
+    <!--MenuGadgetTargetIcon-->
+    <Style x:Key="MenuGadgetTargetIcon"
            TargetType="{x:Type ContentControl}">
         <Setter Property="ToolTip"
                 Value="target" />
@@ -272,7 +272,7 @@
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
-                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/MedicalTestTarget.ico"
+                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/GadgetTarget.ico"
                                Width="28"
                                Height="28" />
                     </Border>
@@ -281,8 +281,8 @@
         </Setter>
     </Style>
 
-    <!--MenuMedicalTestIcon-->
-    <Style x:Key="MenuMedicalTestIcon"
+    <!--MenuGadgetTestIcon-->
+    <Style x:Key="MenuGadgetTestIcon"
            TargetType="{x:Type ContentControl}">
         <Setter Property="ToolTip"
                 Value="test" />
@@ -296,7 +296,7 @@
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
-                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/MedicalTest.ico"
+                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/GadgetTest.ico"
                                Width="28"
                                Height="28" />
                     </Border>
@@ -305,8 +305,8 @@
         </Setter>
     </Style>
 
-    <!--MenuMedicalCareRegistrationIcon-->
-    <Style x:Key="MenuMedicalCareRegistrationIcon"
+    <!--MenuGadgetRegistrationIcon-->
+    <Style x:Key="MenuGadgetRegistrationIcon"
            TargetType="{x:Type ContentControl}">
         <Setter Property="ToolTip"
                 Value="registration" />
@@ -320,7 +320,7 @@
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
-                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/MedicalCareRegistration.ico"
+                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/GadgetRegistration.ico"
                                Width="28"
                                Height="28" />
                     </Border>
@@ -329,11 +329,11 @@
         </Setter>
     </Style>
 
-    <!--MenuMedicalCareTestsIcon-->
-    <Style x:Key="MenuMedicalCareTestsIcon"
+    <!--MenuGadgetResultIcon-->
+    <Style x:Key="MenuGadgetResultIcon"
            TargetType="{x:Type ContentControl}">
         <Setter Property="ToolTip"
-                Value="tests" />
+                Value="result" />
         <Setter Property="VerticalAlignment"
                 Value="Center" />
         <Setter Property="HorizontalAlignment"
@@ -344,7 +344,7 @@
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
-                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/MedicalCareTests.ico"
+                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/GadgetResult.ico"
                                Width="28"
                                Height="28" />
                     </Border>
@@ -353,8 +353,8 @@
         </Setter>
     </Style>
 
-    <!--MenuMedicalCareReportIcon-->
-    <Style x:Key="MenuMedicalCareReportIcon"
+    <!--MenuGadgetReportIcon-->
+    <Style x:Key="MenuGadgetReportIcon"
            TargetType="{x:Type ContentControl}">
         <Setter Property="ToolTip"
                 Value="report" />
@@ -368,7 +368,7 @@
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
-                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/MedicalCareReport.ico"
+                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/GadgetReport.ico"
                                Width="28"
                                Height="28" />
                     </Border>
@@ -392,7 +392,7 @@
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
-                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/MedicalTestMaterial.ico"
+                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/GadgetMaterial.ico"
                                Width="18"
                                Height="18" />
                     </Border>
@@ -416,7 +416,7 @@
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
-                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/MedicalTestMaterial.ico"
+                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/GadgetMaterial.ico"
                                Width="12"
                                Height="12" />
                     </Border>
@@ -440,7 +440,7 @@
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
-                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/MedicalTestTarget.ico"
+                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/GadgetTarget.ico"
                                Width="18"
                                Height="18" />
                     </Border>
@@ -464,7 +464,7 @@
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
-                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/MedicalTestTarget.ico"
+                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/GadgetTarget.ico"
                                Width="12"
                                Height="12" />
                     </Border>
@@ -488,7 +488,7 @@
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
-                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/MedicalTest.ico"
+                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/GadgetTest.ico"
                                Width="18"
                                Height="18" />
                     </Border>
@@ -512,7 +512,7 @@
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
-                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/MedicalTest.ico"
+                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/GadgetTest.ico"
                                Width="12"
                                Height="12" />
                     </Border>
@@ -536,7 +536,7 @@
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
-                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/MedicalCareRegistration.ico"
+                        <Image Source="pack://application:,,,/Blood.Shared.Resources;component/Images/GadgetRegistration.ico"
                                Width="18"
                                Height="18" />
                     </Border>

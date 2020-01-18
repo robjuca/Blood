@@ -1,0 +1,85 @@
+﻿<base:ViewChildBase x:Class="Gadget.Collection.Pattern.Views.TCollectionListView"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:base="clr-namespace:rr.Library.Infrastructure;assembly=rr.Library.Infrastructure"
+                    xmlns:caliburn="http://www.caliburnproject.org"
+                    DataContext="{x:Null}"
+                    x:Name="ModuleCollectionListViewModel">
+
+    <UserControl.Resources>
+        <CollectionViewSource x:Key="ModelItemsViewSource"
+                              Source="{Binding Model.ItemsSource}" />
+
+        <DataTemplate x:Key="ListDataTemplate">
+            <Border Padding="2"
+                    BorderThickness="0 .1 0 .1"
+                    BorderBrush="LightGray">
+
+                <!-- busy, disable, name-->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <!--busy-->
+                    <Border Grid.Column="0"
+                            Padding="0 0 3 0">
+                        <StackPanel Orientation="Horizontal">
+                            <ContentControl Visibility="{Binding DisableVisibility}"
+                                            Style="{DynamicResource DisableIcon}" />
+                            <ContentControl Visibility="{Binding BusyVisibility}"
+                                            Style="{DynamicResource ContentBusyIcon}" />
+                        </StackPanel>
+                    </Border>
+
+                    <!--name-->
+                    <Border Grid.Column="1">
+                        <TextBlock Text="{Binding GadgetInfo}"
+                                   FontWeight="Bold" />
+                    </Border>
+                </Grid>
+            </Border>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Border Padding="2"
+            Width="210">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <!-- material-->
+            <Border Grid.Row="0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0">
+                        <TextBlock Padding="3 0 0 0"
+                                   Text="material" />
+                    </Border>
+
+                    <Border Grid.Column="1">
+                        <TextBlock HorizontalAlignment="Right"
+                                   Text="{Binding Model.MaterialCount}" />
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!--list-->
+            <Border Grid.Row="1"
+                    Padding="2">
+                <ListBox SelectedIndex="{Binding Model.SelectedIndex}"
+                         ItemsSource="{Binding Source={StaticResource ModelItemsViewSource}}"
+                         ItemTemplate="{StaticResource ListDataTemplate}"
+                         caliburn:Message.Attach="[Event SelectionChanged] = [OnSelectionChanged ()]" />
+            </Border>
+        </Grid>
+    </Border>
+
+</base:ViewChildBase>

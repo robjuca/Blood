@@ -29,10 +29,17 @@
                 <ContentControl Style="{DynamicResource MenuSettingsIcon}" />
             </Button>
 
-            <!--medical test-->
+            <!--registration-->
+            <Button ToolTip="registration"
+                    IsEnabled="{Binding Model.IsEnabledGadgetRegistration, Mode=OneWay}"
+                    caliburn:Message.Attach="[Event Click] = [OnGadgetRegistrationCommadClicked ()]">
+                <ContentControl Style="{DynamicResource MenuGadgetRegistrationIcon}" />
+            </Button>
+
+            <!--request-->
             <materialDesign:PopupBox Width="45"
                                      Height="45"
-                                     ToolTip="medical test"
+                                     ToolTip="request"
                                      IsPopupOpen="True"
                                      Style="{DynamicResource MaterialDesignMultiFloatingActionPopupBox}"
                                      PlacementMode="BottomAndAlignCentres">
@@ -44,34 +51,27 @@
                 </materialDesign:PopupBox.ToggleCheckedContent>
 
                 <StackPanel>
-                    <!--medical test material-->
+                    <!--gadget material-->
                     <Button ToolTip="material"
-                            IsEnabled="{Binding Model.IsEnabledMedicalTestMaterial, Mode=OneWay}"
-                            caliburn:Message.Attach="[Event Click] = [OnMedicalTestMaterialCommadClicked ()]">
-                        <ContentControl Style="{DynamicResource MenuMedicalTestMaterialIcon}" />
+                            IsEnabled="{Binding Model.IsEnabledGadgetMaterial, Mode=OneWay}"
+                            caliburn:Message.Attach="[Event Click] = [OnGadgetMaterialCommadClicked ()]">
+                        <ContentControl Style="{DynamicResource MenuGadgetMaterialIcon}" />
                     </Button>
 
-                    <!--medical test target-->
+                    <!--gadget target-->
                     <Button ToolTip="target"
-                            IsEnabled="{Binding Model.IsEnabledMedicalTestTarget, Mode=OneWay}"
-                            caliburn:Message.Attach="[Event Click] = [OnMedicalTestTargetCommadClicked ()]">
-                        <ContentControl Style="{DynamicResource MenuMedicalTestTargetIcon}" />
-                    </Button>
-
-                    <!--medical test-->
-                    <Button ToolTip="test"
-                            IsEnabled="{Binding Model.IsEnabledMedicalTest, Mode=OneWay}"
-                            caliburn:Message.Attach="[Event Click] = [OnMedicalTestCommadClicked ()]">
-                        <ContentControl Style="{DynamicResource MenuMedicalTestIcon}" />
+                            IsEnabled="{Binding Model.IsEnabledGadgetTarget, Mode=OneWay}"
+                            caliburn:Message.Attach="[Event Click] = [OnGadgetTargetCommadClicked ()]">
+                        <ContentControl Style="{DynamicResource MenuGadgetTargetIcon}" />
                     </Button>
                 </StackPanel>
             </materialDesign:PopupBox>
 
-            <!--medical care-->
+            <!--care-->
             <materialDesign:PopupBox Width="45"
                                      Height="45"
                                      Margin="6 0 0 0"
-                                     ToolTip="medical care"
+                                     ToolTip="care"
                                      Background="RoyalBlue"
                                      BorderBrush="RoyalBlue"
                                      IsPopupOpen="True"
@@ -85,28 +85,28 @@
                 </materialDesign:PopupBox.ToggleCheckedContent>
 
                 <StackPanel>
-                    <!--medical care registration-->
-                    <Button ToolTip="registration"
-                            IsEnabled="{Binding Model.IsEnabledMedicalCareRegistration, Mode=OneWay}"
-                            caliburn:Message.Attach="[Event Click] = [OnMedicalCareRegistrationCommadClicked ()]">
-                        <ContentControl Style="{DynamicResource MenuMedicalCareRegistrationIcon}" />
+                    <!--gadget test-->
+                    <Button ToolTip="test"
+                            IsEnabled="{Binding Model.IsEnabledGadgetTest, Mode=OneWay}"
+                            caliburn:Message.Attach="[Event Click] = [OnGadgetTestCommadClicked ()]">
+                        <ContentControl Style="{DynamicResource MenuGadgetTestIcon}" />
                     </Button>
 
-                    <!--medical care tests-->
-                    <Button ToolTip="tests"
-                            IsEnabled="{Binding Model.IsEnabledMedicalCareTests, Mode=OneWay}"
-                            caliburn:Message.Attach="[Event Click] = [OnMedicalCareTestsCommadClicked ()]">
-                        <ContentControl Style="{DynamicResource MenuMedicalCareTestsIcon}" />
-                    </Button>
-
-                    <!--medical care report-->
-                    <Button ToolTip="report"
-                            IsEnabled="{Binding Model.IsEnabledMedicalCareReport, Mode=OneWay}"
-                            caliburn:Message.Attach="[Event Click] = [OnMedicalCareReportCommadClicked ()]">
-                        <ContentControl Style="{DynamicResource MenuMedicalCareReportIcon}" />
+                    <!--gadget result-->
+                    <Button ToolTip="result"
+                            IsEnabled="{Binding Model.IsEnabledGadgetResult, Mode=OneWay}"
+                            caliburn:Message.Attach="[Event Click] = [OnGadgetResultCommadClicked ()]">
+                        <ContentControl Style="{DynamicResource MenuGadgetResultIcon}" />
                     </Button>
                 </StackPanel>
             </materialDesign:PopupBox>
+
+            <!--report-->
+            <Button ToolTip="report"
+                    IsEnabled="{Binding Model.IsEnabledGadgetReport, Mode=OneWay}"
+                    caliburn:Message.Attach="[Event Click] = [OnGadgetReportCommadClicked ()]">
+                <ContentControl Style="{DynamicResource MenuGadgetReportIcon}" />
+            </Button>
         </StackPanel>
     </Border>
 </Window>

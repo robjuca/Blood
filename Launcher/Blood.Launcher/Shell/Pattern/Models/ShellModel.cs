@@ -23,7 +23,7 @@ namespace Launcher.Shell.Pattern.Models
       }
     }
 
-    public bool IsEnabledMedicalTestMaterial
+    public bool IsEnabledGadgetMaterial
     {
       get
       {
@@ -31,7 +31,7 @@ namespace Launcher.Shell.Pattern.Models
       }
     }
 
-    public bool IsEnabledMedicalTestTarget
+    public bool IsEnabledGadgetTarget
     {
       get
       {
@@ -39,7 +39,7 @@ namespace Launcher.Shell.Pattern.Models
       }
     }
 
-    public bool IsEnabledMedicalTest
+    public bool IsEnabledGadgetTest
     {
       get
       {
@@ -47,7 +47,7 @@ namespace Launcher.Shell.Pattern.Models
       }
     }
 
-    public bool IsEnabledMedicalCareRegistration
+    public bool IsEnabledGadgetRegistration
     {
       get
       {
@@ -55,15 +55,15 @@ namespace Launcher.Shell.Pattern.Models
       }
     }
 
-    public bool IsEnabledMedicalCareTests
+    public bool IsEnabledGadgetResult
     {
       get
       {
-        return (m_IsMenuEnabled && IsProcessAlive (TProcess.TName.GadgetTests));
+        return (m_IsMenuEnabled && IsProcessAlive (TProcess.TName.GadgetResult));
       }
     }
 
-    public bool IsEnabledMedicalCareReport
+    public bool IsEnabledGadgetReport
     {
       get
       {
