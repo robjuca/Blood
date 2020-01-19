@@ -30,7 +30,7 @@ namespace Gadget.Factory.Pattern.Models
       set;
     }
 
-    public TActionModel GadgetModel
+    public TActionComponent GadgetModel
     {
       get; 
     }
@@ -47,7 +47,7 @@ namespace Gadget.Factory.Pattern.Models
       ComponentModelProperty = TModelProperty.Create (TCategory.Material);
       ComponentModelProperty.PropertyChanged += OnModelPropertyChanged;
 
-      GadgetModel = TActionModel.CreateDefault;
+      GadgetModel = TActionComponent.Create (TCategory.Material);
 
       AlertsModel = TAlertsModel.CreateDefault;
 
@@ -67,14 +67,14 @@ namespace Gadget.Factory.Pattern.Models
       //}
     }
 
-    internal void SelectModel (TActionModel model)
+    internal void SelectModel (TActionComponent component)
     {
-      model.ThrowNull ();
+      component.ThrowNull ();
 
-      //GadgetModel.CopyFrom (model);
+      GadgetModel.Models.GadgetMaterialModel.CopyFrom (component.Models.GadgetMaterialModel);
 
       var entityAction = TEntityAction.CreateDefault;
-      //TGadgetMaterialActionComponent.Request (model, entityAction);
+      TActionConverter.Request (TCategory.Material, component, entityAction);
 
       ComponentModelProperty.SelectModel (entityAction);
     }

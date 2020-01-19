@@ -4,6 +4,8 @@
 ----------------------------------------------------------------*/
 
 //----- Include
+using System;
+
 using Shared.Gadget.Models.Action;
 
 using Shared.Gadget.Target;
@@ -29,10 +31,12 @@ namespace Gadget.Factory.Pattern.Models
     #endregion
 
     #region Members
-    internal void SelectModel (TGadgetTargetModel model)
+    internal void SelectModel (TActionComponent component)
     {
-      if (model.ValidateId) {
-        ComponentControlModel.SelectModel (model);
+      component.ThrowNull ();
+
+      if (component.Models.GadgetTargetModel.ValidateId) {
+        ComponentControlModel.SelectModel (component);
       }
     }
     #endregion

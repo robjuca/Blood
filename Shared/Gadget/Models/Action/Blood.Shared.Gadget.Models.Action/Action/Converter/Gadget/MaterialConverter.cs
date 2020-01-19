@@ -30,7 +30,7 @@ namespace Shared.Gadget.Models.Action
           var gadget = GadgetMaterial.CreateDefault;
 
           gadget.Id = modelAction.ComponentInfoModel.Id;
-          gadget.Material = modelAction.ExtensionTextModel.Text;
+          gadget.GadgetName = modelAction.ExtensionTextModel.Text;
           gadget.Description = modelAction.ExtensionTextModel.Description;
           gadget.ExternalLink = modelAction.ExtensionTextModel.ExternalLink;
           gadget.SetImage (modelAction.ExtensionImageModel.Image);
@@ -63,7 +63,7 @@ namespace Shared.Gadget.Models.Action
         component.Select (TCategory.Material);
 
         component.Models.GadgetMaterialModel.Id = entityAction.ModelAction.ComponentInfoModel.Id;
-        component.Models.GadgetMaterialModel.Material = entityAction.ModelAction.ExtensionTextModel.Text;
+        component.Models.GadgetMaterialModel.GadgetName = entityAction.ModelAction.ExtensionTextModel.Text;
         component.Models.GadgetMaterialModel.Description = entityAction.ModelAction.ExtensionTextModel.Description;
         component.Models.GadgetMaterialModel.ExternalLink = entityAction.ModelAction.ExtensionTextModel.ExternalLink;
         component.Models.GadgetMaterialModel.SetImage (entityAction.ModelAction.ExtensionImageModel.Image);
@@ -84,7 +84,7 @@ namespace Shared.Gadget.Models.Action
         entityAction.ModelAction.ComponentStatusModel.Busy = component.Models.GadgetMaterialModel.Busy;
 
         entityAction.ModelAction.ComponentInfoModel.Id = component.Models.GadgetMaterialModel.Id;
-        entityAction.ModelAction.ExtensionTextModel.Text = component.Models.GadgetMaterialModel.Material;
+        entityAction.ModelAction.ExtensionTextModel.Text = component.Models.GadgetMaterialModel.GadgetName;
         entityAction.ModelAction.ExtensionTextModel.Description = component.Models.GadgetMaterialModel.Description;
         entityAction.ModelAction.ExtensionTextModel.ExternalLink = component.Models.GadgetMaterialModel.ExternalLink;
         entityAction.ModelAction.ComponentInfoModel.Enabled = component.Models.GadgetMaterialModel.Enabled;

@@ -51,7 +51,7 @@
                                    Height="16"
                                    Source="{Binding MaterialImage, Converter={StaticResource CollectionToBitmapImageConverter}}" />
 
-                            <TextBlock Text="{Binding Name}"
+                            <TextBlock Text="{Binding GadgetInfo}"
                                        FontWeight="Bold"
                                        VerticalAlignment="Center" />
                         </StackPanel>
@@ -89,12 +89,11 @@
                         </Border>
                     </Grid>
 
-                    <ComboBox x:Name="MaterialList"
-                              Padding="3 0 0 0"
+                    <ComboBox Padding="3 0 0 0"
+                              DisplayMemberPath="GadgetName"
+                              SelectedIndex="{Binding Model.MaterialSelectionSelectedIndex}"
                               ItemsSource="{Binding Source={StaticResource MaterialModelItemsViewSource}}"
-                              DisplayMemberPath="Name"
-                              SelectedItem="{Binding Model.MaterialSelected}"
-                              caliburn:Message.Attach="[Event SelectionChanged] = [OnMaterialSelectionChanged (MaterialList.SelectedIndex)]" />
+                              caliburn:Message.Attach="[Event SelectionChanged] = [OnMaterialSelectionChanged ()]" />
                 </StackPanel>
             </Border>
 
@@ -129,11 +128,10 @@
 
                     <!--list-->
                     <Border Grid.Row="1">
-                        <ListBox x:Name="TargetList"
-                                 SelectedIndex="{Binding Model.TargetSelectedIndex}"
+                        <ListBox SelectedIndex="{Binding Model.TargetSelectedIndex}"
                                  ItemsSource="{Binding Source={StaticResource TargetModelItemsViewSource}}"
                                  ItemTemplate="{StaticResource TargetListDataTemplate}"
-                                 caliburn:Message.Attach="[Event SelectionChanged] = [OnTargetSelectionChanged (TargetList.SelectedItem)]" />
+                                 caliburn:Message.Attach="[Event SelectionChanged] = [OnTargetSelectionChanged ()]" />
                     </Border>
                 </Grid>
             </Border>

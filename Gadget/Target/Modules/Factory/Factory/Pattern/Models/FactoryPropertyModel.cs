@@ -38,7 +38,7 @@ namespace Gadget.Factory.Pattern.Models
     #region Constructor
     public TFactoryPropertyModel ()
     {
-      ComponentModelProperty = TModelProperty.Create (Server.Models.Infrastructure.TCategory.Target);
+      ComponentModelProperty = TModelProperty.Create (TCategory.Target);
       ComponentModelProperty.PropertyChanged += OnModelPropertyChanged;
 
       AlertsModel = TAlertsModel.CreateDefault;
@@ -49,13 +49,13 @@ namespace Gadget.Factory.Pattern.Models
     internal void RefreshModel (TEntityAction entityAction)
     {
       if (entityAction.NotNull ()) {
-        var gadgets = new Collection<TGadgetMaterialModel> ();
-        TGadgetMaterialActionComponent.Select (gadgets, entityAction);
+        var gadgets = new Collection<TActionComponent> ();
+        TActionConverter.Collection (TCategory.Material, gadgets, entityAction);
 
         if (gadgets.Any ()) {
-          foreach (var item in gadgets) {
-            var selection = Server.Models.Infrastructure.TSelectionInfo.Create (item.Model.Material, item.Id, item.Enabled);
-            selection.SetImage (item.Model.GetImage ());
+          foreach (var component in gadgets) {
+            var selection = TSelectionInfo.Create (component.Models.GadgetMaterialModel.GadgetName, component.Models.GadgetMaterialModel.Id, component.Models.GadgetMaterialModel.Enabled);
+            selection.SetImage (component.Models.GadgetMaterialModel.GetImage ());
 
             entityAction.SupportAction.SelectionCollection.Add (selection);
           }
@@ -79,20 +79,21 @@ namespace Gadget.Factory.Pattern.Models
       }
     }
 
-    internal void SelectModel (TGadgetTargetModel model)
+    internal bool EditEnter (TActionComponent component)
     {
-      model.ThrowNull ();
+      component.ThrowNull ();
 
       var entityAction = TEntityAction.CreateDefault;
-      TGadgetTargetActionComponent.Request (model, entityAction);
+      TActionConverter.Request (TCategory.Target, component, entityAction);
 
       // update Material selection
-      var tag = model.Model.MaterialId;
-      entityAction.SupportAction.SelectionInfo.Select (model.MaterialModel.Model.Material, tag, enabled: model.Enabled);
-      entityAction.SupportAction.SelectionInfo.SetImage (model.MaterialModel.Model.GetImage ());
+      var tag = component.Models.GadgetTargetModel.MaterialId;
+      entityAction.SupportAction.SelectionInfo.Select (component.Models.GadgetTargetModel.Material, tag, enabled: component.Models.GadgetTargetModel.Enabled);
 
       ComponentModelProperty.SelectModel (entityAction);
-      ComponentModelProperty.SelectionLock (model.Busy);
+      ComponentModelProperty.SelectionLock (component.Models.GadgetTargetModel.Busy);
+
+      return (component.Models.GadgetTargetModel.ValidateId);
     }
 
     internal void RequestModel (TEntityAction action)
@@ -122,9 +123,9 @@ namespace Gadget.Factory.Pattern.Models
     {
       bool res = true;
 
-      if (propertyName.Equals ("TextProperty")) {
-        AlertsModel.Select (isOpen: false); // default
+      AlertsModel.Select (isOpen: false); // default
 
+      if (propertyName.Equals ("TextProperty")) {
         ComponentModelProperty.ValidateModel (true);
 
         var entityAction = TEntityAction.CreateDefault;
@@ -145,9 +146,9 @@ namespace Gadget.Factory.Pattern.Models
 
           res = false;
         }
-
-        AlertsModel.Refresh ();
       }
+
+      AlertsModel.Refresh ();
 
       return (res);
     }
@@ -160,6 +161,7 @@ namespace Gadget.Factory.Pattern.Models
     internal void Cleanup ()
     {
       ComponentModelProperty.Cleanup ();
+      ComponentModelProperty.SelectionLock (lockCurrent: false);
     }
     #endregion
 

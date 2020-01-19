@@ -4,13 +4,13 @@
 ----------------------------------------------------------------*/
 
 //----- Include
-using System;
 using System.ComponentModel.Composition;
 
 using rr.Library.Infrastructure;
 using rr.Library.Helper;
 
 using Server.Models.Action;
+using Server.Models.Infrastructure;
 
 using Shared.Types;
 using Shared.Resources;
@@ -98,14 +98,14 @@ namespace Gadget.Collection.Pattern.ViewModels
     #endregion
 
     #region View Event
-    public void OnMaterialSelectionChanged (int selectedIndex)
+    public void OnMaterialSelectionChanged ()
     {
-      TDispatcher.BeginInvoke (MaterialItemSelectedDispatcher, selectedIndex);
+      TDispatcher.Invoke (MaterialSelectionChangedDispatcher);
     }
 
-    public void OnTargetSelectionChanged (TGadgetTargetModel model)
+    public void OnTargetSelectionChanged ()
     {
-      TDispatcher.BeginInvoke (TargetItemSelectedDispatcher, model);
+      TDispatcher.Invoke (TargetItemSelectedDispatcher);
     }
     #endregion
 
@@ -177,26 +177,29 @@ namespace Gadget.Collection.Pattern.ViewModels
       DelegateCommand.PublishInternalMessage.Execute (message);
     }
 
-    void MaterialItemSelectedDispatcher (int selectedIndex)
+    void MaterialSelectionChangedDispatcher ()
     {
-      Model.MaterialChanged (selectedIndex);
+      Model.MaterialChanged ();
 
       TDispatcher.Invoke (RefreshAllDispatcher);
     }
 
-    void TargetItemSelectedDispatcher (TGadgetTargetModel model)
+    void TargetItemSelectedDispatcher ()
     {
-      if (model.IsNull ()) {
-        // to Sibling (Cleanup)
-        var message = new TCollectionSiblingMessageInternal (TInternalMessageAction.Cleanup, TChild.List, TypeInfo);
+      if (Model.TargetCurrent.ValidateId) {
+        // to Sibling (Select)
+        var component = TActionComponent.Create (TCategory.Target);
+        Model.Request (component);
+
+        var message = new TCollectionSiblingMessageInternal (TInternalMessageAction.Select, TChild.List, TypeInfo);
+        message.Support.Argument.Args.Select (component);
+
         DelegateCommand.PublishInternalMessage.Execute (message);
       }
 
       else {
-        // to Sibling (Select)
-        var message = new TCollectionSiblingMessageInternal (TInternalMessageAction.Select, TChild.List, TypeInfo);
-        message.Support.Argument.Args.Select (model);
-
+        // to Sibling (Cleanup)
+        var message = new TCollectionSiblingMessageInternal (TInternalMessageAction.Cleanup, TChild.List, TypeInfo);
         DelegateCommand.PublishInternalMessage.Execute (message);
       }
     }

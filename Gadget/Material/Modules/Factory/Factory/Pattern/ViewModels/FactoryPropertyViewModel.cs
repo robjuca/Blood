@@ -230,7 +230,7 @@ namespace Gadget.Factory.Pattern.ViewModels
 
     void EditDispatcher (object param1)
     {
-      if (param1 is TActionModel model) {
+      if (param1 is TActionComponent model) {
         SelectViewMode (TViewMode.Edit);
 
         Model.SelectModel (model);

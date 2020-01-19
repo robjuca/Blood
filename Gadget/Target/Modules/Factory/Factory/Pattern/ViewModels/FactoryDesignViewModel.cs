@@ -52,8 +52,8 @@ namespace Gadget.Factory.Pattern.ViewModels
             var propertyName = message.Support.Argument.Args.PropertyName;
 
             if (propertyName.Equals ("edit")) {
-              if (message.Support.Argument.Args.Param1 is TGadgetTargetModel model) {
-                Model.SelectModel (model);
+              if (message.Support.Argument.Args.Param1 is TActionComponent component) {
+                Model.SelectModel (component);
               }
             }
 

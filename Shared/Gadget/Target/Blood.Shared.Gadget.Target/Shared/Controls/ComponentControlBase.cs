@@ -12,9 +12,6 @@ using System.Windows.Media;
 using MaterialDesignThemes.Wpf;
 
 using Shared.Types;
-
-using Shared.Gadget.Models.Component;
-using Shared.Gadget.Models.Action;
 //---------------------------//
 
 namespace Shared.Gadget.Target
@@ -90,13 +87,13 @@ namespace Shared.Gadget.Target
       stack.Children.Add (materialImage);
 
       // target
-      if (string.IsNullOrEmpty (Model.ControlModel.Target).IsFalse ()) {
+      if (string.IsNullOrEmpty (Model.ControlModel.GadgetName).IsFalse ()) {
         var textBlock = new TextBlock ()
         {
           Margin = new Thickness (10, 0, 0, 0),
           VerticalAlignment = VerticalAlignment.Center,
           FontWeight = FontWeights.Bold,
-          Text = Model.ControlModel.Target,
+          Text = Model.ControlModel.GadgetName,
         };
 
         stack.Children.Add (textBlock);

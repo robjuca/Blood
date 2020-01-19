@@ -9,8 +9,10 @@ using System.Collections.ObjectModel;
 using System.Linq;
 
 using Server.Models.Action;
+using Server.Models.Infrastructure;
 
 using Shared.Gadget.Models.Action;
+using Shared.Gadget.Models.Component;
 //---------------------------//
 
 namespace Gadget.Collection.Pattern.Models
@@ -18,12 +20,12 @@ namespace Gadget.Collection.Pattern.Models
   public sealed class TCollectionListModel
   {
     #region Property
-    public ObservableCollection<TGadgetMaterialModel> MaterialItemsSource
+    public ObservableCollection<GadgetMaterial> MaterialItemsSource
     {
       get;
     }
 
-    public ObservableCollection<TGadgetTargetModel> TargetItemsSource
+    public ObservableCollection<GadgetTarget> TargetItemsSource
     {
       get;
     }
@@ -44,7 +46,15 @@ namespace Gadget.Collection.Pattern.Models
       }
     }
 
-    public TGadgetMaterialModel MaterialSelected
+    public GadgetMaterial MaterialSelected
+    {
+      get
+      {
+        return (MaterialSelectionSelectedIndex.Equals (-1) ? GadgetMaterial.CreateDefault : MaterialItemsSource [MaterialSelectionSelectedIndex]);
+      }
+    }
+
+    public int MaterialSelectionSelectedIndex
     {
       get;
       set;
@@ -56,23 +66,25 @@ namespace Gadget.Collection.Pattern.Models
       set;
     }
 
-    public TGadgetTargetModel TargetCurrent
+    public GadgetTarget TargetCurrent
     {
-      get;
+      get
+      {
+        return (TargetSelectedIndex.Equals (-1) ? GadgetTarget.CreateDefault : TargetItemsSource [TargetSelectedIndex]);
+      }
     }
     #endregion
 
     #region Constructor
     public TCollectionListModel ()
     {
-      MaterialItemsSource = new ObservableCollection<TGadgetMaterialModel> ();
-      TargetItemsSource = new ObservableCollection<TGadgetTargetModel> ();
+      MaterialItemsSource = new ObservableCollection<GadgetMaterial> ();
+      TargetItemsSource = new ObservableCollection<GadgetTarget> ();
 
+      MaterialSelectionSelectedIndex = -1;
       TargetSelectedIndex = -1;
 
-      TargetCurrent = TGadgetTargetModel.CreateDefault;
-
-      Targets = new Collection<TGadgetTargetModel> ();
+      Targets = new Collection<GadgetTarget> ();
     }
     #endregion
 
@@ -81,7 +93,15 @@ namespace Gadget.Collection.Pattern.Models
     {
       entityAction.ThrowNull ();
 
-      TGadgetTargetActionComponent.Select (Targets, entityAction);
+      Targets.Clear ();
+
+      var gadgets = new Collection<TActionComponent> ();
+      
+      TActionConverter.Collection (TCategory.Target, gadgets, entityAction);
+
+      foreach (var component in gadgets) {
+        Targets.Add (component.Models.GadgetTargetModel);
+      }
     }
 
     internal void RefreshModel (TEntityAction entityAction)
@@ -89,53 +109,61 @@ namespace Gadget.Collection.Pattern.Models
       entityAction.ThrowNull ();
 
       MaterialItemsSource.Clear ();
-      
-      // for gadget Material
-      var list = new Collection<TGadgetMaterialModel> ();
-      TGadgetMaterialActionComponent.Select (list, entityAction);
+      MaterialSelectionSelectedIndex = -1;
 
-      foreach (var gadgetMaterial in list) {
+      // for gadget Material
+      var gadgets = new Collection<TActionComponent> ();
+      TActionConverter.Collection (TCategory.Material, gadgets, entityAction);
+
+      foreach (var component in gadgets) {
+        var gadgetMaterial = component.Models.GadgetMaterialModel;
+
         if (gadgetMaterial.Enabled) {
           MaterialItemsSource.Add (gadgetMaterial);
 
           foreach (var gadgetTarget in Targets) {
             // Node reverse here 
-            if (gadgetTarget.Model.MaterialId.Equals (gadgetMaterial.Id)) {
-              gadgetTarget.MaterialModel.CopyFrom (gadgetMaterial);
+            if (gadgetTarget.MaterialId.Equals (gadgetMaterial.Id)) {
+              gadgetTarget.Material = gadgetMaterial.GadgetName;
             }
           }
         }
       }
 
       if (MaterialItemsSource.Any ()) {
-        MaterialSelected = MaterialItemsSource [0];
+        MaterialSelected.CopyFrom (MaterialItemsSource [0]);
+        MaterialSelectionSelectedIndex = 0;
       }
     }
 
-    internal void MaterialChanged (int selectdIndex)
+    internal void MaterialChanged ()
     {
       TargetItemsSource.Clear ();
 
-      if (selectdIndex.Equals (-1)) {
-        TargetSelectedIndex = -1;
-      }
+      TargetSelectedIndex = -1;
 
-      else {
-        foreach (var item in Targets) {
-          if (item.Model.MaterialId.Equals (MaterialSelected.Id)) {
-            TargetItemsSource.Add (item);
-          }
-        }
-
-        if (TargetItemsSource.Any ()) {
-          TargetSelectedIndex = 0;
+      foreach (var model in Targets) {
+        if (model.MaterialId.Equals (MaterialSelected.Id)) {
+          TargetItemsSource.Add (model);
         }
       }
+
+      if (TargetItemsSource.Any ()) {
+        TargetSelectedIndex = 0;
+      }
+    }
+
+    internal void Request (TActionComponent component)
+    {
+      component.ThrowNull ();
+
+      component.Models.GadgetTargetModel.CopyFrom (TargetCurrent);
+      component.Models.GadgetMaterialModel.CopyFrom (MaterialSelected);
     }
     #endregion
 
     #region property
-    Collection<TGadgetTargetModel> Targets
+    Collection<GadgetTarget> Targets
     {
       get;
     } 

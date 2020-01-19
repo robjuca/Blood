@@ -35,11 +35,11 @@ namespace Shared.Gadget.Target
     #endregion
 
     #region Members
-    public void SelectModel (TGadgetTargetModel model)
+    public void SelectModel (TActionComponent component)
     {
-      if (model.NotNull ()) {
-        ControlModel.CopyFrom (model.Model);
-        ChildControlModel.CopyFrom (model.MaterialModel.Model);
+      if (component.NotNull ()) {
+        ControlModel.CopyFrom (component.Models.GadgetTargetModel);
+        ChildControlModel.CopyFrom (component.Models.GadgetMaterialModel);
       }
     }
     #endregion

@@ -10,10 +10,12 @@ using rr.Library.Infrastructure;
 using rr.Library.Helper;
 
 using Server.Models.Action;
+using Server.Models.Infrastructure;
 
 using Shared.Resources;
 using Shared.Types;
 using Shared.ViewModel;
+using Shared.Gadget.Models.Component;
 using Shared.Gadget.Models.Action;
 
 using Gadget.Collection.Presentation;
@@ -62,8 +64,8 @@ namespace Gadget.Collection.Pattern.ViewModels
         if (message.Node.IsSiblingToMe (TChild.Display, TypeInfo)) {
           // Select
           if (message.IsAction (TInternalMessageAction.Select)) {
-            if (message.Support.Argument.Args.Param1 is TGadgetTargetModel model) {
-              TDispatcher.BeginInvoke (SelectDispatcher, model);
+            if (message.Support.Argument.Args.Param1 is TActionComponent component) {
+              TDispatcher.BeginInvoke (SelectDispatcher, component);
             }
           }
 
@@ -89,9 +91,9 @@ namespace Gadget.Collection.Pattern.ViewModels
     #endregion
 
     #region Dispatcher
-    void SelectDispatcher (TGadgetTargetModel model)
+    void SelectDispatcher (TActionComponent component)
     {
-      Model.Select (model);
+      Model.Select (component);
 
       if (FrameworkElementView.FindName ("DisplayControl") is Shared.Gadget.Target.TComponentDisplayControl control) {
         control.RefreshDesign ();
@@ -103,8 +105,11 @@ namespace Gadget.Collection.Pattern.ViewModels
     void EditDispatcher ()
     {
       // to parent (Edit)
+      var component = TActionComponent.Create (TCategory.Target);
+      Model.Request (component);
+
       var message = new TCollectionMessageInternal (TInternalMessageAction.Edit, TChild.Display, TypeInfo);
-      message.Support.Argument.Args.Select (Model.GadgetModel);
+      message.Support.Argument.Args.Select (component);
 
       DelegateCommand.PublishInternalMessage.Execute (message);
     }

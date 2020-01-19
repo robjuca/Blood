@@ -7,11 +7,8 @@
 using System;
 using System.Windows;
 
-using Server.Models.Action;
-
-using Shared.ViewModel;
 using Shared.Gadget.Models.Action;
-
+using Shared.Gadget.Models.Component;
 using Shared.Gadget.Target;
 //---------------------------//
 
@@ -26,10 +23,9 @@ namespace Gadget.Collection.Pattern.Models
       set;
     }
 
-    public TGadgetTargetModel GadgetModel
+    public GadgetTarget GadgetModel
     {
       get;
-      private set;
     }
 
     public bool IsViewEnabled
@@ -42,7 +38,7 @@ namespace Gadget.Collection.Pattern.Models
     {
       get
       {
-        return (GadgetModel.NotNull ());
+        return (GadgetModel.ValidateId);
       }
     }
 
@@ -73,7 +69,7 @@ namespace Gadget.Collection.Pattern.Models
     public TCollectionDisplayModel ()
     {
       ComponentControlModel = TComponentControlModel.CreateDefault;
-      GadgetModel = TGadgetTargetModel.CreateDefault;
+      GadgetModel = GadgetTarget.CreateDefault;
 
       BusyVisibility = Visibility.Hidden;
 
@@ -82,21 +78,30 @@ namespace Gadget.Collection.Pattern.Models
     #endregion
 
     #region Members
-    internal void Select (TGadgetTargetModel model)
+    internal void Select (TActionComponent component)
     {
-      GadgetModel = model ?? throw new System.ArgumentNullException (nameof (model));
+      component.ThrowNull ();
+
+      GadgetModel.CopyFrom (component.Models.GadgetTargetModel);
       
-      ComponentControlModel.SelectModel (model);
+      ComponentControlModel.SelectModel (component);
 
       BusyVisibility = GadgetModel.BusyVisibility;
     }
 
     internal void Cleanup ()
     {
-      GadgetModel = TGadgetTargetModel.CreateDefault;
+      GadgetModel.CopyFrom (GadgetTarget.CreateDefault);
       ComponentControlModel = TComponentControlModel.CreateDefault;
 
       BusyVisibility = Visibility.Hidden;
+    }
+
+    internal void Request (TActionComponent component)
+    {
+      component.ThrowNull ();
+
+      component.Models.GadgetTargetModel.CopyFrom (GadgetModel);
     }
     #endregion
   };
