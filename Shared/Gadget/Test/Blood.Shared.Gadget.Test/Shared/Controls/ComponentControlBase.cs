@@ -53,7 +53,7 @@ namespace Shared.Gadget.Test
         VerticalAlignment = VerticalAlignment.Top,
       };
 
-      m_Grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Auto) }); // row 0 test name
+      m_Grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Auto) }); // row 0 material image, test name
       m_Grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Auto) }); // row 1 description
       m_Grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Auto) }); // row 2 external link
       m_Grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Star) }); // row 3 targets
@@ -75,21 +75,50 @@ namespace Shared.Gadget.Test
     {
       m_Grid.Children.Clear ();
 
-      // test name (row 0)
+      // material image, test name (row 0)
+      var stack = new StackPanel ()
+      {
+        Orientation = Orientation.Horizontal
+      };
+
+      if (Model.HasImage) {
+        // image
+        var imageSource = rr.Library.Helper.THelper.ByteArrayToBitmapImage (Model.MaterialImage);
+
+        if (imageSource.NotNull ()) {
+          var width = imageSource.PixelWidth;
+          var height = imageSource.PixelHeight;
+
+          var image = new Image ()
+          {
+            Stretch = Stretch.Fill,
+            Width = width,
+            Height = height,
+            Source = imageSource.Clone (),
+            Margin = new Thickness (0, 0, 10, 0),
+          };
+
+          stack.Children.Add (image);
+        }
+      }
+      
+      // name
       var textBlock = new TextBlock ()
       {
         Margin = new Thickness (10, 0, 0, 0),
         VerticalAlignment = VerticalAlignment.Center,
-        Text = Model.ControlModel.Model.Test,
+        Text = Model.ControlModel.GadgetName,
         FontWeight = FontWeights.UltraBold,
         FontSize = 14,
       };
+      
+      stack.Children.Add (textBlock);
 
       var cz = new ColorZone ()
       {
         Padding = new Thickness (3),
         Mode = Model.HasComponentControlModels ? ColorZoneMode.Accent : ColorZoneMode.PrimaryLight,
-        Content = textBlock,
+        Content = stack,
       };
 
       cz.SetValue (Grid.RowProperty, 0);  // row  0
@@ -105,7 +134,7 @@ namespace Shared.Gadget.Test
         TextAlignment = TextAlignment.Left,
         VerticalAlignment = VerticalAlignment.Top,
         VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
-        Text = Model.ControlModel.Model.Description,
+        Text = Model.ControlModel.Description,
       };
       
 
@@ -113,11 +142,11 @@ namespace Shared.Gadget.Test
       m_Grid.Children.Add (textBox);
 
       // external link (row 2)
-      if (string.IsNullOrEmpty (Model.ControlModel.Model.ExternalLink).IsFalse ()) {
+      if (string.IsNullOrEmpty (Model.ControlModel.ExternalLink).IsFalse ()) {
         try {
           var externalLink = new System.Windows.Documents.Hyperlink (new System.Windows.Documents.Run ("more info"))
           {
-            NavigateUri = new Uri (Model.ControlModel.Model.ExternalLink),
+            NavigateUri = new Uri (Model.ControlModel.ExternalLink),
             TargetName = "_blanc",
           };
 
@@ -178,7 +207,7 @@ namespace Shared.Gadget.Test
     {
       if (Model.RequestCategory ().Equals (TCategory.Target)) {
         var targetsItemSource = new Collection<GadgetTarget> ();
-        Model.ControlModel.Model.RequestContent (targetsItemSource);
+        Model.ControlModel.RequestContent (targetsItemSource);
 
         string itemTemplate = @"
           <DataTemplate

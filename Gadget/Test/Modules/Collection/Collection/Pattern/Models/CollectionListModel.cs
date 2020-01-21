@@ -9,8 +9,10 @@ using System.Collections.ObjectModel;
 using System.Linq;
 
 using Server.Models.Action;
+using Server.Models.Infrastructure;
 
 using Shared.Gadget.Models.Action;
+using Shared.Gadget.Models.Component;
 //---------------------------//
 
 namespace Gadget.Collection.Pattern.Models
@@ -18,7 +20,7 @@ namespace Gadget.Collection.Pattern.Models
   public sealed class TCollectionListModel
   {
     #region Property
-    public ObservableCollection<TGadgetTestModel> ItemsSource
+    public ObservableCollection<GadgetTest> ItemsSource
     {
       get; 
     }
@@ -29,7 +31,7 @@ namespace Gadget.Collection.Pattern.Models
       set;
     }
 
-    public TGadgetTestModel Current
+    public GadgetTest Current
     {
       get;
     }
@@ -48,8 +50,9 @@ namespace Gadget.Collection.Pattern.Models
     {
       SelectedIndex = -1;
 
-      ItemsSource = new ObservableCollection<TGadgetTestModel> ();
-      Current = TGadgetTestModel.CreateDefault;
+      ItemsSource = new ObservableCollection<GadgetTest> ();
+
+      Current = GadgetTest.CreateDefault;
     }
     #endregion
 
@@ -63,11 +66,38 @@ namespace Gadget.Collection.Pattern.Models
 
       ItemsSource.Clear ();
 
-      TGadgetTestActionComponent.Select (ItemsSource, entityAction);
+      var gadgets = new Collection<TActionComponent> ();
+      TActionConverter.Collection (TCategory.Test, gadgets, entityAction);
+
+      foreach (var component in gadgets) {
+        ItemsSource.Add (component.Models.GadgetTestModel);
+      }
+
+      //// sort
+      //var list = gadgetList
+      //  .OrderBy (p => p.GadgetInfo)
+      //  .ToList ()
+      //;
+
+      //foreach (var item in list) {
+      //  ItemsSource.Add (item);
+      //}
 
       if (ItemsSource.Any ()) {
         SelectedIndex = 0;
+        Current.CopyFrom (ItemsSource [0]);
       }
+    }
+
+    internal bool SelectionChanged (GadgetTest gadget)
+    {
+      if (gadget.IsNull ()) {
+        return (false);
+      }
+
+      Current.CopyFrom (gadget);
+
+      return (Current.ValidateId); 
     }
     #endregion
   };

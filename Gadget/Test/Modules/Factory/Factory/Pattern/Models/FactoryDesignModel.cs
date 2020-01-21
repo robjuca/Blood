@@ -7,6 +7,7 @@
 using System;
 
 using Server.Models.Action;
+using Server.Models.Infrastructure;
 
 using Shared.Gadget.Models.Action;
 
@@ -33,23 +34,24 @@ namespace Gadget.Factory.Pattern.Models
     #endregion
 
     #region Members
-    internal void SelectModel (TEntityAction action)
+    //internal void SelectModel (TEntityAction action)
+    //{
+    //  //TODO: what for?
+    //  //ComponentControlModel.SelectModel (action);
+    //}
+
+    internal void AddModel (TActionComponent component) 
     {
-      //ComponentControlModel.SelectModel (action);
+      component.ThrowNull ();
+
+      ComponentControlModel.AddComponent (component);
     }
 
-    internal void AddModel (TGadgetTestComponent gadgetComponent) 
+    internal void RemoveModel (TActionComponent component)
     {
-      gadgetComponent.ThrowNull ();
+      component.ThrowNull ();
 
-      ComponentControlModel.AddComponent (gadgetComponent);
-    }
-
-    internal void RemoveModel (TGadgetTestComponent gadgetComponent)
-    {
-      gadgetComponent.ThrowNull ();
-
-      ComponentControlModel.RemoveComponent (gadgetComponent);
+      ComponentControlModel.RemoveComponent (component);
     }
 
     internal void Cleanup ()
@@ -57,11 +59,13 @@ namespace Gadget.Factory.Pattern.Models
       ComponentControlModel.Cleanup ();
     }
 
-    internal void Edit (TGadgetTestModel gadget)
+    internal void Edit (TActionComponent component)
     {
-      gadget.ThrowNull ();
+      component.ThrowNull ();
 
-      ComponentControlModel.SelectModel (gadget);
+      if (component.IsCategory (TCategory.Test)) {
+        ComponentControlModel.SelectModel (component.Models.GadgetTestModel);
+      }
     }
     #endregion
   };

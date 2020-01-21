@@ -50,24 +50,24 @@ namespace Gadget.Factory.Pattern.ViewModels
             var propertyName = message.Support.Argument.Args.PropertyName;
 
             if (propertyName.Equals ("GadgetAdd")) {
-              if (message.Support.Argument.Args.Param1 is TGadgetTestComponent gadget) {
-                Model.AddModel (gadget);
+              if (message.Support.Argument.Args.Param1 is TActionComponent component) {
+                Model.AddModel (component);
               }
 
               TDispatcher.Invoke (RefreshDesignDispatcher);
             }
 
             if (propertyName.Equals ("GadgetRemove")) {
-              if (message.Support.Argument.Args.Param1 is TGadgetTestComponent gadget) {
-                Model.RemoveModel (gadget);
+              if (message.Support.Argument.Args.Param1 is TActionComponent component) {
+                Model.RemoveModel (component);
               }
 
               TDispatcher.Invoke (RefreshDesignDispatcher);
             }
 
             if (propertyName.Equals ("edit")) {
-              if (message.Support.Argument.Args.Param1 is TGadgetTestModel gadget) {
-                Model.Edit (gadget);
+              if (message.Support.Argument.Args.Param1 is TActionComponent component) {
+                Model.Edit (component);
               }
               
               TDispatcher.Invoke (RefreshDesignDispatcher);
@@ -113,7 +113,8 @@ namespace Gadget.Factory.Pattern.ViewModels
     {
       if (action.Param1 is string propertyName) {
         if (propertyName.Equals ("DescriptionProperty") || propertyName.Equals ("TextProperty") || propertyName.Equals ("ExternalLinkProperty")) {
-          Model.SelectModel (action);
+          //TODO: what for?
+          //Model.SelectModel (action);
           TDispatcher.Invoke (RefreshDesignDispatcher);
         }
       }

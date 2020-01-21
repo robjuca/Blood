@@ -6,9 +6,12 @@
 //----- Include
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 using Server.Models.Action;
 using Server.Models.Infrastructure;
+
+using Shared.Gadget.Models.Component;
 //---------------------------//
 
 namespace Shared.Gadget.Models.Action
@@ -21,38 +24,53 @@ namespace Shared.Gadget.Models.Action
       gadgets.Clear ();
 
       if (entityAction.CategoryType.IsCategory (TCategory.Target)) {
+        var gadgetCollection = new Collection<GadgetTarget> ();
+
         foreach (var item in entityAction.CollectionAction.ModelCollection) {
           var modelAction = item.Value;
-          var actionModel = TActionComponent.Create (TCategory.Target);
+          var gadget = GadgetTarget.CreateDefault;
 
-          actionModel.Models.GadgetTargetModel.Id = modelAction.ComponentInfoModel.Id;
-          actionModel.Models.GadgetTargetModel.MaterialId = modelAction.ExtensionNodeModel.ParentId;
-          actionModel.Models.GadgetTargetModel.GadgetName = modelAction.ExtensionTextModel.Text;
-          actionModel.Models.GadgetTargetModel.Description = modelAction.ExtensionTextModel.Description;
-          actionModel.Models.GadgetTargetModel.Reference = modelAction.ExtensionTextModel.Reference;
-          actionModel.Models.GadgetTargetModel.Value = modelAction.ExtensionTextModel.Value;
-          actionModel.Models.GadgetTargetModel.ExternalLink = modelAction.ExtensionTextModel.ExternalLink;
-          actionModel.Models.GadgetTargetModel.Enabled = modelAction.ComponentInfoModel.Enabled;
-                     
-          actionModel.Models.GadgetTargetModel.GadgetInfo = modelAction.ComponentInfoModel.Name;
-          actionModel.Models.GadgetTargetModel.Busy = modelAction.ComponentStatusModel.Busy;
+          gadget.Id = modelAction.ComponentInfoModel.Id;
+          gadget.MaterialId = modelAction.ExtensionNodeModel.ParentId;
+          gadget.GadgetName = modelAction.ExtensionTextModel.Text;
+          gadget.Description = modelAction.ExtensionTextModel.Description;
+          gadget.Reference = modelAction.ExtensionTextModel.Reference;
+          gadget.Value = modelAction.ExtensionTextModel.Value;
+          gadget.ExternalLink = modelAction.ExtensionTextModel.ExternalLink;
+          gadget.Enabled = modelAction.ComponentInfoModel.Enabled;
+          
+          gadget.GadgetInfo = modelAction.ComponentInfoModel.Name;
+          gadget.Busy = modelAction.ComponentStatusModel.Busy;
 
           //  // Has only one child node (GadgetMaterial)
           foreach (var node in entityAction.CollectionAction.ExtensionNodeCollection) {
             // gadget Target must be child here
-            if (actionModel.Models.GadgetTargetModel.Contains (node.ChildId)) {
-              entityAction.ModelAction.ExtensionNodeModel.ChildId = node.ChildId;
-              entityAction.ModelAction.ExtensionNodeModel.ChildCategory = node.ChildCategory;
-              entityAction.ModelAction.ExtensionNodeModel.ParentId = node.ParentId;
-              entityAction.ModelAction.ExtensionNodeModel.ParentCategory = node.ParentCategory;
+            if (gadget.Contains (node.ChildId)) {
+              modelAction.ExtensionNodeModel.ChildId = node.ChildId;
+              modelAction.ExtensionNodeModel.ChildCategory = node.ChildCategory;
+              modelAction.ExtensionNodeModel.ParentId = node.ParentId;
+              modelAction.ExtensionNodeModel.ParentCategory = node.ParentCategory;
 
-              actionModel.Models.GadgetTargetModel.MaterialId = actionModel.Models.GadgetTargetModel.MaterialId.IsEmpty () ? node.ParentId : actionModel.Models.GadgetTargetModel.MaterialId;  // must be child
+              gadget.MaterialId = gadget.MaterialId.IsEmpty () ? node.ParentId : gadget.MaterialId;  // must be child
 
               break;
             }
           }
 
-          gadgets.Add (actionModel);
+          gadgetCollection.Add (gadget);
+        }
+
+        // sort
+        var list = gadgetCollection
+          .OrderBy (p => p.GadgetInfo)
+          .ToList ()
+        ;
+
+        foreach (var model in list) {
+          var component = TActionComponent.Create (TCategory.Target);
+          component.Models.GadgetTargetModel.CopyFrom (model);
+
+          gadgets.Add (component);
         }
       }
     }
@@ -87,6 +105,22 @@ namespace Shared.Gadget.Models.Action
 
             break;
           }
+        }
+
+        // update Material
+        var materialId = component.Models.GadgetTargetModel.MaterialId;
+
+        if (entityAction.CollectionAction.ModelCollection.ContainsKey (materialId)) {
+          var action = TEntityAction.Create (TCategory.Material);
+          action.ModelAction.CopyFrom (entityAction.CollectionAction.ModelCollection [materialId]);
+
+          var componentMaterial = TActionComponent.Create (TCategory.Material);
+          TActionConverter.Select (TCategory.Material, componentMaterial, action);
+
+          var gadgetMaterial = componentMaterial.Models.GadgetMaterialModel;
+
+          component.Models.GadgetMaterialModel.CopyFrom (gadgetMaterial);
+          component.Models.GadgetTargetModel.Material = gadgetMaterial.Material;
         }
       }
     }

@@ -17,6 +17,7 @@ using Shared.Types;
 using Shared.Resources;
 using Shared.ViewModel;
 using Shared.Gadget.Models.Action;
+using Shared.Gadget.Models.Component;
 
 using Gadget.Factory.Presentation;
 using Gadget.Factory.Pattern.Models;
@@ -81,8 +82,8 @@ namespace Gadget.Factory.Pattern.ViewModels
           // Select
           if (message.IsAction (TInternalMessageAction.Select)) {
             // material
-            if (message.Support.Argument.Args.Param1 is TGadgetMaterialModel gadget) {
-              Model.MaterialItemChanged (gadget);
+            if (message.Support.Argument.Args.Param1 is TActionComponent component) {
+              Model.MaterialItemChanged (component);
             }
 
             TDispatcher.Invoke (RefreshAllDispatcher);
@@ -91,8 +92,8 @@ namespace Gadget.Factory.Pattern.ViewModels
           // PropertySelect
           if (message.IsAction (TInternalMessageAction.PropertySelect)) {
             if (message.Support.Argument.Args.PropertyName.Equals ("edit")) {
-              if (message.Support.Argument.Args.Param1 is TGadgetTestModel gadget) {
-                TDispatcher.BeginInvoke (EditDispatcher, gadget);
+              if (message.Support.Argument.Args.Param1 is TActionComponent component) {
+                TDispatcher.BeginInvoke (EditDispatcher, component);
               }
             }
           }
@@ -115,14 +116,14 @@ namespace Gadget.Factory.Pattern.ViewModels
     #endregion
 
     #region View Event
-    public void OnGadgetItemChecked (TGadgetTestComponent gadgetComponent)
+    public void OnGadgetItemChecked (GadgetTest gadget)
     {
-      TDispatcher.BeginInvoke (ItemCheckedChangedDispatcher, gadgetComponent);
+      TDispatcher.BeginInvoke (ItemCheckedChangedDispatcher, gadget);
     }
 
-    public void OnGadgetItemUnchecked (TGadgetTestComponent gadgetComponent)
+    public void OnGadgetItemUnchecked (GadgetTest gadget)
     {
-      TDispatcher.BeginInvoke (ItemCheckedChangedDispatcher, gadgetComponent);
+      TDispatcher.BeginInvoke (ItemCheckedChangedDispatcher, gadget);
     }
     #endregion
 
@@ -172,19 +173,20 @@ namespace Gadget.Factory.Pattern.ViewModels
     {
       entityAction.ThrowNull ();
 
-      if (entityAction.Param2 is TGadgetTestComponent gadgetComponent) {
-        if (gadgetComponent.CurrentGadgetCategory.Equals(TCategory.Test)) {
-          var gadgetTest = TGadgetTestModel.Create (gadgetComponent.GadgetTestModel);
-          TGadgetTestActionComponent.Select (gadgetTest, entityAction);
+      if (entityAction.Param2 is GadgetTest gadget) {
+        if (gadget.IsContentTest) {
+          var component = TActionComponent.Create (TCategory.Test);
+          component.Models.GadgetTestModel.CopyFrom (gadget);
 
-          gadgetComponent.GadgetTestModel.CopyFrom (gadgetTest.Model); // update
+          TActionConverter.Select (TCategory.Test, component, entityAction);
+          gadget.CopyFrom (component.Models.GadgetTestModel);
 
-          Model.GadgetItemChecked (gadgetComponent, isChecked: gadgetComponent.IsChecked);
+          Model.GadgetItemChecked (gadget, isChecked: gadget.IsChecked);
 
           // to Sibling
           var message = new TFactorySiblingMessageInternal (TInternalMessageAction.PropertySelect, TChild.List, TypeInfo);
-          message.Support.Argument.Args.Select (gadgetComponent);
-          message.Support.Argument.Args.Select (gadgetComponent.IsChecked ? "GadgetAdd" : "GadgetRemove");
+          message.Support.Argument.Args.Select (gadget);
+          message.Support.Argument.Args.Select (gadget.IsChecked ? "GadgetAdd" : "GadgetRemove");
 
           if (Model.HasGadgetChecked) {
             message.Support.Argument.Types.ReportData.SelectLock ();
@@ -197,7 +199,7 @@ namespace Gadget.Factory.Pattern.ViewModels
       }
     }
 
-    void ItemCheckedChangedDispatcher (TGadgetTestComponent gadgetComponent)
+    void ItemCheckedChangedDispatcher (GadgetTest gadget)
     {
       // to parent
       // Collection - Full 
@@ -207,8 +209,8 @@ namespace Gadget.Factory.Pattern.ViewModels
         TExtension.ById
       );
 
-      action.Id = gadgetComponent.Id;
-      action.Param2 = gadgetComponent; // preserve
+      action.Id = gadget.Id;
+      action.Param2 = gadget; // preserve
 
       var message = new TFactoryMessageInternal (TInternalMessageAction.Request, TChild.List, TypeInfo);
       message.Support.Argument.Types.Select (action);
@@ -216,9 +218,9 @@ namespace Gadget.Factory.Pattern.ViewModels
       DelegateCommand.PublishInternalMessage.Execute (message);
     }
 
-    void EditDispatcher (TGadgetTestModel gadget)
+    void EditDispatcher (TActionComponent component)
     {
-      Model.Edit (gadget);
+      Model.Edit (component);
 
       TDispatcher.Invoke (RefreshAllDispatcher);
     }

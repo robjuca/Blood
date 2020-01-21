@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 
 using Server.Models.Infrastructure;
 //---------------------------//
@@ -555,11 +556,35 @@ namespace Shared.Gadget.Models.Component
       }
     }
 
+    public string ContentCategory
+    {
+      get
+      {
+        return (RequestCategory ().ToString ());
+      }
+    }
+
     public bool CanRemove
     {
       get
       {
         return (Enabled.IsFalse () && Content.IsEmpty);
+      }
+    }
+
+    public Visibility ContentTargetVisibility
+    {
+      get
+      {
+        return (IsContentTarget ? Visibility.Visible : Visibility.Collapsed);
+      }
+    }
+
+    public Visibility ContentTestVisibility
+    {
+      get
+      {
+        return (IsContentTest ? Visibility.Visible : Visibility.Collapsed);
       }
     }
     #endregion

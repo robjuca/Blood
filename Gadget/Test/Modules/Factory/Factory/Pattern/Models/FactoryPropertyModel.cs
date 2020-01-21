@@ -9,6 +9,7 @@ using System;
 using rr.Library.Types;
 
 using Server.Models.Action;
+using Server.Models.Infrastructure;
 
 using Shared.Resources;
 using Shared.Types;
@@ -35,7 +36,7 @@ namespace Gadget.Factory.Pattern.Models
     #region Constructor
     public TFactoryPropertyModel ()
     {
-      ComponentModelProperty = TModelProperty.Create (Server.Models.Infrastructure.TCategory.Test);
+      ComponentModelProperty = TModelProperty.Create (TCategory.Test);
       ComponentModelProperty.PropertyChanged += OnModelPropertyChanged;
 
       AlertsModel = TAlertsModel.CreateDefault;
@@ -43,16 +44,22 @@ namespace Gadget.Factory.Pattern.Models
     #endregion
 
     #region Members
-    internal void EditEnter (TGadgetTestModel gadget)
+    internal bool EditEnter (TActionComponent component)
     {
-      if (gadget.NotNull ()) {
+      var res = false;
+
+      if (component.NotNull ()) {
         var entityAction = TEntityAction.CreateDefault;
-        TGadgetTestActionComponent.Request (gadget, entityAction);
+        TActionConverter.Request (TCategory.Test, component, entityAction);
 
         ComponentModelProperty.SelectModel (entityAction);
 
         ValidateProperty ("TextProperty");
+
+        res = component.Models.GadgetTestModel.ValidateId;
       }
+
+      return (res);
     }
 
     internal void SelectModel (TEntityAction action)
@@ -63,9 +70,6 @@ namespace Gadget.Factory.Pattern.Models
     internal void RequestModel (TEntityAction action)
     {
       ComponentModelProperty.RequestModel (action);
-
-      // update model
-      //action.ModelAction.GadgetTargetModel.CopyFrom (action);
     }
 
     internal void ShowPanels ()

@@ -9,8 +9,10 @@ using System.Collections.ObjectModel;
 using System.Linq;
 
 using Server.Models.Action;
+using Server.Models.Infrastructure;
 
 using Shared.Gadget.Models.Action;
+using Shared.Gadget.Models.Component;
 //---------------------------//
 
 namespace Gadget.Factory.Pattern.Models
@@ -18,7 +20,7 @@ namespace Gadget.Factory.Pattern.Models
   public class TFactoryListModel
   {
     #region Property
-    public ObservableCollection<TGadgetMaterialModel> MaterialSelectionItemsSource
+    public ObservableCollection<GadgetMaterial> MaterialSelectionItemsSource
     {
       get;
     }
@@ -31,11 +33,11 @@ namespace Gadget.Factory.Pattern.Models
       }
     }
 
-    public TGadgetMaterialModel MaterialSelectionCurrent
+    public GadgetMaterial MaterialSelectionCurrent
     {
       get
       {
-        return (MaterialSelectionSelectedIndex.Equals (-1) ? TGadgetMaterialModel.CreateDefault : MaterialSelectionItemsSource [MaterialSelectionSelectedIndex]);
+        return (MaterialSelectionSelectedIndex.Equals (-1) ? GadgetMaterial.CreateDefault : MaterialSelectionItemsSource [MaterialSelectionSelectedIndex]);
       }
     }
 
@@ -79,7 +81,7 @@ namespace Gadget.Factory.Pattern.Models
     #region Constructor
     public TFactoryListModel ()
     {
-      MaterialSelectionItemsSource = new ObservableCollection<TGadgetMaterialModel> ();
+      MaterialSelectionItemsSource = new ObservableCollection<GadgetMaterial> ();
       
       MaterialSelectionSelectedIndex = -1;
       MaterialSelectionEnabled = true;
@@ -99,7 +101,14 @@ namespace Gadget.Factory.Pattern.Models
       entityAction.ThrowNull ();
 
       // for gadget Material
-      TGadgetMaterialActionComponent.Select (MaterialSelectionItemsSource, entityAction);
+      var gadgets = new Collection<TActionComponent> ();
+      TActionConverter.Collection (TCategory.Material, gadgets, entityAction);
+
+      MaterialSelectionItemsSource.Clear ();
+
+      foreach (var gadget in gadgets) {
+        MaterialSelectionItemsSource.Add (gadget.Models.GadgetMaterialModel);
+      }
 
       if (MaterialSelectionItemsSource.Any ()) {
         MaterialSelectionSelectedIndex = 0;
@@ -123,30 +132,34 @@ namespace Gadget.Factory.Pattern.Models
       }
     }
 
-    internal void EditEnter (TGadgetTestModel gadget)
+    internal void EditEnter (TActionComponent component)
     {
-      gadget.ThrowNull ();
+      component.ThrowNull ();
 
-      MaterialSelectionItemChanged (gadget.Model.Material);
+      if (component.IsCategory (TCategory.Test)) {
+        var gadget = component.Models.GadgetTestModel;
 
-      IsEnabledSelector = gadget.Model.IsContentEmpty;
-      MaterialSelectionEnabled = gadget.Model.IsContentEmpty;
+        MaterialSelectionItemChanged (gadget.Material);
 
-      if (gadget.Model.IsContentTarget) {
-        SlideIndex = 0;
-        SelectorTargetChecked = true;
-      }
+        IsEnabledSelector = gadget.IsContentEmpty;
+        MaterialSelectionEnabled = gadget.IsContentEmpty;
 
-      if (gadget.Model.IsContentTest) {
-        SlideIndex = 1;
-        SelectorTestChecked = true;
+        if (gadget.IsContentTarget) {
+          SlideIndex = 0;
+          SelectorTargetChecked = true;
+        }
+
+        if (gadget.IsContentTest) {
+          SlideIndex = 1;
+          SelectorTestChecked = true;
+        }
       }
     }
 
     internal void MaterialSelectionItemChanged (string materialName)
     {
       for (int index = 0; index < MaterialSelectionItemsSource.Count; index++) {
-        if (MaterialSelectionItemsSource [index].Model.Material.Equals (materialName)) {
+        if (MaterialSelectionItemsSource [index].GadgetName.Equals (materialName)) {
           MaterialSelectionSelectedIndex = index;
           break;
         }

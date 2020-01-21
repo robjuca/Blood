@@ -11,7 +11,7 @@
         <CollectionViewSource x:Key="ModelItemsViewSource"
                               Source="{Binding Model.ItemsSource}">
             <CollectionViewSource.GroupDescriptions>
-                <PropertyGroupDescription PropertyName="RelationCategory" />
+                <PropertyGroupDescription PropertyName="ContentCategory" />
             </CollectionViewSource.GroupDescriptions>
 
             <CollectionViewSource.SortDescriptions>
@@ -38,7 +38,7 @@
                             <!--busy-->
                             <ContentControl Visibility="{Binding BusyVisibility}"
                                             Style="{DynamicResource ContentBusyIcon}" />
-                            
+
                             <!--disable-->
                             <ContentControl Visibility="{Binding DisableVisibility}"
                                             Style="{DynamicResource DisableIcon}" />
@@ -51,21 +51,21 @@
                             Padding="3 0 0 0">
                         <StackPanel Orientation="Horizontal">
                             <!--relation category-->
-                            <ContentControl Visibility="{Binding TestRelationVisibility}"
+                            <ContentControl Visibility="{Binding ContentTestVisibility}"
                                             Style="{DynamicResource GadgetTestMiniIcon}" />
-                            <ContentControl Visibility="{Binding TargetRelationVisibility}"
+                            <ContentControl Visibility="{Binding ContentTargetVisibility}"
                                             Style="{DynamicResource GadgetTargetMiniIcon}" />
-                            
+
                             <!--count-->
                             <TextBlock Margin="3 0 0 0">
                                 <Run Text="[" />
-                                <Run Text="{Binding TargetCount, Mode=OneWay}" />
+                                <Run Text="{Binding ContentCount, Mode=OneWay}" />
                                 <Run Text="]" />
                             </TextBlock>
 
                             <!--name-->
                             <TextBlock Margin="3 0 0 0"
-                                       Text="{Binding Name}"
+                                       Text="{Binding GadgetInfo}"
                                        FontWeight="Bold" />
                         </StackPanel>
                     </Border>
@@ -102,7 +102,7 @@
                     </Border>
 
                     <Border Grid.Column="1">
-                        <TextBlock HorizontalAlignment="Right" 
+                        <TextBlock HorizontalAlignment="Right"
                                    Text="{Binding Model.TestCount}" />
                     </Border>
                 </Grid>

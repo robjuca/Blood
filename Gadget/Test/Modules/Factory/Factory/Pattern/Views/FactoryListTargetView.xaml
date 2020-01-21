@@ -14,7 +14,7 @@
         <CollectionViewSource x:Key="TargetModelItemsViewSource"
                               Source="{Binding Model.GadgetItemsSource}">
             <CollectionViewSource.SortDescriptions>
-                <scm:SortDescription PropertyName="Name"
+                <scm:SortDescription PropertyName="Models.GadgetTargetModel.GadgetInfo"
                                      Direction="Ascending" />
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
@@ -27,7 +27,7 @@
                 <!--check, material, name-->
                 <StackPanel Orientation="Horizontal">
                     <CheckBox Margin="0 0 5 0"
-                              IsChecked="{Binding IsChecked}"
+                              IsChecked="{Binding Models.GadgetTargetModel.IsChecked}"
                               caliburn:Message.Attach="[Event Checked] = [OnGadgetItemChecked ($datacontext)]; [Event Unchecked] = [OnGadgetItemUnchecked ($datacontext)]" />
 
                     <Image Margin="0 0 5 0"
@@ -35,7 +35,7 @@
                            Height="16"
                            Source="{Binding MaterialImage, Converter={StaticResource CollectionToBitmapImageConverter}}" />
 
-                    <TextBlock Text="{Binding Name}"
+                    <TextBlock Text="{Binding Models.GadgetTargetModel.GadgetInfo}"
                                FontWeight="Bold"
                                VerticalAlignment="Center" />
                 </StackPanel>
@@ -80,10 +80,9 @@
 
             <!--list-->
             <Border Grid.Row="1">
-                <ListBox x:Name="TargetList"
-                         ItemsSource="{Binding Source={StaticResource TargetModelItemsViewSource}}"
+                <ListBox ItemsSource="{Binding Source={StaticResource TargetModelItemsViewSource}}"
                          ItemTemplate="{StaticResource TargetListDataTemplate}"
-                         caliburn:Message.Attach="[Event SelectionChanged] = [OnGadgetChanged (TargetList.SelectedItem)]" />
+                         caliburn:Message.Attach="[Event SelectionChanged] = [OnGadgetChanged ()]" />
             </Border>
         </Grid>
     </Border>

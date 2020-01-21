@@ -19,7 +19,7 @@ namespace Shared.Gadget.Test
   public class TComponentControlModel
   {
     #region Property
-    public TGadgetTestModel ControlModel
+    public GadgetTest ControlModel
     {
       get;
     }
@@ -44,17 +44,33 @@ namespace Shared.Gadget.Test
         return (ComponentControlModels.Any ());
       }
     }
+
+    public Collection<byte> MaterialImage
+    {
+      get;
+      private set;
+    }
+
+    public bool HasImage
+    {
+      get
+      {
+        return (MaterialImage.IsNull ().IsFalse ());
+      }
+    }
     #endregion
 
     #region Constructor
     TComponentControlModel ()
     {
-      ControlModel = TGadgetTestModel.CreateDefault;
+      ControlModel = GadgetTest.CreateDefault;
 
       ComponentControlModels = new Collection<TComponentControlModel> ();
+
+      MaterialImage = null;
     }
 
-    TComponentControlModel (TGadgetTestModel gadget)
+    TComponentControlModel (GadgetTest gadget)
       : this ()
     {
       if (gadget.NotNull ()) {
@@ -64,7 +80,7 @@ namespace Shared.Gadget.Test
     #endregion
 
     #region Members
-    public void SelectModel (TGadgetTestModel gadget)
+    public void SelectModel (GadgetTest gadget)
     {
       /*
        action.ModelAction.GadgetTestModel
@@ -72,49 +88,48 @@ namespace Shared.Gadget.Test
       */
 
       if (gadget.NotNull ()) {
-        // Change only
-        if (gadget.Id.IsEmpty ()) {
-          ControlModel.Model.Test = gadget.Model.Test;
-          ControlModel.Model.Description = gadget.Model.Description;
-          ControlModel.Model.ExternalLink = gadget.Model.ExternalLink;
-        }
-
-        else {
+        if (gadget.ValidateId) {
           ComponentControlModels.Clear ();
 
           ControlModel.CopyFrom (gadget);
 
-          if (ControlModel.RelationCategory.Equals (TCategory.Test)) {
+          if (ControlModel.IsContentTest) {
             var contents = new Collection<GadgetTest> ();
-            ControlModel.Model.RequestContent (contents);
+            ControlModel.RequestContent (contents);
 
             foreach (var gadgetTest in contents) {
               var controlModel = TComponentControlModel.CreateDefault;
-              controlModel.ControlModel.CopyFrom (TGadgetTestModel.Create (gadgetTest));
+              controlModel.ControlModel.CopyFrom (gadgetTest.Clone ());
 
               ComponentControlModels.Add (controlModel);
             }
           }
         }
+
+        // Change only
+        else {
+          ControlModel.GadgetName = gadget.GadgetName;
+          ControlModel.Description = gadget.Description;
+          ControlModel.ExternalLink = gadget.ExternalLink;
+        }
       }
     }
 
-    //public void SelectComponents (Server.Models.Component.TEntityAction action)
-    //{
-    //  if (action.NotNull ()) {
-    //    if (action.Param2 is Collection<TComponentControlModel> relations) {
-    //      ComponentControlModels.Clear ();
-
-    //      foreach (var item in relations) {
-    //        ComponentControlModels.Add (item);
-    //      }
-    //    }
-    //  }
-    //}
-
-    public Server.Models.Infrastructure.TCategory RequestCategory ()
+    public void SelectModel (TActionComponent component)
     {
-      return (ControlModel.Model.RequestCategory ());
+      if (component.NotNull ()) {
+        if (component.IsCategory (TCategory.Test)) {
+          Cleanup ();
+          SelectModel (component.Models.GadgetTestModel);
+
+          MaterialImage = new Collection<byte> (component.Models.GadgetMaterialModel.Image);
+        }
+      }
+    }
+
+    public TCategory RequestCategory ()
+    {
+      return (ControlModel.RequestCategory ());
     }
 
     //public void RequestComponents (Server.Models.Component.TEntityAction action)
@@ -130,29 +145,29 @@ namespace Shared.Gadget.Test
     //  }
     //}
 
-    public void AddComponent (TGadgetTestComponent gadgetComponent)
+    public void AddComponent (TActionComponent component)
     {
-      if (gadgetComponent.NotNull ()) {
-        switch (gadgetComponent.CurrentGadgetCategory) {
+      if (component.NotNull ()) {
+        switch (component.Category) {
           case TCategory.Test: {
-              ControlModel.Model.AddContent (gadgetComponent.GadgetTestModel);
+              ControlModel.AddContent (component.Models.GadgetTestModel);
 
               var contents = new Collection<GadgetTest> ();
-              ControlModel.Model.RequestContent (contents);
+              ControlModel.RequestContent (contents);
 
               ComponentControlModels.Clear ();
 
-              foreach (var gadgetContent in contents) {
+              foreach (var gadgetTest in contents) {
                 var componentControlModel = TComponentControlModel.CreateDefault;
-                componentControlModel.ControlModel.CopyFrom (gadgetContent);
+                componentControlModel.ControlModel.CopyFrom (gadgetTest);
 
-                if (componentControlModel.ControlModel.RelationCategory.Equals (TCategory.Test)) {
+                if (componentControlModel.ControlModel.IsContentTest) {
                   var internalContents = new Collection<GadgetTest> ();
-                  componentControlModel.ControlModel.Model.RequestContent (internalContents);
+                  componentControlModel.ControlModel.RequestContent (internalContents);
 
-                  foreach (var gadgetInternalContent in internalContents) {
+                  foreach (var gadgetTestInternal in internalContents) {
                     var internalComponentControlModel = TComponentControlModel.CreateDefault;
-                    internalComponentControlModel.ControlModel.CopyFrom (gadgetInternalContent);
+                    internalComponentControlModel.ControlModel.CopyFrom (gadgetTestInternal);
 
                     componentControlModel.ComponentControlModels.Add (internalComponentControlModel);
                   }
@@ -164,27 +179,27 @@ namespace Shared.Gadget.Test
             break;
 
           case TCategory.Target:
-            ControlModel.Model.AddContent (gadgetComponent.GadgetTargetModel);
+            ControlModel.AddContent (component.Models.GadgetTargetModel);
             break;
         }
       }
     }
 
-    public void RemoveComponent (TGadgetTestComponent gadgetComponent)
+    public void RemoveComponent (TActionComponent component)
     {
-      if (gadgetComponent.NotNull ()) {
-        if (gadgetComponent.Contains (ControlModelId)) {
+      if (component.NotNull ()) {
+        if (component.Models.GadgetTestModel.Contains (ControlModelId)) {
           Cleanup ();
         }
 
         else {
-          switch (gadgetComponent.CurrentGadgetCategory) {
+          switch (component.Category) {
             case TCategory.Test: {
-                ControlModel.Model.RemoveContent (gadgetComponent.GadgetTestModel);
+                ControlModel.RemoveContent (component.Models.GadgetTestModel);
 
                 if (HasComponentControlModels) {
                   foreach (var controlModelItem in ComponentControlModels) {
-                    if (gadgetComponent.Contains (controlModelItem.ControlModelId)) {
+                    if (component.Models.GadgetTestModel.Contains (controlModelItem.ControlModelId)) {
                       ComponentControlModels.Remove (controlModelItem);
                       break;
                     }
@@ -194,7 +209,7 @@ namespace Shared.Gadget.Test
               break;
 
             case TCategory.Target:
-              ControlModel.Model.RemoveContent (gadgetComponent.GadgetTargetModel);
+              ControlModel.RemoveContent (component.Models.GadgetTargetModel);
               break;
           }
         }
@@ -216,14 +231,14 @@ namespace Shared.Gadget.Test
 
     public void Cleanup ()
     {
-      ControlModel.CopyFrom (TGadgetTestModel.CreateDefault);
+      ControlModel.CopyFrom (GadgetTest.CreateDefault);
 
       ComponentControlModels.Clear ();
     }
     #endregion
 
     #region Static
-    public static TComponentControlModel Create (TGadgetTestModel gadget) => new TComponentControlModel (gadget);
+    public static TComponentControlModel Create (GadgetTest gadget) => new TComponentControlModel (gadget);
 
     public static TComponentControlModel CreateDefault => new TComponentControlModel ();
     #endregion

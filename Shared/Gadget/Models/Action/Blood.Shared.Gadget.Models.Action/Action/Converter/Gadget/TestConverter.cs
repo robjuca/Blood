@@ -6,9 +6,12 @@
 //----- Include
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 using Server.Models.Action;
 using Server.Models.Infrastructure;
+
+using Shared.Gadget.Models.Component;
 //---------------------------//
 
 namespace Shared.Gadget.Models.Action
@@ -21,19 +24,21 @@ namespace Shared.Gadget.Models.Action
       gadgets.Clear ();
 
       if (entityAction.CategoryType.IsCategory (TCategory.Test)) {
+        var gadgetCollection = new Collection<GadgetTest> ();
+
         foreach (var item in entityAction.CollectionAction.ModelCollection) {
           var modelAction = item.Value;
-          var component = TActionComponent.Create (TCategory.Test);
+          var gadget = GadgetTest.CreateDefault;
 
-          component.Models.GadgetTestModel.Id = modelAction.ComponentInfoModel.Id;
-          component.Models.GadgetTestModel.GadgetName= modelAction.ExtensionTextModel.Text;
-          component.Models.GadgetTestModel.Description = modelAction.ExtensionTextModel.Description;
-          component.Models.GadgetTestModel.ExternalLink = modelAction.ExtensionTextModel.ExternalLink;
-          component.Models.GadgetTestModel.Material = modelAction.ExtensionTextModel.Extension;
-          component.Models.GadgetTestModel.Enabled = modelAction.ComponentInfoModel.Enabled;
-                   
-          component.Models.GadgetTestModel.GadgetInfo = entityAction.ModelAction.ComponentInfoModel.Name;
-          component.Models.GadgetTestModel.Busy = entityAction.ModelAction.ComponentStatusModel.Busy;
+          gadget.Id = modelAction.ComponentInfoModel.Id;
+          gadget.GadgetName= modelAction.ExtensionTextModel.Text;
+          gadget.Description = modelAction.ExtensionTextModel.Description;
+          gadget.ExternalLink = modelAction.ExtensionTextModel.ExternalLink;
+          gadget.Material = modelAction.ExtensionTextModel.Extension;
+          gadget.Enabled = modelAction.ComponentInfoModel.Enabled;
+          
+          gadget.GadgetInfo = modelAction.ComponentInfoModel.Name;
+          gadget.Busy = modelAction.ComponentStatusModel.Busy;
 
           // update
           if (entityAction.CollectionAction.ComponentRelationCollection.Count.Equals (0)) {
@@ -46,15 +51,28 @@ namespace Shared.Gadget.Models.Action
 
           foreach (var relation in entityAction.CollectionAction.ComponentRelationCollection) {
             if (relation.ParentId.IsEmpty ()) {
-              component.Models.GadgetTestModel.AddContentId (relation.ChildId, TCategoryType.FromValue (relation.ChildCategory));
+              gadget.AddContentId (relation.ChildId, TCategoryType.FromValue (relation.ChildCategory));
             }
 
             else {
-              if (component.Models.GadgetTestModel.Contains (relation.ParentId)) {
-                component.Models.GadgetTestModel.AddContentId (relation.ChildId, TCategoryType.FromValue (relation.ChildCategory));
+              if (gadget.Contains (relation.ParentId)) {
+                gadget.AddContentId (relation.ChildId, TCategoryType.FromValue (relation.ChildCategory));
               }
             }
           }
+
+          gadgetCollection.Add (gadget);
+        }
+
+        // sort
+        var list = gadgetCollection
+          .OrderBy (p => p.GadgetInfo)
+          .ToList ()
+        ;
+
+        foreach (var model in list) {
+          var component = TActionComponent.Create (TCategory.Test);
+          component.Models.GadgetTestModel.CopyFrom (model);
 
           gadgets.Add (component);
         }
@@ -94,16 +112,21 @@ namespace Shared.Gadget.Models.Action
 
               // target
               if (gadgetEntityAction.CategoryType.IsCategory (TCategory.Target)) {
-                var modelTarget = TActionComponent.Create (TCategory.Target);
-                TGadgetTargetConverter.Select (modelTarget, gadgetEntityAction);
+                var componentTarget = TActionComponent.Create (TCategory.Target);
+                TActionConverter.Select (TCategory.Target, componentTarget, gadgetEntityAction);
 
-                component.Models.GadgetTestModel.AddContent (modelTarget.Models.GadgetTargetModel);
+                component.Models.GadgetTestModel.AddContent (componentTarget.Models.GadgetTargetModel);
+
+                // same material always
+                if (component.Models.GadgetMaterialModel.ValidateId.IsFalse ()) {
+                  component.Models.GadgetMaterialModel.CopyFrom (componentTarget.Models.GadgetMaterialModel);
+                }
               }
 
               // test
               if (gadgetEntityAction.CategoryType.IsCategory (TCategory.Test)) {
                 var modelTest = TActionComponent.Create (TCategory.Test);
-                TGadgetTestConverter.Select (modelTest, gadgetEntityAction);
+                TActionConverter.Select (TCategory.Test, modelTest, gadgetEntityAction);
 
                 component.Models.GadgetTestModel.AddContent (modelTest.Models.GadgetTestModel);
               }

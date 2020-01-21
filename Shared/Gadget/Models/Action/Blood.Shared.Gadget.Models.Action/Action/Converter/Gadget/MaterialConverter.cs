@@ -71,6 +71,7 @@ namespace Shared.Gadget.Models.Action
                  
         component.Models.GadgetMaterialModel.GadgetInfo = entityAction.ModelAction.ComponentInfoModel.Name;
         component.Models.GadgetMaterialModel.Busy = entityAction.ModelAction.ComponentStatusModel.Busy;
+        component.Models.GadgetMaterialModel.Material = entityAction.ModelAction.ExtensionTextModel.Text;
       }
     }
 

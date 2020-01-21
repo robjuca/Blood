@@ -65,8 +65,8 @@ namespace Gadget.Collection.Pattern.ViewModels
         if (message.Node.IsSiblingToMe (TChild.Display, TypeInfo)) {
           // Select
           if (message.IsAction (TInternalMessageAction.Select)) {
-            if (message.Support.Argument.Args.Param1 is TGadgetTestModel gadget) {
-              TDispatcher.BeginInvoke (SelectDispatcher, gadget);
+            if (message.Support.Argument.Args.Param1 is TActionComponent component) {
+              TDispatcher.BeginInvoke (SelectDispatcher, component);
             }
           }
 
@@ -92,9 +92,9 @@ namespace Gadget.Collection.Pattern.ViewModels
     #endregion
 
     #region Dispatcher
-    void SelectDispatcher (TGadgetTestModel gadget)
+    void SelectDispatcher (TActionComponent component)
     {
-      Model.Select (gadget);
+      Model.Select (component);
 
       if (FrameworkElementView.FindName ("DisplayControl") is TComponentDisplayControl control) {
         control.RefreshDesign ();

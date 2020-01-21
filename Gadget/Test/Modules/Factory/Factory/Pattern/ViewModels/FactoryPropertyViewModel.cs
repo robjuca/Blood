@@ -55,8 +55,8 @@ namespace Gadget.Factory.Pattern.ViewModels
 
           // Edit
           if (message.IsAction (TInternalMessageAction.Edit)) {
-            if (message.Support.Argument.Args.Param1 is TGadgetTestModel gadget) {
-              TDispatcher.BeginInvoke (EditDispatcher, gadget);
+            if (message.Support.Argument.Args.Param1 is TActionComponent component) {
+              TDispatcher.BeginInvoke (EditDispatcher, component);
             }
           }
 
@@ -233,13 +233,11 @@ namespace Gadget.Factory.Pattern.ViewModels
       DelegateCommand.PublishInternalMessage.Execute (msg);
     }
 
-    void EditDispatcher (TGadgetTestModel gadget)
+    void EditDispatcher (TActionComponent component)
     {
       // Id must exist
-      if (gadget.ValidateId) {
+      if (Model.EditEnter (component)) {
         SelectViewMode (TViewMode.Edit);
-
-        Model.EditEnter (gadget);
 
         TDispatcher.Invoke (RefreshAllDispatcher);
         TDispatcher.Invoke (EditEnterDispatcher);
@@ -247,7 +245,7 @@ namespace Gadget.Factory.Pattern.ViewModels
         // to Sibling
         var message = new TFactorySiblingMessageInternal (TInternalMessageAction.PropertySelect, TChild.Property, TypeInfo);
         message.Support.Argument.Args.Select ("edit");
-        message.Support.Argument.Args.Select (gadget);
+        message.Support.Argument.Args.Select (component);
 
         DelegateCommand.PublishInternalMessage.Execute (message);
       }

@@ -61,6 +61,12 @@ namespace Shared.Gadget.Models.Component
       set;
     }
 
+    public bool IsChecked
+    {
+      get;
+      set;
+    }
+
     public bool ValidateId
     {
       get
@@ -98,6 +104,7 @@ namespace Shared.Gadget.Models.Component
       ExternalLink = string.Empty;
       Enabled = false;
       Busy = false;
+      IsChecked = false;
     }
 
     protected TGadgetBase (TGadgetBase alias)
@@ -126,6 +133,7 @@ namespace Shared.Gadget.Models.Component
         ExternalLink = alias.ExternalLink;
         Enabled = alias.Enabled;
         Busy = alias.Busy;
+        IsChecked = alias.IsChecked;
       }
     }
 
@@ -139,6 +147,7 @@ namespace Shared.Gadget.Models.Component
         ExternalLink = alias.ExternalLink;
         Enabled = alias.Enabled;
         Busy = alias.Busy;
+        IsChecked = alias.IsChecked;
       }
     } 
     #endregion

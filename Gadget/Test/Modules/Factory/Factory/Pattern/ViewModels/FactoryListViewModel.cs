@@ -4,7 +4,6 @@
 ----------------------------------------------------------------*/
 
 //----- Include
-using System;
 using System.ComponentModel.Composition;
 
 using rr.Library.Infrastructure;
@@ -71,8 +70,8 @@ namespace Gadget.Factory.Pattern.ViewModels
             var propertyName = message.Support.Argument.Args.PropertyName;
 
             if (propertyName.Equals ("edit")) {
-              if (message.Support.Argument.Args.Param1 is TGadgetTestModel gadget) {
-                TDispatcher.BeginInvoke (EditDispatcher, gadget);
+              if (message.Support.Argument.Args.Param1 is TActionComponent component) {
+                TDispatcher.BeginInvoke (EditDispatcher, component);
               }
             }
 
@@ -152,9 +151,9 @@ namespace Gadget.Factory.Pattern.ViewModels
       TDispatcher.Invoke (RefreshAllDispatcher);
     }
 
-    void EditDispatcher (TGadgetTestModel gadget)
+    void EditDispatcher (TActionComponent component)
     {
-      Model.EditEnter (gadget);
+      Model.EditEnter (component);
 
       TDispatcher.Invoke (RefreshAllDispatcher);
     }

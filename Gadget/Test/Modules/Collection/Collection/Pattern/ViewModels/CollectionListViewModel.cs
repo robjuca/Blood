@@ -17,6 +17,7 @@ using Shared.Types;
 using Shared.Resources;
 using Shared.ViewModel;
 using Shared.Gadget.Models.Action;
+using Shared.Gadget.Models.Component;
 
 using Gadget.Collection.Presentation;
 using Gadget.Collection.Pattern.Models;
@@ -97,9 +98,9 @@ namespace Gadget.Collection.Pattern.ViewModels
     #endregion
 
     #region View Event
-    public void OnSelectionChanged (TGadgetTestModel gadget)
+    public void OnSelectionChanged (GadgetTest gadget)
     {
-      TDispatcher.BeginInvoke (ItemSelectedDispatcher, gadget);
+      TDispatcher.BeginInvoke (SelectionChangedDispatcher, gadget);
     }
     #endregion
 
@@ -134,15 +135,9 @@ namespace Gadget.Collection.Pattern.ViewModels
       TDispatcher.Invoke (RefreshAllDispatcher);
     }
 
-    void ItemSelectedDispatcher (TGadgetTestModel gadget)
+    void SelectionChangedDispatcher (GadgetTest gadget)
     {
-      if (gadget.IsNull ()) {
-        // to Sibling
-        var message = new TCollectionSiblingMessageInternal (TInternalMessageAction.Cleanup, TChild.List, TypeInfo);
-        DelegateCommand.PublishInternalMessage.Execute (message);
-      }
-
-      else {
+      if (Model.SelectionChanged (gadget)) {
         // to parent
         // Select - ById
         var entityAction = TEntityAction.Create (
@@ -151,24 +146,29 @@ namespace Gadget.Collection.Pattern.ViewModels
           TExtension.ById
         );
 
-        entityAction.Id = gadget.Id;
+        entityAction.Id = Model.Current.Id;
 
         var message = new TCollectionMessageInternal (TInternalMessageAction.Request, TChild.List, TypeInfo);
         message.Support.Argument.Types.Select (entityAction);
 
         DelegateCommand.PublishInternalMessage.Execute (message);
       }
+
+      else {
+        // to Sibling
+        var message = new TCollectionSiblingMessageInternal (TInternalMessageAction.Cleanup, TChild.List, TypeInfo);
+        DelegateCommand.PublishInternalMessage.Execute (message);
+      }
     }
 
     void ResponseSelectByIdDispatcher (TEntityAction entityAction)
     {
-      var gadget = TGadgetTestModel.CreateDefault;
-
-      TGadgetTestActionComponent.Select (gadget, entityAction);
+      var component = TActionComponent.Create (TCategory.Test);
+      TActionConverter.Select (TCategory.Test, component, entityAction);
 
       // to Sibling
       var message = new TCollectionSiblingMessageInternal (TInternalMessageAction.Select, TChild.List, TypeInfo);
-      message.Support.Argument.Args.Select (gadget);
+      message.Support.Argument.Args.Select (component);
 
       DelegateCommand.PublishInternalMessage.Execute (message);
     }

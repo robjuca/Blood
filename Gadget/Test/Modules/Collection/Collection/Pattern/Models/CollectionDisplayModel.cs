@@ -5,11 +5,12 @@
 
 //----- Include
 using System;
-using System.Collections.ObjectModel;
 using System.Windows;
 
-using Server.Models.Action;
+using Server.Models.Infrastructure;
+
 using Shared.Gadget.Models.Action;
+using Shared.Gadget.Models.Component;
 
 using Shared.Gadget.Test;
 //---------------------------//
@@ -25,7 +26,7 @@ namespace Gadget.Collection.Pattern.Models
       set;
     }
 
-    public TGadgetTestModel GadgetModel
+    public GadgetTest GadgetModel
     {
       get;
       private set;
@@ -71,7 +72,7 @@ namespace Gadget.Collection.Pattern.Models
     #region Constructor
     public TCollectionDisplayModel ()
     {
-      GadgetModel = TGadgetTestModel.CreateDefault;
+      GadgetModel = GadgetTest.CreateDefault;
       ComponentControlModel = TComponentControlModel.CreateDefault;
 
       BusyVisibility = Visibility.Hidden;
@@ -81,15 +82,17 @@ namespace Gadget.Collection.Pattern.Models
     #endregion
 
     #region Members
-    internal void Select (TGadgetTestModel gadget)
+    internal void Select (TActionComponent component)
     {
-      gadget.ThrowNull ();
+      component.ThrowNull ();
 
-      GadgetModel.CopyFrom (gadget);
+      if (component.IsCategory (TCategory.Test)) {
+        GadgetModel.CopyFrom (component.Models.GadgetTestModel);
 
-      ComponentControlModel.SelectModel (gadget);
+        ComponentControlModel.SelectModel (component);
 
-      BusyVisibility = GadgetModel.BusyVisibility;
+        BusyVisibility = GadgetModel.BusyVisibility;
+      }
     }
 
     //internal void RequestModel (TEntityAction entityAction)
@@ -109,7 +112,7 @@ namespace Gadget.Collection.Pattern.Models
 
     internal void Cleanup ()
     {
-      GadgetModel = TGadgetTestModel.CreateDefault;
+      GadgetModel.CopyFrom (GadgetTest.CreateDefault);
       ComponentControlModel = TComponentControlModel.CreateDefault;
 
       BusyVisibility = Visibility.Hidden;
