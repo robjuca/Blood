@@ -125,10 +125,17 @@ namespace Gadget.Factory.Pattern.Models
 
         case "GadgetRemove":
           if (locked.IsFalse ()) {
-            IsEnabledSelector = true;
-            MaterialSelectionEnabled = true;
+            //IsEnabledSelector = true;  // NOT NOW
+            //MaterialSelectionEnabled = true;
           }
           break;
+      }
+    }
+
+    internal void Request (TActionComponent component)
+    {
+      if (component.NotNull ()) {
+        component.Models.GadgetMaterialModel.CopyFrom (MaterialSelectionCurrent);
       }
     }
 

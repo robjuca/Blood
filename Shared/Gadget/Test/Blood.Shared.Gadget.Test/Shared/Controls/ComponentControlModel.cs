@@ -119,10 +119,21 @@ namespace Shared.Gadget.Test
     {
       if (component.NotNull ()) {
         if (component.IsCategory (TCategory.Test)) {
-          Cleanup ();
-          SelectModel (component.Models.GadgetTestModel);
+          var gadget = component.Models.GadgetTestModel;
 
-          MaterialImage = new Collection<byte> (component.Models.GadgetMaterialModel.Image);
+          SelectModel (gadget);
+
+          if (gadget.ValidateId) {
+            if (HasComponentControlModels) {
+              foreach (var controlModel in ComponentControlModels) {
+                controlModel.SelectImage (component.Models.GadgetMaterialModel.GetImage ());
+              }
+            }
+
+            else {
+              SelectImage (component.Models.GadgetMaterialModel.GetImage ());
+            }
+          }
         }
       }
     }
@@ -168,9 +179,14 @@ namespace Shared.Gadget.Test
                   foreach (var gadgetTestInternal in internalContents) {
                     var internalComponentControlModel = TComponentControlModel.CreateDefault;
                     internalComponentControlModel.ControlModel.CopyFrom (gadgetTestInternal);
+                    internalComponentControlModel.SelectImage (component.Models.GadgetMaterialModel.GetImage ());
 
                     componentControlModel.ComponentControlModels.Add (internalComponentControlModel);
                   }
+                }
+
+                if (componentControlModel.ControlModel.IsContentTarget) {
+                  componentControlModel.SelectImage (component.Models.GadgetMaterialModel.GetImage ());
                 }
 
                 ComponentControlModels.Add (componentControlModel);
@@ -178,8 +194,12 @@ namespace Shared.Gadget.Test
             }
             break;
 
-          case TCategory.Target:
-            ControlModel.AddContent (component.Models.GadgetTargetModel);
+          case TCategory.Target: {
+              ControlModel.CopyFrom (component.Models.GadgetTestModel);
+              ControlModel.AddContent (component.Models.GadgetTargetModel);  // for sure
+
+              SelectImage (component.Models.GadgetMaterialModel.GetImage ());
+            }
             break;
         }
       }
@@ -229,11 +249,20 @@ namespace Shared.Gadget.Test
       }
     }
 
+    internal void SelectImage (byte [] image)
+    {
+      if (image.NotNull ()) {
+        MaterialImage = new Collection<byte> (image);
+      }
+    }
+
     public void Cleanup ()
     {
       ControlModel.CopyFrom (GadgetTest.CreateDefault);
 
       ComponentControlModels.Clear ();
+
+      MaterialImage = null;
     }
     #endregion
 

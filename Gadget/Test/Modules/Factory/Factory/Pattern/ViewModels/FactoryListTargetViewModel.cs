@@ -211,9 +211,14 @@ namespace Gadget.Factory.Pattern.ViewModels
 
       TDispatcher.Invoke (RefreshAllDispatcher);
 
+      var component = TActionComponent.Create (TCategory.Target);
+      component.Models.GadgetTargetModel.CopyFrom (gadget);
+
+      Model.Request (component);
+
       // to Sibling
       var message = new TFactorySiblingMessageInternal (TInternalMessageAction.PropertySelect, TChild.List, TypeInfo);
-      message.Support.Argument.Args.Select (gadget);
+      message.Support.Argument.Args.Select (component);
       message.Support.Argument.Args.Select (gadget.IsChecked ? "GadgetAdd" : "GadgetRemove");
 
       if (Model.HasGadgetChecked) {

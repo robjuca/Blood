@@ -10,6 +10,7 @@ using rr.Library.Infrastructure;
 using rr.Library.Helper;
 
 using Server.Models.Action;
+using Server.Models.Infrastructure;
 
 using Shared.Types;
 using Shared.Resources;
@@ -51,10 +52,10 @@ namespace Gadget.Factory.Pattern.ViewModels
           // Response
           if (message.IsAction (TInternalMessageAction.Response)) {
             // Collection-Full
-            if (message.Support.Argument.Types.IsOperation (Server.Models.Infrastructure.TOperation.Collection, Server.Models.Infrastructure.TExtension.Full)) {
+            if (message.Support.Argument.Types.IsOperation (TOperation.Collection, TExtension.Full)) {
               if (message.Result.IsValid) {
                 // Gadget Material
-                if (message.Support.Argument.Types.IsOperationCategory (Server.Models.Infrastructure.TCategory.Material)) {
+                if (message.Support.Argument.Types.IsOperationCategory (TCategory.Material)) {
                   var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
                   TDispatcher.BeginInvoke (MaterialCollectionFullDispatcher, action);
                 }
@@ -132,9 +133,9 @@ namespace Gadget.Factory.Pattern.ViewModels
       // to parent
       // Collection - Full (Material list - used to send RefreshModel)
       var entityAction = TEntityAction.Create (
-        Server.Models.Infrastructure.TCategory.Material,
-        Server.Models.Infrastructure.TOperation.Collection,
-        Server.Models.Infrastructure.TExtension.Full
+        TCategory.Material,
+        TOperation.Collection,
+        TExtension.Full
       );
 
       var message = new TFactoryMessageInternal (TInternalMessageAction.Request, TChild.List, TypeInfo);
@@ -160,9 +161,12 @@ namespace Gadget.Factory.Pattern.ViewModels
 
     void MaterialSelectionChangedDispatcher ()
     {
+      var component = TActionComponent.Create (TCategory.Material);
+      Model.Request (component);
+
       // to sibling
       var message = new TFactorySiblingMessageInternal (TInternalMessageAction.Select, TChild.List, TypeInfo);
-      message.Support.Argument.Args.Select (Model.MaterialSelectionCurrent);
+      message.Support.Argument.Args.Select (component);
 
       DelegateCommand.PublishInternalMessage.Execute (message);
     }

@@ -38,6 +38,7 @@ namespace Shared.Gadget.Models.Action
 
           gadget.GadgetInfo = modelAction.ComponentInfoModel.Name;
           gadget.Busy = modelAction.ComponentStatusModel.Busy;
+          gadget.Material = modelAction.ExtensionTextModel.Text;
 
           gadgetCollection.Add (gadget);
         }

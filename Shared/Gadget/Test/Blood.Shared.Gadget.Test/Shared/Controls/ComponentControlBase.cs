@@ -86,14 +86,11 @@ namespace Shared.Gadget.Test
         var imageSource = rr.Library.Helper.THelper.ByteArrayToBitmapImage (Model.MaterialImage);
 
         if (imageSource.NotNull ()) {
-          var width = imageSource.PixelWidth;
-          var height = imageSource.PixelHeight;
-
           var image = new Image ()
           {
             Stretch = Stretch.Fill,
-            Width = width,
-            Height = height,
+            Width = 18,
+            Height = 18,
             Source = imageSource.Clone (),
             Margin = new Thickness (0, 0, 10, 0),
           };
@@ -214,7 +211,7 @@ namespace Shared.Gadget.Test
               xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'
               xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml'>
                 <StackPanel>
-                  <TextBlock FontWeight='Bold' Foreground='DarkBlue' Text='{Binding Target}' />
+                  <TextBlock FontWeight='Bold' Foreground='DarkBlue' Text='{Binding GadgetName}' />
                   <TextBox FontSize='10px' IsReadOnly='true' MaxWidth='680' TextWrapping='Wrap' Text='{Binding Description}' />
                   <TextBlock Foreground='DarkGreen' Text='{Binding Reference}' />
                 </StackPanel>

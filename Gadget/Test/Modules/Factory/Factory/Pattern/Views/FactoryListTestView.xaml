@@ -21,7 +21,7 @@
                               IsChecked="{Binding IsChecked, Mode=TwoWay}"
                               caliburn:Message.Attach="[Event Checked] = [OnGadgetItemChecked ($datacontext)]; [Event Unchecked] = [OnGadgetItemUnchecked ($datacontext)]" />
 
-                    <TextBlock Text="{Binding Name}"
+                    <TextBlock Text="{Binding GadgetInfo}"
                                FontWeight="Bold"
                                VerticalAlignment="Center" />
                 </StackPanel>

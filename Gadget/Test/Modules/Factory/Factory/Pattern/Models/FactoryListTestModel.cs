@@ -101,21 +101,21 @@ namespace Gadget.Factory.Pattern.Models
     internal void GadgetItemChecked (GadgetTest gadget, bool isChecked)
     {
       if (gadget.NotNull ()) {
-        gadget.IsChecked = isChecked;
+        gadget.IsChecked = isChecked; // for sure
 
         var gadgetChecked = IsChecked (gadget);
 
-        //if (isChecked) {
-        //  if (gadgetChecked.ValidateId.IsFalse ()) {
-        //    AddChecked (gadget);
-        //  }
-        //}
+        if (isChecked) {
+          if (gadgetChecked.ValidateId.IsFalse ()) {
+            AddChecked (gadget);
+          }
+        }
 
-        //else {
-        //  if (gadgetChecked.ValidateId) {
-        //    RemoveChecked (gadget.Id);
-        //  }
-        //}
+        else {
+          if (gadgetChecked.ValidateId) {
+            RemoveChecked (gadget.Id);
+          }
+        }
       }
     }
     
@@ -223,6 +223,31 @@ namespace Gadget.Factory.Pattern.Models
       return (false);
     }
 
+    bool AddGadget (GadgetTest gadget)
+    {
+      var res = false;
+
+      if (gadget.NotNull ()) {
+        if (ContainsGadget (gadget.Id).IsFalse ()) {
+          GadgetItemsSource.Add (gadget);
+          res = true;
+        }
+      }
+
+      return (res);
+    }
+
+    bool ContainsGadget (Guid id)
+    {
+      foreach (var gadget in GadgetItemsSource) {
+        if (gadget.Contains (id)) {
+          return (true);
+        }
+      }
+
+      return (false);
+    }
+
     void AddChecked (GadgetTest gadget)
     {
       if (gadget.NotNull ()) {
@@ -314,8 +339,9 @@ namespace Gadget.Factory.Pattern.Models
             if (gadgetTest.ValidateId) {
               gadgetTest.Material = m_CurrentMaterialGadget.Material;
 
-              GadgetItemsSource.Add (gadgetTest);
-              AddChecked (gadgetTest);
+              if (AddGadget (gadgetTest)) {
+                AddChecked (gadgetTest);
+              }
             }
           }
         }
@@ -338,15 +364,18 @@ namespace Gadget.Factory.Pattern.Models
             if (checkedItem.ValidateId.IsFalse ()) {
               if (gadgetTest.Enabled) {
                 if (gadgetTest.Busy.IsFalse ()) {
-                  gadgetTest.Material = m_CurrentMaterialGadget.Material;
+                  // only Target content
+                  if (gadgetTest.IsContentTarget) {
+                    gadgetTest.Material = m_CurrentMaterialGadget.Material;
 
-                  GadgetItemsSource.Add (gadgetTest);
+                    AddGadget (gadgetTest);
+                  }
                 }
               }
             }
 
             else {
-              GadgetItemsSource.Add (checkedItem);
+              AddGadget (checkedItem);
             }
           }
         }

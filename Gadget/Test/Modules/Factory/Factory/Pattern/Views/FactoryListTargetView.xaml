@@ -24,18 +24,13 @@
                     BorderThickness="0 .1 0 .1"
                     BorderBrush="LightGray">
 
-                <!--check, material, name-->
+                <!--check, name-->
                 <StackPanel Orientation="Horizontal">
                     <CheckBox Margin="0 0 5 0"
-                              IsChecked="{Binding Models.GadgetTargetModel.IsChecked}"
+                              IsChecked="{Binding IsChecked}"
                               caliburn:Message.Attach="[Event Checked] = [OnGadgetItemChecked ($datacontext)]; [Event Unchecked] = [OnGadgetItemUnchecked ($datacontext)]" />
 
-                    <Image Margin="0 0 5 0"
-                           Width="16"
-                           Height="16"
-                           Source="{Binding MaterialImage, Converter={StaticResource CollectionToBitmapImageConverter}}" />
-
-                    <TextBlock Text="{Binding Models.GadgetTargetModel.GadgetInfo}"
+                    <TextBlock Text="{Binding GadgetInfo}"
                                FontWeight="Bold"
                                VerticalAlignment="Center" />
                 </StackPanel>

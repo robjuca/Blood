@@ -13,6 +13,7 @@ using rr.Library.Helper;
 using rr.Library.Types;
 
 using Server.Models.Action;
+using Server.Models.Infrastructure;
 
 using Shared.Resources;
 using Shared.Types;
@@ -70,12 +71,12 @@ namespace Gadget.Factory.Pattern.ViewModels
           // Response
           if (message.IsAction (TInternalMessageAction.Response)) {
             // Insert
-            if (message.Support.Argument.Types.IsOperation (Server.Models.Infrastructure.TOperation.Insert)) {
+            if (message.Support.Argument.Types.IsOperation (TOperation.Insert)) {
               TDispatcher.Invoke (InsertSuccessDispatcher);
             }
 
             // Change - Full
-            if (message.Support.Argument.Types.IsOperation (Server.Models.Infrastructure.TOperation.Change, Server.Models.Infrastructure.TExtension.Full)) {
+            if (message.Support.Argument.Types.IsOperation (TOperation.Change, TExtension.Full)) {
               TDispatcher.Invoke (ChangeSuccessDispatcher);
             }
           }
@@ -117,10 +118,10 @@ namespace Gadget.Factory.Pattern.ViewModels
       Model.ShowPanels ();
       RaiseChanged ();
 
-      var action = TEntityAction.Create (Server.Models.Infrastructure.TCategory.Test, Server.Models.Infrastructure.TOperation.Insert);
+      var action = TEntityAction.Create (TCategory.Test, TOperation.Insert);
 
       if (IsViewModeEdit) {
-        action = TEntityAction.Create (Server.Models.Infrastructure.TCategory.Test, Server.Models.Infrastructure.TOperation.Change, Server.Models.Infrastructure.TExtension.Full);
+        action = TEntityAction.Create (TCategory.Test, TOperation.Change, TExtension.Full);
       }
 
       Model.RequestModel (action);
@@ -288,10 +289,8 @@ namespace Gadget.Factory.Pattern.ViewModels
     {
       Model.ValidateProperty (propertyName);
 
-      var action = TEntityAction.CreateDefault;
-      Model.ComponentModelProperty.RequestModel (action);
-
-      //action.ModelAction.GadgetTestModel.CopyFrom (action); // set model
+      var action = TEntityAction.Create(TCategory.Test);
+      Model.RequestModel (action);
 
       // to Sibling
       var message = new TFactorySiblingMessageInternal (TInternalMessageAction.PropertySelect, TChild.Property, TypeInfo);

@@ -113,8 +113,7 @@ namespace Gadget.Factory.Pattern.ViewModels
     {
       if (action.Param1 is string propertyName) {
         if (propertyName.Equals ("DescriptionProperty") || propertyName.Equals ("TextProperty") || propertyName.Equals ("ExternalLinkProperty")) {
-          //TODO: what for?
-          //Model.SelectModel (action);
+          Model.SelectModel (action);
           TDispatcher.Invoke (RefreshDesignDispatcher);
         }
       }

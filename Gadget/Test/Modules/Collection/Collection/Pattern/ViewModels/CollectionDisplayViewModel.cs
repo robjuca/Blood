@@ -105,9 +105,12 @@ namespace Gadget.Collection.Pattern.ViewModels
 
     void EditDispatcher ()
     {
+      var component = TActionComponent.Create (TCategory.Test);
+      Model.Request (component);
+
       // to parent
       var message = new TCollectionMessageInternal (TInternalMessageAction.Edit, TChild.Display, TypeInfo);
-      message.Support.Argument.Args.Select (Model.GadgetModel);
+      message.Support.Argument.Args.Select (component);
 
       DelegateCommand.PublishInternalMessage.Execute (message);
     }

@@ -125,10 +125,15 @@ namespace Shared.Gadget.Models.Action
 
               // test
               if (gadgetEntityAction.CategoryType.IsCategory (TCategory.Test)) {
-                var modelTest = TActionComponent.Create (TCategory.Test);
-                TActionConverter.Select (TCategory.Test, modelTest, gadgetEntityAction);
+                var componentTest = TActionComponent.Create (TCategory.Test);
+                TActionConverter.Select (TCategory.Test, componentTest, gadgetEntityAction);
 
-                component.Models.GadgetTestModel.AddContent (modelTest.Models.GadgetTestModel);
+                component.Models.GadgetTestModel.AddContent (componentTest.Models.GadgetTestModel);
+
+                // update Material
+                if (component.Models.GadgetMaterialModel.ValidateId.IsFalse ()) {
+                  component.Models.GadgetMaterialModel.CopyFrom (componentTest.Models.GadgetMaterialModel);
+                }
               }
             }
           }

@@ -174,7 +174,7 @@ namespace Gadget.Factory.Pattern.ViewModels
       entityAction.ThrowNull ();
 
       if (entityAction.Param2 is GadgetTest gadget) {
-        if (gadget.IsContentTest) {
+        if (gadget.IsContentTarget) {
           var component = TActionComponent.Create (TCategory.Test);
           component.Models.GadgetTestModel.CopyFrom (gadget);
 
@@ -185,7 +185,7 @@ namespace Gadget.Factory.Pattern.ViewModels
 
           // to Sibling
           var message = new TFactorySiblingMessageInternal (TInternalMessageAction.PropertySelect, TChild.List, TypeInfo);
-          message.Support.Argument.Args.Select (gadget);
+          message.Support.Argument.Args.Select (component);
           message.Support.Argument.Args.Select (gadget.IsChecked ? "GadgetAdd" : "GadgetRemove");
 
           if (Model.HasGadgetChecked) {
@@ -202,7 +202,7 @@ namespace Gadget.Factory.Pattern.ViewModels
     void ItemCheckedChangedDispatcher (GadgetTest gadget)
     {
       // to parent
-      // Collection - Full 
+      // Select = ById (Test) 
       var action = TEntityAction.Create (
         TCategory.Test,
         TOperation.Select,

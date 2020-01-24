@@ -53,9 +53,8 @@
                                 </Border>
                             </Grid>
 
-                            <ComboBox x:Name="MaterialList"
-                                      ItemsSource="{Binding Source={StaticResource MaterialModelItemsViewSource}}"
-                                      DisplayMemberPath="Name"
+                            <ComboBox ItemsSource="{Binding Source={StaticResource MaterialModelItemsViewSource}}"
+                                      DisplayMemberPath="GadgetName"
                                       IsEnabled="{Binding Model.MaterialSelectionEnabled, Mode=TwoWay}"
                                       SelectedIndex="{Binding Model.MaterialSelectionSelectedIndex, Mode=TwoWay}"
                                       caliburn:Message.Attach="[Event SelectionChanged] = [OnMaterialSelectionChanged ()]" />
@@ -66,36 +65,36 @@
                     <Border Margin="0 10 0 0">
                         <Grid>
                             <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
 
-                        <!--selector-->
-                        <Border Grid.Column="0">
-                            <TextBlock Text="selector ->"
-                                       VerticalAlignment="Center" />
-                        </Border>
+                            <!--selector-->
+                            <Border Grid.Column="0">
+                                <TextBlock Text="selector ->"
+                                           VerticalAlignment="Center" />
+                            </Border>
 
-                        <!--target button-->
-                        <Border Grid.Column="1">
-                            <RadioButton GroupName="selector"
-                                         IsEnabled="{Binding Model.IsEnabledSelector, Mode=TwoWay}"
-                                         IsChecked="{Binding Model.SelectorTargetChecked}"
-                                         caliburn:Message.Attach="[Event Click] = [OnSelectorTargetCommadClicked ()]">
-                                <ContentControl Style="{DynamicResource GadgetTargetIcon}" />
-                            </RadioButton>
-                        </Border>
+                            <!--target button-->
+                            <Border Grid.Column="1">
+                                <RadioButton GroupName="selector"
+                                             IsEnabled="{Binding Model.IsEnabledSelector, Mode=TwoWay}"
+                                             IsChecked="{Binding Model.SelectorTargetChecked}"
+                                             caliburn:Message.Attach="[Event Click] = [OnSelectorTargetCommadClicked ()]">
+                                    <ContentControl Style="{DynamicResource GadgetTargetIcon}" />
+                                </RadioButton>
+                            </Border>
 
-                        <!--test button-->
-                        <Border Grid.Column="2">
-                            <RadioButton GroupName="selector"
-                                         IsEnabled="{Binding Model.IsEnabledSelector, Mode=TwoWay}"
-                                         IsChecked="{Binding Model.SelectorTestChecked}"
-                                         caliburn:Message.Attach="[Event Click] = [OnSelectorTestCommadClicked ()]">
-                                <ContentControl Style="{DynamicResource GadgetTestIcon}" />
-                            </RadioButton>
-                        </Border>
+                            <!--test button-->
+                            <Border Grid.Column="2">
+                                <RadioButton GroupName="selector"
+                                             IsEnabled="{Binding Model.IsEnabledSelector, Mode=TwoWay}"
+                                             IsChecked="{Binding Model.SelectorTestChecked}"
+                                             caliburn:Message.Attach="[Event Click] = [OnSelectorTestCommadClicked ()]">
+                                    <ContentControl Style="{DynamicResource GadgetTestIcon}" />
+                                </RadioButton>
+                            </Border>
                         </Grid>
                     </Border>
 
@@ -105,19 +104,19 @@
                     </Border>
                 </StackPanel>
             </Border>
-            
+
             <!--target or test views-->
             <Border Grid.Row="1"
                     Margin="0 6 0 0">
                 <materialDesign:Transitioner SelectedIndex="{Binding Model.SlideIndex, Mode=TwoWay}">
-                     <!--target-->
+                    <!--target-->
                     <materialDesign:TransitionerSlide OpeningEffect="{materialDesign:TransitionEffect FadeIn}">
                         <materialDesign:TransitionerSlide.BackwardWipe>
                             <materialDesign:CircleWipe />
                         </materialDesign:TransitionerSlide.BackwardWipe>
 
                         <views:TFactoryListTargetView />
-                        
+
                     </materialDesign:TransitionerSlide>
 
                     <!--test-->
@@ -127,7 +126,7 @@
                         </materialDesign:TransitionerSlide.BackwardWipe>
 
                         <views:TFactoryListTestView />
-                        
+
                     </materialDesign:TransitionerSlide>
                 </materialDesign:Transitioner>
             </Border>

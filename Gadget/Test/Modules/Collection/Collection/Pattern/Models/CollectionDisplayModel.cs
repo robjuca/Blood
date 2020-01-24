@@ -26,10 +26,14 @@ namespace Gadget.Collection.Pattern.Models
       set;
     }
 
+    public GadgetMaterial CurrentGadgetMaterial
+    {
+      get;
+    }
+
     public GadgetTest GadgetModel
     {
       get;
-      private set;
     }
 
     public bool IsViewEnabled
@@ -72,6 +76,7 @@ namespace Gadget.Collection.Pattern.Models
     #region Constructor
     public TCollectionDisplayModel ()
     {
+      CurrentGadgetMaterial = GadgetMaterial.CreateDefault;
       GadgetModel = GadgetTest.CreateDefault;
       ComponentControlModel = TComponentControlModel.CreateDefault;
 
@@ -87,6 +92,7 @@ namespace Gadget.Collection.Pattern.Models
       component.ThrowNull ();
 
       if (component.IsCategory (TCategory.Test)) {
+        CurrentGadgetMaterial.CopyFrom (component.Models.GadgetMaterialModel);
         GadgetModel.CopyFrom (component.Models.GadgetTestModel);
 
         ComponentControlModel.SelectModel (component);
@@ -116,6 +122,14 @@ namespace Gadget.Collection.Pattern.Models
       ComponentControlModel = TComponentControlModel.CreateDefault;
 
       BusyVisibility = Visibility.Hidden;
+    }
+
+    internal void Request (TActionComponent component)
+    {
+      component.ThrowNull ();
+
+      component.Models.GadgetMaterialModel.CopyFrom (CurrentGadgetMaterial);
+      component.Models.GadgetTestModel.CopyFrom (GadgetModel);
     }
     #endregion
   };

@@ -34,11 +34,17 @@ namespace Gadget.Factory.Pattern.Models
     #endregion
 
     #region Members
-    //internal void SelectModel (TEntityAction action)
-    //{
-    //  //TODO: what for?
-    //  //ComponentControlModel.SelectModel (action);
-    //}
+    internal void SelectModel (TEntityAction entityAction)
+    {
+      entityAction.ThrowNull ();
+
+      if (entityAction.CategoryType.IsCategory (TCategory.Test)) {
+        var component = TActionComponent.Create (TCategory.Test);
+        TActionConverter.Select (TCategory.Test, component, entityAction);
+
+        ComponentControlModel.SelectModel (component);
+      }
+    }
 
     internal void AddModel (TActionComponent component) 
     {
@@ -64,7 +70,7 @@ namespace Gadget.Factory.Pattern.Models
       component.ThrowNull ();
 
       if (component.IsCategory (TCategory.Test)) {
-        ComponentControlModel.SelectModel (component.Models.GadgetTestModel);
+        ComponentControlModel.SelectModel (component);
       }
     }
     #endregion

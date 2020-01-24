@@ -45,7 +45,7 @@ namespace Gadget.Factory.Pattern.Models
     {
       get
       {
-        return (GadgetCheckedCount.Equals (0).IsFalse ());
+        return (GadgetTargetCheckedCollection.Any ());
       }
     }
     #endregion
@@ -99,18 +99,12 @@ namespace Gadget.Factory.Pattern.Models
     internal void GadgetItemChecked (GadgetTarget gadget)
     {
       if (gadget.NotNull ()) {
-        var gadgetChecked = IsChecked (gadget);
-
-        if (gadgetChecked.IsChecked) {
-          if (gadgetChecked.ValidateId.IsFalse ()) {
-            AddChecked (gadgetChecked);
-          }
+        if (gadget.IsChecked) {
+          AddChecked (gadget);
         }
 
         else {
-          if (gadgetChecked.ValidateId) {
-            RemoveChecked (gadgetChecked.Id);
-          }
+          RemoveChecked (gadget.Id);
         }
       }
     }
@@ -136,6 +130,14 @@ namespace Gadget.Factory.Pattern.Models
 
       // update rule
       action.SupportAction.Rule.Pump ("gadget");
+    }
+
+    internal void Request (TActionComponent component)
+    {
+      component.ThrowNull ();
+
+      component.Models.GadgetMaterialModel.CopyFrom (m_CurrentMaterialGadget);
+      component.Models.GadgetTestModel.CopyFrom (m_CurrentEditGadget);
     }
 
     internal void Edit (TActionComponent component)
