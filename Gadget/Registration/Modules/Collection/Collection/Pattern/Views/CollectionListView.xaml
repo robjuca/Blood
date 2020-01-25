@@ -12,9 +12,9 @@
         <converters:TCollectionToBitmapImageConverter  x:Key="CollectionToBitmapImageConverter" />
 
         <CollectionViewSource x:Key="RegistrationModelItemsViewSource"
-                              Source="{Binding Model.RegistrationItemsSource}">
+                              Source="{Binding Model.ItemsSource}">
             <CollectionViewSource.SortDescriptions>
-                <scm:SortDescription PropertyName="GadgetRegistrationModel.Name"
+                <scm:SortDescription PropertyName="GadgetInfo"
                                      Direction="Ascending" />
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
@@ -45,7 +45,7 @@
 
                     <!--name-->
                     <Border Grid.Column="1">
-                        <TextBlock Text="{Binding Name}"
+                        <TextBlock Text="{Binding GadgetInfo}"
                                    FontWeight="Bold"
                                    VerticalAlignment="Center" />
                     </Border>
@@ -87,11 +87,10 @@
 
                 <!--list-->
                 <Border Grid.Row="1">
-                    <ListBox x:Name="RegistrationList"
-                             SelectedIndex="{Binding Model.RegistrationSelectedIndex}"
+                    <ListBox SelectedIndex="{Binding Model.SelectedIndex}"
                              ItemsSource="{Binding Source={StaticResource RegistrationModelItemsViewSource}}"
                              ItemTemplate="{StaticResource RegistrationListDataTemplate}"
-                             caliburn:Message.Attach="[Event SelectionChanged] = [OnRegistrationSelectionChanged (RegistrationList.SelectedItem)]" />
+                             caliburn:Message.Attach="[Event SelectionChanged] = [OnRegistrationSelectionChanged ()]" />
                 </Border>
             </Grid>
         </Border>

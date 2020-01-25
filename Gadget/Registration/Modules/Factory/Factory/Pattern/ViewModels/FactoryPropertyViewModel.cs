@@ -12,9 +12,13 @@ using rr.Library.Controls;
 using rr.Library.Helper;
 using rr.Library.Types;
 
+using Server.Models.Action;
+using Server.Models.Infrastructure;
+
 using Shared.Resources;
 using Shared.Types;
 using Shared.ViewModel;
+using Shared.Gadget.Models.Action;
 
 using Gadget.Factory.Presentation;
 using Gadget.Factory.Pattern.Models;
@@ -47,12 +51,14 @@ namespace Gadget.Factory.Pattern.ViewModels
         if (message.Node.IsParentToMe (TChild.Property)) {
           // RefreshModel
           if (message.IsAction (TInternalMessageAction.RefreshModel)) {
-            TDispatcher.BeginInvoke (RefreshModelDispatcher, Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction));
+            TDispatcher.BeginInvoke (RefreshModelDispatcher, TEntityAction.Request (message.Support.Argument.Types.EntityAction));
           }
 
           // Edit
           if (message.IsAction (TInternalMessageAction.Edit)) {
-            TDispatcher.BeginInvoke (EditDispatcher, Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction));
+            if (message.Support.Argument.Args.Param1 is TActionComponent component) {
+              TDispatcher.BeginInvoke (EditDispatcher, component);
+            }
           }
 
           // EditLeave
@@ -65,12 +71,12 @@ namespace Gadget.Factory.Pattern.ViewModels
           // Response
           if (message.IsAction (TInternalMessageAction.Response)) {
             // Insert
-            if (message.Support.Argument.Types.IsOperation (Server.Models.Infrastructure.TOperation.Insert)) {
+            if (message.Support.Argument.Types.IsOperation (TOperation.Insert)) {
               TDispatcher.Invoke (InsertSuccessDispatcher);
             }
 
             // Change - Full
-            if (message.Support.Argument.Types.IsOperation (Server.Models.Infrastructure.TOperation.Change, Server.Models.Infrastructure.TExtension.Full)) {
+            if (message.Support.Argument.Types.IsOperation (TOperation.Change, TExtension.Full)) {
               TDispatcher.Invoke (ChangeSuccessDispatcher);
             }
           }
@@ -80,7 +86,7 @@ namespace Gadget.Factory.Pattern.ViewModels
         if (message.Node.IsSiblingToMe (TChild.Property, TypeInfo)) {
           // Response
           if (message.IsAction (TInternalMessageAction.Response)) {
-            TDispatcher.BeginInvoke (ResponseModelDispatcher, Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction));
+            TDispatcher.BeginInvoke (ResponseModelDispatcher, TEntityAction.Request (message.Support.Argument.Types.EntityAction));
           }
         }
       }
@@ -113,11 +119,11 @@ namespace Gadget.Factory.Pattern.ViewModels
       RaiseChanged ();
 
       // Insert
-      var action = Server.Models.Component.TEntityAction.Create (Server.Models.Infrastructure.TCategory.Registration, Server.Models.Infrastructure.TOperation.Insert);
+      var action = TEntityAction.Create (TCategory.Registration, TOperation.Insert);
 
       if (IsViewModeEdit) {
         // Change-Full
-        action = Server.Models.Component.TEntityAction.Create (Server.Models.Infrastructure.TCategory.Registration, Server.Models.Infrastructure.TOperation.Change, Server.Models.Infrastructure.TExtension.Full);
+        action = TEntityAction.Create (TCategory.Registration, TOperation.Change, TExtension.Full);
       }
 
       Model.RequestModel (action);
@@ -157,12 +163,12 @@ namespace Gadget.Factory.Pattern.ViewModels
       PropertySelect ("all");
     }
 
-    void ResponseModelDispatcher (Server.Models.Component.TEntityAction action)
+    void ResponseModelDispatcher (TEntityAction action)
     {
       TDispatcher.BeginInvoke (ApplyDispatcher, action);  
     }
 
-    void ApplyDispatcher (Server.Models.Component.TEntityAction action)
+    void ApplyDispatcher (TEntityAction action)
     {
       // to parent
       var message = new TFactoryMessageInternal (TInternalMessageAction.Request, TChild.Property, TypeInfo);
@@ -215,30 +221,32 @@ namespace Gadget.Factory.Pattern.ViewModels
       DelegateCommand.PublishInternalMessage.Execute (msg);
     }
 
-    void EditDispatcher (Server.Models.Component.TEntityAction action)
+    void EditDispatcher (TActionComponent component)
     {
       // Id must exist
-      if (action.Id.NotEmpty ()) {
-        SelectViewMode (TViewMode.Edit);
+      if (component.NotNull ()) {
+        if (component.IsCategory (TCategory.Registration)) {
+          SelectViewMode (TViewMode.Edit);
 
-        Model.SelectModel (action);
+          Model.SelectModel (component);
 
-        TDispatcher.Invoke (RefreshAllDispatcher);
-        TDispatcher.Invoke (EditEnterDispatcher);
+          TDispatcher.Invoke (RefreshAllDispatcher);
+          TDispatcher.Invoke (EditEnterDispatcher);
 
-        // to Sibling
-        var message = new TFactorySiblingMessageInternal (TInternalMessageAction.PropertySelect, TChild.Property, TypeInfo);
-        message.Support.Argument.Types.Select (action);
-        message.Support.Argument.Args.Select ("all");
+          // to Sibling
+          var message = new TFactorySiblingMessageInternal (TInternalMessageAction.PropertySelect, TChild.Property, TypeInfo);
+          message.Support.Argument.Args.Select (component);
+          message.Support.Argument.Args.Select ("edit");
 
-        DelegateCommand.PublishInternalMessage.Execute (message);
+          DelegateCommand.PublishInternalMessage.Execute (message);
+        }
       }
     }
 
-    void RefreshModelDispatcher (Server.Models.Component.TEntityAction action)
+    void RefreshModelDispatcher (TEntityAction action)
     {
       action.ThrowNull ();
-
+      //TODO: what for??
       
       RaiseChanged ();
     }
@@ -269,13 +277,13 @@ namespace Gadget.Factory.Pattern.ViewModels
     #region Support
     void PropertySelect (string propertyName)
     {
-      var action = Server.Models.Component.TEntityAction.CreateDefault;
-      Model.RequestModel (action);
+      var component = TActionComponent.Create (TCategory.Registration);
+      Model.Request (component);
 
       // to Sibling
       var message = new TFactorySiblingMessageInternal (TInternalMessageAction.PropertySelect, TChild.Property, TypeInfo);
-      message.Support.Argument.Types.Select (action);
       message.Support.Argument.Args.Select (propertyName);
+      message.Support.Argument.Args.Select (component);
 
       DelegateCommand.PublishInternalMessage.Execute (message);
 

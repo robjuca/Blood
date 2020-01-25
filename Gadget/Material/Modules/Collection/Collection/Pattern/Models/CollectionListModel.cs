@@ -11,7 +11,6 @@ using System.Linq;
 using Server.Models.Action;
 using Server.Models.Infrastructure;
 
-using Shared.ViewModel;
 using Shared.Gadget.Models.Component;
 using Shared.Gadget.Models.Action;
 //---------------------------//
@@ -58,7 +57,6 @@ namespace Gadget.Collection.Pattern.Models
       ItemsSource.Clear ();
 
       var gadgets = new Collection<TActionComponent> ();
-
       TActionConverter.Collection (TCategory.Material, gadgets, entityAction);
 
       foreach (var model in gadgets) {

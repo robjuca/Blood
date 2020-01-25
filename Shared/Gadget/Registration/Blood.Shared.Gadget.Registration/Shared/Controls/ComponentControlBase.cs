@@ -95,12 +95,12 @@ namespace Shared.Gadget.Registration
       }
 
       // Registration (row 1)
-      if (string.IsNullOrEmpty (Model.ControlModel.Name).IsFalse ()) {
+      if (string.IsNullOrEmpty (Model.ControlModel.GadgetName).IsFalse ()) {
         var textBlock = new TextBlock ()
         {
           Padding = new Thickness (2),
           FontWeight = FontWeights.SemiBold,
-          Text = Model.ControlModel.Name,
+          Text = Model.ControlModel.GadgetName,
         };
 
         textBlock.SetValue (Grid.RowProperty, 1);  // row 1

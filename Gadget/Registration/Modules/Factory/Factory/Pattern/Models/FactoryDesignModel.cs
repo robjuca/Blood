@@ -6,6 +6,8 @@
 //----- Include
 using System;
 
+using Shared.Gadget.Models.Action;
+
 using Shared.Gadget.Registration;
 //---------------------------//
 
@@ -29,10 +31,11 @@ namespace Gadget.Factory.Pattern.Models
     #endregion
 
     #region Members
-    internal void SelectModel (string propertyName, Server.Models.Component.TEntityAction action)
+    internal void SelectModel (string propertyName, TActionComponent component)
     {
+      ComponentControlModel.ThrowNull ();
       //TODO: review
-      ComponentControlModel.SelectModel (action);
+      ComponentControlModel.SelectModel (component);
     }
     #endregion
   };

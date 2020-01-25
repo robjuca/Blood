@@ -71,7 +71,7 @@ namespace Gadget.Factory.Pattern.ViewModels
           // to child edit 
           var messageInternal = new TFactoryMessageInternal (TInternalMessageAction.Edit, TypeInfo);
           messageInternal.Node.SelectRelationParent (TChild.Property);
-          messageInternal.Support.Argument.Types.CopyFrom (message.Support.Argument.Types);
+          messageInternal.Support.Argument.Args.Select (message.Support.Argument.Args.Param1);
 
           DelegateCommand.PublishInternalMessage.Execute (messageInternal);
         }

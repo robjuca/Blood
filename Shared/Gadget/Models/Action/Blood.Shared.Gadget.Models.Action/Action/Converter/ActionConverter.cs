@@ -34,7 +34,7 @@ namespace Shared.Gadget.Models.Action
             break;
           
           case TCategory.Registration:
-            //TGadgetRegistrationConverter.Collection (gadgets, entityAction);
+            TGadgetRegistrationConverter.Collection (gadgets, entityAction);
             break;
           
           case TCategory.Result:
@@ -67,15 +67,15 @@ namespace Shared.Gadget.Models.Action
             break;
 
           case TCategory.Registration:
-            //TGadgetRegistrationConverter.Select (actionModel, entityAction);
+            TGadgetRegistrationConverter.Select (component, entityAction);
             break;
 
           case TCategory.Result:
-            //TGadgetResultConverter.Select (actionModel, entityAction);
+            //TGadgetResultConverter.Select (component, entityAction);
             break;
 
           case TCategory.Report:
-            //TGadgetReportConverter.Select (actionModel, entityAction);
+            //TGadgetReportConverter.Select (component, entityAction);
             break;
         }
       }
@@ -100,15 +100,15 @@ namespace Shared.Gadget.Models.Action
             break;
 
           case TCategory.Registration:
-            //TGadgetRegistrationConverter.Request (actionModel, entityAction);
+            TGadgetRegistrationConverter.Request (component, entityAction);
             break;
 
           case TCategory.Result:
-            //TGadgetResultConverter.Request (actionModel, entityAction);
+            //TGadgetResultConverter.Request (component, entityAction);
             break;
 
           case TCategory.Report:
-            //TGadgetReportConverter.Request (actionModel, entityAction);
+            //TGadgetReportConverter.Request (component, entityAction);
             break;
         }
       }

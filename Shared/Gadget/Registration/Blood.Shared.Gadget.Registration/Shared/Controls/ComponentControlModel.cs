@@ -5,6 +5,11 @@
 
 //----- Include
 using System;
+
+using Server.Models.Infrastructure;
+
+using Shared.Gadget.Models.Action;
+using Shared.Gadget.Models.Component;
 //---------------------------//
 
 namespace Shared.Gadget.Registration
@@ -12,7 +17,7 @@ namespace Shared.Gadget.Registration
   public class TComponentControlModel
   {
     #region Property
-    public Server.Models.Component.GadgetRegistration ControlModel
+    public GadgetRegistration ControlModel
     {
       get;
     }
@@ -21,15 +26,17 @@ namespace Shared.Gadget.Registration
     #region Constructor
     TComponentControlModel ()
     {
-      ControlModel = Server.Models.Component.GadgetRegistration.CreateDefault;
+      ControlModel = GadgetRegistration.CreateDefault;
     }
     #endregion
 
     #region Members
-    public void SelectModel (Server.Models.Component.TEntityAction action)
+    public void SelectModel (TActionComponent component)
     {
-      if (action.NotNull ()) {
-        ControlModel.CopyFrom (action.ModelAction.GadgetRegistrationModel);
+      if (component.NotNull ()) {
+        if (component.IsCategory (TCategory.Registration)) {
+          ControlModel.CopyFrom (component.Models.GadgetRegistrationModel);
+        }
       }
     }
     #endregion

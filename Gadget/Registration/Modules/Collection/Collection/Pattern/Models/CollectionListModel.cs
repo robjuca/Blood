@@ -6,8 +6,13 @@
 //----- Include
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 
-using Shared.ViewModel;
+using Server.Models.Action;
+using Server.Models.Infrastructure;
+
+using Shared.Gadget.Models.Action;
+using Shared.Gadget.Models.Component;
 //---------------------------//
 
 namespace Gadget.Collection.Pattern.Models
@@ -15,7 +20,7 @@ namespace Gadget.Collection.Pattern.Models
   public sealed class TCollectionListModel
   {
     #region Property
-    public ObservableCollection<TComponentModelItem> RegistrationItemsSource
+    public ObservableCollection<GadgetRegistration> ItemsSource
     {
       get;
     }
@@ -24,72 +29,85 @@ namespace Gadget.Collection.Pattern.Models
     {
       get
       {
-        return ($"[ {RegistrationItemsSource.Count} ]");
+        return ($"[ {ItemsSource.Count} ]");
       }
     }
 
-    public int RegistrationSelectedIndex
+    public int SelectedIndex
     {
       get;
       set;
-    }
-
-    public TComponentModelItem RegistrationCurrent
-    {
-      get;
     }
     #endregion
 
     #region Constructor
     public TCollectionListModel ()
     {
-      RegistrationItemsSource = new ObservableCollection<TComponentModelItem> ();
+      ItemsSource = new ObservableCollection<GadgetRegistration> ();
 
-      RegistrationSelectedIndex = -1;
-
-      RegistrationCurrent = TComponentModelItem.CreateDefault;
+      SelectedIndex = -1;
 
       // TODO: what for??
-      Registrations = new Collection<TComponentModelItem> ();
+      //Registrations = new Collection<TComponentModelItem> ();
     }
     #endregion
 
     #region Members
-    internal void Select (Server.Models.Component.TEntityAction action)
+    internal void Select (TEntityAction entityAction)
     {
       // DATA IN:
       // action.CollectionAction.ModelCollection
 
-      action.ThrowNull ();
+      entityAction.ThrowNull ();
 
-      Registrations.Clear ();
-      RegistrationItemsSource.Clear ();
+      //Registrations.Clear ();
+      ItemsSource.Clear ();
 
-      foreach (var gadget in action.CollectionAction.GadgetRegistrationCollection) {
-        if (action.CollectionAction.ModelCollection.ContainsKey (gadget.Id)) {
-          var modelAction = action.CollectionAction.ModelCollection [gadget.Id];
-          modelAction.GadgetRegistrationModel.CopyFrom (gadget);
+      var gadgets = new Collection<TActionComponent> ();
+      TActionConverter.Collection (TCategory.Registration, gadgets, entityAction);
 
-          action.ModelAction.CopyFrom (modelAction);
-
-          var item = TComponentModelItem.Create (action);
-
-          Registrations.Add (item);
-          RegistrationItemsSource.Add (item);
-        }
+      foreach (var model in gadgets) {
+        ItemsSource.Add (model.Models.GadgetRegistrationModel);
       }
 
-      if (RegistrationItemsSource.Count.Equals (0).IsFalse ()) {
-        RegistrationSelectedIndex = 0;
+      //foreach (var gadget in action.CollectionAction.GadgetRegistrationCollection) {
+      //  if (action.CollectionAction.ModelCollection.ContainsKey (gadget.Id)) {
+      //    var modelAction = action.CollectionAction.ModelCollection [gadget.Id];
+      //    modelAction.GadgetRegistrationModel.CopyFrom (gadget);
+
+      //    action.ModelAction.CopyFrom (modelAction);
+
+      //    var item = TComponentModelItem.Create (action);
+
+      //    Registrations.Add (item);
+      //    RegistrationItemsSource.Add (item);
+      //  }
+      //}
+
+      SelectedIndex = ItemsSource.Any () ? 0 : -1;
+    }
+
+    internal bool SelectionChanged (TActionComponent component)
+    {
+      component.ThrowNull ();
+
+      bool res = false;
+
+      if (SelectedIndex.Equals (-1).IsFalse ()) {
+        var gadget = ItemsSource [SelectedIndex];
+        component.Models.GadgetRegistrationModel.CopyFrom (gadget);
+        res = true;
       }
+
+      return (res);
     }
     #endregion
 
     #region property
-    Collection<TComponentModelItem> Registrations
-    {
-      get;
-    } 
+    //Collection<TComponentModelItem> Registrations
+    //{
+    //  get;
+    //} 
     #endregion
   };
   //---------------------------//

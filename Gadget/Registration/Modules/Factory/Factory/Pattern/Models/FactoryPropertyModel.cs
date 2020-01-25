@@ -8,8 +8,12 @@ using System;
 
 using rr.Library.Types;
 
+using Server.Models.Infrastructure;
+using Server.Models.Action;
+
 using Shared.Resources;
 using Shared.Types;
+using Shared.Gadget.Models.Action;
 //---------------------------//
 
 namespace Gadget.Factory.Pattern.Models
@@ -32,7 +36,7 @@ namespace Gadget.Factory.Pattern.Models
     #region Constructor
     public TFactoryPropertyModel ()
     {
-      ComponentModelProperty = TModelProperty.Create (Server.Models.Infrastructure.TCategory.Registration);
+      ComponentModelProperty = TModelProperty.Create (TCategory.Registration);
       ComponentModelProperty.PropertyChanged += OnModelPropertyChanged;
 
       //TODO: what for??
@@ -41,17 +45,33 @@ namespace Gadget.Factory.Pattern.Models
     #endregion
 
     #region Members
-    internal void SelectModel (Server.Models.Component.TEntityAction action)
+    internal void SelectModel (TActionComponent component)
     {
-      ComponentModelProperty.SelectModel (action);
+      component.ThrowNull ();
+
+      if (component.IsCategory(TCategory.Registration)) {
+        var entityAction = TEntityAction.Create (TCategory.Registration);
+        TActionConverter.Request (TCategory.Registration, component, entityAction);
+
+        ComponentModelProperty.SelectModel (entityAction);
+      }
     }
 
-    internal void RequestModel (Server.Models.Component.TEntityAction action)
+    internal void RequestModel (TEntityAction entityAction)
     {
-      if (action.NotNull ()) {
-        ComponentModelProperty.RequestModel (action);
-        action.ModelAction.GadgetRegistrationModel.CopyFrom (action); // update model
-      }
+      entityAction.ThrowNull ();
+
+      ComponentModelProperty.RequestModel (entityAction);
+    }
+
+    internal void Request (TActionComponent component)
+    {
+      component.ThrowNull ();
+
+      var entityAction = TEntityAction.Create (TCategory.Registration);
+      ComponentModelProperty.RequestModel (entityAction);
+
+      TActionConverter.Select (TCategory.Registration, component, entityAction);
     }
 
     internal void ShowPanels ()

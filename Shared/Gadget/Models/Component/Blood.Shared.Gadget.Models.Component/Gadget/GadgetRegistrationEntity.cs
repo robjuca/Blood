@@ -10,27 +10,9 @@ using System.Collections.ObjectModel;
 
 namespace Shared.Gadget.Models.Component
 {
-  public class GadgetRegistration
+  public class GadgetRegistration : TGadgetBase
   {
     #region Property
-    public Guid Id
-    {
-      get; 
-      set;
-    }
-
-    public string Name
-    {
-      get; 
-      set;
-    }
-
-    public string Description
-    {
-      get; 
-      set;
-    }
-
     public Collection<byte> Image
     {
       get; 
@@ -42,24 +24,14 @@ namespace Shared.Gadget.Models.Component
       get; 
       private set;
     }
-
-    public bool Enabled
-    {
-      get; 
-      set;
-    }
     #endregion
 
     #region Constructor
     public GadgetRegistration ()
+      : base ()
     {
-      Id = Guid.Empty;
-
-      Name = string.Empty;
-      Description = string.Empty;
       Image = new Collection<byte>();
       Date = DateTime.Now;
-      Enabled = false;
     }
 
     public GadgetRegistration (GadgetRegistration alias)
@@ -80,23 +52,20 @@ namespace Shared.Gadget.Models.Component
     public void CopyFrom (GadgetRegistration alias)
     {
       if (alias.NotNull ()) {
-        Id = alias.Id;
-        Name = alias.Name;
-        Description = alias.Description;
+        base.CopyFrom (alias);
+
         SetImage (alias.Image);
         Date = alias.Date;
-        Enabled = alias.Enabled;
       }
     }
 
     public void Change (GadgetRegistration alias)
     {
       if (alias.NotNull ()) {
-        Name = alias.Name;
-        Description = alias.Description;
+        base.Change (alias);
+
         SetImage (alias.Image);
         Date = alias.Date;
-        Enabled = alias.Enabled;
       }
     }
 
@@ -106,6 +75,13 @@ namespace Shared.Gadget.Models.Component
       Image.CopyTo (image, 0);
 
       return (image);
+    }
+
+    public void SetDate (DateTime date)
+    {
+      if (date.NotNull ()) {
+        Date = date;
+      }
     }
 
     public void SetImage (Collection<byte> image)
@@ -165,18 +141,6 @@ namespace Shared.Gadget.Models.Component
 
     #region Static
     public static GadgetRegistration CreateDefault => (new GadgetRegistration ());
-    #endregion
-
-    #region Support
-    //void CopyFrom (TModelAction modelAction)
-    //{
-    //  Id = modelAction.ComponentInfoModel.Id;
-    //  Name = modelAction.ExtensionTextModel.Text;
-    //  Description = modelAction.ExtensionTextModel.Description;
-    //  Enabled = modelAction.ComponentInfoModel.Enabled;
-    //  SetImage (modelAction.ExtensionImageModel.Image);
-    //  Date = modelAction.ExtensionTextModel.Date;
-    //} 
     #endregion
   };
   //---------------------------//

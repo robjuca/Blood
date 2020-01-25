@@ -10,10 +10,13 @@ using System.ComponentModel.Composition;
 using rr.Library.Infrastructure;
 using rr.Library.Helper;
 
-using Shared.Types;
-using Shared.Resources;
-using Shared.ViewModel;
+using Server.Models.Action;
+using Server.Models.Infrastructure;
 
+using Shared.Resources;
+using Shared.Types;
+using Shared.ViewModel;
+using Shared.Gadget.Models.Action;
 using Shared.Gadget.Registration;
 
 using Gadget.Factory.Presentation;
@@ -45,17 +48,18 @@ namespace Gadget.Factory.Pattern.ViewModels
         if (message.Node.IsSiblingToMe (TChild.Design, TypeInfo)) {
           // PropertySelect
           if (message.IsAction (TInternalMessageAction.PropertySelect)) {
-            var action = Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction);
-            var propertyName = message.Support.Argument.Args.PropertyName;
+            if (message.Support.Argument.Args.Param1 is TActionComponent component) {
+              var propertyName = message.Support.Argument.Args.PropertyName;
 
-            Model.SelectModel (propertyName, action);
+              Model.SelectModel (propertyName, component);
+            }
 
             TDispatcher.Invoke (RefreshDesignDispatcher);
           }
 
           // Request
           if (message.IsAction (TInternalMessageAction.Request)) {
-            TDispatcher.BeginInvoke (RequestDesignDispatcher, Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction));
+            TDispatcher.BeginInvoke (RequestDesignDispatcher, TEntityAction.Request (message.Support.Argument.Types.EntityAction));
           }
 
           // Cleanup
@@ -85,7 +89,7 @@ namespace Gadget.Factory.Pattern.ViewModels
       }
     }
 
-    void RequestDesignDispatcher (Server.Models.Component.TEntityAction action)
+    void RequestDesignDispatcher (TEntityAction action)
     {
       // to Sibling
       var message = new TFactorySiblingMessageInternal (TInternalMessageAction.Response, TChild.Design, TypeInfo);

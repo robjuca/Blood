@@ -70,6 +70,7 @@
   <ItemGroup>
     <Compile Include="Action\Component\ActionComponent.cs" />
     <Compile Include="Action\Converter\ActionConverter.cs" />
+    <Compile Include="Action\Converter\Gadget\RegistrationConverter.cs" />
     <Compile Include="Action\Model\ActionModel.cs" />
     <Compile Include="Action\Converter\Gadget\MaterialConverter.cs" />
     <Compile Include="Action\Converter\Gadget\TargetConverter.cs" />

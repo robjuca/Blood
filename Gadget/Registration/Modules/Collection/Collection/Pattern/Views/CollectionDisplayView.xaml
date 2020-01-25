@@ -78,7 +78,7 @@
                             <Border Grid.Column="1">
                                 <TextBlock TextAlignment="Right"
                                            VerticalAlignment="Center"
-                                           Text="{Binding Model.ComponentModelItem.Name}" />
+                                           Text="{Binding Model.Name}" />
                             </Border>
                         </Grid>
                     </materialDesign:Card>
