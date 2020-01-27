@@ -27,6 +27,8 @@ namespace Module.Settings.Factory.Database.Pattern.ViewModels
     public TWADBBackSettingsViewModel (IFactoryDatabasePresentation presentation)
       : base (new TWADBBackSettingsModel ())
     {
+      TypeName = GetType ().Name;
+
       presentation.RequestPresentationCommand (this);
       presentation.EventSubscribe (this);
     }

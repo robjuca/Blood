@@ -27,6 +27,8 @@ namespace Module.Settings.Factory.Database.Pattern.ViewModels
     public TSQLADBFrontSettingsViewModel (IFactoryDatabasePresentation presentation)
       : base (new TSQLADBFrontSettingsModel ())
     {
+      TypeName = GetType ().Name;
+
       presentation.RequestPresentationCommand (this);
       presentation.EventSubscribe (this);
     }

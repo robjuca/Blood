@@ -51,6 +51,13 @@ namespace Launcher.Shell.Pattern.ViewModels
     #endregion
 
     #region View Event
+    public void OnAlertsLoaded (object control)
+    {
+      if (control is TAlerts) {
+        m_AlertsCintrol = m_AlertsCintrol ?? (TAlerts) control;
+      }
+    }
+
     public void OnSettingsCommadClicked ()
     {
       THelper.DispatcherLater (StartSettingsProcessDispatcher);
@@ -107,7 +114,7 @@ namespace Launcher.Shell.Pattern.ViewModels
     void RemoveProcessPartialDispatcher ()
     {
       foreach (var name in Enum.GetNames (typeof (TProcess.TName))) {
-        if (name.Equals (TProcess.TName.ModuleSettings)) {
+        if (name.Equals (TProcess.TName.ModuleSettings.ToString ())) {
           continue;
         }
 
@@ -158,10 +165,15 @@ namespace Launcher.Shell.Pattern.ViewModels
                 break;
 
               case TCommandComm.Success: {
+                  Model.SettingsValidated ();
+                  RaiseChanged ();
                 }
                 break;
 
               case TCommandComm.Error: {
+                  Model.SettingsHasError ();
+                  RaiseChanged ();
+
                   THelper.DispatcherLater (RemoveProcessPartialDispatcher);
                 }
                 break;
@@ -229,7 +241,7 @@ namespace Launcher.Shell.Pattern.ViewModels
           }
           break;
       }
-    } 
+    }
     #endregion
 
     #region Overrides
@@ -240,7 +252,15 @@ namespace Launcher.Shell.Pattern.ViewModels
       ValidateProcessAlive ();
       UpdateIniSettings ();
 
-      OnSettingsCommadClicked ();
+      if (Model.Result.IsValid) {
+        OnSettingsCommadClicked ();
+      }
+
+      Model.ShowError ();
+
+      if (m_AlertsCintrol.NotNull ()) {
+        m_AlertsCintrol.RefreshModel ();
+      }
     }
     #endregion
 
@@ -265,6 +285,7 @@ namespace Launcher.Shell.Pattern.ViewModels
     readonly TMessagingComm<TDataComm>                                    m_Communication;
     readonly TDataComm                                                    m_DataComm;
     readonly Dictionary<TProcess.TName, Process>                          m_Process;
+    TAlerts                                                               m_AlertsCintrol;
     #endregion
 
     #region Support
@@ -335,9 +356,15 @@ namespace Launcher.Shell.Pattern.ViewModels
       }
     }
 
-    void UpdateIniSettings ()
+    bool UpdateIniSettings ()
     {
-      if (IniFileManager.ValidatePath ().IsValid) {
+      if (IniFileManager.IniFileExists ().IsFalse ()) {
+        IniFileManager.SaveChanges ();  // create empty INI file
+      }
+
+      Model.Result.CopyFrom (IniFileManager.ValidatePath ());
+
+      if (Model.Result.IsValid) {
         // first time only
         if (IniFileManager.ContainsSection (TProcess.PROCESSMODULESSECTION).IsFalse ()) {
           // Module Process section
@@ -379,6 +406,8 @@ namespace Launcher.Shell.Pattern.ViewModels
 
         IniFileManager.SaveChanges ();
       }
+
+      return (Model.Result.IsValid);
     }
     #endregion
   };

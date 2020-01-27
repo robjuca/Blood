@@ -30,6 +30,8 @@ namespace Module.Settings.Factory.Database.Pattern.ViewModels
     public TFactoryDatabaseViewModel (IFactoryDatabasePresentation presentation)
       : base (new TFactoryDatabaseModel ())
     {
+      TypeName = GetType ().Name;
+
       presentation.ViewModel = this;
       presentation.EventSubscribe (this);
     }

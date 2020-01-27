@@ -8,7 +8,7 @@
 
 namespace Launcher.Shell.Pattern.Views
 {
-  public partial class TShellView 
+  public partial class TShellView
   {
     #region Constructor
     public TShellView ()

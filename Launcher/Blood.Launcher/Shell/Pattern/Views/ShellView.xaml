@@ -2,6 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:resources="clr-namespace:Shared.Resources;assembly=Blood.Shared.Resources"
         xmlns:caliburn="http://www.caliburnproject.org"
         WindowStyle="None"
         WindowState="Normal"
@@ -21,92 +22,101 @@
 
     <Border VerticalAlignment="Top"
             Background="Transparent">
-        <StackPanel Orientation="Horizontal">
-            <!--settings-->
-            <Button ToolTip="settings"
-                    IsEnabled="{Binding Model.IsEnabledSettings, Mode=OneWay}"
-                    caliburn:Message.Attach="[Event Click] = [OnSettingsCommadClicked ()]">
-                <ContentControl Style="{DynamicResource MenuSettingsIcon}" />
-            </Button>
+        <StackPanel>
+            <!--Alerts-->
+            <Border>
+                <resources:TAlerts Model="{Binding Model.AlertsModel}"
+                                   caliburn:Message.Attach="[Event Loaded] = [OnAlertsLoaded ($source)]" />
+            </Border>
 
-            <!--registration-->
-            <Button ToolTip="registration"
-                    IsEnabled="{Binding Model.IsEnabledGadgetRegistration, Mode=OneWay}"
-                    caliburn:Message.Attach="[Event Click] = [OnGadgetRegistrationCommadClicked ()]">
-                <ContentControl Style="{DynamicResource MenuGadgetRegistrationIcon}" />
-            </Button>
+            <!--commands-->
+            <StackPanel Orientation="Horizontal">
+                <!--settings-->
+                <Button ToolTip="settings"
+                        IsEnabled="{Binding Model.IsEnabledSettings}"
+                        caliburn:Message.Attach="[Event Click] = [OnSettingsCommadClicked ()]">
+                    <ContentControl Style="{DynamicResource MenuSettingsIcon}" />
+                </Button>
 
-            <!--request-->
-            <materialDesign:PopupBox Width="45"
-                                     Height="45"
-                                     ToolTip="request"
-                                     IsPopupOpen="True"
-                                     Style="{DynamicResource MaterialDesignMultiFloatingActionPopupBox}"
-                                     PlacementMode="BottomAndAlignCentres">
+                <!--registration-->
+                <Button ToolTip="registration"
+                        IsEnabled="{Binding Model.IsEnabledGadgetRegistration, Mode=OneWay}"
+                        caliburn:Message.Attach="[Event Click] = [OnGadgetRegistrationCommadClicked ()]">
+                    <ContentControl Style="{DynamicResource MenuGadgetRegistrationIcon}" />
+                </Button>
 
-                <materialDesign:PopupBox.ToggleCheckedContent>
-                    <materialDesign:PackIcon Kind="MedicalBag"
-                                             Width="26"
-                                             Height="26" />
-                </materialDesign:PopupBox.ToggleCheckedContent>
+                <!--request-->
+                <materialDesign:PopupBox Width="45"
+                                         Height="45"
+                                         ToolTip="request"
+                                         IsPopupOpen="True"
+                                         Style="{DynamicResource MaterialDesignMultiFloatingActionPopupBox}"
+                                         PlacementMode="BottomAndAlignCentres">
 
-                <StackPanel>
-                    <!--gadget material-->
-                    <Button ToolTip="material"
-                            IsEnabled="{Binding Model.IsEnabledGadgetMaterial, Mode=OneWay}"
-                            caliburn:Message.Attach="[Event Click] = [OnGadgetMaterialCommadClicked ()]">
-                        <ContentControl Style="{DynamicResource MenuGadgetMaterialIcon}" />
-                    </Button>
+                    <materialDesign:PopupBox.ToggleCheckedContent>
+                        <materialDesign:PackIcon Kind="MedicalBag"
+                                                 Width="26"
+                                                 Height="26" />
+                    </materialDesign:PopupBox.ToggleCheckedContent>
 
-                    <!--gadget target-->
-                    <Button ToolTip="target"
-                            IsEnabled="{Binding Model.IsEnabledGadgetTarget, Mode=OneWay}"
-                            caliburn:Message.Attach="[Event Click] = [OnGadgetTargetCommadClicked ()]">
-                        <ContentControl Style="{DynamicResource MenuGadgetTargetIcon}" />
-                    </Button>
-                </StackPanel>
-            </materialDesign:PopupBox>
+                    <StackPanel>
+                        <!--gadget material-->
+                        <Button ToolTip="material"
+                                IsEnabled="{Binding Model.IsEnabledGadgetMaterial, Mode=OneWay}"
+                                caliburn:Message.Attach="[Event Click] = [OnGadgetMaterialCommadClicked ()]">
+                            <ContentControl Style="{DynamicResource MenuGadgetMaterialIcon}" />
+                        </Button>
 
-            <!--care-->
-            <materialDesign:PopupBox Width="45"
-                                     Height="45"
-                                     Margin="6 0 0 0"
-                                     ToolTip="care"
-                                     Background="RoyalBlue"
-                                     BorderBrush="RoyalBlue"
-                                     IsPopupOpen="True"
-                                     Style="{DynamicResource MaterialDesignMultiFloatingActionPopupBox}"
-                                     PlacementMode="BottomAndAlignCentres">
+                        <!--gadget target-->
+                        <Button ToolTip="target"
+                                IsEnabled="{Binding Model.IsEnabledGadgetTarget, Mode=OneWay}"
+                                caliburn:Message.Attach="[Event Click] = [OnGadgetTargetCommadClicked ()]">
+                            <ContentControl Style="{DynamicResource MenuGadgetTargetIcon}" />
+                        </Button>
+                    </StackPanel>
+                </materialDesign:PopupBox>
 
-                <materialDesign:PopupBox.ToggleCheckedContent>
-                    <materialDesign:PackIcon Kind="Hearts"
-                                             Width="26"
-                                             Height="26" />
-                </materialDesign:PopupBox.ToggleCheckedContent>
+                <!--care-->
+                <materialDesign:PopupBox Width="45"
+                                         Height="45"
+                                         Margin="6 0 0 0"
+                                         ToolTip="care"
+                                         Background="RoyalBlue"
+                                         BorderBrush="RoyalBlue"
+                                         IsPopupOpen="True"
+                                         Style="{DynamicResource MaterialDesignMultiFloatingActionPopupBox}"
+                                         PlacementMode="BottomAndAlignCentres">
 
-                <StackPanel>
-                    <!--gadget test-->
-                    <Button ToolTip="test"
-                            IsEnabled="{Binding Model.IsEnabledGadgetTest, Mode=OneWay}"
-                            caliburn:Message.Attach="[Event Click] = [OnGadgetTestCommadClicked ()]">
-                        <ContentControl Style="{DynamicResource MenuGadgetTestIcon}" />
-                    </Button>
+                    <materialDesign:PopupBox.ToggleCheckedContent>
+                        <materialDesign:PackIcon Kind="Hearts"
+                                                 Width="26"
+                                                 Height="26" />
+                    </materialDesign:PopupBox.ToggleCheckedContent>
 
-                    <!--gadget result-->
-                    <Button ToolTip="result"
-                            IsEnabled="{Binding Model.IsEnabledGadgetResult, Mode=OneWay}"
-                            caliburn:Message.Attach="[Event Click] = [OnGadgetResultCommadClicked ()]">
-                        <ContentControl Style="{DynamicResource MenuGadgetResultIcon}" />
-                    </Button>
-                </StackPanel>
-            </materialDesign:PopupBox>
+                    <StackPanel>
+                        <!--gadget test-->
+                        <Button ToolTip="test"
+                                IsEnabled="{Binding Model.IsEnabledGadgetTest, Mode=OneWay}"
+                                caliburn:Message.Attach="[Event Click] = [OnGadgetTestCommadClicked ()]">
+                            <ContentControl Style="{DynamicResource MenuGadgetTestIcon}" />
+                        </Button>
 
-            <!--report-->
-            <Button ToolTip="report"
-                    IsEnabled="{Binding Model.IsEnabledGadgetReport, Mode=OneWay}"
-                    caliburn:Message.Attach="[Event Click] = [OnGadgetReportCommadClicked ()]">
-                <ContentControl Style="{DynamicResource MenuGadgetReportIcon}" />
-            </Button>
+                        <!--gadget result-->
+                        <Button ToolTip="result"
+                                IsEnabled="{Binding Model.IsEnabledGadgetResult, Mode=OneWay}"
+                                caliburn:Message.Attach="[Event Click] = [OnGadgetResultCommadClicked ()]">
+                            <ContentControl Style="{DynamicResource MenuGadgetResultIcon}" />
+                        </Button>
+                    </StackPanel>
+                </materialDesign:PopupBox>
+
+                <!--report-->
+                <Button ToolTip="report"
+                        IsEnabled="{Binding Model.IsEnabledGadgetReport, Mode=OneWay}"
+                        caliburn:Message.Attach="[Event Click] = [OnGadgetReportCommadClicked ()]">
+                    <ContentControl Style="{DynamicResource MenuGadgetReportIcon}" />
+                </Button>
+            </StackPanel>
         </StackPanel>
     </Border>
 </Window>

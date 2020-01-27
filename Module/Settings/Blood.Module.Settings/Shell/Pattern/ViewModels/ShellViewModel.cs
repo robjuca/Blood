@@ -85,14 +85,14 @@ namespace Module.Settings.Shell.Pattern.ViewModels
         // Response
         if (message.IsAction (TMessageAction.Response)) {
           // (Select - Settings)
-          if (message.Support.Argument.Types.IsOperation (TOperation.Select, Server.Models.Infrastructure.TExtension.Settings)) {
+          if (message.Support.Argument.Types.IsOperation (TOperation.Select, TExtension.Settings)) {
             var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
 
             TDispatcher.BeginInvoke (SelectSettingsDispatcher, action);
           }
 
           // (Change - Settings)
-          if (message.Support.Argument.Types.IsOperation (TOperation.Change, Server.Models.Infrastructure.TExtension.Settings)) {
+          if (message.Support.Argument.Types.IsOperation (TOperation.Change, TExtension.Settings)) {
             var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
 
             TDispatcher.BeginInvoke (SelectSettingsDispatcher, action);
@@ -290,7 +290,7 @@ namespace Module.Settings.Shell.Pattern.ViewModels
         // open and validate current database (for sure)
         if (DatabaseConnection.IsAuthentication) {
           // to services (Select - Settings)
-          var action = TEntityAction.Create (TCategory.Settings, TOperation.Select, Server.Models.Infrastructure.TExtension.Settings);
+          var action = TEntityAction.Create (TCategory.Settings, TOperation.Select, TExtension.Settings);
 
           var message = new TShellMessage (TMessageAction.Request, TypeInfo);
           message.Support.Argument.Types.Select (action);
@@ -426,7 +426,7 @@ namespace Module.Settings.Shell.Pattern.ViewModels
       }
 
       else {
-        var errorMessage = new TErrorMessage ("Settings ERROR", "Load Settings Dispatcher", (string) DatabaseConnection.Result.ErrorContent)
+        var errorMessage = new TErrorMessage ("Settings ERROR", "Load Settings Dispatcher (Database)", (string) DatabaseConnection.Result.ErrorContent)
         {
           Severity = TSeverity.Hight
         };
@@ -441,7 +441,7 @@ namespace Module.Settings.Shell.Pattern.ViewModels
 
       // supprt
       if (SupportSettings.Validate ().IsFalse ()) {
-        var errorMessage = new TErrorMessage ("Settings ERROR", "Load Settings Dispatcher", (string) SupportSettings.Result.ErrorContent)
+        var errorMessage = new TErrorMessage ("Settings ERROR", "Load Settings Dispatcher (Support)", (string) SupportSettings.Result.ErrorContent)
         {
           Severity = TSeverity.Hight
         };

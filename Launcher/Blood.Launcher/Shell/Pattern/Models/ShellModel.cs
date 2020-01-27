@@ -7,6 +7,8 @@
 using System;
 using System.Collections.Generic;
 
+using rr.Library.Helper;
+
 using Shared.Resources;
 //---------------------------//
 
@@ -70,22 +72,40 @@ namespace Launcher.Shell.Pattern.Models
         return (m_IsMenuEnabled && IsProcessAlive (TProcess.TName.GadgetReport));
       }
     }
+
+    public TValidationResult Result
+    {
+      get; 
+    }
+
+    public TAlertsModel AlertsModel
+    {
+      get;
+    }
     #endregion
 
     #region Constructor
     public TShellModel ()
     {
       m_IsMenuEnabled = false;
-      m_IsSettingsEnabled = true;
+      m_IsSettingsEnabled = false;
 
       m_Process = new Dictionary<TProcess.TName, bool> ();
+
+      Result = TValidationResult.CreateDefault;
+      AlertsModel = TAlertsModel.CreateDefault;
+
+      m_SettingsHasError = false;
     }
     #endregion
 
     #region Members
     internal void EnableAll ()
     {
-      m_IsMenuEnabled = true;
+      if (m_SettingsHasError.IsFalse ()) {
+        m_IsMenuEnabled = true;
+      }
+      
       m_IsSettingsEnabled = true;
     }
 
@@ -149,19 +169,48 @@ namespace Launcher.Shell.Pattern.Models
     {
       return (m_Process);
     }
+
+    internal void ShowError ()
+    {
+      AlertsModel.Select (isOpen: false);
+
+      if (Result.IsValid.IsFalse ()) {
+        // show alerts
+        var message = $"Launcher (ERROR = {Result.ErrorContent})";
+
+        AlertsModel.Select (TAlertsModel.TKind.Danger);
+        AlertsModel.Select ("DANGER", message);
+        AlertsModel.Select (isOpen: true);
+
+        DisableAll ();
+      }
+
+      AlertsModel.Refresh ();
+    }
+
+    internal void SettingsHasError ()
+    {
+      m_SettingsHasError = true;
+    }
+
+    internal void SettingsValidated ()
+    {
+      m_SettingsHasError = false;
+    }
     #endregion
 
     #region Fields
     readonly Dictionary<TProcess.TName, bool>                             m_Process;
     bool                                                                  m_IsMenuEnabled;
     bool                                                                  m_IsSettingsEnabled;
+    bool                                                                  m_SettingsHasError;
     #endregion
 
     #region Support
     bool IsProcessAlive (TProcess.TName name)
     {
       return (m_Process.ContainsKey (name) ? m_Process [name] : false);
-    } 
+    }
     #endregion
   };
   //---------------------------//

@@ -9,8 +9,6 @@ using rr.Library.Types;
 
 using Shared.Message;
 using Shared.ViewModel;
-
-//using Shared.Gadget.Document;
 //---------------------------//
 
 namespace Gadget.Collection.Presentation

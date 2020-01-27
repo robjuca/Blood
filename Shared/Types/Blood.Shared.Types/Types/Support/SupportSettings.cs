@@ -47,6 +47,7 @@ namespace Shared.Types
 
       Result.CopyFrom (IniFileManager.ValidatePath ());
 
+      // file found
       if (Result.IsValid) {
         // create new section
         if (IniFileManager.ContainsSection (SupportSection).IsFalse ()) {

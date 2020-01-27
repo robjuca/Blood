@@ -11,7 +11,6 @@ namespace Launcher.Shell.Presentation
   public class TPresentationCommand : IDelegateCommand
   {
     #region IDelegateCommand Members
-    
 
     
     #endregion
@@ -19,7 +18,6 @@ namespace Launcher.Shell.Presentation
     #region Constructor
     public TPresentationCommand (TShellPresentation presentation)
     {
-
     }
     #endregion
   }
