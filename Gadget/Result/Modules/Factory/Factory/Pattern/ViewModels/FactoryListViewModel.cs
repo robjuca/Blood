@@ -10,6 +10,9 @@ using System.ComponentModel.Composition;
 using rr.Library.Infrastructure;
 using rr.Library.Helper;
 
+using Server.Models.Infrastructure;
+using Server.Models.Action;
+
 using Shared.Types;
 using Shared.Resources;
 using Shared.ViewModel;
@@ -55,19 +58,19 @@ namespace Gadget.Factory.Pattern.ViewModels
               if (message.Result.IsValid) {
                 // Gadget Material
                 if (message.Support.Argument.Types.IsOperationCategory (Server.Models.Infrastructure.TCategory.Material)) {
-                  var action = Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction);
+                  var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
                   TDispatcher.BeginInvoke (ResponseDataDispatcher, action);
                 }
 
                 // Gadget Registration
                 if (message.Support.Argument.Types.IsOperationCategory (Server.Models.Infrastructure.TCategory.Registration)) {
-                  var action = Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction);
+                  var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
                   TDispatcher.BeginInvoke (ResponseDataDispatcher, action);
                 }
 
                 // Gadget Test
                 if (message.Support.Argument.Types.IsOperationCategory (Server.Models.Infrastructure.TCategory.Test)) {
-                  var action = Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction);
+                  var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
                   TDispatcher.BeginInvoke (ResponseDataDispatcher, action);
                 }
               }
@@ -78,7 +81,7 @@ namespace Gadget.Factory.Pattern.ViewModels
               if (message.Result.IsValid) {
                 // Gadget Test
                 if (message.Support.Argument.Types.IsOperationCategory (Server.Models.Infrastructure.TCategory.Test)) {
-                  var action = Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction);
+                  var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
                   TDispatcher.BeginInvoke (SelectManyDispatcher, action);
                 }
               }
@@ -93,13 +96,13 @@ namespace Gadget.Factory.Pattern.ViewModels
             var propertyName = message.Support.Argument.Args.PropertyName;
 
             if (propertyName.Equals ("edit")) {
-              TDispatcher.BeginInvoke (EditDispatcher, Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction));
+              TDispatcher.BeginInvoke (EditDispatcher, TEntityAction.Request (message.Support.Argument.Types.EntityAction));
             }
           }
 
           // Request
           if (message.IsAction (TInternalMessageAction.Request)) {
-            TDispatcher.BeginInvoke (RequestModelDispatcher, Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction));
+            TDispatcher.BeginInvoke (RequestModelDispatcher, TEntityAction.Request (message.Support.Argument.Types.EntityAction));
           }
         }
       }
@@ -143,7 +146,7 @@ namespace Gadget.Factory.Pattern.ViewModels
     {
       // to parent
       // Registration - Collection - Full 
-      var action = Server.Models.Component.TEntityAction.Create (
+      var action = TEntityAction.Create (
         Server.Models.Infrastructure.TCategory.Registration,
         Server.Models.Infrastructure.TOperation.Collection,
         Server.Models.Infrastructure.TExtension.Full
@@ -155,7 +158,7 @@ namespace Gadget.Factory.Pattern.ViewModels
       DelegateCommand.PublishInternalMessage.Execute (message);
 
       // Material - Collection - Full 
-      action = Server.Models.Component.TEntityAction.Create (
+      action = TEntityAction.Create (
         Server.Models.Infrastructure.TCategory.Material,
         Server.Models.Infrastructure.TOperation.Collection,
         Server.Models.Infrastructure.TExtension.Full
@@ -167,7 +170,7 @@ namespace Gadget.Factory.Pattern.ViewModels
       DelegateCommand.PublishInternalMessage.Execute (message);
 
       // Test - Collection - Full 
-      action = Server.Models.Component.TEntityAction.Create (
+      action = TEntityAction.Create (
         Server.Models.Infrastructure.TCategory.Test,
         Server.Models.Infrastructure.TOperation.Collection,
         Server.Models.Infrastructure.TExtension.Full
@@ -179,7 +182,7 @@ namespace Gadget.Factory.Pattern.ViewModels
       DelegateCommand.PublishInternalMessage.Execute (message);
     }
 
-    void ResponseDataDispatcher (Server.Models.Component.TEntityAction action)
+    void ResponseDataDispatcher (TEntityAction action)
     {
       // Collection - Full (Material, Registration, Test)
       Model.Select (action);
@@ -198,7 +201,7 @@ namespace Gadget.Factory.Pattern.ViewModels
       }
     }
 
-    void RequestModelDispatcher (Server.Models.Component.TEntityAction action)
+    void RequestModelDispatcher (TEntityAction action)
     {
       Model.RequestModel (action);
 
@@ -209,7 +212,7 @@ namespace Gadget.Factory.Pattern.ViewModels
       DelegateCommand.PublishInternalMessage.Execute (message);
     }
 
-    void SelectManyDispatcher (Server.Models.Component.TEntityAction action)
+    void SelectManyDispatcher (TEntityAction action)
     {
       Model.SelectMany (action);
 
@@ -237,7 +240,7 @@ namespace Gadget.Factory.Pattern.ViewModels
       RaiseChanged ();
     }
 
-    void EditDispatcher (Server.Models.Component.TEntityAction action)
+    void EditDispatcher (TEntityAction action)
     {
       Model.EditEnter (action);
 

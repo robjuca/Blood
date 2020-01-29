@@ -42,13 +42,6 @@ namespace Shared.Gadget.Models.Component
     #endregion
 
     #region Members
-    //public void CopyFrom (TEntityAction action)
-    //{
-    //  if (action.NotNull ()) {
-    //    CopyFrom (action.ModelAction);
-    //  }
-    //}
-
     public void CopyFrom (GadgetRegistration alias)
     {
       if (alias.NotNull ()) {
@@ -105,38 +98,6 @@ namespace Shared.Gadget.Models.Component
 
       return (model);
     }
-
-    //public void RefreshModel (TEntityAction action)
-    //{
-    //  if (action.NotNull ()) {
-    //    if (action.CategoryType.IsCategory (Infrastructure.TCategory.Registration)) {
-    //      // update model action
-    //      CopyFrom (action.ModelAction); // my self
-    //      action.ModelAction.GadgetRegistrationModel.CopyFrom (this); 
-
-    //      // update model collection
-    //      action.CollectionAction.GadgetRegistrationCollection.Clear ();
-
-    //      foreach (var modelAction in action.CollectionAction.ModelCollection) {
-    //        var gadget = GadgetRegistration.CreateDefault;
-    //        gadget.CopyFrom (modelAction.Value);
-
-    //        action.CollectionAction.GadgetRegistrationCollection.Add (gadget);
-    //      }
-    //    }
-    //  }
-    //}
-
-    //public void Refresh (TEntityAction action)
-    //{
-    //  if (action.NotNull ()) {
-    //    if (action.CategoryType.IsCategory (Infrastructure.TCategory.Registration)) {
-    //      // update model action
-    //      CopyFrom (action.ModelAction); // my self
-    //      action.ModelAction.GadgetRegistrationModel.CopyFrom (this);
-    //    }
-    //  }
-    //}
     #endregion
 
     #region Static

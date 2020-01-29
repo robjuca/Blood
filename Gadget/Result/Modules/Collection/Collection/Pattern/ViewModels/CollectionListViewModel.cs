@@ -10,6 +10,9 @@ using System.ComponentModel.Composition;
 using rr.Library.Infrastructure;
 using rr.Library.Helper;
 
+using Server.Models.Infrastructure;
+using Server.Models.Action;
+
 using Shared.Types;
 using Shared.Resources;
 using Shared.ViewModel;
@@ -53,13 +56,13 @@ namespace Gadget.Collection.Pattern.ViewModels
               if (message.Result.IsValid) {
                 // Gadget Registration
                 if (message.Support.Argument.Types.IsOperationCategory (Server.Models.Infrastructure.TCategory.Registration)) {
-                  var action = Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction);
+                  var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
                   TDispatcher.BeginInvoke (ResponseDataDispatcher, action);
                 }
 
                 // Gadget Result
                 if (message.Support.Argument.Types.IsOperationCategory (Server.Models.Infrastructure.TCategory.Result)) {
-                  var action = Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction);
+                  var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
                   TDispatcher.BeginInvoke (ResponseDataDispatcher, action);
                 }
               }
@@ -68,7 +71,7 @@ namespace Gadget.Collection.Pattern.ViewModels
             // Select-ById
             if (message.Support.Argument.Types.IsOperation (Server.Models.Infrastructure.TOperation.Select, Server.Models.Infrastructure.TExtension.ById)) {
               if (message.Result.IsValid) {
-                var action = Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction);
+                var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
                 TDispatcher.BeginInvoke (ResponseModelDispatcher, action);
               }
             }
@@ -120,7 +123,7 @@ namespace Gadget.Collection.Pattern.ViewModels
     {
       // to parent
       // Collection - Full (Registration)
-      var action = Server.Models.Component.TEntityAction.Create (
+      var action = TEntityAction.Create (
         Server.Models.Infrastructure.TCategory.Registration,
         Server.Models.Infrastructure.TOperation.Collection,
         Server.Models.Infrastructure.TExtension.Full
@@ -133,7 +136,7 @@ namespace Gadget.Collection.Pattern.ViewModels
 
       // to parent
       // Collection - Full (Result)
-      action = Server.Models.Component.TEntityAction.Create (
+      action = TEntityAction.Create (
         Server.Models.Infrastructure.TCategory.Result,
         Server.Models.Infrastructure.TOperation.Collection,
         Server.Models.Infrastructure.TExtension.Full
@@ -145,7 +148,7 @@ namespace Gadget.Collection.Pattern.ViewModels
       DelegateCommand.PublishInternalMessage.Execute (message);
     }
 
-    void ResponseDataDispatcher (Server.Models.Component.TEntityAction action)
+    void ResponseDataDispatcher (TEntityAction action)
     {
       // Collection - Full (Registration or Result )
       Model.Select (action);
@@ -153,7 +156,7 @@ namespace Gadget.Collection.Pattern.ViewModels
       TDispatcher.Invoke (RefreshAllDispatcher);
     }
 
-    void ResponseModelDispatcher (Server.Models.Component.TEntityAction action)
+    void ResponseModelDispatcher (TEntityAction action)
     {
       // to Sibling (Select)
       var message = new TCollectionSiblingMessageInternal (TInternalMessageAction.Select, TChild.List, TypeInfo);

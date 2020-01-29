@@ -8,8 +8,12 @@ using System;
 
 using rr.Library.Types;
 
+using Server.Models.Infrastructure;
+using Server.Models.Action;
+
 using Shared.Resources;
 using Shared.Types;
+using Shared.Gadget.Models.Action;
 //---------------------------//
 
 namespace Gadget.Factory.Pattern.Models
@@ -40,37 +44,37 @@ namespace Gadget.Factory.Pattern.Models
     #endregion
 
     #region Members
-    internal void RefreshModel (Server.Models.Component.TEntityAction action)
+    internal void RefreshModel (TEntityAction action)
     {
-      if (action.NotNull ()) {
-        if (action.CollectionAction.GadgetMaterialCollection.Count.Equals (0)) {
-          ComponentModelProperty.ValidateModel (false);
+      //if (action.NotNull ()) {
+      //  if (action.CollectionAction.GadgetMaterialCollection.Count.Equals (0)) {
+      //    ComponentModelProperty.ValidateModel (false);
 
-          // show alerts
-          var message = $"Material list is EMPTY!";
+      //    // show alerts
+      //    var message = $"Material list is EMPTY!";
 
-          AlertsModel.Select (TAlertsModel.TKind.Warning);
-          AlertsModel.Select ("EMPTY", message);
-          AlertsModel.Select (isOpen: true);
-        }
+      //    AlertsModel.Select (TAlertsModel.TKind.Warning);
+      //    AlertsModel.Select ("EMPTY", message);
+      //    AlertsModel.Select (isOpen: true);
+      //  }
 
-        else {
-          foreach (var item in action.CollectionAction.GadgetMaterialCollection) {
-            var selection = Server.Models.Infrastructure.TSelectionInfo.Create (item.Material, item.Id, item.Enabled);
-            selection.SetImage (item.GetImage ());
+      //  else {
+      //    foreach (var item in action.CollectionAction.GadgetMaterialCollection) {
+      //      var selection = Server.Models.Infrastructure.TSelectionInfo.Create (item.Material, item.Id, item.Enabled);
+      //      selection.SetImage (item.GetImage ());
 
-            action.SupportAction.SelectionCollection.Add (selection);
-          }
+      //      action.SupportAction.SelectionCollection.Add (selection);
+      //    }
 
-          ComponentModelProperty.ValidateModel (true);
-          ComponentModelProperty.ExtensionModel.SelectModel (Server.Models.Infrastructure.TCategory.Report, action); // update Selection Property (Material list)
+      //    ComponentModelProperty.ValidateModel (true);
+      //    ComponentModelProperty.ExtensionModel.SelectModel (Server.Models.Infrastructure.TCategory.Report, action); // update Selection Property (Material list)
 
-          AlertsModel.Select (isOpen: false); // default
-        }
-      }
+      //    AlertsModel.Select (isOpen: false); // default
+      //  }
+      //}
     }
 
-    internal void SelectModel (Server.Models.Component.TEntityAction action)
+    internal void SelectModel (TEntityAction action)
     {
       // TODO: review
       // update Material selection
@@ -81,7 +85,7 @@ namespace Gadget.Factory.Pattern.Models
       //ComponentModelProperty.SelectModel (action);
     }
 
-    internal void RequestModel (Server.Models.Component.TEntityAction action)
+    internal void RequestModel (TEntityAction action)
     {
       if (action.NotNull ()) {
         action.CollectionAction.ExtensionNodeCollection.Clear ();
@@ -103,7 +107,7 @@ namespace Gadget.Factory.Pattern.Models
         }
 
         // update model
-        action.ModelAction.GadgetReportModel.CopyFrom (action);
+        //action.ModelAction.GadgetReportModel.CopyFrom (action);
       }
     }
 

@@ -12,7 +12,7 @@ using System.Linq;
 
 namespace Shared.Gadget.Models.Component
 {
-  public class GadgetResult
+  public class GadgetResult : TGadgetBase
   {
     #region Data
     //----- TContent
@@ -349,34 +349,10 @@ namespace Shared.Gadget.Models.Component
     #endregion
 
     #region Property
-    public Guid Id
-    {
-      get; 
-      set;
-    }
-
-    public string Name
-    {
-      get; 
-      set;
-    }
-
-    public string Description
-    {
-      get; 
-      set;
-    }
-
     public DateTime Date
     {
       get; 
       private set;
-    }
-
-    public bool Enabled
-    {
-      get; 
-      set;
     }
 
     public int ContentCount
@@ -398,13 +374,9 @@ namespace Shared.Gadget.Models.Component
 
     #region Constructor
     public GadgetResult ()
+      : base ()
     {
-      Id = Guid.Empty;
-
-      Name = string.Empty;
-      Description = string.Empty;
       Date = DateTime.Now;
-      Enabled = false;
 
       Content = TContent.CreateDefault;
     }
@@ -437,21 +409,12 @@ namespace Shared.Gadget.Models.Component
       Content.Request (gadget);
     }
 
-    //public void CopyFrom (TEntityAction action)
-    //{
-    //  if (action.NotNull ()) {
-    //    CopyFrom (action.ModelAction);
-    //  }
-    //}
-
     public void CopyFrom (GadgetResult alias)
     {
       if (alias.NotNull ()) {
-        Id = alias.Id;
-        Name = alias.Name;
-        Description = alias.Description;
+        base.CopyFrom (alias);
+
         Date = alias.Date;
-        Enabled = alias.Enabled;
 
         Content.CopyFrom (alias.Content);
       }
@@ -460,9 +423,14 @@ namespace Shared.Gadget.Models.Component
     public void Change (GadgetResult alias)
     {
       if (alias.NotNull ()) {
-        Name = alias.Name;
-        Description = alias.Description;
-        Enabled = alias.Enabled;
+        base.Change (alias);
+      }
+    }
+
+    public void SetDate (DateTime date)
+    {
+      if (date.NotNull ()) {
+        Date = date;
       }
     }
 
@@ -536,18 +504,6 @@ namespace Shared.Gadget.Models.Component
 
     #region Static
     public static GadgetResult CreateDefault => (new GadgetResult ());
-    #endregion
-
-    #region Support
-    //void CopyFrom (TModelAction modelAction)
-    //{
-    //  Id = modelAction.ComponentInfoModel.Id;
-
-    //  Name = modelAction.ExtensionTextModel.Text;
-    //  Description = modelAction.ExtensionTextModel.Description;
-    //  Enabled = modelAction.ComponentInfoModel.Enabled;
-    //  Date = modelAction.ExtensionTextModel.Date;
-    //} 
     #endregion
   };
   //---------------------------//

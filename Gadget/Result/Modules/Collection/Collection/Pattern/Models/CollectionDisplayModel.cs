@@ -7,6 +7,9 @@
 using System;
 using System.Windows;
 
+using Server.Models.Infrastructure;
+using Server.Models.Action;
+
 using Shared.ViewModel;
 
 using Shared.Gadget.Result;
@@ -43,13 +46,13 @@ namespace Gadget.Collection.Pattern.Models
       }
     }
 
-    public bool IsRemoveCommandEnabled
-    {
-      get
-      {
-        return (ComponentModelItem.IsNull () ? false : (ComponentModelItem.InfoModel.Enabled.IsFalse ()));
-      }
-    }
+    //public bool IsRemoveCommandEnabled
+    //{
+    //  get
+    //  {
+    //    return (ComponentModelItem.IsNull () ? false : (ComponentModelItem.InfoModel.Enabled.IsFalse ()));
+    //  }
+    //}
 
     public Visibility BusyVisibility
     {
@@ -82,15 +85,15 @@ namespace Gadget.Collection.Pattern.Models
     {
       ComponentModelItem = item ?? throw new System.ArgumentNullException (nameof (item));
 
-      var action = Server.Models.Component.TEntityAction.CreateDefault;
-      action.ModelAction.GadgetResultModel.CopyFrom (item.GadgetResultModel);
+      var action = TEntityAction.CreateDefault;
+      //action.ModelAction.GadgetResultModel.CopyFrom (item.GadgetResultModel);
 
-      ComponentControlModel.SelectModel (action);
+      //ComponentControlModel.SelectModel (action);
 
       BusyVisibility = ComponentModelItem.BusyVisibility;
     }
 
-    internal void RequestModel (Server.Models.Component.TEntityAction action)
+    internal void RequestModel (TEntityAction action)
     {
       action.ThrowNull ();
 

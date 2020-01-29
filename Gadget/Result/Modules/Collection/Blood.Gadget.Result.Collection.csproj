@@ -32,17 +32,25 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Blood.Server.Models.Component, Version=1.0.2019.10, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Blood.Server.Models.Action, Version=1.0.2020.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Bin\Blood.Server.Models.Component.dll</HintPath>
+      <HintPath>..\..\..\..\Bin\Blood.Server.Models.Action.dll</HintPath>
     </Reference>
     <Reference Include="Blood.Server.Models.Infrastructure, Version=1.0.2019.10, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Bin\Blood.Server.Models.Infrastructure.dll</HintPath>
     </Reference>
-    <Reference Include="Blood.Shared.Gadget.Tests, Version=1.0.2019.11, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Blood.Shared.Gadget.Models.Action, Version=1.0.2020.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\Bin\Blood.Shared.Gadget.Tests.dll</HintPath>
+      <HintPath>..\..\..\..\Bin\Blood.Shared.Gadget.Models.Action.dll</HintPath>
+    </Reference>
+    <Reference Include="Blood.Shared.Gadget.Models.Component, Version=1.0.2020.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Bin\Blood.Shared.Gadget.Models.Component.dll</HintPath>
+    </Reference>
+    <Reference Include="Blood.Shared.Gadget.Result, Version=1.0.2019.11, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Bin\Blood.Shared.Gadget.Result.dll</HintPath>
     </Reference>
     <Reference Include="Blood.Shared.Message, Version=1.0.2019.10, Culture=neutral, PublicKeyToken=null" />
     <Reference Include="Blood.Shared.Resources, Version=1.0.2019.10, Culture=neutral, processorArchitecture=MSIL">

@@ -8,6 +8,10 @@ using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 
+using Server.Models.Infrastructure;
+using Server.Models.Action;
+
+
 using Shared.ViewModel;
 //---------------------------//
 
@@ -82,7 +86,7 @@ namespace Gadget.Collection.Pattern.Models
     #endregion
 
     #region Members
-    internal void Select (Server.Models.Component.TEntityAction action)
+    internal void Select (TEntityAction action)
     {
       // DATA IN:
       // action.CollectionAction.ModelCollection
@@ -94,14 +98,14 @@ namespace Gadget.Collection.Pattern.Models
         RegistrationSelectionSelectedIndex = -1;
         RegistrationSelectionItemsSource.Clear ();
 
-        foreach (var gadget in action.CollectionAction.GadgetRegistrationCollection) {
-          var modelAction = action.CollectionAction.ModelCollection [gadget.Id];
-          modelAction.GadgetRegistrationModel.CopyFrom (gadget);
+        //foreach (var gadget in action.CollectionAction.GadgetRegistrationCollection) {
+        //  var modelAction = action.CollectionAction.ModelCollection [gadget.Id];
+        //  modelAction.GadgetRegistrationModel.CopyFrom (gadget);
 
-          action.ModelAction.CopyFrom (modelAction);
+        //  action.ModelAction.CopyFrom (modelAction);
 
-          RegistrationSelectionItemsSource.Add (TComponentModelItem.Create (action));
-        }
+        //  RegistrationSelectionItemsSource.Add (TComponentModelItem.Create (action));
+        //}
 
         if (RegistrationSelectionItemsSource.Any ()) {
           RegistrationSelectionSelectedIndex = 0;
@@ -112,14 +116,14 @@ namespace Gadget.Collection.Pattern.Models
       if (action.CategoryType.IsCategory (Server.Models.Infrastructure.TCategory.Result)) {
         ResultFullCollection.Clear ();
 
-        foreach (var gadget in action.CollectionAction.GadgetResultCollection) {
-          var modelAction = action.CollectionAction.ModelCollection [gadget.Id];
-          modelAction.GadgetResultModel.CopyFrom (gadget);
+        //foreach (var gadget in action.CollectionAction.GadgetResultCollection) {
+        //  var modelAction = action.CollectionAction.ModelCollection [gadget.Id];
+        //  modelAction.GadgetResultModel.CopyFrom (gadget);
 
-          action.ModelAction.CopyFrom (modelAction);
+        //  action.ModelAction.CopyFrom (modelAction);
 
-          ResultFullCollection.Add (TComponentModelItem.Create (action));
-        }
+        //  ResultFullCollection.Add (TComponentModelItem.Create (action));
+        //}
       }
     }
 
@@ -132,9 +136,9 @@ namespace Gadget.Collection.Pattern.Models
           ResultItemsSource.Clear ();
 
           foreach (var item in ResultFullCollection) {
-            if (item.GadgetResultModel.IsRegistrationContent (RegistrationSelectionCurrent.Id)) {
-              ResultItemsSource.Add (item);
-            }
+            //if (item.GadgetResultModel.IsRegistrationContent (RegistrationSelectionCurrent.Id)) {
+            //  ResultItemsSource.Add (item);
+            //}
           }
 
           if (ResultItemsSource.Any ()) {

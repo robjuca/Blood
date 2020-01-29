@@ -8,6 +8,9 @@ using System;
 
 using rr.Library.Types;
 
+using Server.Models.Infrastructure;
+using Server.Models.Action;
+
 using Shared.Resources;
 using Shared.Types;
 //---------------------------//
@@ -40,7 +43,7 @@ namespace Gadget.Factory.Pattern.Models
     #endregion
 
     #region Members
-    internal void EditEnter (Server.Models.Component.TEntityAction action)
+    internal void EditEnter (TEntityAction action)
     {
       if (action.NotNull ()) {
         ComponentModelProperty.SelectModel (action);
@@ -49,10 +52,10 @@ namespace Gadget.Factory.Pattern.Models
       }
     }
 
-    internal void RequestModel (Server.Models.Component.TEntityAction action)
+    internal void RequestModel (TEntityAction action)
     {
       if (action.NotNull ()) {
-        action.CollectionAction.ExtensionNodeCollection.Clear ();
+        //action.CollectionAction.ExtensionNodeCollection.Clear ();
 
         ComponentModelProperty.RequestModel (action);
 

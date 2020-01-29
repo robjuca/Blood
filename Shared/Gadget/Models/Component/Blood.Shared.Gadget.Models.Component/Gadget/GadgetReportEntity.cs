@@ -9,49 +9,21 @@ using System;
 
 namespace Shared.Gadget.Models.Component
 {
-  public class GadgetReport
+  public class GadgetReport : TGadgetBase
   {
     #region Property
-    public Guid Id
-    {
-      get; 
-      set;
-    }
-
-    public string Name
-    {
-      get; 
-      set;
-    }
-
-    public string Description
-    {
-      get; 
-      set;
-    }
-
     public DateTime Date
     {
       get; 
       private set;
     }
-
-    public bool Enabled
-    {
-      get; 
-      set;
-    }
     #endregion
 
     #region Constructor
     public GadgetReport ()
+      : base ()
     {
-      Id = Guid.Empty;
-
-      Name = string.Empty;
-      Description = string.Empty;
       Date = DateTime.Now;
-      Enabled = false;
     }
 
     public GadgetReport (GadgetReport alias)
@@ -62,30 +34,28 @@ namespace Shared.Gadget.Models.Component
     #endregion
 
     #region Members
-    //public void CopyFrom (TEntityAction action)
-    //{
-    //  if (action.NotNull ()) {
-    //    CopyFrom (action.ModelAction);
-    //  }
-    //}
-
     public void CopyFrom (GadgetReport alias)
     {
       if (alias.NotNull ()) {
-        Id = alias.Id;
-        Name = alias.Name;
-        Description = alias.Description;
+        base.CopyFrom (alias);
+
         Date = alias.Date;
-        Enabled = alias.Enabled;
       }
     }
 
     public void Change (GadgetReport alias)
     {
       if (alias.NotNull ()) {
-        Name = alias.Name;
-        Description = alias.Description;
-        Enabled = alias.Enabled;
+        base.Change (alias);
+
+        Date = alias.Date;
+      }
+    }
+
+    public void SetDate (DateTime date)
+    {
+      if (date.NotNull ()) {
+        Date = date;
       }
     }
 
@@ -96,53 +66,10 @@ namespace Shared.Gadget.Models.Component
 
       return (model);
     }
-
-    //public void RefreshModel (TEntityAction action)
-    //{
-    //  if (action.NotNull ()) {
-    //    if (action.CategoryType.IsCategory (Infrastructure.TCategory.Report)) {
-    //      // update model action
-    //      CopyFrom (action.ModelAction); // my self
-    //      action.ModelAction.GadgetReportModel.CopyFrom (this); 
-
-    //      // update model collection
-    //      action.CollectionAction.GadgetMaterialCollection.Clear ();
-
-    //      foreach (var modelAction in action.CollectionAction.ModelCollection) {
-    //        var gadget = GadgetReport.CreateDefault;
-    //        gadget.CopyFrom (modelAction.Value);
-
-    //        action.CollectionAction.GadgetReportCollection.Add (gadget);
-    //      }
-    //    }
-    //  }
-    //}
-
-    //public void Refresh (TEntityAction action)
-    //{
-    //  if (action.NotNull ()) {
-    //    if (action.CategoryType.IsCategory (Infrastructure.TCategory.Report)) {
-    //      // update model action
-    //      CopyFrom (action.ModelAction); // my self
-    //      action.ModelAction.GadgetReportModel.CopyFrom (this);
-    //    }
-    //  }
-    //}
     #endregion
 
     #region Static
     public static GadgetReport CreateDefault => (new GadgetReport ());
-    #endregion
-
-    #region Support
-    //void CopyFrom (TModelAction modelAction)
-    //{
-    //  Id = modelAction.ComponentInfoModel.Id;
-    //  Name = modelAction.ExtensionTextModel.Text;
-    //  Description = modelAction.ExtensionTextModel.Description;
-    //  Enabled = modelAction.ComponentInfoModel.Enabled;
-    //  Date = modelAction.ExtensionTextModel.Date;
-    //} 
     #endregion
   };
   //---------------------------//

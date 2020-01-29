@@ -167,13 +167,13 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Modules\Collection\Blood.Gadget.Tests.Collection.csproj">
+    <ProjectReference Include="..\Modules\Collection\Blood.Gadget.Result.Collection.csproj">
       <Project>{4a4b168a-29ce-459c-a01f-a4b18e2043a5}</Project>
-      <Name>Blood.Gadget.Tests.Collection</Name>
+      <Name>Blood.Gadget.Result.Collection</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Modules\Factory\Blood.Gadget.Tests.Factory.csproj">
+    <ProjectReference Include="..\Modules\Factory\Blood.Gadget.Result.Factory.csproj">
       <Project>{d3ad9a65-2cdb-4f28-b677-2cba57f11777}</Project>
-      <Name>Blood.Gadget.Tests.Factory</Name>
+      <Name>Blood.Gadget.Result.Factory</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

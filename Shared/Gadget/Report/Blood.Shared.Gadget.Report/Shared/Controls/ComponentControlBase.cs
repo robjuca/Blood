@@ -80,11 +80,11 @@ namespace Shared.Gadget.Report
       grid.SetValue (Grid.RowProperty, 0); // row 0
 
       // Report
-      if (string.IsNullOrEmpty (Model.ControlModel.Name).IsFalse ()) {
+      if (string.IsNullOrEmpty (Model.ControlModel.GadgetInfo).IsFalse ()) {
         var textBlock = new TextBlock ()
         {
           VerticalAlignment = VerticalAlignment.Center,
-          Text = Model.ControlModel.Name,
+          Text = Model.ControlModel.GadgetInfo,
         };
 
         textBlock.SetValue (Grid.ColumnProperty, 1);  // col 1

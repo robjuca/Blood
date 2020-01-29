@@ -11,8 +11,8 @@
     <UserControl.Resources>
         <converters:TCollectionToBitmapImageConverter  x:Key="CollectionToBitmapImageConverter" />
 
-        <CollectionViewSource x:Key="ReportModelItemsViewSource"
-                              Source="{Binding Model.ReportItemsSource}">
+        <CollectionViewSource x:Key="ItemsViewSource"
+                              Source="{Binding Model.ItemsSource}">
             <CollectionViewSource.GroupDescriptions>
                 <PropertyGroupDescription PropertyName="Busy" />
             </CollectionViewSource.GroupDescriptions>
@@ -93,7 +93,7 @@
                 <Border Grid.Row="1">
                     <ListBox x:Name="ReportList"
                              SelectedIndex="{Binding Model.ReportSelectedIndex}"
-                             ItemsSource="{Binding Source={StaticResource ReportModelItemsViewSource}}"
+                             ItemsSource="{Binding Source={StaticResource ItemsViewSource}}"
                              ItemTemplate="{StaticResource ReportListDataTemplate}"
                              caliburn:Message.Attach="[Event SelectionChanged] = [OnReportSelectionChanged (ReportList.SelectedItem)]" />
                 </Border>

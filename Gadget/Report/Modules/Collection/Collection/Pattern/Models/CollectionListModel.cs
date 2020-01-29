@@ -7,7 +7,11 @@
 using System;
 using System.Collections.ObjectModel;
 
-using Shared.ViewModel;
+using Server.Models.Action;
+using Server.Models.Infrastructure;
+
+using Shared.Gadget.Models.Action;
+using Shared.Gadget.Models.Component;
 //---------------------------//
 
 namespace Gadget.Collection.Pattern.Models
@@ -15,7 +19,7 @@ namespace Gadget.Collection.Pattern.Models
   public sealed class TCollectionListModel
   {
     #region Property
-    public ObservableCollection<TComponentModelItem> ReportItemsSource
+    public ObservableCollection<GadgetReport> ItemsSource
     {
       get;
     }
@@ -24,58 +28,64 @@ namespace Gadget.Collection.Pattern.Models
     {
       get
       {
-        return ($"[ {ReportItemsSource.Count} ]");
+        return ($"[ {ItemsSource.Count} ]");
       }
     }
 
-    public int ReportSelectedIndex
+    public int SelectedIndex
     {
       get;
       set;
-    }
-
-    public TComponentModelItem ReportCurrent
-    {
-      get;
     }
     #endregion
 
     #region Constructor
     public TCollectionListModel ()
     {
-      ReportItemsSource = new ObservableCollection<TComponentModelItem> ();
+      ItemsSource = new ObservableCollection<GadgetReport> ();
 
-      ReportSelectedIndex = -1;
+      SelectedIndex = -1;
 
-      ReportCurrent = TComponentModelItem.CreateDefault;
-
-      Reports = new Collection<TComponentModelItem> ();
+      Reports = new Collection<GadgetReport> ();
     }
     #endregion
 
     #region Members
-    internal void Select (Server.Models.Component.TEntityAction action)
+    internal void Select (TEntityAction entityAction)
     {
       // DATA IN:
       // action.CollectionAction.ModelCollection
 
-      action.ThrowNull ();
+      entityAction.ThrowNull ();
 
       Reports.Clear ();
 
-      foreach (var gadget in action.CollectionAction.GadgetReportCollection) {
-        var modelAction = action.CollectionAction.ModelCollection [gadget.Id];
-        modelAction.GadgetReportModel.CopyFrom (gadget);
+      var gadgets = new Collection<TActionComponent> ();
+      TActionConverter.Collection (TCategory.Report, gadgets, entityAction);
 
-        action.ModelAction.CopyFrom (modelAction);
-
-        Reports.Add (TComponentModelItem.Create (action));
+      foreach (var model in gadgets) {
+        Reports.Add (model.Models.GadgetReportModel);
       }
+    }
+
+    internal bool SelectionChanged (TActionComponent component)
+    {
+      component.ThrowNull ();
+
+      bool res = false;
+
+      if (SelectedIndex.Equals (-1).IsFalse ()) {
+        var gadget = ItemsSource [SelectedIndex];
+        component.Models.GadgetReportModel.CopyFrom (gadget);
+        res = true;
+      }
+
+      return (res);
     }
     #endregion
 
     #region property
-    Collection<TComponentModelItem> Reports
+    Collection<GadgetReport> Reports
     {
       get;
     } 

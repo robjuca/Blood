@@ -9,6 +9,9 @@ using System.ComponentModel.Composition;
 using rr.Library.Infrastructure;
 using rr.Library.Helper;
 
+using Server.Models.Infrastructure;
+using Server.Models.Action;
+
 using Shared.Resources;
 using Shared.Types;
 using Shared.ViewModel;
@@ -97,7 +100,7 @@ namespace Gadget.Collection.Pattern.ViewModels
 
     void EditDispatcher ()
     {
-      var action = Server.Models.Component.TEntityAction.CreateDefault;
+      var action = TEntityAction.CreateDefault;
       Model.RequestModel (action);
 
       // to parent
@@ -110,7 +113,7 @@ namespace Gadget.Collection.Pattern.ViewModels
     void RemoveDispatcher ()
     {
       // Remove
-      var action = Server.Models.Component.TEntityAction.Create (Server.Models.Infrastructure.TCategory.Result, Server.Models.Infrastructure.TOperation.Remove);
+      var action = TEntityAction.Create (Server.Models.Infrastructure.TCategory.Result, Server.Models.Infrastructure.TOperation.Remove);
       Model.RequestModel (action);
 
       // to parent

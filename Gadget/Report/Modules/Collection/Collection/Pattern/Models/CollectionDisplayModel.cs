@@ -7,7 +7,8 @@
 using System;
 using System.Windows;
 
-using Shared.ViewModel;
+using Shared.Gadget.Models.Action;
+using Shared.Gadget.Models.Component;
 
 using Shared.Gadget.Report;
 //---------------------------//
@@ -23,7 +24,7 @@ namespace Gadget.Collection.Pattern.Models
       set;
     }
 
-    public TComponentModelItem ComponentModelItem
+    public GadgetReport GadgetModel
     {
       get;
       private set;
@@ -39,7 +40,7 @@ namespace Gadget.Collection.Pattern.Models
     {
       get
       {
-        return (ComponentModelItem.NotNull ());
+        return (GadgetModel.ValidateId);
       }
     }
 
@@ -47,7 +48,7 @@ namespace Gadget.Collection.Pattern.Models
     {
       get
       {
-        return (ComponentModelItem.IsNull () ? false : (ComponentModelItem.InfoModel.Enabled.IsFalse ()));
+        return (GadgetModel.Enabled.IsFalse ());
       }
     }
 
@@ -61,7 +62,7 @@ namespace Gadget.Collection.Pattern.Models
     {
       get
       {
-        return (ComponentModelItem.IsNull () ? Guid.Empty : ComponentModelItem.Id);
+        return (GadgetModel.Id);
       }
     }
     #endregion
@@ -70,6 +71,7 @@ namespace Gadget.Collection.Pattern.Models
     public TCollectionDisplayModel ()
     {
       ComponentControlModel = TComponentControlModel.CreateDefault;
+      GadgetModel = GadgetReport.CreateDefault;
 
       BusyVisibility = Visibility.Hidden;
 
@@ -78,32 +80,27 @@ namespace Gadget.Collection.Pattern.Models
     #endregion
 
     #region Members
-    internal void Select (TComponentModelItem item)
+    internal void Select (TActionComponent component)
     {
-      ComponentModelItem = item ?? throw new System.ArgumentNullException (nameof (item));
+      component.ThrowNull ();
 
-      var action = Server.Models.Component.TEntityAction.CreateDefault;
-      action.ModelAction.GadgetReportModel.CopyFrom (item.GadgetReportModel);
+      GadgetModel.CopyFrom (component.Models.GadgetReportModel);
 
-      ComponentControlModel.SelectModel (action);
+      ComponentControlModel.SelectModel (component);
 
-      BusyVisibility = ComponentModelItem.BusyVisibility;
+      BusyVisibility = GadgetModel.BusyVisibility;
     }
 
-    internal void RequestModel (Server.Models.Component.TEntityAction action)
+    internal void Request (TActionComponent component)
     {
-      action.ThrowNull ();
+      component.ThrowNull ();
 
-      var modelAction = ComponentModelItem.RequestModel ();
-      action.ModelAction.CopyFrom (modelAction);
-
-      action.Id = Id;
-      action.CategoryType.Select (ComponentModelItem.Category);
+      component.Models.GadgetReportModel.CopyFrom (GadgetModel);
     }
 
     internal void Cleanup ()
     {
-      ComponentModelItem = null;
+      GadgetModel.CopyFrom (GadgetReport.CreateDefault);
       ComponentControlModel = TComponentControlModel.CreateDefault;
 
       BusyVisibility = Visibility.Hidden;

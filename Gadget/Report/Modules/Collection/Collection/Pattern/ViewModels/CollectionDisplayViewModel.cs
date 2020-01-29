@@ -9,9 +9,13 @@ using System.ComponentModel.Composition;
 using rr.Library.Infrastructure;
 using rr.Library.Helper;
 
+using Server.Models.Action;
+using Server.Models.Infrastructure;
+
 using Shared.Resources;
 using Shared.Types;
 using Shared.ViewModel;
+using Shared.Gadget.Models.Action;
 
 using Gadget.Collection.Presentation;
 using Gadget.Collection.Pattern.Models;
@@ -43,7 +47,7 @@ namespace Gadget.Collection.Pattern.ViewModels
           // Response
           if (message.IsAction (TInternalMessageAction.Response)) {
             // Remove
-            if (message.Support.Argument.Types.IsOperation (Server.Models.Infrastructure.TOperation.Remove)) {
+            if (message.Support.Argument.Types.IsOperation (TOperation.Remove)) {
               if (message.Result.IsValid) {
                 Model.Cleanup ();
                 RaiseChanged ();
@@ -59,7 +63,9 @@ namespace Gadget.Collection.Pattern.ViewModels
         if (message.Node.IsSiblingToMe (TChild.Display, TypeInfo)) {
           // Select
           if (message.IsAction (TInternalMessageAction.Select)) {
-            TDispatcher.BeginInvoke (SelectDispatcher, message.Support.Argument.Types.Item);
+            if (message.Support.Argument.Args.Param1 is TActionComponent component) {
+              TDispatcher.BeginInvoke (SelectDispatcher, component);
+            }
           }
 
           // Cleanup
@@ -84,9 +90,9 @@ namespace Gadget.Collection.Pattern.ViewModels
     #endregion
 
     #region Dispatcher
-    void SelectDispatcher (TComponentModelItem item)
+    void SelectDispatcher (TActionComponent component)
     {
-      Model.Select (item);
+      Model.Select (component);
 
       if (FrameworkElementView.FindName ("DisplayControl") is Shared.Gadget.Report.TComponentDisplayControl control) {
         control.RefreshDesign ();
@@ -97,12 +103,12 @@ namespace Gadget.Collection.Pattern.ViewModels
 
     void EditDispatcher ()
     {
-      var action = Server.Models.Component.TEntityAction.CreateDefault;
-      Model.RequestModel (action);
+      var component = TActionComponent.Create (TCategory.Report);
+      Model.Request (component);
 
       // to parent
       var message = new TCollectionMessageInternal (TInternalMessageAction.Edit, TChild.Display, TypeInfo);
-      message.Support.Argument.Types.Select (action);
+      message.Support.Argument.Args.Select (component);
 
       DelegateCommand.PublishInternalMessage.Execute (message);
     }
@@ -110,8 +116,8 @@ namespace Gadget.Collection.Pattern.ViewModels
     void RemoveDispatcher ()
     {
       // Remove
-      var action = Server.Models.Component.TEntityAction.Create (Server.Models.Infrastructure.TCategory.Report, Server.Models.Infrastructure.TOperation.Remove);
-      Model.RequestModel (action);
+      var action = TEntityAction.Create (TCategory.Report, TOperation.Remove);
+      action.Id = Model.Id;
 
       // to parent
       var message = new TCollectionMessageInternal (TInternalMessageAction.Request, TChild.Display, TypeInfo);

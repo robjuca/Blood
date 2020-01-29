@@ -12,6 +12,9 @@ using rr.Library.Controls;
 using rr.Library.Helper;
 using rr.Library.Types;
 
+using Server.Models.Infrastructure;
+using Server.Models.Action;
+
 using Shared.Resources;
 using Shared.Types;
 using Shared.ViewModel;
@@ -47,12 +50,12 @@ namespace Gadget.Factory.Pattern.ViewModels
         if (message.Node.IsParentToMe (TChild.Property)) {
           // RefreshModel
           if (message.IsAction (TInternalMessageAction.RefreshModel)) {
-            TDispatcher.BeginInvoke (RefreshModelDispatcher, Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction));
+            TDispatcher.BeginInvoke (RefreshModelDispatcher, TEntityAction.Request (message.Support.Argument.Types.EntityAction));
           }
 
           // Edit
           if (message.IsAction (TInternalMessageAction.Edit)) {
-            TDispatcher.BeginInvoke (EditDispatcher, Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction));
+            TDispatcher.BeginInvoke (EditDispatcher, TEntityAction.Request (message.Support.Argument.Types.EntityAction));
           }
 
           // EditLeave
@@ -80,7 +83,7 @@ namespace Gadget.Factory.Pattern.ViewModels
         if (message.Node.IsSiblingToMe (TChild.Property, TypeInfo)) {
           // Response
           if (message.IsAction (TInternalMessageAction.Response)) {
-            TDispatcher.BeginInvoke (ResponseModelDispatcher, Server.Models.Component.TEntityAction.Request (message.Support.Argument.Types.EntityAction));
+            TDispatcher.BeginInvoke (ResponseModelDispatcher, TEntityAction.Request (message.Support.Argument.Types.EntityAction));
           }
         }
       }
@@ -113,11 +116,11 @@ namespace Gadget.Factory.Pattern.ViewModels
       RaiseChanged ();
 
       // Insert
-      var action = Server.Models.Component.TEntityAction.Create (Server.Models.Infrastructure.TCategory.Result, Server.Models.Infrastructure.TOperation.Insert);
+      var action = TEntityAction.Create (Server.Models.Infrastructure.TCategory.Result, Server.Models.Infrastructure.TOperation.Insert);
 
       if (IsViewModeEdit) {
         // Change-Full
-        action = Server.Models.Component.TEntityAction.Create (Server.Models.Infrastructure.TCategory.Result, Server.Models.Infrastructure.TOperation.Change, Server.Models.Infrastructure.TExtension.Full);
+        action = TEntityAction.Create (Server.Models.Infrastructure.TCategory.Result, Server.Models.Infrastructure.TOperation.Change, Server.Models.Infrastructure.TExtension.Full);
       }
 
       Model.RequestModel (action);
@@ -157,7 +160,7 @@ namespace Gadget.Factory.Pattern.ViewModels
       PropertySelect ("all");
     }
 
-    void RequestModelDispatcher (Server.Models.Component.TEntityAction action)
+    void RequestModelDispatcher (TEntityAction action)
     {
       // request from Sibling
       var message = new TFactorySiblingMessageInternal (TInternalMessageAction.Request, TChild.Property, TypeInfo);
@@ -166,14 +169,14 @@ namespace Gadget.Factory.Pattern.ViewModels
       DelegateCommand.PublishInternalMessage.Execute (message);
     }
 
-    void ResponseModelDispatcher (Server.Models.Component.TEntityAction action)
+    void ResponseModelDispatcher (TEntityAction action)
     {
-      action.ModelAction.GadgetResultModel.CopyFrom (action);
+      //action.ModelAction.GadgetResultModel.CopyFrom (action);
 
       TDispatcher.BeginInvoke (ApplyDispatcher, action);
     }
 
-    void ApplyDispatcher (Server.Models.Component.TEntityAction action)
+    void ApplyDispatcher (TEntityAction action)
     {
       // to parent
       var message = new TFactoryMessageInternal (TInternalMessageAction.Request, TChild.Property, TypeInfo);
@@ -226,7 +229,7 @@ namespace Gadget.Factory.Pattern.ViewModels
       DelegateCommand.PublishInternalMessage.Execute (msg);
     }
 
-    void EditDispatcher (Server.Models.Component.TEntityAction action)
+    void EditDispatcher (TEntityAction action)
     {
       // Id must exist
       if (action.Id.NotEmpty ()) {
@@ -246,7 +249,7 @@ namespace Gadget.Factory.Pattern.ViewModels
       }
     }
 
-    void RefreshModelDispatcher (Server.Models.Component.TEntityAction action)
+    void RefreshModelDispatcher (TEntityAction action)
     {
       action.ThrowNull ();
 
@@ -280,7 +283,7 @@ namespace Gadget.Factory.Pattern.ViewModels
     #region Support
     void PropertySelect (string propertyName)
     {
-      var action = Server.Models.Component.TEntityAction.CreateDefault;
+      var action = TEntityAction.CreateDefault;
       Model.RequestModel (action);
 
       // to Sibling

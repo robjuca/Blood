@@ -26,7 +26,7 @@ namespace Gadget.Result.Shell.Pattern.ViewModels
     #region Constructor
     [ImportingConstructor]
     public TShellViewModel (IShellPresentation presentation)
-      : base (new TShellModel (), TProcess.GADGETResult)
+      : base (new TShellModel (), TProcess.GADGETRESULT)
     {
       presentation.ViewModel = this;
     }

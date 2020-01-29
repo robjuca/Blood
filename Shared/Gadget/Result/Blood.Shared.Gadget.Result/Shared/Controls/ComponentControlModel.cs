@@ -5,6 +5,9 @@
 
 //----- Include
 using System;
+
+using Shared.Gadget.Models.Component;
+using Shared.Gadget.Models.Action;
 //---------------------------//
 
 namespace Shared.Gadget.Result
@@ -12,7 +15,7 @@ namespace Shared.Gadget.Result
   public class TComponentControlModel
   {
     #region Property
-    public Server.Models.Component.GadgetResult ControlModel
+    public GadgetResult ControlModel
     {
       get;
     }
@@ -21,15 +24,15 @@ namespace Shared.Gadget.Result
     #region Constructor
     TComponentControlModel ()
     {
-      ControlModel = Server.Models.Component.GadgetResult.CreateDefault;
+      ControlModel = GadgetResult.CreateDefault;
     }
     #endregion
 
     #region Members
-    public void SelectModel (Server.Models.Component.TEntityAction action)
+    public void SelectModel (TActionComponent component)
     {
-      if (action.NotNull ()) {
-        ControlModel.CopyFrom (action.ModelAction.GadgetResultModel);
+      if (component.NotNull ()) {
+        ControlModel.CopyFrom (component.Models.GadgetResultModel);
       }
     }
     #endregion

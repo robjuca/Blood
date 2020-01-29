@@ -4,7 +4,6 @@
 ----------------------------------------------------------------*/
 
 //----- Include
-using System;
 using System.ComponentModel.Composition;
 
 using rr.Library.Infrastructure;
@@ -17,7 +16,6 @@ using Shared.Types;
 using Shared.Resources;
 using Shared.ViewModel;
 using Shared.Gadget.Models.Action;
-using Shared.Gadget.Models.Component;
 
 using Gadget.Collection.Presentation;
 using Gadget.Collection.Pattern.Models;
