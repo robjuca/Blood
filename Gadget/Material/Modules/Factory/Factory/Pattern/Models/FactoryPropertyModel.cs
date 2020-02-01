@@ -61,10 +61,6 @@ namespace Gadget.Factory.Pattern.Models
       entityAction.ThrowNull ();
 
       m_Gadgets.Clear ();
-
-      //foreach (var model in action.CollectionAction.GadgetMaterialCollection) {
-      //  m_Gadgets.Add (model.Id, model);
-      //}
     }
 
     internal void SelectModel (TActionComponent component)

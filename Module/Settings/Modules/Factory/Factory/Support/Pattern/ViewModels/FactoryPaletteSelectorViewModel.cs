@@ -27,6 +27,8 @@ namespace Module.Settings.Factory.Support.Pattern.ViewModels
     public TFactoryPaletteSelectorViewModel (IFactorySupportPresentation presentation)
       : base (new TFactoryPaletteSelectorModel ())
     {
+      TypeName = GetType ().Name;
+
       presentation.ViewModel = this;
       presentation.EventSubscribe (this);
     }

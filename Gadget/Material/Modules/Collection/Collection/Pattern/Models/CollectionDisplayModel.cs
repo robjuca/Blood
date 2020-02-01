@@ -85,7 +85,7 @@ namespace Gadget.Collection.Pattern.Models
       }
     }
 
-    internal void RequestModel (TActionComponent component)
+    internal void Request (TActionComponent component)
     {
       component.ThrowNull ();
 

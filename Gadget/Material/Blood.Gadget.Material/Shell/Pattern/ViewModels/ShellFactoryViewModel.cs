@@ -24,6 +24,8 @@ namespace Gadget.Material.Shell.Pattern.ViewModels
     public TShellFactoryViewModel (IShellPresentation presentation)
       : base (new TShellFactoryModel ())
     {
+      TypeName = GetType ().Name;
+
       presentation.RequestPresentationCommand (this);
       presentation.EventSubscribe (this);
     }

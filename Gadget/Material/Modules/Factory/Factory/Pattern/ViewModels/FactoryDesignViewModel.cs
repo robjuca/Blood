@@ -10,13 +10,10 @@ using System.ComponentModel.Composition;
 using rr.Library.Infrastructure;
 using rr.Library.Helper;
 
-using Server.Models.Action;
-using Shared.Gadget.Models.Action;
-
 using Shared.Types;
 using Shared.Resources;
 using Shared.ViewModel;
-
+using Shared.Gadget.Models.Action;
 using Shared.Gadget.Material;
 
 using Gadget.Factory.Presentation;
@@ -64,11 +61,6 @@ namespace Gadget.Factory.Pattern.ViewModels
             TDispatcher.Invoke (RefreshDesignDispatcher);
           }
 
-          // Request
-          if (message.IsAction (TInternalMessageAction.Request)) {
-            TDispatcher.BeginInvoke (RequestDesignDispatcher, TEntityAction.Request (message.Support.Argument.Types.EntityAction));
-          }
-
           // Cleanup
           if (message.IsAction (TInternalMessageAction.Cleanup)) {
             TDispatcher.Invoke (RefreshDesignDispatcher);
@@ -94,15 +86,6 @@ namespace Gadget.Factory.Pattern.ViewModels
         m_DesignControl.RefreshDesign ();
         RaiseChanged ();
       }
-    }
-
-    void RequestDesignDispatcher (TEntityAction action)
-    {
-      // to sibling
-      var message = new TFactorySiblingMessageInternal (TInternalMessageAction.Response, TChild.Design, TypeInfo);
-      message.Support.Argument.Types.Select (action);
-
-      DelegateCommand.PublishInternalMessage.Execute (message);
     }
     #endregion
 

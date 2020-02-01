@@ -14,11 +14,11 @@ using rr.Library.Types;
 
 using Server.Models.Infrastructure;
 using Server.Models.Action;
-using Shared.Gadget.Models.Action;
 
 using Shared.Resources;
 using Shared.Types;
 using Shared.ViewModel;
+using Shared.Gadget.Models.Action;
 
 using Gadget.Factory.Presentation;
 using Gadget.Factory.Pattern.Models;
@@ -75,18 +75,9 @@ namespace Gadget.Factory.Pattern.ViewModels
             }
 
             // Change - Full
-            if (message.Support.Argument.Types.IsOperation (TOperation.Change, Server.Models.Infrastructure.TExtension.Full)) {
+            if (message.Support.Argument.Types.IsOperation (TOperation.Change, TExtension.Full)) {
               TDispatcher.Invoke (ChangeSuccessDispatcher);
             }
-          }
-        }
-
-        // from Sibling
-        if (message.Node.IsSiblingToMe (TChild.Property, TypeInfo)) {
-          // Response
-          if (message.IsAction (TInternalMessageAction.Response)) {
-            var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
-            TDispatcher.BeginInvoke (ResponseModelDispatcher, action);
           }
         }
       }
@@ -121,12 +112,12 @@ namespace Gadget.Factory.Pattern.ViewModels
       var action = TEntityAction.Create (TCategory.Material, TOperation.Insert);
 
       if (IsViewModeEdit) {
-        action = TEntityAction.Create (TCategory.Material, TOperation.Change, Server.Models.Infrastructure.TExtension.Full);
+        action = TEntityAction.Create (TCategory.Material, TOperation.Change, TExtension.Full);
       }
 
       Model.RequestModel (action);
 
-      TDispatcher.BeginInvoke (RequestModelDispatcher, action);
+      TDispatcher.BeginInvoke (ApplyDispatcher, action);
     }
 
     public void OnCancelCommadClicked ()
@@ -159,20 +150,6 @@ namespace Gadget.Factory.Pattern.ViewModels
       DelegateCommand.PublishInternalMessage.Execute (message);
 
       PropertySelect ("all");
-    }
-
-    void RequestModelDispatcher (TEntityAction action)
-    {
-      // request from Sibling
-      var message = new TFactorySiblingMessageInternal (TInternalMessageAction.Request, TChild.Property, TypeInfo);
-      message.Support.Argument.Types.Select (action);
-
-      DelegateCommand.PublishInternalMessage.Execute (message);
-    }
-
-    void ResponseModelDispatcher (TEntityAction action)
-    {
-      TDispatcher.BeginInvoke (ApplyDispatcher, action);  
     }
 
     void ApplyDispatcher (TEntityAction action)

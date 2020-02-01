@@ -46,11 +46,6 @@ namespace Module.Settings.Factory.Support.Pattern.Models
     #region Constructor
     public TFactorySupportModel ()
     {
-      //SupportInfoCollection = new ObservableCollection<TSupportInfo>
-      //{
-      //  new TSupportInfo ("SettingsSupportIcon", "ColumnWidth", "('mini' style column width [260 - 460 pixel])")
-      //};
-      // TODO: for new features
       SupportInfoCollection = new ObservableCollection<TSupportInfo> ();
 
       ErrorPanelVisibility = Visibility.Hidden;

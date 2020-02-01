@@ -31,6 +31,8 @@ namespace Module.Settings.Factory.Support.Pattern.ViewModels
     public TFactorySupportViewModel (IFactorySupportPresentation presentation)
       : base (new TFactorySupportModel ())
     {
+      TypeName = GetType ().Name;
+
       presentation.ViewModel = this;
       presentation.EventSubscribe (this);
     }

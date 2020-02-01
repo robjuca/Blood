@@ -107,7 +107,7 @@ namespace Gadget.Collection.Pattern.ViewModels
     void EditDispatcher ()
     {
       var component = TActionComponent.Create (TCategory.Material);
-      Model.RequestModel (component);
+      Model.Request (component);
 
       // to parent
       var message = new TCollectionMessageInternal (TInternalMessageAction.Edit, TChild.Display, TypeInfo);
@@ -119,7 +119,7 @@ namespace Gadget.Collection.Pattern.ViewModels
     void RemoveDispatcher ()
     {
       var component = TActionComponent.Create (TCategory.Material);
-      Model.RequestModel (component);
+      Model.Request (component);
 
       var action = TEntityAction.Create (TCategory.Material, TOperation.Remove);
       action.Param2 = component;

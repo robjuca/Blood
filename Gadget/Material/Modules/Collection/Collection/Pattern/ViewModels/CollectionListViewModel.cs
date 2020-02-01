@@ -16,7 +16,6 @@ using Server.Models.Action;
 using Shared.Types;
 using Shared.Resources;
 using Shared.ViewModel;
-using Shared.Gadget.Models.Action;
 
 using Gadget.Collection.Presentation;
 using Gadget.Collection.Pattern.Models;
