@@ -165,7 +165,6 @@ namespace Shared.Gadget.Target
           m_StackPanel.Children.Add (textBoxLink); // row 3
         }
 
-        //TODO: what for??
         catch (Exception) {
           // do nothing
         }

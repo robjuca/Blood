@@ -38,7 +38,7 @@ namespace Server.Models.Action
     }
 
 
-    public Dictionary<Guid, ComponentRelation> ChildIdCollection
+    public Dictionary<Guid, Collection<ComponentRelation>> ChildIdCollection
     {
       get;
       private set;
@@ -75,7 +75,7 @@ namespace Server.Models.Action
       CategoryCollection = new Collection<int> ();
       IdCollection = new Collection<Guid> ();
 
-      ChildIdCollection = new Dictionary<Guid, ComponentRelation> ();
+      ChildIdCollection = new Dictionary<Guid, Collection<ComponentRelation>> ();
       ParentIdCollection = new Dictionary<Guid, Collection<ComponentRelation>> ();
 
       ChildCategoryCollection = new Dictionary<int, Collection<ComponentRelation>> ();
@@ -99,9 +99,7 @@ namespace Server.Models.Action
 
     public void SelectChild (Guid id, IList<ComponentRelation> list)
     {
-      foreach (var ComponentRelation in list) {
-        ChildIdCollection.Add (id, ComponentRelation);
-      }
+      ChildIdCollection.Add (id, new Collection<ComponentRelation> (list));
     }
 
     public void SelectParent (Guid id, IList<ComponentRelation> list)

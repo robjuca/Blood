@@ -244,6 +244,18 @@ namespace Server.Context.Component
                         }
                       }
                       break;
+
+                    case TComponentExtensionName.Content: {
+                        var list = context.ExtensionContent
+                          .Where (p => p.Id.Equals (id))
+                          .ToList ()
+                        ;
+
+                        if (list.Count.Equals (1)) {
+                          context.ExtensionContent.Remove (list [0]);
+                        }
+                      }
+                      break;
                   }
                 }
               }

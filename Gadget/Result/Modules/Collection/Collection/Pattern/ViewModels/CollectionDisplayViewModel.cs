@@ -15,6 +15,8 @@ using Server.Models.Action;
 using Shared.Resources;
 using Shared.Types;
 using Shared.ViewModel;
+using Shared.Gadget.Models.Action;
+using Shared.Gadget.Result;
 
 using Gadget.Collection.Presentation;
 using Gadget.Collection.Pattern.Models;
@@ -46,7 +48,7 @@ namespace Gadget.Collection.Pattern.ViewModels
           // Response
           if (message.IsAction (TInternalMessageAction.Response)) {
             // Remove
-            if (message.Support.Argument.Types.IsOperation (Server.Models.Infrastructure.TOperation.Remove)) {
+            if (message.Support.Argument.Types.IsOperation (TOperation.Remove)) {
               if (message.Result.IsValid) {
                 Model.Cleanup ();
                 RaiseChanged ();
@@ -62,7 +64,9 @@ namespace Gadget.Collection.Pattern.ViewModels
         if (message.Node.IsSiblingToMe (TChild.Display, TypeInfo)) {
           // Select
           if (message.IsAction (TInternalMessageAction.Select)) {
-            TDispatcher.BeginInvoke (SelectDispatcher, message.Support.Argument.Types.Item);
+            if (message.Support.Argument.Args.Param1 is TActionComponent component) {
+              TDispatcher.BeginInvoke (SelectDispatcher, component);
+            }
           }
 
           // Cleanup
@@ -87,11 +91,11 @@ namespace Gadget.Collection.Pattern.ViewModels
     #endregion
 
     #region Dispatcher
-    void SelectDispatcher (TComponentModelItem item)
+    void SelectDispatcher (TActionComponent component)
     {
-      Model.Select (item);
+      Model.Select (component);
 
-      if (FrameworkElementView.FindName ("DisplayControl") is Shared.Gadget.Result.TComponentDisplayControl control) {
+      if (FrameworkElementView.FindName ("DisplayControl") is TComponentDisplayControl control) {
         control.RefreshDesign ();
       }
 
@@ -113,7 +117,7 @@ namespace Gadget.Collection.Pattern.ViewModels
     void RemoveDispatcher ()
     {
       // Remove
-      var action = TEntityAction.Create (Server.Models.Infrastructure.TCategory.Result, Server.Models.Infrastructure.TOperation.Remove);
+      var action = TEntityAction.Create (TCategory.Result, TOperation.Remove);
       Model.RequestModel (action);
 
       // to parent

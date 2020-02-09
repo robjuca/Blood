@@ -45,7 +45,15 @@ namespace Gadget.Factory.Pattern.Models
     {
       get
       {
-        return (GadgetCheckedCount.Equals (0).IsFalse ());
+        return (GadgetCheckedCollection.Any ());
+      }
+    }
+
+    public bool IsEditMode
+    {
+      get
+      {
+        return (m_CurrentEditGadget.ValidateId);
       }
     }
     #endregion

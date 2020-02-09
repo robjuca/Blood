@@ -66,7 +66,7 @@ namespace Server.Models.Infrastructure
   // extension mask (bit position) 
   //      7       6         5         4          3         2         1           0         (bit)                            
   // ----------------------------------------------------------------------------------
-  // |        |        |   text   |  node   | layout  |  image   | geometry | document |
+  // |        |content|   text   |  node   | layout  |  image   | geometry | document |
   // ----------------------------------------------------------------------------------
 
   // TODO: review
@@ -77,7 +77,7 @@ namespace Server.Models.Infrastructure
 
   // gadget Care
   //  Registration      = 00100100 binary -> 24 hex -> 36 decimal
-  //  Result            = 00100000 binary -> 20 hex -> 32 decimal
+  //  Result            = 01100000 binary -> 60 hex -> 96 decimal
   //  Report            = 00000000 binary -> 00 hex -> 00 decimal
 
 
@@ -92,6 +92,7 @@ namespace Server.Models.Infrastructure
     Layout      = 8,
     Node        = 16,
     Text        = 32,
+    Content     = 64,
   };
   //---------------------------//
 

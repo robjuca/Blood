@@ -15,7 +15,7 @@
             </CollectionViewSource.GroupDescriptions>
 
             <CollectionViewSource.SortDescriptions>
-                <scm:SortDescription PropertyName="Name"
+                <scm:SortDescription PropertyName="GadgetInfo"
                                      Direction="Ascending" />
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
@@ -103,7 +103,7 @@
 
                     <Border Grid.Column="1">
                         <TextBlock HorizontalAlignment="Right"
-                                   Text="{Binding Model.TestCount}" />
+                                   Text="{Binding Model.Count}" />
                     </Border>
                 </Grid>
             </Border>

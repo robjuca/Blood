@@ -188,7 +188,7 @@ namespace Gadget.Factory.Pattern.ViewModels
           message.Support.Argument.Args.Select (component);
           message.Support.Argument.Args.Select (gadget.IsChecked ? "GadgetAdd" : "GadgetRemove");
 
-          if (Model.HasGadgetChecked) {
+          if (Model.IsEditMode || Model.HasGadgetChecked) {
             message.Support.Argument.Types.ReportData.SelectLock ();
           }
 

@@ -80,6 +80,21 @@ namespace Shared.Gadget.Models.Action
         }
       }
     }
+
+    public static void SelectMany (TCategory category, Collection<TActionComponent> gadgets, TEntityAction entityAction)
+    {
+      if (gadgets.NotNull () && entityAction.NotNull ()) {
+        switch (category) {
+          case TCategory.Test:
+            TGadgetTestConverter.SelectMany (gadgets, entityAction);
+            break;
+
+          case TCategory.Result:
+            TGadgetResultConverter.SelectMany (gadgets, entityAction);
+            break;
+        }
+      }
+    }
     #endregion
 
     #region Request

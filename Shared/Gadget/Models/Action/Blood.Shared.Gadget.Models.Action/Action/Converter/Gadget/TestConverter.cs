@@ -141,6 +141,62 @@ namespace Shared.Gadget.Models.Action
       }
     }
 
+    public static void SelectMany (Collection<TActionComponent> gadgets, TEntityAction entityAction)
+    {
+      //entityAction.CollectionAction.EntityCollection
+
+      if (entityAction.CategoryType.IsCategory (TCategory.Test)) {
+        foreach (var component in gadgets) {
+          var gadget = component.Models.GadgetTestModel;
+
+          if (entityAction.CollectionAction.EntityCollection.ContainsKey (gadget.Id)) {
+            var action = entityAction.CollectionAction.EntityCollection [gadget.Id];
+
+            var idCollection = new Collection<Guid> ();
+            gadget.RequestContentId (idCollection);
+
+            // target
+            if (gadget.IsContentTarget) {
+              foreach (var id in idCollection) {
+                if (action.CollectionAction.EntityCollection.ContainsKey (id)) {
+                  var gadgetEntityAction = action.CollectionAction.EntityCollection [id];
+                  var someComponent = TActionComponent.Create (TCategory.Target);
+                  
+                  TActionConverter.Select (TCategory.Target, someComponent, gadgetEntityAction);
+
+                  gadget.AddContent (someComponent.Models.GadgetTargetModel);
+
+                  // same material always
+                  if (component.Models.GadgetMaterialModel.ValidateId.IsFalse ()) {
+                    component.Models.GadgetMaterialModel.CopyFrom (someComponent.Models.GadgetMaterialModel);
+                  }
+                }
+              }
+            }
+
+            // test
+            if (gadget.IsContentTest) {
+              foreach (var id in idCollection) {
+                if (action.CollectionAction.EntityCollection.ContainsKey (id)) {
+                  var gadgetEntityAction = action.CollectionAction.EntityCollection [id];
+                  var someComponent = TActionComponent.Create (TCategory.Test);
+
+                  TActionConverter.Select (TCategory.Test, someComponent, gadgetEntityAction);
+
+                  gadget.AddContent (someComponent.Models.GadgetTestModel);
+
+                  // update Material
+                  if (component.Models.GadgetMaterialModel.ValidateId.IsFalse ()) {
+                    component.Models.GadgetMaterialModel.CopyFrom (someComponent.Models.GadgetMaterialModel);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
     public static void Request (TActionComponent component, TEntityAction entityAction)
     {
       if (component.IsCategory (TCategory.Test)) {
@@ -160,84 +216,5 @@ namespace Shared.Gadget.Models.Action
     #endregion
   };
   //---------------------------//
-
-  //public void RefreshModel (TEntityAction action)
-  //{
-  //  if (action.NotNull ()) {
-  //    if (action.CategoryType.IsCategory (Infrastructure.TCategory.Test)) {
-  //      // collection
-  //      if (action.ModelAction.ComponentInfoModel.Id.IsEmpty ()) {
-  //        // action.CollectionAction.ModelCollection [Id(GadgetTest)]
-  //        foreach (var modelAction in action.CollectionAction.ModelCollection) {
-  //          var gadget = GadgetTest.CreateDefault;
-  //          gadget.CopyFrom (modelAction.Value);
-
-  //          foreach (var item in action.ComponentOperation.ParentCategoryCollection) {
-  //            var relationList = item.Value
-  //              .Where (p => p.ParentId.Equals (gadget.Id))
-  //              .ToList ()
-  //            ;
-
-  //            foreach (var relation in relationList) {
-  //              gadget.AddContentId (relation.ChildId, Server.Models.Infrastructure.TCategoryType.FromValue (relation.ChildCategory));
-  //            }
-  //          }
-
-  //          action.CollectionAction.GadgetTestCollection.Add (gadget);
-  //        }
-  //      }
-
-  //      // just me
-  //      else {
-  //        // update model action
-  //        CopyFrom (action.ModelAction); // my self
-
-  //        // content list
-  //        foreach (var item in action.ComponentOperation.ParentIdCollection) {
-  //          foreach (var relation in item.Value) {
-  //            Content.Add (relation.ChildId, Server.Models.Infrastructure.TCategoryType.FromValue (relation.ChildCategory));
-  //          }
-  //        }
-
-  //        // update
-  //        action.ModelAction.GadgetTestModel.CopyFrom (this);
-
-  //        action.CollectionAction.GadgetTestCollection.Clear ();
-
-  //        // update model collection
-  //        foreach (var modelAction in action.CollectionAction.ModelCollection) {
-  //          action.ModelAction.CopyFrom (modelAction.Value);
-
-  //          var gadget = GadgetTest.CreateDefault;
-  //          gadget.CopyFrom (action);
-
-  //          modelAction.Value.GadgetTestModel.CopyFrom (gadget); // update colection
-
-  //          action.CollectionAction.GadgetTestCollection.Add (gadget);
-  //        }
-
-  //        // update contents
-  //        Content.Update (action);
-  //      }
-  //    }
-  //  }
-  //}
-
-  //public void UpdateModel (TEntityAction action)
-  //{
-  //  if (action.NotNull ()) {
-  //    if (action.CategoryType.IsCategory (Server.Models.Infrastructure.TCategory.Test)) {
-  //      if (action.ModelAction.GadgetTestModel.Id.Equals (Id)) {
-  //        Content.Update (action);
-  //      }
-  //    }
-  //  }
-  //}
-
-  //public void UpdateContents (TEntityAction action)
-  //{
-  //  Content.Update (action);
-  //}
-
 
 }  // namespace

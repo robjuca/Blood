@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+
+using Server.Models.Infrastructure;
 //---------------------------//
 
 namespace Shared.Gadget.Models.Component
@@ -65,15 +67,15 @@ namespace Shared.Gadget.Models.Component
 
         if (id.NotEmpty ()) {
           if (Contains (id).IsFalse ()) {
-            var category = Server.Models.Infrastructure.TCategoryType.FromValue (categoryValue);
+            var category = TCategoryType.FromValue (categoryValue);
 
-            if (category.Equals (Server.Models.Infrastructure.TCategory.Registration)) {
+            if (category.Equals (TCategory.Registration)) {
               Registration.Id = id;
 
               res = true;
             }
 
-            if (category.Equals (Server.Models.Infrastructure.TCategory.Test)) {
+            if (category.Equals (TCategory.Test)) {
               IdCollection.Add (id);
 
               res = true;
@@ -215,6 +217,16 @@ namespace Shared.Gadget.Models.Component
       //    }
       //  }
       //}
+
+      internal void Update (GadgetRegistration gadget)
+      {
+        if (gadget.NotNull ()) {
+          if (Contains (gadget.Id)) {
+            IdCollection.Remove (gadget.Id);
+            Add (gadget);
+          }
+        }
+      }
 
       internal void Update (Collection<GadgetTest> list)
       {
@@ -389,6 +401,16 @@ namespace Shared.Gadget.Models.Component
     #endregion
 
     #region Members
+    public void AddContent (GadgetRegistration gadget)
+    {
+      Content.Add (gadget);
+    }
+
+    public void AddContent (GadgetTest gadget)
+    {
+      Content.Add (gadget);
+    }
+
     public bool AddContentId (Guid id, int catergoryValue)
     {
       return (Content.Add (id, catergoryValue));
@@ -407,6 +429,16 @@ namespace Shared.Gadget.Models.Component
     public void RequestContent (GadgetRegistration gadget)
     {
       Content.Request (gadget);
+    }
+
+    public void UpdateContent (GadgetRegistration gadget)
+    {
+      Content.Update (gadget);
+    }
+
+    public void UpdateContent (Collection<GadgetTest> list)
+    {
+      Content.Update (list);
     }
 
     public void CopyFrom (GadgetResult alias)

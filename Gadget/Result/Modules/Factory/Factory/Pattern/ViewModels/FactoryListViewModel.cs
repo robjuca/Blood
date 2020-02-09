@@ -6,6 +6,7 @@
 //----- Include
 using System;
 using System.ComponentModel.Composition;
+using System.Collections.ObjectModel;
 
 using rr.Library.Infrastructure;
 using rr.Library.Helper;
@@ -16,8 +17,8 @@ using Server.Models.Action;
 using Shared.Types;
 using Shared.Resources;
 using Shared.ViewModel;
-
-using Shared.Gadget.Result;
+using Shared.Gadget.Models.Action;
+using Shared.Gadget.Models.Component;
 
 using Gadget.Factory.Presentation;
 using Gadget.Factory.Pattern.Models;
@@ -54,22 +55,16 @@ namespace Gadget.Factory.Pattern.ViewModels
           // Response
           if (message.IsAction (TInternalMessageAction.Response)) {
             // Collection-Full
-            if (message.Support.Argument.Types.IsOperation (Server.Models.Infrastructure.TOperation.Collection, Server.Models.Infrastructure.TExtension.Full)) {
+            if (message.Support.Argument.Types.IsOperation (TOperation.Collection, TExtension.Full)) {
               if (message.Result.IsValid) {
-                // Gadget Material
-                if (message.Support.Argument.Types.IsOperationCategory (Server.Models.Infrastructure.TCategory.Material)) {
-                  var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
-                  TDispatcher.BeginInvoke (ResponseDataDispatcher, action);
-                }
-
                 // Gadget Registration
-                if (message.Support.Argument.Types.IsOperationCategory (Server.Models.Infrastructure.TCategory.Registration)) {
+                if (message.Support.Argument.Types.IsOperationCategory (TCategory.Registration)) {
                   var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
                   TDispatcher.BeginInvoke (ResponseDataDispatcher, action);
                 }
 
                 // Gadget Test
-                if (message.Support.Argument.Types.IsOperationCategory (Server.Models.Infrastructure.TCategory.Test)) {
+                if (message.Support.Argument.Types.IsOperationCategory (TCategory.Test)) {
                   var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
                   TDispatcher.BeginInvoke (ResponseDataDispatcher, action);
                 }
@@ -77,10 +72,10 @@ namespace Gadget.Factory.Pattern.ViewModels
             }
 
             // Select-Many
-            if (message.Support.Argument.Types.IsOperation (Server.Models.Infrastructure.TOperation.Select, Server.Models.Infrastructure.TExtension.Many)) {
+            if (message.Support.Argument.Types.IsOperation (TOperation.Select, TExtension.Many)) {
               if (message.Result.IsValid) {
                 // Gadget Test
-                if (message.Support.Argument.Types.IsOperationCategory (Server.Models.Infrastructure.TCategory.Test)) {
+                if (message.Support.Argument.Types.IsOperationCategory (TCategory.Test)) {
                   var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
                   TDispatcher.BeginInvoke (SelectManyDispatcher, action);
                 }
@@ -112,22 +107,22 @@ namespace Gadget.Factory.Pattern.ViewModels
     #region Event
     public void OnCheckedRegistrationCommadClicked (object obj)
     {
-      if (obj is TRegistrationInfo item) {
-        TDispatcher.BeginInvoke (RegistrationItemSelectedDispatcher, item);
+      if (obj is GadgetRegistration gadget) {
+        TDispatcher.BeginInvoke (RegistrationItemSelectedDispatcher, gadget);
       }
     }
 
     public void OnTestItemChecked (object obj)
     {
-      if (obj is TGadgetTestInfo item) {
-        TDispatcher.BeginInvoke (TestItemCheckedDispatcher, item);
+      if (obj is TActionComponent component) {
+        TDispatcher.BeginInvoke (TestItemCheckedDispatcher, component);
       }
     }
 
     public void OnTestItemUnchecked (object obj)
     {
-      if (obj is TGadgetTestInfo item) {
-        TDispatcher.BeginInvoke (TestItemUncheckedDispatcher, item);
+      if (obj is TActionComponent component) {
+        TDispatcher.BeginInvoke (TestItemUncheckedDispatcher, component);
       }
     }
 
@@ -147,9 +142,9 @@ namespace Gadget.Factory.Pattern.ViewModels
       // to parent
       // Registration - Collection - Full 
       var action = TEntityAction.Create (
-        Server.Models.Infrastructure.TCategory.Registration,
-        Server.Models.Infrastructure.TOperation.Collection,
-        Server.Models.Infrastructure.TExtension.Full
+        TCategory.Registration,
+        TOperation.Collection,
+        TExtension.Full
       );
 
       var message = new TFactoryMessageInternal (TInternalMessageAction.Request, TChild.List, TypeInfo);
@@ -157,23 +152,11 @@ namespace Gadget.Factory.Pattern.ViewModels
 
       DelegateCommand.PublishInternalMessage.Execute (message);
 
-      // Material - Collection - Full 
-      action = TEntityAction.Create (
-        Server.Models.Infrastructure.TCategory.Material,
-        Server.Models.Infrastructure.TOperation.Collection,
-        Server.Models.Infrastructure.TExtension.Full
-      );
-
-      message = new TFactoryMessageInternal (TInternalMessageAction.Request, TChild.List, TypeInfo);
-      message.Support.Argument.Types.Select (action);
-
-      DelegateCommand.PublishInternalMessage.Execute (message);
-
       // Test - Collection - Full 
       action = TEntityAction.Create (
-        Server.Models.Infrastructure.TCategory.Test,
-        Server.Models.Infrastructure.TOperation.Collection,
-        Server.Models.Infrastructure.TExtension.Full
+        TCategory.Test,
+        TOperation.Collection,
+        TExtension.Full
       );
 
       message = new TFactoryMessageInternal (TInternalMessageAction.Request, TChild.List, TypeInfo);
@@ -184,65 +167,90 @@ namespace Gadget.Factory.Pattern.ViewModels
 
     void ResponseDataDispatcher (TEntityAction action)
     {
-      // Collection - Full (Material, Registration, Test)
-      Model.Select (action);
+      var gadgets = new Collection<TActionComponent> ();
 
-      TDispatcher.Invoke (RefreshAllDispatcher);
+      // Collection - Full (Registration, Test)
 
-      // update
-      // Test - Select - Many
-      if (action.CategoryType.IsCategory (Server.Models.Infrastructure.TCategory.Test)) {
-        action.Operation.Select (Server.Models.Infrastructure.TCategory.Test, Server.Models.Infrastructure.TOperation.Select, Server.Models.Infrastructure.TExtension.Many);
+      // Registration
+      if (action.CategoryType.IsCategory (TCategory.Registration)) {
+        TActionConverter.Collection (TCategory.Registration, gadgets, action);
+        Model.SelectRegistration (gadgets);
+      }
+
+      // Test
+      if (action.CategoryType.IsCategory (TCategory.Test)) {
+        TActionConverter.Collection (TCategory.Test, gadgets, action);
+        Model.SelectTest (gadgets);
+
+        // update
+        // Test - Select - Many
+        action.Operation.Select (TCategory.Test, TOperation.Select, TExtension.Many);
+        Model.RequestTestIdCollection (action.IdCollection);
 
         var message = new TFactoryMessageInternal (TInternalMessageAction.Request, TChild.List, TypeInfo);
         message.Support.Argument.Types.Select (action);
 
         DelegateCommand.PublishInternalMessage.Execute (message);
       }
+
+      TDispatcher.Invoke (RefreshAllDispatcher);
     }
 
     void RequestModelDispatcher (TEntityAction action)
     {
-      Model.RequestModel (action);
+      if (action.NotNull ()) {
+        var component = TActionComponent.Create (TCategory.Result);
+        Model.Request (component);
 
-      // to Sibling
-      var message = new TFactorySiblingMessageInternal (TInternalMessageAction.Response, TChild.List, TypeInfo);
-      message.Support.Argument.Types.Select (action);
+        TActionConverter.Request (TCategory.Result, component, action);
 
-      DelegateCommand.PublishInternalMessage.Execute (message);
+        // to Sibling
+        var message = new TFactorySiblingMessageInternal (TInternalMessageAction.Response, TChild.List, TypeInfo);
+        message.Support.Argument.Types.Select (action);
+
+        DelegateCommand.PublishInternalMessage.Execute (message);
+      }
     }
 
     void SelectManyDispatcher (TEntityAction action)
     {
-      Model.SelectMany (action);
+      // Test
+      if (action.CategoryType.IsCategory (TCategory.Test)) {
+        var gadgets = new Collection<TActionComponent> ();
+        Model.RequestTestCollection (gadgets);
+
+        TActionConverter.SelectMany (TCategory.Test, gadgets, action);
+
+        Model.SelectTestMany (gadgets);
+      }
 
       RaiseChanged ();
     }
 
-    void RegistrationItemSelectedDispatcher (TRegistrationInfo item)
+    void RegistrationItemSelectedDispatcher (GadgetRegistration gadget)
     {
-      Model.RegistrationCurrentSelected (item);
+      Model.RegistrationCurrentSelected (gadget);
 
       RaiseChanged ();
     }
 
-    void TestItemCheckedDispatcher (TGadgetTestInfo item)
+    void TestItemCheckedDispatcher (TActionComponent component)
     {
-      Model.Resultelected (item, isChecked:true);
+      Model.TestSelected (component, isChecked: true);
 
       RaiseChanged ();
     }
 
-    void TestItemUncheckedDispatcher (TGadgetTestInfo item)
+    void TestItemUncheckedDispatcher (TActionComponent component)
     {
-      Model.Resultelected (item, isChecked: false);
+      Model.TestSelected (component, isChecked: false);
 
       RaiseChanged ();
     }
 
     void EditDispatcher (TEntityAction action)
     {
-      Model.EditEnter (action);
+      //Model.EditEnter (action);
 
       TDispatcher.Invoke (RefreshAllDispatcher);
     }

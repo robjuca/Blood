@@ -53,6 +53,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entity\Extension\ExtensionContentEntity.cs" />
     <Compile Include="Models\CategoryRelation.cs" />
     <Compile Include="Models\Component\ComponentDescriptor.cs" />
     <Compile Include="Models\Component\ComponentInfo.cs" />
@@ -61,6 +62,7 @@
     <Compile Include="Models\Extension\ExtensionGeometry.cs" />
     <Compile Include="Models\Extension\ExtensionImage.cs" />
     <Compile Include="Models\Extension\ExtensionLayout.cs" />
+    <Compile Include="Models\Extension\ExtensionContent.cs" />
     <Compile Include="Models\Extension\ExtensionNode.cs" />
     <Compile Include="Models\Extension\ExtensionText.cs" />
     <Compile Include="Entity\CategoryRelationEntity.cs" />

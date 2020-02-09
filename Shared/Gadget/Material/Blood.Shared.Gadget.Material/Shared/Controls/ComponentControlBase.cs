@@ -164,7 +164,6 @@ namespace Shared.Gadget.Material
           m_Grid.Children.Add (textBoxLink); // row 2
         }
 
-        //TODO: what for??
         catch (Exception) {
           // do nothing
         }

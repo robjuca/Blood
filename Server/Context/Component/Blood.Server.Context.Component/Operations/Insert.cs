@@ -261,6 +261,16 @@ namespace Server.Context.Component
                     context.ExtensionText.Add (extText);
                   }
                   break;
+
+                case TComponentExtensionName.Content: {
+                    action.ModelAction.ExtensionContentModel.Id = id;
+
+                    var extContent = ExtensionContent.CreateDefault;
+                    extContent.CopyFrom (action.ModelAction.ExtensionContentModel);
+
+                    context.ExtensionContent.Add (extContent);
+                  }
+                  break;
               }
             }
           }

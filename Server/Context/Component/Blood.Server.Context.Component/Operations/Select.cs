@@ -149,7 +149,7 @@ namespace Server.Context.Component
           operationSupport.RequestComponent (context, action);
           operationSupport.RequestExtension (context, action);
           operationSupport.RequestNode (context, action);
-          operationSupport.RequestRelation (context, action);
+          TOperationSupport.RequestRelation (context, action);
 
           // use Parent relation
           if (action.ComponentOperation.ParentIdCollection.ContainsKey (action.Id)) {
@@ -209,7 +209,7 @@ namespace Server.Context.Component
 
       try {
         var operationSupport = new TOperationSupport (context, action);
-        operationSupport.RequestRelation (context, action);
+        TOperationSupport.RequestRelation (context, action);
 
         action.Result = TValidationResult.Success;
       }
@@ -385,6 +385,18 @@ namespace Server.Context.Component
                     }
                   }
                   break;
+
+                case TComponentExtensionName.Content: {
+                    var list = context.ExtensionContent
+                      .Where (p => p.Id.Equals (id))
+                      .ToList ()
+                    ;
+
+                    if (list.Count.Equals (1)) {
+                      action.CollectionAction.ExtensionContentCollection.Add (list [0]);
+                    }
+                  }
+                  break;
               }
             }
           }
@@ -488,6 +500,18 @@ namespace Server.Context.Component
 
                   if (list.Count.Equals (1)) {
                     models.ExtensionTextModel.CopyFrom (list [0]);
+                  }
+                }
+                break;
+
+              case TComponentExtensionName.Content: {
+                  var list = action.CollectionAction.ExtensionContentCollection
+                    .Where (p => p.Id.Equals (id))
+                    .ToList ()
+                  ;
+
+                  if (list.Count.Equals (1)) {
+                    models.ExtensionContentModel.CopyFrom (list [0]);
                   }
                 }
                 break;

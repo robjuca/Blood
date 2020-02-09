@@ -37,7 +37,7 @@ namespace Gadget.Factory.Pattern.Models
     {
       get
       {
-        return (GadgetTargetCheckedCollection.Count);
+        return (GadgetCheckedCollection.Count);
       }
     }
 
@@ -45,7 +45,15 @@ namespace Gadget.Factory.Pattern.Models
     {
       get
       {
-        return (GadgetTargetCheckedCollection.Any ());
+        return (GadgetCheckedCollection.Any ());
+      }
+    }
+
+    public bool IsEditMode
+    {
+      get
+      {
+        return (m_CurrentEditGadget.ValidateId);
       }
     }
     #endregion
@@ -55,8 +63,8 @@ namespace Gadget.Factory.Pattern.Models
     {
       GadgetItemsSource = new ObservableCollection<GadgetTarget> ();
 
-      GadgetTargetFullCollection = new Collection<GadgetTarget> ();
-      GadgetTargetCheckedCollection = new Collection<GadgetTarget> ();
+      GadgetFullCollection = new Collection<GadgetTarget> ();
+      GadgetCheckedCollection = new Collection<GadgetTarget> ();
 
       m_CurrentMaterialGadget = GadgetMaterial.CreateDefault;
       m_CurrentEditGadget = GadgetTest.CreateDefault;
@@ -77,7 +85,7 @@ namespace Gadget.Factory.Pattern.Models
       TActionConverter.Collection (TCategory.Target, gadgets, entityAction);
 
       foreach (var gadget in gadgets) {
-        GadgetTargetFullCollection.Add (gadget.Models.GadgetTargetModel);
+        GadgetFullCollection.Add (gadget.Models.GadgetTargetModel);
       }
     }
 
@@ -113,7 +121,7 @@ namespace Gadget.Factory.Pattern.Models
     {
       action.ThrowNull ();
 
-      foreach (var item in GadgetTargetCheckedCollection) {
+      foreach (var item in GadgetCheckedCollection) {
         //var componentRelation = ComponentRelation.CreateDefault;
         //componentRelation.ChildId = item.Id;
         //componentRelation.ChildCategory = item.CategoryValue;
@@ -159,19 +167,19 @@ namespace Gadget.Factory.Pattern.Models
     internal void Cleanup ()
     {
       GadgetItemsSource.Clear ();
-      GadgetTargetCheckedCollection.Clear ();
+      GadgetCheckedCollection.Clear ();
 
       m_CurrentEditGadget.CopyFrom (GadgetTest.CreateDefault);
     }
     #endregion
 
     #region property
-    Collection<GadgetTarget> GadgetTargetFullCollection
+    Collection<GadgetTarget> GadgetFullCollection
     {
       get;
     }
 
-    Collection<GadgetTarget> GadgetTargetCheckedCollection
+    Collection<GadgetTarget> GadgetCheckedCollection
     {
       get;
     }
@@ -188,7 +196,7 @@ namespace Gadget.Factory.Pattern.Models
       var someGadgetTarget = GadgetTarget.CreateDefault;
 
       if (gadgetTarget.NotNull ()) {
-        foreach (var gadgetTargetChecked in GadgetTargetCheckedCollection) {
+        foreach (var gadgetTargetChecked in GadgetCheckedCollection) {
           if (gadgetTargetChecked.Contains (gadgetTarget.Id)) {
             someGadgetTarget.CopyFrom (gadgetTargetChecked);
             break;
@@ -203,7 +211,7 @@ namespace Gadget.Factory.Pattern.Models
     {
       var someGadgetTarget = GadgetTarget.CreateDefault;
 
-      foreach (var gadgetTargetChecked in GadgetTargetCheckedCollection) {
+      foreach (var gadgetTargetChecked in GadgetCheckedCollection) {
         if (gadgetTargetChecked.Contains (id)) {
           someGadgetTarget.CopyFrom (gadgetTargetChecked);
           break;
@@ -215,14 +223,14 @@ namespace Gadget.Factory.Pattern.Models
 
     void AddChecked (GadgetTarget gadgetTarget)
     {
-      GadgetTargetCheckedCollection.Add (gadgetTarget);
+      GadgetCheckedCollection.Add (gadgetTarget);
     }
 
     void RemoveChecked (Guid id)
     {
-      foreach (var gadgetTargetChecked in GadgetTargetCheckedCollection) {
+      foreach (var gadgetTargetChecked in GadgetCheckedCollection) {
         if (gadgetTargetChecked.Contains (id)) {
-          GadgetTargetCheckedCollection.Remove (gadgetTargetChecked);
+          GadgetCheckedCollection.Remove (gadgetTargetChecked);
           break;
         }
       }
@@ -232,7 +240,7 @@ namespace Gadget.Factory.Pattern.Models
     {
       var gadgetTarget = GadgetTarget.CreateDefault;
 
-      foreach (var gadget in GadgetTargetFullCollection) {
+      foreach (var gadget in GadgetFullCollection) {
         if (gadget.Id.Equals (id)) {
           gadgetTarget.CopyFrom (gadget);
           break;
@@ -244,7 +252,7 @@ namespace Gadget.Factory.Pattern.Models
 
     internal bool GadgetChanged ()
     {
-      throw new NotImplementedException ();
+      throw new NotImplementedException ();//TODO: what for??
     }
 
     void SortItemsSourceCollection ()
@@ -289,7 +297,7 @@ namespace Gadget.Factory.Pattern.Models
       if (m_CurrentMaterialGadget.ValidateId) {
         GadgetItemsSource.Clear ();
 
-        foreach (var gadgetTargetModel in GadgetTargetFullCollection) {
+        foreach (var gadgetTargetModel in GadgetFullCollection) {
           if (m_CurrentMaterialGadget.Contains (gadgetTargetModel.MaterialId)) {
             var checkedItem = IsChecked (gadgetTargetModel.Id);
 

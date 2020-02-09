@@ -5,14 +5,14 @@
 
 //----- Include
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
 using Server.Models.Infrastructure;
-using Server.Models.Action;
 
-
-using Shared.ViewModel;
+using Shared.Gadget.Models.Action;
+using Shared.Gadget.Models.Component;
 //---------------------------//
 
 namespace Gadget.Collection.Pattern.Models
@@ -20,137 +20,164 @@ namespace Gadget.Collection.Pattern.Models
   public sealed class TCollectionListModel
   {
     #region Property
-    public ObservableCollection<TComponentModelItem> RegistrationSelectionItemsSource
+    public ObservableCollection<GadgetRegistration> RegistrationItemsSource
     {
       get;
     }
 
-    public ObservableCollection<TComponentModelItem> ResultItemsSource
+    public ObservableCollection<GadgetResult> ItemsSource
     {
       get;
     }
 
-    public int RegistrationSelectionItemsSourceCount
+    public int RegistrationCount
     {
       get
       {
-        return (RegistrationSelectionItemsSource.Count);
+        return (RegistrationItemsSource.Count);
       }
     }
 
-    public string ResultCount
+    public string Count
     {
       get
       {
-        return ($"[ {ResultItemsSource.Count} ]");
+        return ($"[ {ItemsSource.Count} ]");
       }
     }
 
-    public int RegistrationSelectionSelectedIndex
+    public GadgetRegistration RegistrationCurrent
+    {
+      get
+      {
+        return (RegistrationSelectedIndex.Equals (-1) ? GadgetRegistration.CreateDefault : RegistrationItemsSource [RegistrationSelectedIndex]);
+      }
+    }
+
+    public int RegistrationSelectedIndex
     {
       get; 
       set;
     }
 
+    public GadgetResult Current
+    {
+      get
+      {
+        return (ResultSelectedIndex.Equals (-1) ? GadgetResult.CreateDefault : ItemsSource [ResultSelectedIndex]);
+      }
+    }
+
     public int ResultSelectedIndex
     {
-      get;
+      get; 
       set;
-    }
-
-    public TComponentModelItem RegistrationSelectionCurrent
-    {
-      get;
-    }
-
-    public TComponentModelItem ResultCurrent
-    {
-      get;
     }
     #endregion
 
     #region Constructor
     public TCollectionListModel ()
     {
-      RegistrationSelectionItemsSource = new ObservableCollection<TComponentModelItem> ();
-      ResultItemsSource = new ObservableCollection<TComponentModelItem> ();
+      RegistrationItemsSource = new ObservableCollection<GadgetRegistration> ();
+      ItemsSource = new ObservableCollection<GadgetResult> ();
 
-      RegistrationSelectionSelectedIndex = -1;
+      RegistrationSelectedIndex = -1;
       ResultSelectedIndex = -1;
 
-      RegistrationSelectionCurrent = TComponentModelItem.CreateDefault;
-      ResultCurrent = TComponentModelItem.CreateDefault;
-
-      ResultFullCollection = new Collection<TComponentModelItem> ();
+      FullCollection = new Collection<GadgetResult> ();
     }
     #endregion
 
     #region Members
-    internal void Select (TEntityAction action)
+    internal void SelectRegistration (Collection<TActionComponent> gadgets)
     {
-      // DATA IN:
-      // action.CollectionAction.ModelCollection
+      gadgets.ThrowNull ();
 
-      action.ThrowNull ();
+      RegistrationItemsSource.Clear ();
 
-      // Registration
-      if (action.CategoryType.IsCategory(Server.Models.Infrastructure.TCategory.Registration)) {
-        RegistrationSelectionSelectedIndex = -1;
-        RegistrationSelectionItemsSource.Clear ();
+      foreach (var component in gadgets) {
+        var gadget = component.Models.GadgetRegistrationModel;
 
-        //foreach (var gadget in action.CollectionAction.GadgetRegistrationCollection) {
-        //  var modelAction = action.CollectionAction.ModelCollection [gadget.Id];
-        //  modelAction.GadgetRegistrationModel.CopyFrom (gadget);
-
-        //  action.ModelAction.CopyFrom (modelAction);
-
-        //  RegistrationSelectionItemsSource.Add (TComponentModelItem.Create (action));
-        //}
-
-        if (RegistrationSelectionItemsSource.Any ()) {
-          RegistrationSelectionSelectedIndex = 0;
+        if (gadget.Enabled) {
+          RegistrationItemsSource.Add (gadget);
         }
       }
 
-      // Result
-      if (action.CategoryType.IsCategory (Server.Models.Infrastructure.TCategory.Result)) {
-        ResultFullCollection.Clear ();
-
-        //foreach (var gadget in action.CollectionAction.GadgetResultCollection) {
-        //  var modelAction = action.CollectionAction.ModelCollection [gadget.Id];
-        //  modelAction.GadgetResultModel.CopyFrom (gadget);
-
-        //  action.ModelAction.CopyFrom (modelAction);
-
-        //  ResultFullCollection.Add (TComponentModelItem.Create (action));
-        //}
+      if (RegistrationItemsSource.Any ()) {
+        RegistrationSelectedIndex = 0;
       }
     }
 
-    internal void RegistrationChanged (TComponentModelItem componentModelItem)
+    internal void SelectResult (Collection<TActionComponent> gadgets, Collection<Guid> idcontents)
     {
-      if (componentModelItem.NotNull ()) {
-        if (componentModelItem.ValidateId) {
-          RegistrationSelectionCurrent.CopyFrom (componentModelItem);
+      gadgets.ThrowNull ();
+      idcontents.ThrowNull ();
 
-          ResultItemsSource.Clear ();
+      FullCollection.Clear ();
+      idcontents.Clear ();
 
-          foreach (var item in ResultFullCollection) {
-            //if (item.GadgetResultModel.IsRegistrationContent (RegistrationSelectionCurrent.Id)) {
-            //  ResultItemsSource.Add (item);
-            //}
+      foreach (var component in gadgets) {
+        FullCollection.Add (component.Models.GadgetResultModel);
+      }
+
+      foreach (var gadget in FullCollection) {
+        var idList = new Collection<Guid> ();
+        gadget.RequestContent (idList);
+
+        foreach (var id in idList) {
+          idcontents.Add (id);
+        }
+      }
+    }
+
+    internal void SelectMany (Collection<TActionComponent> gadgets)
+    {
+      gadgets.ThrowNull ();
+
+      var gadgetRegistrationList = new Collection<GadgetRegistration> ();
+      var gadgetTestList = new Collection<GadgetTest> ();
+
+      foreach (var component in gadgets) {
+        if (component.IsCategory (TCategory.Registration)) {
+          gadgetRegistrationList.Add (component.Models.GadgetRegistrationModel);
+        }
+
+        if (component.IsCategory (TCategory.Test)) {
+          gadgetTestList.Add (component.Models.GadgetTestModel);
+        }
+      }
+
+      foreach (var gadget in FullCollection) {
+        foreach (var gadgetRegistration in gadgetRegistrationList) {
+          gadget.UpdateContent (gadgetRegistration);
+        }
+
+        gadget.UpdateContent (gadgetTestList);
+      }
+
+      RegistrationChanged (RegistrationCurrent);
+    }
+
+    internal void RegistrationChanged (GadgetRegistration gadget)
+    {
+      if (gadget.NotNull ()) {
+        ItemsSource.Clear ();
+
+        foreach (var gadgetResult in FullCollection) {
+          if (gadgetResult.IsRegistrationContent (gadget.Id)) {
+            ItemsSource.Add (gadgetResult);
           }
+        }
 
-          if (ResultItemsSource.Any ()) {
-            ResultSelectedIndex = 0;
-          }
+        if (ItemsSource.Any ()) {
+          ResultSelectedIndex = 0;
         }
       }
     }
     #endregion
 
     #region Property
-    Collection<TComponentModelItem> ResultFullCollection
+    Collection<GadgetResult> FullCollection
     {
       get;
     }

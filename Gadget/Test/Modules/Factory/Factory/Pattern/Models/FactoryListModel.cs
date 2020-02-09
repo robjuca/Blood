@@ -125,8 +125,8 @@ namespace Gadget.Factory.Pattern.Models
 
         case "GadgetRemove":
           if (locked.IsFalse ()) {
-            //IsEnabledSelector = true;  // NOT NOW
-            //MaterialSelectionEnabled = true;
+            IsEnabledSelector = true;  
+            MaterialSelectionEnabled = true;
           }
           break;
       }

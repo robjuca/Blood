@@ -69,7 +69,19 @@ namespace Server.Models.Action
       private set;
     }
 
+    public Collection<ExtensionContent> ContentModelCollection
+    {
+      get;
+      private set;
+    }
+
     public ExtensionText TextModel
+    {
+      get;
+      private set;
+    }
+
+    public ExtensionContent ContentModel
     {
       get;
       private set;
@@ -122,8 +134,10 @@ namespace Server.Models.Action
       LayoutModel = ExtensionLayout.CreateDefault;
       NodeModel = ExtensionNode.CreateDefault;
       TextModel = ExtensionText.CreateDefault;
+      ContentModel = ExtensionContent.CreateDefault;
 
       NodeModelCollection = new Collection<ExtensionNode> ();
+      ContentModelCollection = new Collection<ExtensionContent> ();
     }
     #endregion
 
@@ -168,9 +182,19 @@ namespace Server.Models.Action
       NodeModelCollection = new Collection<ExtensionNode> (list);
     }
 
+    public void Select (IList<ExtensionContent> list)
+    {
+      ContentModelCollection = new Collection<ExtensionContent> (list);
+    }
+
     public void Select (ExtensionText text)
     {
       TextModel.CopyFrom (text);
+    }
+
+    public void Select (ExtensionContent content)
+    {
+      ContentModel.CopyFrom (content);
     }
 
     public void Select (TEntityAction action)
@@ -194,6 +218,7 @@ namespace Server.Models.Action
       modelAction.ExtensionLayoutModel.CopyFrom (LayoutModel);
       modelAction.ExtensionTextModel.CopyFrom (TextModel);
       modelAction.ExtensionNodeModel.CopyFrom (NodeModel);
+      modelAction.ExtensionContentModel.CopyFrom (ContentModel);
 
       return (modelAction);
     }
@@ -213,8 +238,10 @@ namespace Server.Models.Action
         LayoutModel.CopyFrom (alias.LayoutModel);
         TextModel.CopyFrom (alias.TextModel);
         NodeModel.CopyFrom (alias.NodeModel);
+        ContentModel.CopyFrom (alias.ContentModel);
 
         NodeModelCollection = new Collection<ExtensionNode> (alias.NodeModelCollection);
+        ContentModelCollection = new Collection<ExtensionContent> (alias.ContentModelCollection);
       }
     }
     #endregion
@@ -235,6 +262,7 @@ namespace Server.Models.Action
         model.LayoutModel.CopyFrom (modelAction.ExtensionLayoutModel);
         model.TextModel.CopyFrom (modelAction.ExtensionTextModel);
         model.NodeModel.CopyFrom (modelAction.ExtensionNodeModel);
+        model.ContentModel.CopyFrom (modelAction.ExtensionContentModel);
       }
 
       return (model);

@@ -67,7 +67,7 @@ namespace Gadget.Factory.Pattern.ViewModels
             if (message.Support.Argument.Types.IsOperation (TOperation.Select, TExtension.ById)) {
               if (message.Result.IsValid) {
                 var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
-                TDispatcher.BeginInvoke (ResponseModelDispatcher, action);
+                TDispatcher.BeginInvoke (ResponseSelectByIdDispatcher, action);
               }
             }
           }
@@ -168,7 +168,7 @@ namespace Gadget.Factory.Pattern.ViewModels
       TDispatcher.Invoke (RefreshAllDispatcher);
     }
 
-    void ResponseModelDispatcher (TEntityAction action)
+    void ResponseSelectByIdDispatcher (TEntityAction action)
     {
       // to Sibling (Select By Id)
       var message = new TFactorySiblingMessageInternal (TInternalMessageAction.Select, TChild.List, TypeInfo);
@@ -221,7 +221,7 @@ namespace Gadget.Factory.Pattern.ViewModels
       message.Support.Argument.Args.Select (component);
       message.Support.Argument.Args.Select (gadget.IsChecked ? "GadgetAdd" : "GadgetRemove");
 
-      if (Model.HasGadgetChecked) {
+      if (Model.IsEditMode || Model.HasGadgetChecked) {
         message.Support.Argument.Types.ReportData.SelectLock ();
       }
 

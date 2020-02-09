@@ -80,6 +80,12 @@ namespace Server.Models.Action
       get;
       private set;
     }
+
+    public Collection<ExtensionContent> ExtensionContentCollection
+    {
+      get;
+      private set;
+    }
     #endregion
 
     #region ById
@@ -121,6 +127,7 @@ namespace Server.Models.Action
       ExtensionLayoutCollection = new Collection<ExtensionLayout> ();
       ExtensionNodeCollection = new Collection<ExtensionNode> ();
       ExtensionTextCollection = new Collection<ExtensionText> ();
+      ExtensionContentCollection = new Collection<ExtensionContent> ();
 
       // ById
       ModelCollection = new Dictionary<Guid, TModelAction> ();
@@ -179,6 +186,11 @@ namespace Server.Models.Action
     public void SetCollection (IList<ExtensionText> list)
     {
       ExtensionTextCollection = new Collection<ExtensionText> (list);
+    }
+
+    public void SetCollection (IList<ExtensionContent> list)
+    {
+      ExtensionContentCollection = new Collection<ExtensionContent> (list);
     }
 
     public bool IsComponentOperation (TComponentOperation.TInternalOperation componentOperation)

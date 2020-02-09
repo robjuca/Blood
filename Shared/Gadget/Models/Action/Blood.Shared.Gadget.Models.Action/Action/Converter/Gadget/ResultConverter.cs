@@ -4,8 +4,11 @@
 ----------------------------------------------------------------*/
 
 //----- Include
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 
 using Server.Models.Infrastructure;
 using Server.Models.Action;
@@ -38,6 +41,17 @@ namespace Shared.Gadget.Models.Action
 
           gadget.GadgetInfo = modelAction.ComponentInfoModel.Name;
           gadget.Busy = modelAction.ComponentStatusModel.Busy;
+
+          if (modelAction.ExtensionContentModel.Id.Equals (gadget.Id)) {
+            string [] contentIdString = Regex.Split (modelAction.ExtensionContentModel.Contents, ";");
+
+            foreach (var idString in contentIdString) {
+              if (string.IsNullOrEmpty (idString).IsFalse ()) {
+                var id = Guid.Parse (idString);
+                gadget.AddContentId (id, TCategoryType.ToValue (TCategory.Test));
+              }
+            }
+          }
 
           gadgetCollection.Add (gadget);
         }
@@ -76,6 +90,30 @@ namespace Shared.Gadget.Models.Action
       }
     }
 
+    public static void SelectMany (Collection<TActionComponent> gadgets, TEntityAction entityAction)
+    {
+      //entityAction.CollectionAction.EntityCollection
+
+      if (entityAction.CategoryType.IsCategory (TCategory.Result)) {
+        if (gadgets.Any ()) {
+          foreach (var component in gadgets) {
+            
+          }
+        }
+
+        else {
+          foreach (var item in entityAction.CollectionAction.EntityCollection) {
+            var someEntity = item.Value;
+
+            var component = TActionComponent.Create (someEntity.CategoryType.Category);
+            TActionConverter.Select (someEntity.CategoryType.Category, component, someEntity);
+
+            gadgets.Add (component);
+          }
+        }
+      }
+    }
+
     public static void Request (TActionComponent component, TEntityAction entityAction)
     {
       if (component.IsCategory (TCategory.Result)) {
@@ -92,6 +130,25 @@ namespace Shared.Gadget.Models.Action
         entityAction.ModelAction.ExtensionTextModel.Date = gadget.Date;
         entityAction.ModelAction.ExtensionTextModel.Description = gadget.Description;
         entityAction.ModelAction.ComponentInfoModel.Enabled = gadget.Enabled;
+
+        var contentString = new StringBuilder ();
+
+        var contentRegistration = GadgetRegistration.CreateDefault;
+        gadget.RequestContent (contentRegistration);
+        contentString.Append (contentRegistration.Id);
+        contentString.Append (";");
+
+        var contents = new Collection<GadgetTest> ();
+        gadget.RequestContent (contents);
+
+        foreach (var item in contents) {
+          contentString.Append (item.Id);
+          contentString.Append (";");
+        }
+
+        entityAction.ModelAction.ExtensionContentModel.Id = gadget.Id;
+        entityAction.ModelAction.ExtensionContentModel.Category = TCategoryType.ToValue (TCategory.Result);
+        entityAction.ModelAction.ExtensionContentModel.Contents = contentString.ToString ();
       }
     }
     #endregion

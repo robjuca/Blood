@@ -7,11 +7,12 @@
 using Microsoft.EntityFrameworkCore;
 
 using Server.Models.Component;
+using Server.Models.Infrastructure;
 //---------------------------//
 
 namespace Server.Context.Component
 {
-  public partial class TModelContext : DbContext, Server.Models.Infrastructure.IModelContext
+  public partial class TModelContext : DbContext, IModelContext
   {
     #region Property
     #region Settings
@@ -80,6 +81,11 @@ namespace Server.Context.Component
     {
       get; set;
     }
+
+    public virtual DbSet<ExtensionContent> ExtensionContent
+    {
+      get; set;
+    }
     #endregion
 
     public static string ConnectionString
@@ -101,7 +107,7 @@ namespace Server.Context.Component
     #endregion
 
     #region Interface
-    void Server.Models.Infrastructure.IModelContext.DisposeNow ()
+    void IModelContext.DisposeNow ()
     {
       Dispose ();
     }
@@ -117,7 +123,7 @@ namespace Server.Context.Component
     #endregion
 
     #region Property
-    public static TModelContext CastTo (Server.Models.Infrastructure.IModelContext modelContext) => (modelContext as TModelContext);
+    public static TModelContext CastTo (IModelContext modelContext) => (modelContext as TModelContext);
     #endregion
   };
   //---------------------------//

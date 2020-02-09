@@ -68,12 +68,12 @@ namespace Gadget.Factory.Pattern.ViewModels
           // Response
           if (message.IsAction (TInternalMessageAction.Response)) {
             // Insert
-            if (message.Support.Argument.Types.IsOperation (Server.Models.Infrastructure.TOperation.Insert)) {
+            if (message.Support.Argument.Types.IsOperation (TOperation.Insert)) {
               TDispatcher.Invoke (InsertSuccessDispatcher);
             }
 
             // Change - Full
-            if (message.Support.Argument.Types.IsOperation (Server.Models.Infrastructure.TOperation.Change, Server.Models.Infrastructure.TExtension.Full)) {
+            if (message.Support.Argument.Types.IsOperation (TOperation.Change, TExtension.Full)) {
               TDispatcher.Invoke (ChangeSuccessDispatcher);
             }
           }
@@ -116,14 +116,12 @@ namespace Gadget.Factory.Pattern.ViewModels
       RaiseChanged ();
 
       // Insert
-      var action = TEntityAction.Create (Server.Models.Infrastructure.TCategory.Result, Server.Models.Infrastructure.TOperation.Insert);
+      var action = TEntityAction.Create (TCategory.Result, TOperation.Insert);
 
       if (IsViewModeEdit) {
         // Change-Full
-        action = TEntityAction.Create (Server.Models.Infrastructure.TCategory.Result, Server.Models.Infrastructure.TOperation.Change, Server.Models.Infrastructure.TExtension.Full);
+        action = TEntityAction.Create (TCategory.Result, TOperation.Change, TExtension.Full);
       }
-
-      Model.RequestModel (action);
 
       TDispatcher.BeginInvoke (RequestModelDispatcher, action);
     }
@@ -171,7 +169,7 @@ namespace Gadget.Factory.Pattern.ViewModels
 
     void ResponseModelDispatcher (TEntityAction action)
     {
-      //action.ModelAction.GadgetResultModel.CopyFrom (action);
+      Model.RequestModel (action);
 
       TDispatcher.BeginInvoke (ApplyDispatcher, action);
     }

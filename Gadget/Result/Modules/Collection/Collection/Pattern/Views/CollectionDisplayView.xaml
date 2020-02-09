@@ -41,7 +41,7 @@
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
 
-                            <!--busy edit remove style distorted-->
+                            <!--busy edit remove -->
                             <Border Grid.Column="0">
                                 <StackPanel Orientation="Horizontal">
                                     <!--busy-->

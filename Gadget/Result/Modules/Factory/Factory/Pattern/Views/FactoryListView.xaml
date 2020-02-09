@@ -16,11 +16,11 @@
         <CollectionViewSource x:Key="TestModelItemsViewSource"
                               Source="{Binding Model.TestItemsSource}">
             <CollectionViewSource.GroupDescriptions>
-                <PropertyGroupDescription PropertyName="ContentCategoryString" />
+                <PropertyGroupDescription PropertyName="Models.GadgetTestModel.ContentCategory" />
             </CollectionViewSource.GroupDescriptions>
 
             <CollectionViewSource.SortDescriptions>
-                <scm:SortDescription PropertyName="Name"
+                <scm:SortDescription PropertyName="Models.GadgetTestModel.GadgetInfo"
                                      Direction="Ascending" />
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
@@ -40,25 +40,26 @@
                     <StackPanel Orientation="Horizontal">
                         <!--check-->
                         <CheckBox Margin="0 0 5 0"
-                                  IsChecked="{Binding IsChecked, Mode=TwoWay}"
+                                  IsChecked="{Binding Models.GadgetTestModel.IsChecked}"
                                   caliburn:Message.Attach="[Event Checked] = [OnTestItemChecked ($dataContext)]; [Event Unchecked] = [OnTestItemUnchecked ($dataContext)]" />
 
                         <!--material image-->
                         <Image Width="16"
-                               Height="16" ToolTip="{Binding GadgetMaterialName}"
-                               Source="{Binding GadgetMaterialImage, Converter={StaticResource CollectionToBitmapImageConverter}}" />
+                               Height="16"
+                               ToolTip="{Binding Material}"
+                               Source="{Binding Models.GadgetMaterialModel.Image, Converter={StaticResource CollectionToBitmapImageConverter}}" />
 
                         <!--test icon-->
-                        <ContentControl  Visibility="{Binding GadgetTestVisibility}"
+                        <ContentControl  Visibility="{Binding Models.GadgetTestModel.ContentTestVisibility}"
                                          Style="{DynamicResource GadgetTestMiniIcon}" />
 
                         <!--target icon-->
-                        <ContentControl  Visibility="{Binding GadgetTargetVisibility}"
+                        <ContentControl  Visibility="{Binding Models.GadgetTestModel.ContentTargetVisibility}"
                                          Style="{DynamicResource GadgetTargetMiniIcon}" />
 
                         <!--test name-->
                         <TextBlock Margin="5 0 0 0"
-                                   Text="{Binding Name}"
+                                   Text="{Binding Models.GadgetTestModel.GadgetInfo}"
                                    FontWeight="DemiBold"
                                    VerticalAlignment="Center" />
                     </StackPanel>
@@ -83,19 +84,19 @@
                         <!--image-->
                         <Image Stretch="UniformToFill"
                                Height="140"
-                               Source="{Binding ModelItem.GadgetRegistrationModel.Image, Converter={StaticResource CollectionToBitmapImageConverter}}" />
+                               Source="{Binding Image, Converter={StaticResource CollectionToBitmapImageConverter}}" />
 
                         <!--registration-->
                         <TextBlock FontWeight="DemiBold"
                                    Margin="3"
-                                   Text="{Binding ModelItem.GadgetRegistrationModel.Name}" />
+                                   Text="{Binding GadgetInfo}" />
 
                         <!--name-->
                         <RadioButton GroupName="Registration"
                                      Margin="3"
-                                     IsChecked="{Binding IsChecked, Mode=TwoWay}"
+                                     IsChecked="{Binding IsChecked}"
                                      caliburn:Message.Attach="[Event Checked] = [OnCheckedRegistrationCommadClicked ($dataContext)]">
-                            <TextBlock Text="{Binding ModelItem.Name}" />
+                            <TextBlock Text="{Binding GadgetName}" />
                         </RadioButton>
                     </StackPanel>
                 </materialDesign:Card>

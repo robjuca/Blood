@@ -440,6 +440,20 @@ namespace Server.Context.Component
                         }
                       }
                       break;
+
+                    case TComponentExtensionName.Content: {
+                        var list = context.ExtensionContent
+                          .Where (p => p.Id.Equals (id))
+                          .ToList ()
+                        ;
+
+                        if (list.Count.Equals (1)) {
+                          var model = list [0];
+                          model.Change (action.ModelAction.ExtensionContentModel);
+                          context.ExtensionContent.Update (model); // change model
+                        }
+                      }
+                      break;
                   }
                 }
               }

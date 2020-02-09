@@ -36,7 +36,7 @@ namespace Gadget.Collection.Pattern.Models
       get;
     }
 
-    public string TestCount
+    public string Count
     {
       get
       {
@@ -72,16 +72,6 @@ namespace Gadget.Collection.Pattern.Models
       foreach (var component in gadgets) {
         ItemsSource.Add (component.Models.GadgetTestModel);
       }
-
-      //// sort
-      //var list = gadgetList
-      //  .OrderBy (p => p.GadgetInfo)
-      //  .ToList ()
-      //;
-
-      //foreach (var item in list) {
-      //  ItemsSource.Add (item);
-      //}
 
       if (ItemsSource.Any ()) {
         SelectedIndex = 0;

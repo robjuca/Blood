@@ -124,37 +124,22 @@ namespace Shared.Gadget.Test
           SelectModel (gadget);
 
           if (gadget.ValidateId) {
+            SelectImage (component.Models.GadgetMaterialModel.GetImage ());
+
             if (HasComponentControlModels) {
               foreach (var controlModel in ComponentControlModels) {
                 controlModel.SelectImage (component.Models.GadgetMaterialModel.GetImage ());
               }
             }
-
-            else {
-              SelectImage (component.Models.GadgetMaterialModel.GetImage ());
-            }
           }
         }
       }
     }
-
+    
     public TCategory RequestCategory ()
     {
       return (ControlModel.RequestCategory ());
     }
-
-    //public void RequestComponents (Server.Models.Component.TEntityAction action)
-    //{
-    //  if (action.NotNull ()) {
-    //    var contents = new Collection<Server.Models.Component.GadgetTest> ();
-
-    //    foreach (var item in ComponentControlModels) {
-    //      contents.Add (item.ControlModel);
-    //    }
-
-    //    action.Param2 = contents;
-    //  }
-    //}
 
     public void AddComponent (TActionComponent component)
     {

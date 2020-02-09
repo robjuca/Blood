@@ -8,18 +8,18 @@
                     x:Name="ModuleCollectionListViewModel">
 
     <UserControl.Resources>
-        <CollectionViewSource x:Key="RegistrationModelItemsViewSource"
-                              Source="{Binding Model.RegistrationSelectionItemsSource}">
+        <CollectionViewSource x:Key="RegistrationItemsViewSource"
+                              Source="{Binding Model.RegistrationItemsSource}">
             <CollectionViewSource.SortDescriptions>
-                <scm:SortDescription PropertyName="GadgetRegistrationModel.Name"
+                <scm:SortDescription PropertyName="GadgetInfo"
                                      Direction="Ascending" />
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
 
-        <CollectionViewSource x:Key="ResultModelItemsViewSource"
-                              Source="{Binding Model.ResultItemsSource}">
+        <CollectionViewSource x:Key="ItemsViewSource"
+                              Source="{Binding Model.ItemsSource}">
             <CollectionViewSource.SortDescriptions>
-                <scm:SortDescription PropertyName="GadgetResultModel.Result"
+                <scm:SortDescription PropertyName="GadgetInfo"
                                      Direction="Ascending" />
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
@@ -50,7 +50,7 @@
 
                     <!--name-->
                     <Border Grid.Column="1">
-                        <TextBlock Text="{Binding Name}"
+                        <TextBlock Text="{Binding GadgetInfo}"
                                    FontWeight="Bold"
                                    VerticalAlignment="Center" />
                     </Border>
@@ -90,16 +90,16 @@
 
                         <Border Grid.Column="1">
                             <TextBlock HorizontalAlignment="Right"
-                                       Text="{Binding Model.RegistrationSelectionItemsSourceCount}" />
+                                       Text="{Binding Model.RegistrationCount}" />
                         </Border>
                     </Grid>
 
                     <ComboBox x:Name="Registration"
                               Margin="10 0 0 0"
-                              ItemsSource="{Binding Source={StaticResource RegistrationModelItemsViewSource}}"
-                              DisplayMemberPath="GadgetRegistrationModel.Name"
-                              SelectedIndex="{Binding Model.RegistrationSelectionSelectedIndex, Mode=TwoWay}"
-                              caliburn:Message.Attach="[Event SelectionChanged] = [OnRegistrationSelectionChanged (Registration.SelectedItem)]" />
+                              ItemsSource="{Binding Source={StaticResource RegistrationItemsViewSource}}"
+                              DisplayMemberPath="GadgetInfo"
+                              SelectedIndex= "{Binding Model.RegistrationSelectedIndex}"
+                              caliburn:Message.Attach="[Event SelectionChanged] = [OnRegistrationChanged (Registration.SelectedItem)]" />
                 </StackPanel>
             </Border>
 
@@ -127,7 +127,7 @@
 
                             <Border Grid.Column="1">
                                 <TextBlock HorizontalAlignment="Right"
-                                           Text="{Binding Model.ResultCount}" />
+                                           Text="{Binding Model.Count}" />
                             </Border>
                         </Grid>
                     </Border>
@@ -136,9 +136,9 @@
                     <Border Grid.Row="1">
                         <ListBox x:Name="ResultList"
                                  SelectedIndex="{Binding Model.ResultSelectedIndex}"
-                                 ItemsSource="{Binding Source={StaticResource ResultModelItemsViewSource}}"
+                                 ItemsSource="{Binding Source={StaticResource ItemsViewSource}}"
                                  ItemTemplate="{StaticResource ResultListDataTemplate}"
-                                 caliburn:Message.Attach="[Event SelectionChanged] = [OnResultSelectionChanged (ResultList.SelectedItem)]" />
+                                 caliburn:Message.Attach="[Event SelectionChanged] = [OnResultChanged (ResultList.SelectedItem)]" />
                     </Border>
                 </Grid>
             </Border>

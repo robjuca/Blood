@@ -49,7 +49,7 @@ namespace Server.Context.Component
       ;
 
       // found (request Category)
-      if (descriptors.Count > 0) {
+      if (descriptors.Any ()) {
         CategoryValue = descriptors [0].Category;
       }
     }
@@ -116,11 +116,11 @@ namespace Server.Context.Component
       }
 
       catch (Exception exception) {
-        Server.Models.Infrastructure.THelper.FormatException ("RequestNode - TOperationSupport", exception, action);
+        THelper.FormatException ("RequestNode - TOperationSupport", exception, action);
       }
     }
 
-    public void RequestRelation (TModelContext context, TEntityAction action)
+    public static void RequestRelation (TModelContext context, TEntityAction action)
     {
       /*
        DATA IN
@@ -144,7 +144,7 @@ namespace Server.Context.Component
             .ToList ()
           ;
 
-          if (parentList.Count > 0) {
+          if (parentList.Any ()) {
             action.CollectionAction.ComponentOperation.SelectParent (categoryValue, parentList);
           }
 
@@ -154,7 +154,7 @@ namespace Server.Context.Component
             .ToList ()
           ;
 
-          if (childList.Count > 0) {
+          if (childList.Any ()) {
             action.CollectionAction.ComponentOperation.SelectChild (categoryValue, childList);
           }
         }
@@ -169,7 +169,7 @@ namespace Server.Context.Component
             .ToList ()
           ;
 
-          if (parentList.Count > 0) {
+          if (parentList.Any ()) {
             action.CollectionAction.ComponentOperation.SelectParent (id, parentList);
           }
 
@@ -179,7 +179,7 @@ namespace Server.Context.Component
             .ToList ()
           ;
 
-          if (childList.Count > 0) {
+          if (childList.Any ()) {
             action.CollectionAction.ComponentOperation.SelectChild (id, childList);
           }
         }
@@ -378,6 +378,18 @@ namespace Server.Context.Component
                   }
                 }
                 break;
+
+              case TComponentExtensionName.Content: {
+                  var list = context.ExtensionContent
+                    .Where (p => p.Id.Equals (id))
+                    .ToList ()
+                  ;
+
+                  if (list.Count.Equals (1)) {
+                    modelAction.ExtensionContentModel.CopyFrom (list [0]);
+                  }
+                }
+                break;
             }
           }
 
@@ -385,7 +397,7 @@ namespace Server.Context.Component
         }
 
         catch (Exception exception) {
-          Server.Models.Infrastructure.THelper.FormatException ("RequestExtension - TOperationSupport", exception, action);
+          THelper.FormatException ("RequestExtension - TOperationSupport", exception, action);
         }
       }
 

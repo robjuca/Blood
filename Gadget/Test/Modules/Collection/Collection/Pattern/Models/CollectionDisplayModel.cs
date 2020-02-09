@@ -101,21 +101,6 @@ namespace Gadget.Collection.Pattern.Models
       }
     }
 
-    //internal void RequestModel (TEntityAction entityAction)
-    //{
-    //  entityAction.ThrowNull ();
-
-    //  TGadgetTestActionComponent.Request (GadgetModel, entityAction);
-
-    //  //ComponentControlModel.RequestComponents (action);
-
-    //  //if (action.Param2 is Collection<GadgetTest> list) {
-    //  //  if (action.CategoryType.IsCategory (Server.Models.Infrastructure.TCategory.Test)) {
-    //  //    action.ModelAction.GadgetTestModel.UpdateContents (list);
-    //  //  }
-    //  //}
-    //}
-
     internal void Cleanup ()
     {
       GadgetModel.CopyFrom (GadgetTest.CreateDefault);

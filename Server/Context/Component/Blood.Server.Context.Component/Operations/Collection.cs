@@ -19,7 +19,7 @@ namespace Server.Context.Component
   public sealed class TOperationCollection : IOperation
   {
     #region Interface
-    public void Invoke (IModelContext modelContext, IEntityAction entityAction, Server.Models.Infrastructure.TExtension extension)
+    public void Invoke (IModelContext modelContext, IEntityAction entityAction, TExtension extension)
     {
       var context = TModelContext.CastTo (modelContext);
 
@@ -32,28 +32,28 @@ namespace Server.Context.Component
 
       if (action.Operation.HasExtension) {
         switch (extension) {
-          case Models.Infrastructure.TExtension.Full: {
+          case TExtension.Full: {
               CollectionFull (context, action);
             }
             break;
 
-          case Models.Infrastructure.TExtension.Minimum: {
+          case TExtension.Minimum: {
               CollectionMinimum (context, action);
             }
             break;
 
-          case Models.Infrastructure.TExtension.ById:
-          case Models.Infrastructure.TExtension.Idle:
-          case Models.Infrastructure.TExtension.Many:
-          case Models.Infrastructure.TExtension.Zap: {
-              Server.Models.Infrastructure.THelper.FormatExtensionNotImplementedException (action);
+          case TExtension.ById:
+          case TExtension.Idle:
+          case TExtension.Many:
+          case TExtension.Zap: {
+              Models.Infrastructure.THelper.FormatExtensionNotImplementedException (action);
             }
             break;
         }
       }
 
       else {
-        Server.Models.Infrastructure.THelper.FormatExtensionMustExistException (action);
+        Models.Infrastructure.THelper.FormatExtensionMustExistException (action);
       }
     }
     #endregion
@@ -253,6 +253,18 @@ namespace Server.Context.Component
                       }
                     }
                     break;
+
+                  case TComponentExtensionName.Content: {
+                      var list = context.ExtensionContent
+                        .Where (p => p.Id.Equals (id))
+                        .ToList ()
+                      ;
+
+                      if (list.Count.Equals (1)) {
+                        action.CollectionAction.ExtensionContentCollection.Add (list [0]);
+                      }
+                    }
+                    break;
                 }
               }
             }
@@ -369,6 +381,18 @@ namespace Server.Context.Component
                     }
                   }
                   break;
+
+                case TComponentExtensionName.Content: {
+                    var list = action.CollectionAction.ExtensionContentCollection
+                      .Where (p => p.Id.Equals (id))
+                      .ToList ()
+                    ;
+
+                    if (list.Count.Equals (1)) {
+                      models.ExtensionContentModel.CopyFrom (list [0]);
+                    }
+                  }
+                  break;
               }
             }
 
@@ -380,7 +404,7 @@ namespace Server.Context.Component
       }
 
       catch (Exception exception) {
-        Server.Models.Infrastructure.THelper.FormatException ("Collection Full", exception, action);
+        Models.Infrastructure.THelper.FormatException ("Collection Full", exception, action);
       }
     }
 
@@ -519,7 +543,7 @@ namespace Server.Context.Component
       }
 
       catch (Exception exception) {
-        Server.Models.Infrastructure.THelper.FormatException ("Collection Full", exception, action);
+        Models.Infrastructure.THelper.FormatException ("Collection Full", exception, action);
       }
     }
     #endregion

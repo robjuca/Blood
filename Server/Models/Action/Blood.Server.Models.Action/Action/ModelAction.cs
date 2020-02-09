@@ -86,6 +86,12 @@ namespace Server.Models.Action
       get;
       private set;
     }
+
+    public ExtensionContent ExtensionContentModel
+    {
+      get;
+      private set;
+    }
     #endregion
     #endregion
 
@@ -110,6 +116,7 @@ namespace Server.Models.Action
       ExtensionLayoutModel = ExtensionLayout.CreateDefault;
       ExtensionNodeModel = ExtensionNode.CreateDefault;
       ExtensionTextModel = ExtensionText.CreateDefault;
+      ExtensionContentModel = ExtensionContent.CreateDefault;
     }
     #endregion
 
@@ -131,6 +138,7 @@ namespace Server.Models.Action
         ExtensionLayoutModel.CopyFrom (alias.ExtensionLayoutModel);
         ExtensionNodeModel.CopyFrom (alias.ExtensionNodeModel);
         ExtensionTextModel.CopyFrom (alias.ExtensionTextModel);
+        ExtensionContentModel.CopyFrom (alias.ExtensionContentModel);
       }
     }
     #endregion
