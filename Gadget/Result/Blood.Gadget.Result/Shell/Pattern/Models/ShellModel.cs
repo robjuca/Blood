@@ -4,10 +4,7 @@
 ----------------------------------------------------------------*/
 
 //----- Include
-using System;
-
 using Shared.ViewModel;
-using Shared.Types;
 //---------------------------//
 
 namespace Gadget.Result.Shell.Pattern.Models

@@ -5,11 +5,15 @@
 
 //----- Include
 using System;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
 using Shared.Types;
+
+using Shared.Gadget.Models.Action;
+using Shared.Gadget.Models.Component;
 //---------------------------//
 
 namespace Shared.Gadget.Result
@@ -43,14 +47,12 @@ namespace Shared.Gadget.Result
 
       m_Grid = new Grid () 
       {
-        HorizontalAlignment= HorizontalAlignment.Center,
-        VerticalAlignment=VerticalAlignment.Center,
+        HorizontalAlignment= HorizontalAlignment.Stretch,
+        VerticalAlignment=VerticalAlignment.Stretch,
       };
 
-      m_Grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Auto) }); // row 0 Result
-      m_Grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Auto) }); // row 1 description
-      m_Grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Auto) }); // row 2 reference
-      m_Grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Auto) }); // row 3 external link
+      m_Grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Auto) }); // row 0 Result Property
+      m_Grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Star) }); // row 1 Result - Registration
 
       AddChild (m_Grid);
 
@@ -69,54 +71,102 @@ namespace Shared.Gadget.Result
     {
       m_Grid.Children.Clear ();
 
-      // Result (row 0)
-      var grid = new Grid () 
-      { 
-        HorizontalAlignment= HorizontalAlignment.Center
+      // Result - Property
+      // Propery (row 0)
+
+      // Gadget Name
+      var textBlock = new TextBlock ()
+      {
+        Padding = new Thickness (2),
+        FontWeight = FontWeights.SemiBold,
+        Text = Model.ControlModel.GadgetName,
       };
 
-      grid.ColumnDefinitions.Add (new ColumnDefinition () { Width = new GridLength (1, GridUnitType.Auto) }); // col 0 material
-      grid.ColumnDefinitions.Add (new ColumnDefinition () { Width = new GridLength (1, GridUnitType.Auto) }); // col 1 Result
-      grid.SetValue (Grid.RowProperty, 0); // row 0
+      // Gadget Date
+      var date = new TextBlock ()
+      {
+        Padding = new Thickness (2),
+        FontWeight = FontWeights.SemiBold,
+        Text = Model.ControlModel.Date.ToString (),
+      };
 
-      // Result
-      if (string.IsNullOrEmpty (Model.ControlModel.GadgetInfo).IsFalse ()) {
-        var textBlock = new TextBlock ()
-        {
-          VerticalAlignment = VerticalAlignment.Center,
-          Text = Model.ControlModel.GadgetInfo,
-        };
+      var stack = new StackPanel ()
+      {
+        Orientation = Orientation.Horizontal,
+      };
 
-        textBlock.SetValue (Grid.ColumnProperty, 1);  // col 1
+      stack.Children.Add (textBlock);
+      stack.Children.Add (date);
 
-        grid.Children.Add (textBlock);
-      }
+      // description 
+      var textBox = new TextBox ()
+      {
+        Margin = new Thickness (3),
+        Padding = new Thickness (3),
+        MaxWidth = 400,
+        MaxHeight = 100,
+        TextWrapping = TextWrapping.Wrap,
+        TextAlignment = TextAlignment.Center,
+        VerticalAlignment = VerticalAlignment.Top,
+        VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+        Text = Model.ControlModel.Description,
+      };
 
-      m_Grid.Children.Add (grid); // row 0
+      var stackAll = new StackPanel ();
+      stackAll.Children.Add (stack);
+      stackAll.Children.Add (textBox);
 
-      // description (row 1)
+      var card = new MaterialDesignThemes.Wpf.Card
+      {
+        Margin = new Thickness (10, 0, 10, 10),
+        Padding = new Thickness (2),
+        HorizontalAlignment = HorizontalAlignment.Stretch,
+        Content = stackAll,
+      };
 
-      if (string.IsNullOrEmpty (Model.ControlModel.Description).IsFalse ()) {
-        var textBox = new TextBox ()
-        {
-          Margin = new Thickness (3),
-          Padding=new Thickness (3),
-          MaxWidth = 400,
-          MaxHeight = 100,
-          TextWrapping = TextWrapping.Wrap,
-          TextAlignment = TextAlignment.Center,
-          VerticalAlignment= VerticalAlignment.Top,
-          VerticalScrollBarVisibility= ScrollBarVisibility.Auto,
-          Text = Model.ControlModel.Description,
-        };
+      card.SetValue (Grid.RowProperty, 0); // row 0
+      m_Grid.Children.Add (card); // row 0
 
-        textBox.SetValue (Grid.RowProperty, 1);
+      // Result - Registration
+      // Test (row 1 )
+      var grid1 = new Grid ()
+      {
+        HorizontalAlignment = HorizontalAlignment.Stretch
+      };
 
-        m_Grid.Children.Add (textBox); // row 1
-      }
+      grid1.ColumnDefinitions.Add (new ColumnDefinition () { Width = new GridLength (1, GridUnitType.Star) }); // col 0 Result Test
+      grid1.ColumnDefinitions.Add (new ColumnDefinition () { Width = new GridLength (1, GridUnitType.Auto) }); // col 1 Result - Registration
 
+      grid1.SetValue (Grid.RowProperty, 1); // row 1
+      m_Grid.Children.Add (grid1); // row 1
 
-      
+      // TestList col 0
+      var gadgets = new Collection<GadgetTest> ();
+      Model.ControlModel.RequestContent (gadgets);
+
+      var list = new ListBox ()
+      {
+        ItemsSource = gadgets,
+        DisplayMemberPath= "GadgetName",
+      };
+
+      list.SetValue (Grid.ColumnProperty, 0); // col 0
+      grid1.Children.Add (list); // col  0
+
+      // Registration col 1
+      var component = TActionComponent.Create (Server.Models.Infrastructure.TCategory.Registration);
+      Model.ControlModel.RequestContent (component.Models.GadgetRegistrationModel);
+
+      var componentControlModel = Registration.TComponentControlModel.CreateDefault;
+      componentControlModel.SelectModel (component);
+
+      var componentControl = new Registration.TComponentDisplayControl ()
+      {
+        Model = componentControlModel
+      };
+
+      componentControl.SetValue (Grid.ColumnProperty, 1); // col 1
+      grid1.Children.Add (componentControl); // col  1
     }
     #endregion
 

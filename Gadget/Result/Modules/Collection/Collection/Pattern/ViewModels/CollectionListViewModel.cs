@@ -221,8 +221,11 @@ namespace Gadget.Collection.Pattern.ViewModels
 
       else {
         // to Sibling (Select)
+        var component = TActionComponent.Create (TCategory.Result);
+        component.Models.GadgetResultModel.CopyFrom (gadget);
+
         var message = new TCollectionSiblingMessageInternal (TInternalMessageAction.Select, TChild.List, TypeInfo);
-        //message.Support.Argument.Types.Item.CopyFrom (item);
+        message.Support.Argument.Args.Select (component);
 
         DelegateCommand.PublishInternalMessage.Execute (message);
       }

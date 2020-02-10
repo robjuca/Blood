@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text;
 using System.Windows;
 
 using Server.Models.Infrastructure;
@@ -298,6 +299,35 @@ namespace Shared.Gadget.Models.Component
         }
       }
 
+      public Collection<string> ContentNames ()
+      {
+        var names = new Collection<string> ();
+
+        if (IsCategoryTest) {
+          var list = TestCollection
+            .OrderBy (p => p.GadgetName)
+            .ToList ()
+          ;
+
+          foreach (var item in list) {
+            names.Add (" - " + item.GadgetName);
+          }
+        }
+
+        if (IsCategoryTarget) {
+          var list = TargetCollection
+            .OrderBy (p => p.GadgetName)
+            .ToList ()
+          ;
+
+          foreach (var item in list) {
+            names.Add (" - " + item.GadgetName);
+          }
+        }
+
+        return (names);
+      }
+
       //public void Update (TEntityAction action)
       //{
       //  /*
@@ -521,6 +551,14 @@ namespace Shared.Gadget.Models.Component
       get
       {
         return (Content.Count);
+      }
+    }
+
+    public Collection<string> ContentNames
+    {
+      get
+      {
+        return (Content.ContentNames ());
       }
     }
 

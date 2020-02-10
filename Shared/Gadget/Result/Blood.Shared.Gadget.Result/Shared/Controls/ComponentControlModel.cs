@@ -29,7 +29,7 @@ namespace Shared.Gadget.Result
     #endregion
 
     #region Members
-    public void SelectModel (TActionComponent component)
+    public void Select (TActionComponent component)
     {
       if (component.NotNull ()) {
         ControlModel.CopyFrom (component.Models.GadgetResultModel);

@@ -18,6 +18,7 @@ using Server.Models.Action;
 using Shared.Resources;
 using Shared.Types;
 using Shared.ViewModel;
+using Shared.Gadget.Models.Action;
 
 using Gadget.Factory.Presentation;
 using Gadget.Factory.Pattern.Models;
@@ -55,7 +56,10 @@ namespace Gadget.Factory.Pattern.ViewModels
 
           // Edit
           if (message.IsAction (TInternalMessageAction.Edit)) {
-            TDispatcher.BeginInvoke (EditDispatcher, TEntityAction.Request (message.Support.Argument.Types.EntityAction));
+            if (message.Support.Argument.Args.Param1 is TActionComponent component) {
+              TDispatcher.BeginInvoke (EditDispatcher, component);
+            }
+            
           }
 
           // EditLeave
@@ -227,20 +231,19 @@ namespace Gadget.Factory.Pattern.ViewModels
       DelegateCommand.PublishInternalMessage.Execute (msg);
     }
 
-    void EditDispatcher (TEntityAction action)
+    void EditDispatcher (TActionComponent component)
     {
-      // Id must exist
-      if (action.Id.NotEmpty ()) {
+      if (component.NotNull ()) {
         SelectViewMode (TViewMode.Edit);
 
-        Model.EditEnter (action);
+        Model.EditEnter (component);
 
         TDispatcher.Invoke (RefreshAllDispatcher);
         TDispatcher.Invoke (EditEnterDispatcher);
 
         // to Sibling
         var message = new TFactorySiblingMessageInternal (TInternalMessageAction.PropertySelect, TChild.Property, TypeInfo);
-        message.Support.Argument.Types.Select (action);
+        message.Support.Argument.Args.Select (component);
         message.Support.Argument.Args.Select ("edit");
 
         DelegateCommand.PublishInternalMessage.Execute (message);

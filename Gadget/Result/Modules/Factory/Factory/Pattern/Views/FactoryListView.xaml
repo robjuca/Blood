@@ -40,7 +40,7 @@
                     <StackPanel Orientation="Horizontal">
                         <!--check-->
                         <CheckBox Margin="0 0 5 0"
-                                  IsChecked="{Binding Models.GadgetTestModel.IsChecked}"
+                                  IsChecked="{Binding Models.GadgetTestModel.IsChecked, Mode=TwoWay}"
                                   caliburn:Message.Attach="[Event Checked] = [OnTestItemChecked ($dataContext)]; [Event Unchecked] = [OnTestItemUnchecked ($dataContext)]" />
 
                         <!--material image-->
@@ -67,7 +67,7 @@
                     <Separator />
 
                     <ItemsControl Margin="10 0 0 0"
-                                  ItemsSource="{Binding ContentNames}" />
+                                  ItemsSource="{Binding Models.GadgetTestModel.ContentNames}" />
                 </StackPanel>
             </Border>
         </DataTemplate>
@@ -95,6 +95,7 @@
                         <RadioButton GroupName="Registration"
                                      Margin="3"
                                      IsChecked="{Binding IsChecked}"
+                                     IsEnabled="{Binding Enabled}"
                                      caliburn:Message.Attach="[Event Checked] = [OnCheckedRegistrationCommadClicked ($dataContext)]">
                             <TextBlock Text="{Binding GadgetName}" />
                         </RadioButton>

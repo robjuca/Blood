@@ -13,6 +13,7 @@ using Server.Models.Action;
 
 using Shared.Resources;
 using Shared.Types;
+using Shared.Gadget.Models.Action;
 //---------------------------//
 
 namespace Gadget.Factory.Pattern.Models
@@ -43,10 +44,13 @@ namespace Gadget.Factory.Pattern.Models
     #endregion
 
     #region Members
-    internal void EditEnter (TEntityAction action)
+    internal void EditEnter (TActionComponent component)
     {
-      if (action.NotNull ()) {
-        ComponentModelProperty.SelectModel (action);
+      if (component.NotNull ()) {
+        var entityAction = TEntityAction.CreateDefault;
+        TActionConverter.Request (TCategory.Result, component, entityAction);
+
+        ComponentModelProperty.SelectModel (entityAction);
 
         ValidateProperty ("TextProperty");
       }

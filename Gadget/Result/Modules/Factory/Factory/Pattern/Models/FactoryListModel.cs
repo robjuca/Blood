@@ -8,15 +8,13 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-using Server.Models.Infrastructure;
-
 using Shared.Gadget.Models.Action;
 using Shared.Gadget.Models.Component;
 //---------------------------//
 
 namespace Gadget.Factory.Pattern.Models
 {
-  public class TFactoryListModel
+    public class TFactoryListModel
   {
     #region Property
     public ObservableCollection<TActionComponent> TestItemsSource
@@ -170,41 +168,51 @@ namespace Gadget.Factory.Pattern.Models
     {
       component.ThrowNull ();
 
-      m_TestCheckedItems.Clear ();
+      Cleanup ();
 
-      //var registration = GadgetRegistration.CreateDefault;
+      var registration = GadgetRegistration.CreateDefault;
       var idList = new List<Guid> ();
 
-      //var gadget = action.ModelAction.GadgetResultModel;
-      //gadget.RequestContent (registration); // registration
-      //gadget.RequestContent (idList); // content id (Test)
+      var gadget = component.Models.GadgetResultModel;
+      gadget.RequestContent (registration); // registration
+      gadget.RequestContent (idList); // content id (Test)
 
       // update Registration
       for (int index = 0; index < RegistrationItemsSource.Count; index++) {
         var registrationItem = RegistrationItemsSource [index];
 
-        //if (registrationItem.Select (registration.Id)) {
-        //  RegistrationCurrentSelected (registrationItem);
-        //  break;
-        //}
+        if (registrationItem.Contains (registration.Id)) {
+          registrationItem.IsChecked = true;
+
+          RegistrationCurrentSelected (registrationItem);
+          EnableAllRegistration (isEnabled: false);
+          break;
+        }
       }
 
       // update Test
       foreach (var id in idList) {
-        foreach (var info in TestItemsSource) {
-          //info.Unselect ();
+        foreach (var someComponent in TestItemsSource) {
+          var gadgetTest = someComponent.Models.GadgetTestModel;
 
-          //if (info.Id.Equals (id)) {
-          //  m_TestCheckedItems.Add (info);
-          //}
+          if (gadgetTest.Contains (id)) {
+            gadgetTest.IsChecked = true;
+            m_TestCheckedItems.Add (gadgetTest);
+          }
         }
       }
+    }
 
-      foreach (var itemChecked in m_TestCheckedItems) {
-        foreach (var item in TestItemsSource) {
-          //item.Select (itemChecked.Id);
-        }
-      }
+    internal void Cleanup ()
+    {
+      EnableAllRegistration (isEnabled: true);
+      UncheckAllRegistration ();
+
+      RegistrationCurrent.CopyFrom (GadgetRegistration.CreateDefault);
+
+      m_TestCheckedItems.Clear ();
+
+      UncheckAllItemsSource ();
     }
     #endregion
 
@@ -236,7 +244,30 @@ namespace Gadget.Factory.Pattern.Models
       }
 
       return (false);
-    } 
+    }
+
+    void EnableAllRegistration (bool isEnabled)
+    {
+      for (int index = 0; index < RegistrationItemsSource.Count; index++) {
+        var registrationItem = RegistrationItemsSource [index];
+        registrationItem.Enabled = isEnabled;
+      }
+    }
+
+    void UncheckAllRegistration ()
+    {
+      for (int index = 0; index < RegistrationItemsSource.Count; index++) {
+        var registrationItem = RegistrationItemsSource [index];
+        registrationItem.IsChecked = false;
+      }
+    }
+
+    void UncheckAllItemsSource ()
+    {
+      foreach (var component in TestItemsSource) {
+        component.Models.GadgetTestModel.IsChecked = false;
+      }
+    }
     #endregion
   };
   //---------------------------//

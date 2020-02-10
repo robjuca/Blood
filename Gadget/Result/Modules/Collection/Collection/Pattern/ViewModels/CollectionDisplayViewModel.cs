@@ -104,12 +104,12 @@ namespace Gadget.Collection.Pattern.ViewModels
 
     void EditDispatcher ()
     {
-      var action = TEntityAction.CreateDefault;
-      Model.RequestModel (action);
+      var component = TActionComponent.Create (TCategory.Result);
+      Model.Request (component);
 
       // to parent
       var message = new TCollectionMessageInternal (TInternalMessageAction.Edit, TChild.Display, TypeInfo);
-      message.Support.Argument.Types.Select (action);
+      message.Support.Argument.Args.Select (component);
 
       DelegateCommand.PublishInternalMessage.Execute (message);
     }
@@ -118,7 +118,7 @@ namespace Gadget.Collection.Pattern.ViewModels
     {
       // Remove
       var action = TEntityAction.Create (TCategory.Result, TOperation.Remove);
-      Model.RequestModel (action);
+      action.Id = Model.Id;
 
       // to parent
       var message = new TCollectionMessageInternal (TInternalMessageAction.Request, TChild.Display, TypeInfo);

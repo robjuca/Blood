@@ -102,31 +102,6 @@ namespace Shared.Gadget.Models.Component
         return (res);
       }
 
-      //internal void Add (Shared.Gadget.Models.Component.TEntityAction action)
-      //{
-      //  /*
-      //  action.CollectionAction.EntityCollection (contents to add)
-      //  action.CollectionAction.EntityCollection [id] (ModelAction content to add Test )
-      //  */
-
-      //  if (action.NotNull ()) {
-      //    if (IsEmpty.IsFalse ()) {
-      //      foreach (var id in IdCollection) {
-      //        if (action.CollectionAction.EntityCollection.ContainsKey (id)) {
-      //          var contentAction = action.CollectionAction.EntityCollection [id];
-      //          var gadget = contentAction.ModelAction.GadgetTestModel;
-
-      //          if (ContainsTest (gadget.Id).IsFalse ()) {
-      //            gadget.AddContent (contentAction);
-
-      //            TestCollection.Add (gadget);
-      //          }
-      //        }
-      //      }
-      //    }
-      //  }
-      //}
-
       internal bool Remove (Guid id)
       {
         return (RemoveFromCollection (id));
@@ -194,36 +169,18 @@ namespace Shared.Gadget.Models.Component
         }
       }
 
-      //internal void Update (TEntityAction action)
-      //{
-      //  /*
-      //   action.CollectionAction.EntityCollection[id]{ModelAction}
-      //  */
-
-      //  if (action.NotNull ()) {
-      //    if (IsEmpty.IsFalse ()) {
-      //      foreach (var id in IdCollection) {
-      //        if (action.CollectionAction.EntityCollection.ContainsKey (id)) {
-      //          var contentAction = action.CollectionAction.EntityCollection [id];
-
-      //          var gadget = contentAction.ModelAction.GadgetTestModel;
-      //          gadget.AddContent (contentAction);
-
-      //          if (ContainsTest (gadget.Id).IsFalse ()) {
-      //            TestCollection.Add (gadget);
-      //          }
-      //        }
-      //      }
-      //    }
-      //  }
-      //}
-
       internal void Update (GadgetRegistration gadget)
       {
         if (gadget.NotNull ()) {
           if (Contains (gadget.Id)) {
             IdCollection.Remove (gadget.Id);
             Add (gadget);
+          }
+
+          else {
+            if (Registration.ValidateId.IsFalse ()) {
+              Add (gadget); // registration must exist
+            }
           }
         }
       }

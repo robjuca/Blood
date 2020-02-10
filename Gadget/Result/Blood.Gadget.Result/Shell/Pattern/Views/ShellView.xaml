@@ -32,7 +32,7 @@
                 </materialDesign:DrawerHost.TopDrawerContent>
 
                 <!--main-->
-                <DockPanel>
+                <DockPanel IsEnabled="{Binding Model.IsViewEnabled}">
                     <!--left menu, title, module icon, module name-->
                     <materialDesign:ColorZone DockPanel.Dock="Top"
                                               Height="34"
@@ -110,7 +110,7 @@
                     </Border>
 
                     <!--context-->
-                    <Border IsEnabled="{Binding Model.IsViewEnabled}">
+                    <Border >
                         <Grid>
                             <views:TShellCollectionView />
                             <views:TShellFactoryView />

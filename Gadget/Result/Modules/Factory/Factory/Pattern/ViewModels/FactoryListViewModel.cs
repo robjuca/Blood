@@ -91,13 +91,21 @@ namespace Gadget.Factory.Pattern.ViewModels
             var propertyName = message.Support.Argument.Args.PropertyName;
 
             if (propertyName.Equals ("edit")) {
-              TDispatcher.BeginInvoke (EditDispatcher, TEntityAction.Request (message.Support.Argument.Types.EntityAction));
+              if (message.Support.Argument.Args.Param1 is TActionComponent component) {
+                TDispatcher.BeginInvoke (EditDispatcher, component);
+              }
             }
           }
 
           // Request
           if (message.IsAction (TInternalMessageAction.Request)) {
             TDispatcher.BeginInvoke (RequestModelDispatcher, TEntityAction.Request (message.Support.Argument.Types.EntityAction));
+          }
+
+          // Cleanup
+          if (message.IsAction (TInternalMessageAction.Cleanup)) {
+            Model.Cleanup ();
+            TDispatcher.Invoke (RefreshAllDispatcher);
           }
         }
       }
@@ -248,9 +256,11 @@ namespace Gadget.Factory.Pattern.ViewModels
       RaiseChanged ();
     }
 
-    void EditDispatcher (TEntityAction action)
+    void EditDispatcher (TActionComponent component)
     {
-      //Model.EditEnter (action);
+      if (component.NotNull ()) {
+        Model.EditEnter (component);
+      }
 
       TDispatcher.Invoke (RefreshAllDispatcher);
     }

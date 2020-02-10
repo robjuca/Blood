@@ -8,7 +8,6 @@ using System;
 using System.Windows;
 
 using Server.Models.Infrastructure;
-using Server.Models.Action;
 
 using Shared.Gadget.Models.Action;
 using Shared.Gadget.Models.Component;
@@ -89,21 +88,17 @@ namespace Gadget.Collection.Pattern.Models
       if (component.IsCategory (TCategory.Result)) {
         Current.CopyFrom (component.Models.GadgetResultModel);
 
-        ComponentControlModel.SelectModel (component);
+        ComponentControlModel.Select (component);
 
         BusyVisibility = Current.BusyVisibility;
       }
     }
 
-    internal void RequestModel (TEntityAction action)
+    internal void Request (TActionComponent component)
     {
-      action.ThrowNull ();
+      component.ThrowNull ();
 
-      //var modelAction = ComponentModelItem.RequestModel ();
-      //action.ModelAction.CopyFrom (modelAction);
-
-      //action.Id = Id;
-      //action.CategoryType.Select (ComponentModelItem.Category);
+      component.Models.GadgetResultModel.CopyFrom (Current);
     }
 
     internal void Cleanup ()
