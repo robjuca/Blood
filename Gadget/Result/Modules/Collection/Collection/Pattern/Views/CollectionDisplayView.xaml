@@ -21,12 +21,8 @@
                 <!--display-->
                 <Border Grid.Row="0"
                         Padding="5">
-                    <ScrollViewer HorizontalScrollBarVisibility="Auto"
-                                  VerticalScrollBarVisibility="Auto"
-                                  Padding="5">
                         <control:TComponentDisplayControl x:Name="DisplayControl"
                                                           Model="{Binding Model.ComponentControlModel}" />
-                    </ScrollViewer>
                 </Border>
 
                 <!--edit Document name-->

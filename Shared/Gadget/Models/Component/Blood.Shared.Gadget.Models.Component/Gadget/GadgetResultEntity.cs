@@ -318,12 +318,6 @@ namespace Shared.Gadget.Models.Component
     #endregion
 
     #region Property
-    public DateTime Date
-    {
-      get; 
-      private set;
-    }
-
     public int ContentCount
     {
       get
@@ -345,8 +339,6 @@ namespace Shared.Gadget.Models.Component
     public GadgetResult ()
       : base ()
     {
-      Date = DateTime.Now;
-
       Content = TContent.CreateDefault;
     }
 
@@ -403,8 +395,6 @@ namespace Shared.Gadget.Models.Component
       if (alias.NotNull ()) {
         base.CopyFrom (alias);
 
-        Date = alias.Date;
-
         Content.CopyFrom (alias.Content);
       }
     }
@@ -413,13 +403,6 @@ namespace Shared.Gadget.Models.Component
     {
       if (alias.NotNull ()) {
         base.Change (alias);
-      }
-    }
-
-    public void SetDate (DateTime date)
-    {
-      if (date.NotNull ()) {
-        Date = date;
       }
     }
 

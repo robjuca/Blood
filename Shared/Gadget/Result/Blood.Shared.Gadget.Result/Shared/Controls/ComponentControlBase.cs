@@ -52,7 +52,7 @@ namespace Shared.Gadget.Result
       };
 
       m_Grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Auto) }); // row 0 Result Property
-      m_Grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Star) }); // row 1 Result - Registration
+      m_Grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Auto) }); // row 1 Result - Registration
 
       AddChild (m_Grid);
 
@@ -75,31 +75,36 @@ namespace Shared.Gadget.Result
       // Propery (row 0)
 
       // Gadget Name
-      var textBlock = new TextBlock ()
+      var gadgetName = new TextBlock ()
       {
         Padding = new Thickness (2),
         FontWeight = FontWeights.SemiBold,
         Text = Model.ControlModel.GadgetName,
       };
 
+      gadgetName.SetValue (Grid.ColumnProperty, 0); // col 0
+
       // Gadget Date
       var date = new TextBlock ()
       {
         Padding = new Thickness (2),
         FontWeight = FontWeights.SemiBold,
-        Text = Model.ControlModel.Date.ToString (),
+        Text = Model.ControlModel.Date.ToString ("dd-MMM-yy HH:mm"),
+        HorizontalAlignment = HorizontalAlignment.Right,
       };
 
-      var stack = new StackPanel ()
-      {
-        Orientation = Orientation.Horizontal,
-      };
+      date.SetValue (Grid.ColumnProperty, 1); // col 1
 
-      stack.Children.Add (textBlock);
-      stack.Children.Add (date);
+      var gridTop = new Grid ();
+      gridTop.ColumnDefinitions.Add (new ColumnDefinition () { Width = new GridLength (1, GridUnitType.Star) }); // col 0 Info
+      gridTop.ColumnDefinitions.Add (new ColumnDefinition () { Width = new GridLength (1, GridUnitType.Star) }); // col 1 Date
+      gridTop.SetValue (Grid.RowProperty, 0); // row 0
+      gridTop.Children.Add (gadgetName); // col 0
+      gridTop.Children.Add (date); // col 1
+
 
       // description 
-      var textBox = new TextBox ()
+      var description = new TextBox ()
       {
         Margin = new Thickness (3),
         Padding = new Thickness (3),
@@ -112,16 +117,20 @@ namespace Shared.Gadget.Result
         Text = Model.ControlModel.Description,
       };
 
-      var stackAll = new StackPanel ();
-      stackAll.Children.Add (stack);
-      stackAll.Children.Add (textBox);
+      description.SetValue (Grid.RowProperty, 1); // row 1
+
+      var gridCard = new Grid ();
+      m_Grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Auto) }); // row 0 
+      m_Grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Auto) }); // row 1 
+      gridCard.Children.Add (gridTop);
+      gridCard.Children.Add (description);
 
       var card = new MaterialDesignThemes.Wpf.Card
       {
-        Margin = new Thickness (10, 0, 10, 10),
+        Margin = new Thickness (1, 0, 1, 10),
         Padding = new Thickness (2),
         HorizontalAlignment = HorizontalAlignment.Stretch,
-        Content = stackAll,
+        Content = gridCard,
       };
 
       card.SetValue (Grid.RowProperty, 0); // row 0
@@ -135,23 +144,83 @@ namespace Shared.Gadget.Result
       };
 
       grid1.ColumnDefinitions.Add (new ColumnDefinition () { Width = new GridLength (1, GridUnitType.Star) }); // col 0 Result Test
-      grid1.ColumnDefinitions.Add (new ColumnDefinition () { Width = new GridLength (1, GridUnitType.Auto) }); // col 1 Result - Registration
-
+      grid1.ColumnDefinitions.Add (new ColumnDefinition () { Width = new GridLength (1, GridUnitType.Star) }); // col 1 Result - Registration
       grid1.SetValue (Grid.RowProperty, 1); // row 1
       m_Grid.Children.Add (grid1); // row 1
 
-      // TestList col 0
+      // Test col 0
+      // TestList 
       var gadgets = new Collection<GadgetTest> ();
       Model.ControlModel.RequestContent (gadgets);
 
-      var list = new ListBox ()
+      var testInfo = new TextBlock
       {
-        ItemsSource = gadgets,
-        DisplayMemberPath= "GadgetName",
+        FontWeight = FontWeights.SemiBold,
+        Text = $"test list [{gadgets.Count}]",
       };
 
-      list.SetValue (Grid.ColumnProperty, 0); // col 0
-      grid1.Children.Add (list); // col  0
+      var testStack = new StackPanel ();
+      testStack.SetValue (Grid.ColumnProperty, 0); // col 0
+      testStack.Children.Add (testInfo);
+      grid1.Children.Add (testStack); // col  0
+
+      string itemTemplate = @"
+          <DataTemplate
+              xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'
+              xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml'
+              xmlns:converters='clr-namespace:rr.Library.Converter;assembly=rr.Library.Converter' >
+
+              <DataTemplate.Resources>
+                <converters:TCollectionToBitmapImageConverter  x:Key='CollectionToBitmapImageConverter' />
+              </DataTemplate.Resources>
+
+                <StackPanel>
+                  <StackPanel Orientation='Horizontal'>
+                        <Image Width='16'
+                               Height='16'
+                               ToolTip='{Binding Material}'
+                                Source='{Binding Image, Converter={StaticResource CollectionToBitmapImageConverter}}' />
+
+                        <ContentControl  Visibility='{Binding ContentTestVisibility}'
+                                         Style='{DynamicResource GadgetTestMiniIcon}' />
+
+                        <ContentControl  Visibility='{Binding ContentTargetVisibility}'
+                                         Style='{DynamicResource GadgetTargetMiniIcon}' />
+
+                        <TextBlock Margin='5 0 0 0'
+                                   Text='{Binding GadgetName}'
+                                   FontWeight='Bold' 
+                                   Foreground='DarkBlue'
+                                   VerticalAlignment='Center' />
+                  </StackPanel>
+
+                  <TextBox FontSize='10px' IsReadOnly='true' MaxWidth='190' TextWrapping='Wrap' Text='{Binding Description}' />
+                  <TextBlock Foreground='DarkGreen' Text='{Binding Reference}' />
+                </StackPanel>
+          </DataTemplate>"
+      ;
+
+      using (var sr = new System.IO.MemoryStream (System.Text.Encoding.UTF8.GetBytes (itemTemplate))) {
+        var testList = new ListBox ()
+        {
+          Margin = new Thickness (0, 5, 0, 0),
+          ItemsSource = gadgets,
+          HorizontalAlignment = HorizontalAlignment.Left,
+          ItemTemplate = System.Windows.Markup.XamlReader.Load (sr) as DataTemplate,
+        };
+
+        var scroll = new ScrollViewer ()
+        {
+          Height = 230,
+          HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
+          VerticalScrollBarVisibility = ScrollBarVisibility.Visible,
+          Padding = new Thickness (5),
+          Content = testList
+        };
+
+        testStack.Children.Add (scroll);
+      }
+      
 
       // Registration col 1
       var component = TActionComponent.Create (Server.Models.Infrastructure.TCategory.Registration);
@@ -162,7 +231,8 @@ namespace Shared.Gadget.Result
 
       var componentControl = new Registration.TComponentDisplayControl ()
       {
-        Model = componentControlModel
+        Model = componentControlModel,
+        HorizontalAlignment = HorizontalAlignment.Right,
       };
 
       componentControl.SetValue (Grid.ColumnProperty, 1); // col 1

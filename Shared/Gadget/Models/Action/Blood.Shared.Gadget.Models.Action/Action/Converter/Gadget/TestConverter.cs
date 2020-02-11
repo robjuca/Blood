@@ -135,6 +135,9 @@ namespace Shared.Gadget.Models.Action
                   component.Models.GadgetMaterialModel.CopyFrom (componentTest.Models.GadgetMaterialModel);
                 }
               }
+
+              // update image
+              component.Models.GadgetTestModel.SetImage (component.Models.GadgetMaterialModel.GetImage ());
             }
           }
         }
@@ -192,6 +195,9 @@ namespace Shared.Gadget.Models.Action
                 }
               }
             }
+
+            // update image
+            gadget.SetImage (component.Models.GadgetMaterialModel.GetImage ());
           }
         }
       }

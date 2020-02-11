@@ -5,6 +5,8 @@
 
 //----- Include
 using System;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 //---------------------------//
 
@@ -90,6 +92,26 @@ namespace Shared.Gadget.Models.Component
         return (Busy ? Visibility.Visible : Visibility.Collapsed);
       }
     }
+
+    public Collection<byte> Image
+    {
+      get;
+      private set;
+    }
+
+    public bool HasImage
+    {
+      get
+      {
+        return (Image.Any ());
+      }
+    }
+
+    public DateTime Date
+    {
+      get;
+      private set;
+    }
     #endregion
 
     #region Constructor
@@ -105,6 +127,8 @@ namespace Shared.Gadget.Models.Component
       Enabled = false;
       Busy = false;
       IsChecked = false;
+      Image = new Collection<byte> ();
+      Date = DateTime.Now;
     }
 
     protected TGadgetBase (TGadgetBase alias)
@@ -134,6 +158,8 @@ namespace Shared.Gadget.Models.Component
         Enabled = alias.Enabled;
         Busy = alias.Busy;
         IsChecked = alias.IsChecked;
+        SetImage (alias.Image);
+        Date = alias.Date;
       }
     }
 
@@ -148,8 +174,39 @@ namespace Shared.Gadget.Models.Component
         Enabled = alias.Enabled;
         Busy = alias.Busy;
         IsChecked = alias.IsChecked;
+        SetImage (alias.Image);
+        Date = alias.Date;
       }
-    } 
+    }
+
+    public byte [] GetImage ()
+    {
+      var image = new byte [Image.Count];
+      Image.CopyTo (image, 0);
+
+      return (image);
+    }
+
+    public void SetImage (Collection<byte> image)
+    {
+      if (image.NotNull ()) {
+        Image = new Collection<byte> (image);
+      }
+    }
+
+    public void SetImage (byte [] image)
+    {
+      if (image.NotNull ()) {
+        Image = new Collection<byte> (image);
+      }
+    }
+
+    public void SetDate (DateTime date)
+    {
+      if (date.NotNull ()) {
+        Date = date;
+      }
+    }
     #endregion
   };
   //---------------------------//

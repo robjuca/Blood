@@ -11,19 +11,10 @@ namespace Shared.Gadget.Models.Component
 {
   public class GadgetReport : TGadgetBase
   {
-    #region Property
-    public DateTime Date
-    {
-      get; 
-      private set;
-    }
-    #endregion
-
     #region Constructor
     public GadgetReport ()
       : base ()
     {
-      Date = DateTime.Now;
     }
 
     public GadgetReport (GadgetReport alias)
@@ -38,8 +29,6 @@ namespace Shared.Gadget.Models.Component
     {
       if (alias.NotNull ()) {
         base.CopyFrom (alias);
-
-        Date = alias.Date;
       }
     }
 
@@ -47,15 +36,6 @@ namespace Shared.Gadget.Models.Component
     {
       if (alias.NotNull ()) {
         base.Change (alias);
-
-        Date = alias.Date;
-      }
-    }
-
-    public void SetDate (DateTime date)
-    {
-      if (date.NotNull ()) {
-        Date = date;
       }
     }
 
