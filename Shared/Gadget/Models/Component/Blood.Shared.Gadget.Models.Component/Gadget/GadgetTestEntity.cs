@@ -253,7 +253,7 @@ namespace Shared.Gadget.Models.Component
         }
       }
 
-      public void Request (IList<string> collection, bool useSeparator)
+      public void Request (IList<string> collection, bool useSeparator, bool full)
       {
         if (collection.NotNull ()) {
           if (IsEmpty.IsFalse ()) {
@@ -279,7 +279,18 @@ namespace Shared.Gadget.Models.Component
               ;
 
               foreach (var item in list) {
-                collection.Add (separator + item.GadgetName);
+                if (full) {
+                  var str = $"{separator}{item.GadgetName}     :{item.Reference}" +
+                            $"{Environment.NewLine}" +
+                            $"    resultado: [ {item.Value} ]" +
+                            $"{Environment.NewLine}";
+
+                  collection.Add (str);
+                }
+
+                else {
+                  collection.Add (separator + item.GadgetName);
+                }
               }
             }
           }
@@ -558,7 +569,21 @@ namespace Shared.Gadget.Models.Component
     {
       get
       {
-        return (Content.ContentNames ());
+        var names = new Collection<string> ();
+        RequestContentNames (names);
+
+        return (names);
+      }
+    }
+
+    public Collection<string> ContentNamesFull
+    {
+      get
+      {
+        var names = new Collection<string> ();
+        RequestContentNamesFull (names);
+
+        return (names);
       }
     }
 
@@ -707,7 +732,12 @@ namespace Shared.Gadget.Models.Component
 
     public void RequestContentNames (IList<string> collection, bool useSeparator = true)
     {
-      Content.Request (collection, useSeparator);
+      Content.Request (collection, useSeparator, full:false);
+    }
+
+    public void RequestContentNamesFull (IList<string> collection)
+    {
+      Content.Request (collection, useSeparator:true, full:true);
     }
 
     public void RequestContentId (IList<Guid> collection)

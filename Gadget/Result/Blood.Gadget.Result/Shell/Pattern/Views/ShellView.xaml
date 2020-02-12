@@ -8,7 +8,7 @@
         WindowStyle="ToolWindow"
         WindowState="Normal"
         WindowStartupLocation="CenterScreen"
-        Width="700"
+        Width="900"
         Height="500"
         ResizeMode="NoResize"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"

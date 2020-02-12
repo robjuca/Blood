@@ -144,10 +144,11 @@ namespace Shared.Gadget.Result
       };
 
       grid1.ColumnDefinitions.Add (new ColumnDefinition () { Width = new GridLength (1, GridUnitType.Star) }); // col 0 Result Test
-      grid1.ColumnDefinitions.Add (new ColumnDefinition () { Width = new GridLength (1, GridUnitType.Star) }); // col 1 Result - Registration
+      grid1.ColumnDefinitions.Add (new ColumnDefinition () { Width = new GridLength (1, GridUnitType.Auto) }); // col 1 Result - Registration
       grid1.SetValue (Grid.RowProperty, 1); // row 1
       m_Grid.Children.Add (grid1); // row 1
 
+      #region Test List
       // Test col 0
       // TestList 
       var gadgets = new Collection<GadgetTest> ();
@@ -194,8 +195,10 @@ namespace Shared.Gadget.Result
                                    VerticalAlignment='Center' />
                   </StackPanel>
 
-                  <TextBox FontSize='10px' IsReadOnly='true' MaxWidth='190' TextWrapping='Wrap' Text='{Binding Description}' />
-                  <TextBlock Foreground='DarkGreen' Text='{Binding Reference}' />
+                  <TextBox FontSize='10px' IsReadOnly='true' MaxWidth='400' TextWrapping='Wrap' Text='{Binding Description}' />
+
+                  <ItemsControl Margin='10 5 0 0'
+                                ItemsSource='{Binding ContentNamesFull}' />
                 </StackPanel>
           </DataTemplate>"
       ;
@@ -211,6 +214,7 @@ namespace Shared.Gadget.Result
 
         var scroll = new ScrollViewer ()
         {
+          Margin = new Thickness (0, 0, 10, 0),
           Height = 230,
           HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
           VerticalScrollBarVisibility = ScrollBarVisibility.Visible,
@@ -219,9 +223,10 @@ namespace Shared.Gadget.Result
         };
 
         testStack.Children.Add (scroll);
-      }
-      
+      } 
+      #endregion
 
+      #region Registration
       // Registration col 1
       var component = TActionComponent.Create (Server.Models.Infrastructure.TCategory.Registration);
       Model.ControlModel.RequestContent (component.Models.GadgetRegistrationModel);
@@ -236,7 +241,8 @@ namespace Shared.Gadget.Result
       };
 
       componentControl.SetValue (Grid.ColumnProperty, 1); // col 1
-      grid1.Children.Add (componentControl); // col  1
+      grid1.Children.Add (componentControl); // col  1 
+      #endregion
     }
     #endregion
 
