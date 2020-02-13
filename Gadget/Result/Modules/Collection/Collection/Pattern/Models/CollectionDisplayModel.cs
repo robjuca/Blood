@@ -41,7 +41,7 @@ namespace Gadget.Collection.Pattern.Models
     {
       get
       {
-        return (Current.ValidateId);
+        return (Current.CanEdit);
       }
     }
 
@@ -49,7 +49,15 @@ namespace Gadget.Collection.Pattern.Models
     {
       get
       {
-        return (Current.ValidateId ? Current.Enabled.IsFalse () : false);
+        return (Current.CanRemove);
+      }
+    }
+
+    public bool IsModifyCommandEnabled
+    {
+      get
+      {
+        return (Current.Enabled && Current.Locked.IsFalse ());
       }
     }
 

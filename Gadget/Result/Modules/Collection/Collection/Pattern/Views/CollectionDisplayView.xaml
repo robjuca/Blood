@@ -35,6 +35,7 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition />
+                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
                             <!--busy edit remove -->
@@ -70,8 +71,20 @@
                                 </StackPanel>
                             </Border>
 
-                            <!--Gadget name-->
+                            <!--modify-->
                             <Border Grid.Column="1">
+                                <Button BorderThickness="0"
+                                        HorizontalAlignment="Center"
+                                        IsEnabled="{Binding Model.IsModifyCommandEnabled}"
+                                        Background="Transparent"
+                                        ToolTip="modify"
+                                        caliburn:Message.Attach="[Event Click] = [OnModifyCommadClicked ()]">
+                                    <ContentControl Style="{DynamicResource GadgetResultMiniIcon}" />
+                                </Button>
+                            </Border>
+
+                            <!--Gadget name-->
+                            <Border Grid.Column="2">
                                 <TextBlock TextAlignment="Right"
                                            VerticalAlignment="Center"
                                            Text="{Binding Model.Current.GadgetInfo}" />

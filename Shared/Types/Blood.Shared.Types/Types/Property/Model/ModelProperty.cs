@@ -29,7 +29,13 @@ namespace Shared.Types
       set;
     }
 
-    public bool IsInfoEnabled
+    public bool IsComponentModelEnabled
+    {
+      get;
+      set;
+    }
+
+    public bool IsExtensionModelEnabled
     {
       get;
       set;
@@ -132,7 +138,8 @@ namespace Shared.Types
       Distorted = false;
       Id = Guid.Empty;
 
-      IsInfoEnabled = true;
+      IsComponentModelEnabled = true;
+      IsExtensionModelEnabled = true;
       IsBusy = false;
       ShowPanel = false;
 
@@ -170,7 +177,7 @@ namespace Shared.Types
         IsBusy = action.ModelAction.ComponentStatusModel.Busy;
 
         BusyVisibility = IsBusy ? Visibility.Visible : Visibility.Collapsed;
-        IsInfoEnabled = IsBusy.IsFalse ();
+        IsComponentModelEnabled = IsBusy.IsFalse ();
 
         Id = action.Id;
 
@@ -210,7 +217,8 @@ namespace Shared.Types
 
       IsEnabledApply = false;
       IsEnabledCancel = false;
-      IsInfoEnabled = true;
+      IsComponentModelEnabled = true;
+      IsExtensionModelEnabled = true;
 
       Distorted = false;
 

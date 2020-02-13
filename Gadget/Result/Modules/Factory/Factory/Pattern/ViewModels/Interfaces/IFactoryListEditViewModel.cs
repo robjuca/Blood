@@ -4,27 +4,13 @@
 ----------------------------------------------------------------*/
 
 //----- Include
+using rr.Library.Infrastructure;
 //---------------------------//
 
-namespace Gadget.Factory.Pattern.Models
+namespace Gadget.Factory.Pattern.ViewModels
 {
-  public class TFactoryListModel
+  public interface IFactoryListEditViewModel : IViewModel
   {
-    #region Property
-    public int SlideIndex
-    {
-      get;
-      set;
-    }
-    #endregion
-
-    #region Constructor
-    public TFactoryListModel ()
-    {
-      SlideIndex = 0;
-    }
-    #endregion
-
     
   };
   //---------------------------//

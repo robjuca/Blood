@@ -88,6 +88,11 @@ namespace Gadget.Collection.Pattern.ViewModels
     {
       TDispatcher.Invoke (RemoveDispatcher);
     }
+
+    public void OnModifyCommadClicked ()
+    {
+      TDispatcher.Invoke (ModifyDispatcher);
+    }
     #endregion
 
     #region Dispatcher
@@ -123,6 +128,18 @@ namespace Gadget.Collection.Pattern.ViewModels
       // to parent
       var message = new TCollectionMessageInternal (TInternalMessageAction.Request, TChild.Display, TypeInfo);
       message.Support.Argument.Types.Select (action);
+
+      DelegateCommand.PublishInternalMessage.Execute (message);
+    }
+
+    void ModifyDispatcher ()
+    {
+      var component = TActionComponent.Create (TCategory.Result);
+      Model.Request (component);
+
+      // to parent
+      var message = new TCollectionMessageInternal (TInternalMessageAction.Modify, TChild.Display, TypeInfo);
+      message.Support.Argument.Args.Select (component);
 
       DelegateCommand.PublishInternalMessage.Execute (message);
     }

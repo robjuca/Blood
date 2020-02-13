@@ -138,6 +138,16 @@ namespace Gadget.Collection.Pattern.ViewModels
 
             DelegateCommand.PublishMessage.Execute (messageModule);
           }
+
+          // Modify
+          if (message.IsAction (TInternalMessageAction.Modify)) {
+            // to module
+            var messageModule = new TCollectionMessage (TMessageAction.Modify, TypeInfo);
+            messageModule.Node.SelectRelationModule (TChild.None);
+            messageModule.Support.Argument.Args.Select (message.Support.Argument.Args.Param1);
+
+            DelegateCommand.PublishMessage.Execute (messageModule);
+          }
         }
       }
     }

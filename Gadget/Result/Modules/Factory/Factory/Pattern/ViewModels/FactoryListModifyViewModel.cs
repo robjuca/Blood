@@ -26,13 +26,13 @@ using Gadget.Factory.Pattern.Models;
 
 namespace Gadget.Factory.Pattern.ViewModels
 {
-  [Export ("ModuleFactoryListViewModel", typeof (IFactoryListViewModel))]
-  public class TFactoryListViewModel : TViewModelAware<TFactoryListModel>, IHandleMessageInternal, IFactoryListViewModel
+  [Export ("ModuleFactoryListModifyViewModel", typeof (IFactoryListModifyViewModel))]
+  public class TFactoryListModifyViewModel : TViewModelAware<TFactoryListModifyModel>, IHandleMessageInternal, IFactoryListModifyViewModel
   {
     #region Constructor
     [ImportingConstructor]
-    public TFactoryListViewModel (IFactoryPresentation presentation)
-      : base (new TFactoryListModel ())
+    public TFactoryListModifyViewModel (IFactoryPresentation presentation)
+      : base (new TFactoryListModifyModel ())
     {
       TypeName = GetType ().Name;
 
@@ -47,7 +47,7 @@ namespace Gadget.Factory.Pattern.ViewModels
       if (message.IsModule (TResource.TModule.Factory)) {
         // from parent
         if (message.Node.IsParentToMe (TChild.List)) {
-          
+
         }
 
         // from Sibling
@@ -56,34 +56,48 @@ namespace Gadget.Factory.Pattern.ViewModels
           if (message.IsAction (TInternalMessageAction.PropertySelect)) {
             var propertyName = message.Support.Argument.Args.PropertyName;
 
-            if (propertyName.Equals ("edit")) {
-              Model.SlideIndex = 0;
-            }
-
             if (propertyName.Equals ("modify")) {
-              Model.SlideIndex = 1;
+              if (message.Support.Argument.Args.Param1 is TActionComponent component) {
+                TDispatcher.BeginInvoke (ModifyDispatcher, component);
+              }
             }
-
-            RaiseChanged ();
-          }
-
-          // Cleanup
-          if (message.IsAction (TInternalMessageAction.Cleanup)) {
-            Model.SlideIndex = 0;
-
-            RaiseChanged ();
           }
         }
       }
     }
     #endregion
 
-    
+    #region Event
+    public void OnTestSelectionChanged ()
+    {
+      TDispatcher.Invoke (TestChangedDispatcher);
+    }
+    #endregion
 
-   
-    
+    #region Dispatcher
+    void RefreshAllDispatcher ()
+    {
+      RaiseChanged ();
 
-   
+      RefreshCollection ("TestModelItemsViewSource");
+    }
+
+    void ModifyDispatcher (TActionComponent component)
+    {
+      if (component.NotNull ()) {
+        Model.ModifyEnter (component);
+      }
+
+      TDispatcher.Invoke (RefreshAllDispatcher);
+    }
+
+    void TestChangedDispatcher ()
+    {
+      Model.TestChanged ();
+      RaiseChanged ();
+    }
+    #endregion
+
     #region Property
     IDelegateCommand DelegateCommand
     {

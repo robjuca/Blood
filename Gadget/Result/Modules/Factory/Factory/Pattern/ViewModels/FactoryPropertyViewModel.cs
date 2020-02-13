@@ -69,6 +69,14 @@ namespace Gadget.Factory.Pattern.ViewModels
             }
           }
 
+          // Modify
+          if (message.IsAction (TInternalMessageAction.Modify)) {
+            if (message.Support.Argument.Args.Param1 is TActionComponent component) {
+              TDispatcher.BeginInvoke (ModifyDispatcher, component);
+            }
+
+          }
+
           // Response
           if (message.IsAction (TInternalMessageAction.Response)) {
             // Insert
@@ -245,6 +253,25 @@ namespace Gadget.Factory.Pattern.ViewModels
         var message = new TFactorySiblingMessageInternal (TInternalMessageAction.PropertySelect, TChild.Property, TypeInfo);
         message.Support.Argument.Args.Select (component);
         message.Support.Argument.Args.Select ("edit");
+
+        DelegateCommand.PublishInternalMessage.Execute (message);
+      }
+    }
+
+    void ModifyDispatcher (TActionComponent component)
+    {
+      if (component.NotNull ()) {
+        SelectViewMode (TViewMode.Edit);
+
+        Model.ModifyEnter (component);
+
+        TDispatcher.Invoke (RefreshAllDispatcher);
+        TDispatcher.Invoke (EditEnterDispatcher);
+
+        // to Sibling
+        var message = new TFactorySiblingMessageInternal (TInternalMessageAction.PropertySelect, TChild.Property, TypeInfo);
+        message.Support.Argument.Args.Select (component);
+        message.Support.Argument.Args.Select ("modify");
 
         DelegateCommand.PublishInternalMessage.Execute (message);
       }

@@ -41,6 +41,7 @@ namespace Shared.Gadget.Models.Action
 
           gadget.GadgetInfo = modelAction.ComponentInfoModel.Name;
           gadget.Busy = modelAction.ComponentStatusModel.Busy;
+          gadget.Locked = modelAction.ComponentStatusModel.Locked;
 
           if (modelAction.ExtensionContentModel.Id.Equals (gadget.Id)) {
             string [] contentIdString = Regex.Split (modelAction.ExtensionContentModel.Contents, ";");
@@ -87,6 +88,7 @@ namespace Shared.Gadget.Models.Action
         
         gadget.GadgetInfo = entityAction.ModelAction.ComponentInfoModel.Name;
         gadget.Busy = entityAction.ModelAction.ComponentStatusModel.Busy;
+        gadget.Locked = entityAction.ModelAction.ComponentStatusModel.Locked;
       }
     }
 
@@ -124,6 +126,7 @@ namespace Shared.Gadget.Models.Action
 
         entityAction.ModelAction.ComponentInfoModel.Name = gadget.GadgetInfo;
         entityAction.ModelAction.ComponentStatusModel.Busy = gadget.Busy;
+        entityAction.ModelAction.ComponentStatusModel.Locked = gadget.Locked;
 
         entityAction.ModelAction.ComponentInfoModel.Id = gadget.Id;
         entityAction.ModelAction.ExtensionTextModel.Text = gadget.GadgetName;

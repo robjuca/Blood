@@ -1,0 +1,194 @@
+﻿<base:ViewChildBase x:Class="Gadget.Factory.Pattern.Views.TFactoryListModifyView"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:base="clr-namespace:rr.Library.Infrastructure;assembly=rr.Library.Infrastructure"
+                    xmlns:converters="clr-namespace:rr.Library.Converter;assembly=rr.Library.Converter"
+                    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+                    xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+                    xmlns:caliburn="http://www.caliburnproject.org"
+                    DataContext="{x:Null}"
+                    x:Name="ModuleFactoryListModifyViewModel">
+
+    <UserControl.Resources>
+        <!--test-->
+        <CollectionViewSource x:Key="TestModelItemsViewSource"
+                              Source="{Binding Model.TestItemsSource}">
+        </CollectionViewSource>
+
+        <!--test-->
+        <DataTemplate x:Key="TestListDataTemplate">
+            <Border Padding="2"
+                    BorderThickness="0 .1 0 .1"
+                    BorderBrush="LightGray">
+                <StackPanel>
+                    <!--check, icon, name-->
+                    <StackPanel Orientation="Horizontal">
+                        <!--test icon-->
+                        <ContentControl  Visibility="{Binding ContentTestVisibility}"
+                                         Style="{DynamicResource GadgetTestMiniIcon}" />
+
+                        <!--target icon-->
+                        <ContentControl  Visibility="{Binding ContentTargetVisibility}"
+                                         Style="{DynamicResource GadgetTargetMiniIcon}" />
+
+                        <!--test name-->
+                        <TextBlock Margin="5 0 0 0"
+                                   Text="{Binding GadgetInfo}"
+                                   FontWeight="DemiBold"
+                                   VerticalAlignment="Center" />
+                    </StackPanel>
+
+                    <Separator />
+
+                    <ItemsControl Margin="10 0 0 0"
+                                  ItemsSource="{Binding ContentNames}" />
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+
+        <!--Content Target-->
+        <DataTemplate x:Key="ContentTargetDataTemplate">
+            <Border Padding="2"
+                    BorderThickness="0 .1 0 .1"
+                    BorderBrush="LightGray">
+                <!---->
+                <StackPanel>
+                    <!--test name-->
+                    <TextBlock FontWeight="Black"
+                               Text="{Binding GadgetName}"
+                               VerticalAlignment="Center" />
+
+                    <!--test reference-->
+                    <TextBlock Text="{Binding Reference}"
+                               FontWeight="Light"
+                               FontSize="11px"
+                               VerticalAlignment="Center" />
+
+                    <!--test value-->
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Foreground="DarkGreen"
+                                   VerticalAlignment="Center"
+                                   Text="result value:" />
+
+                        <TextBox Margin="5 0 0 0"
+                                 VerticalAlignment="Top"
+                                 Width="150"
+                                 TextWrapping="Wrap"
+                                 Text="{Binding Value}" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Border Margin="2">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <!--registration-->
+            <Border Grid.Row="0">
+                <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Right"
+                            Margin="0 0 10 0">
+                    <ContentControl Margin="0 0 5 0"
+                                    Style="{DynamicResource GadgetRegistrationIcon}" />
+
+                    <TextBlock FontWeight="SemiBold"
+                               Text="{Binding Model.Registration.GadgetName}" />
+                </StackPanel>
+            </Border>
+
+            <!--test-->
+            <Border Grid.Row="1"
+                    Margin="0 6 0 0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <!--test-->
+                    <Border Grid.Column="0"
+                            Padding="0 0 10 0">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+
+                            <!--count, test-->
+                            <Border Grid.Row="0">
+                                <StackPanel Orientation="Horizontal">
+                                    <!--count-->
+                                    <TextBlock Text="{Binding Model.TestCount}" />
+
+                                    <!--test icon-->
+                                    <ContentControl Margin="3 0 0 0"
+                                                    Style="{DynamicResource GadgetTestMiniIcon}" />
+
+                                    <!--test-->
+                                    <TextBlock Margin="3 0 0 0"
+                                               Text="Test" />
+                                </StackPanel>
+                            </Border>
+
+                            <!--test list-->
+                            <Border Grid.Row="1">
+                                <ListBox ScrollViewer.CanContentScroll="False"
+                                         MinWidth="200"
+                                         SelectedIndex="{Binding Model.TestSelectedIndex}"
+                                         caliburn:Message.Attach="[Event SelectionChanged] = [OnTestSelectionChanged ()]"
+                                         ItemsSource="{Binding Source={StaticResource TestModelItemsViewSource}}"
+                                         ItemTemplate="{StaticResource TestListDataTemplate}" />
+                            </Border>
+                        </Grid>
+                    </Border>
+
+                    <!--Result Modify-->
+                    <Border Grid.Column="1">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+
+                            <!--test-->
+                            <Border Grid.Row="0">
+                                <TextBlock  FontWeight="Bold"
+                                            Text="{Binding Model.Current.GadgetName}" />
+                            </Border>
+
+                            <Border Grid.Row="1">
+                                <Separator />
+                            </Border>
+
+                            <Border Grid.Row="2">
+                                <ListBox ScrollViewer.CanContentScroll="False"
+                                         ItemsSource="{Binding Model.Current.ContentTargetCollection}"
+                                         ItemTemplate="{StaticResource ContentTargetDataTemplate}" />
+                            </Border>
+                        </Grid>
+                    </Border>
+
+                    <!--comands-->
+                    <Border Grid.Column="2">
+                        <StackPanel>
+                            <Button BorderThickness="0"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Top"
+                                    Background="Transparent"
+                                    Content="Modify">
+                            </Button>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+
+</base:ViewChildBase>

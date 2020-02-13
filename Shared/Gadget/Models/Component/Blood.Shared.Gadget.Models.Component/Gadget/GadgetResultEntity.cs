@@ -326,11 +326,19 @@ namespace Shared.Gadget.Models.Component
       }
     }
 
+    public bool CanEdit
+    {
+      get
+      {
+        return (IsEditEnabled);
+      }
+    }
+
     public bool CanRemove
     {
       get
       {
-        return (Enabled.IsFalse () && Content.IsEmpty);
+        return (IsRemoveEnabled && Content.IsEmpty);
       }
     }
     #endregion

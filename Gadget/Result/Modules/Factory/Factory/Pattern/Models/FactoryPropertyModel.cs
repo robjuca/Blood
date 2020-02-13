@@ -56,6 +56,19 @@ namespace Gadget.Factory.Pattern.Models
       }
     }
 
+    internal void ModifyEnter (TActionComponent component)
+    {
+      if (component.NotNull ()) {
+        var entityAction = TEntityAction.CreateDefault;
+        TActionConverter.Request (TCategory.Result, component, entityAction);
+
+        ComponentModelProperty.SelectModel (entityAction);
+        ComponentModelProperty.ValidateModel (validated: false);
+        ComponentModelProperty.IsComponentModelEnabled = false;
+        ComponentModelProperty.IsExtensionModelEnabled = false;
+      }
+    }
+
     internal void RequestModel (TEntityAction action)
     {
       if (action.NotNull ()) {

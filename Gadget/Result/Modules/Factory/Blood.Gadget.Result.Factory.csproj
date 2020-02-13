@@ -125,15 +125,27 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Factory\Pattern\Models\FactoryListEditModel.cs" />
+    <Compile Include="Factory\Pattern\Models\FactoryListModifyModel.cs" />
     <Compile Include="Factory\Pattern\Models\FactoryListModel.cs" />
     <Compile Include="Factory\Pattern\Models\FactoryModel.cs" />
     <Compile Include="Factory\Pattern\Models\FactoryPropertyModel.cs" />
+    <Compile Include="Factory\Pattern\ViewModels\FactoryListEditViewModel.cs" />
+    <Compile Include="Factory\Pattern\ViewModels\FactoryListModifyViewModel.cs" />
     <Compile Include="Factory\Pattern\ViewModels\FactoryListViewModel.cs" />
     <Compile Include="Factory\Pattern\ViewModels\FactoryPropertyViewModel.cs" />
     <Compile Include="Factory\Pattern\ViewModels\FactoryViewModel.cs" />
+    <Compile Include="Factory\Pattern\ViewModels\Interfaces\IFactoryListEditViewModel.cs" />
+    <Compile Include="Factory\Pattern\ViewModels\Interfaces\IFactoryListModifyViewModel.cs" />
     <Compile Include="Factory\Pattern\ViewModels\Interfaces\IFactoryListViewModel.cs" />
     <Compile Include="Factory\Pattern\ViewModels\Interfaces\IFactoryPropertyViewModel.cs" />
     <Compile Include="Factory\Pattern\ViewModels\Interfaces\IFactoryViewModel.cs" />
+    <Compile Include="Factory\Pattern\Views\FactoryListEditView.xaml.cs">
+      <DependentUpon>FactoryListEditView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Factory\Pattern\Views\FactoryListModifyView.xaml.cs">
+      <DependentUpon>FactoryListModifyView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Factory\Pattern\Views\FactoryListView.xaml.cs">
       <DependentUpon>FactoryListView.xaml</DependentUpon>
     </Compile>
@@ -153,6 +165,14 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Factory\Pattern\Views\FactoryListEditView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Factory\Pattern\Views\FactoryListModifyView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Factory\Pattern\Views\FactoryListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -63,6 +63,12 @@ namespace Shared.Gadget.Models.Component
       set;
     }
 
+    public bool Locked
+    {
+      get;
+      set;
+    }
+
     public bool IsChecked
     {
       get;
@@ -74,6 +80,22 @@ namespace Shared.Gadget.Models.Component
       get
       {
         return (Id.NotEmpty ());
+      }
+    }
+
+    public bool IsEditEnabled
+    {
+      get
+      {
+        return (ValidateId && Locked.IsFalse ());
+      }
+    }
+
+    public bool IsRemoveEnabled
+    {
+      get
+      {
+        return (ValidateId ? (Enabled.IsFalse () && Locked.IsFalse ()) : false);
       }
     }
 

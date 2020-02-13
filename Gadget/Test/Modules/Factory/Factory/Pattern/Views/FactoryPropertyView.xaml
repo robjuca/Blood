@@ -26,7 +26,7 @@
                 <StackPanel>
                     <!--component-->
                     <controls:TPropertyGrid VerticalAlignment="Stretch"
-                                            IsEnabled="{Binding Model.ComponentModelProperty.IsInfoEnabled}"
+                                            IsEnabled="{Binding Model.ComponentModelProperty.IsComponentModelEnabled}"
                                             SelectedObject="{Binding Model.ComponentModelProperty.ComponentModel}"
                                             caliburn:Message.Attach="[Event Loaded] = [OnPropertyGridComponentLoaded ($source)]" />
 
@@ -41,6 +41,7 @@
 
                     <!--extension-->
                     <controls:TPropertyGrid VerticalAlignment="Stretch"
+                                            IsEnabled="{Binding Model.ComponentModelProperty.IsExtensionModelEnabled}"
                                             SelectedObject="{Binding Model.ComponentModelProperty.ExtensionModel}"
                                             caliburn:Message.Attach="[Event Loaded] = [OnPropertyGridExtensionLoaded ($source)]" />
                 </StackPanel>

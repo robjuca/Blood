@@ -587,6 +587,28 @@ namespace Shared.Gadget.Models.Component
       }
     }
 
+    public Collection<GadgetTest> ContentTestCollection
+    {
+      get
+      {
+        var contents = new Collection<GadgetTest> ();
+        RequestContent (contents);
+
+        return (contents);
+      }
+    }
+
+    public Collection<GadgetTarget> ContentTargetCollection
+    {
+      get
+      {
+        var contents = new Collection<GadgetTarget> ();
+        RequestContent (contents);
+
+        return (contents);
+      }
+    }
+
     public bool HasContent
     {
       get
