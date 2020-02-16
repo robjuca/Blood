@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 
 using Shared.Gadget.Models.Action;
 using Shared.Gadget.Models.Component;
@@ -49,6 +50,36 @@ namespace Gadget.Factory.Pattern.Models
       get; 
       set;
     }
+
+    public bool SelectorContentTestEnabled
+    {
+      get; 
+      set;
+    }
+
+    public bool SelectorContentTargetEnabled
+    {
+      get;
+      set;
+    }
+
+    public bool SelectorContentTestChecked
+    {
+      get; 
+      set;
+    }
+
+    public bool SelectorContentTargetChecked
+    {
+      get;
+      set;
+    }
+
+    public int SlideIndex
+    {
+      get;
+      set;
+    }
     #endregion
 
     #region Constructor
@@ -59,6 +90,15 @@ namespace Gadget.Factory.Pattern.Models
       TestItemsSource = new ObservableCollection<GadgetTest> ();
 
       TestSelectedIndex = -1;
+      SlideIndex = -1;
+
+      SelectorContentTestEnabled = false;
+      SelectorContentTestChecked = false;
+
+      SelectorContentTargetEnabled = false;
+      SelectorContentTargetChecked = false;
+
+      m_FullCollection = new Collection<GadgetTest> ();
     }
     #endregion
 
@@ -71,7 +111,64 @@ namespace Gadget.Factory.Pattern.Models
 
       var gadget = component.Models.GadgetResultModel;
       gadget.RequestContent (Registration);
-      gadget.RequestContent (TestItemsSource);
+      gadget.RequestContent (m_FullCollection);
+
+      foreach (var item in m_FullCollection) {
+        if (item.IsContentTest) {
+          SelectorContentTestEnabled = true;
+        }
+
+        if (item.IsContentTarget) {
+          SelectorContentTargetEnabled = true;
+        }
+      }
+
+      if (SelectorContentTestEnabled && SelectorContentTargetEnabled) {
+        SlideIndex = 0;
+        SelectorContentTestChecked = true;
+      }
+
+      else {
+        if (SelectorContentTestEnabled) {
+          SlideIndex = 0;
+          SelectorContentTestChecked = true;
+        }
+
+        if (SelectorContentTargetEnabled) {
+          SlideIndex = 1;
+          SelectorContentTargetChecked = true;
+        }
+      }
+    }
+
+    internal void SelectorContentTestIsChecked ()
+    {
+      SlideIndex = 0;
+
+      TestItemsSource.Clear ();
+
+      foreach (var item in m_FullCollection) {
+        if (item.IsContentTest) {
+          TestItemsSource.Add (item);
+        }
+      }
+
+      if (TestItemsSource.Any ()) {
+        TestSelectedIndex = 0;
+      }
+    }
+
+    internal void SelectorContentTargetIsChecked ()
+    {
+      SlideIndex = 1;
+
+      TestItemsSource.Clear ();
+
+      foreach (var item in m_FullCollection) {
+        if (item.IsContentTarget) {
+          TestItemsSource.Add (item);
+        }
+      }
 
       if (TestItemsSource.Any ()) {
         TestSelectedIndex = 0;
@@ -90,9 +187,21 @@ namespace Gadget.Factory.Pattern.Models
       TestItemsSource.Clear ();
 
       TestSelectedIndex = -1;
+      SlideIndex = -1;
+
+      SelectorContentTestEnabled = false;
+      SelectorContentTestChecked = false;
+
+      SelectorContentTargetEnabled = false;
+      SelectorContentTargetChecked = false;
+
+      m_FullCollection.Clear ();
     }
     #endregion
 
+    #region Fields
+    readonly Collection<GadgetTest>                             m_FullCollection;
+    #endregion
   };
   //---------------------------//
 

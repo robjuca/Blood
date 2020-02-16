@@ -68,6 +68,16 @@ namespace Gadget.Factory.Pattern.ViewModels
     #endregion
 
     #region Event
+    public void OnSelectorContentTestChecked ()
+    {
+      TDispatcher.Invoke (SelectorContentTestCheckedDispatcher);
+    }
+
+    public void OnSelectorContentTargetChecked ()
+    {
+      TDispatcher.Invoke (SelectorContentTargetCheckedDispatcher);
+    }
+
     public void OnTestSelectionChanged ()
     {
       TDispatcher.Invoke (TestChangedDispatcher);
@@ -91,6 +101,17 @@ namespace Gadget.Factory.Pattern.ViewModels
       TDispatcher.Invoke (RefreshAllDispatcher);
     }
 
+    void SelectorContentTestCheckedDispatcher ()
+    {
+      Model.SelectorContentTestIsChecked ();
+      RaiseChanged ();
+    }
+
+    void SelectorContentTargetCheckedDispatcher ()
+    {
+      Model.SelectorContentTargetIsChecked ();
+      RaiseChanged ();
+    }
     void TestChangedDispatcher ()
     {
       Model.TestChanged ();
