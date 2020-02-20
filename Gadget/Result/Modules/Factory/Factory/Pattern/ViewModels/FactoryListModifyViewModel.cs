@@ -78,9 +78,20 @@ namespace Gadget.Factory.Pattern.ViewModels
       TDispatcher.Invoke (SelectorContentTargetCheckedDispatcher);
     }
 
-    public void OnTestSelectionChanged ()
+    public void OnContentTestTargetSelectionChanged (object context)
     {
-      TDispatcher.Invoke (TestChangedDispatcher);
+      // content Test
+      if (context is GadgetTest gadget) {
+        TDispatcher.BeginInvoke (ContentTestTargetChangedDispatcher, gadget);
+      }
+    }
+
+    public void OnContentTargetSelectionChanged (object context)
+    {
+      // content Target
+      if (context is GadgetTest gadget) {
+        TDispatcher.BeginInvoke (ContentTargetChangedDispatcher, gadget);
+      }
     }
     #endregion
 
@@ -89,7 +100,8 @@ namespace Gadget.Factory.Pattern.ViewModels
     {
       RaiseChanged ();
 
-      RefreshCollection ("TestModelItemsViewSource");
+      RefreshCollection ("ContentTestModelItemsViewSource");
+      RefreshCollection ("ContentTargetModelItemsViewSource");
     }
 
     void ModifyDispatcher (TActionComponent component)
@@ -112,9 +124,16 @@ namespace Gadget.Factory.Pattern.ViewModels
       Model.SelectorContentTargetIsChecked ();
       RaiseChanged ();
     }
-    void TestChangedDispatcher ()
+
+    void ContentTestTargetChangedDispatcher (GadgetTest gadget)
     {
-      Model.TestChanged ();
+      Model.ContentTestTargetChanged (gadget);
+      RaiseChanged ();
+    }
+
+    void ContentTargetChangedDispatcher (GadgetTest gadget)
+    {
+      Model.ContentTargetChanged (gadget);
       RaiseChanged ();
     }
     #endregion

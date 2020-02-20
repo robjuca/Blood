@@ -2,20 +2,23 @@
                     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:base="clr-namespace:rr.Library.Infrastructure;assembly=rr.Library.Infrastructure"
-                    xmlns:converters="clr-namespace:rr.Library.Converter;assembly=rr.Library.Converter"
                     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-                    xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
                     xmlns:caliburn="http://www.caliburnproject.org"
                     DataContext="{x:Null}"
                     x:Name="ModuleFactoryListModifyViewModel">
 
     <UserControl.Resources>
-        <!--test-->
-        <CollectionViewSource x:Key="TestModelItemsViewSource"
-                              Source="{Binding Model.TestItemsSource}">
+        <!--content test-->
+        <CollectionViewSource x:Key="ContentTestModelItemsViewSource"
+                              Source="{Binding Model.ContentTestItemsSource}">
         </CollectionViewSource>
 
-        <!--content target list-->
+        <!--content target-->
+        <CollectionViewSource x:Key="ContentTargetModelItemsViewSource"
+                              Source="{Binding Model.ContentTargetItemsSource}">
+        </CollectionViewSource>
+
+        <!--content target list data template-->
         <DataTemplate x:Key="ContentTargetListDataTemplate">
             <Border Padding="2"
                     BorderThickness="0 .1 0 .1"
@@ -56,7 +59,7 @@
             </Border>
         </DataTemplate>
 
-        <!--content test list-->
+        <!--content test list data template-->
         <DataTemplate x:Key="ContentTestListDataTemplate">
             <Border Padding="2"
                     BorderThickness="0 .1 0 .1"
@@ -93,7 +96,8 @@
                         <ListBox ScrollViewer.CanContentScroll="False"
                                  MinWidth="200"
                                  ItemsSource="{Binding ContentTestCollection}"
-                                 ItemTemplate="{DynamicResource ContentTargetListDataTemplate}" />
+                                 ItemTemplate="{DynamicResource ContentTargetListDataTemplate}"
+                                 caliburn:Message.Attach="[Event SelectionChanged] = [OnContentTestTargetSelectionChanged ($this)]" />
                     </Border>
                 </Grid>
             </Border>
@@ -219,7 +223,7 @@
                                     <Border Grid.Row="0">
                                         <StackPanel Orientation="Horizontal">
                                             <!--count-->
-                                            <TextBlock Text="{Binding Model.TestCount}" />
+                                            <TextBlock Text="{Binding Model.ContentTestCount}" />
 
                                             <!--test icon-->
                                             <ContentControl Margin="3 0 0 0"
@@ -235,7 +239,7 @@
                                     <Border Grid.Row="1">
                                         <ListBox ScrollViewer.CanContentScroll="False"
                                                       MinWidth="200"
-                                                      ItemsSource="{Binding Source={StaticResource TestModelItemsViewSource}}"
+                                                      ItemsSource="{Binding Source={StaticResource ContentTestModelItemsViewSource}}"
                                                       ItemTemplate="{StaticResource ContentTestListDataTemplate}" />
                                     </Border>
                                 </Grid>
@@ -253,7 +257,7 @@
                                     <!--test-->
                                     <Border Grid.Row="0">
                                         <TextBlock  FontWeight="Bold"
-                                                    Text="{Binding Model.Current.GadgetName}" />
+                                                    Text="{Binding Model.ContentTestTargetCurrent.GadgetName}" />
                                     </Border>
 
                                     <Border Grid.Row="1">
@@ -262,7 +266,7 @@
 
                                     <Border Grid.Row="2">
                                         <ListBox ScrollViewer.CanContentScroll="False"
-                                                 ItemsSource="{Binding Model.Current.ContentTargetCollection}"
+                                                 ItemsSource="{Binding Model.ContentTestTargetCurrent.ContentTargetCollection}"
                                                  ItemTemplate="{StaticResource ContentTargetDataTemplate}" />
                                     </Border>
                                 </Grid>
@@ -308,7 +312,7 @@
                                     <Border Grid.Row="0">
                                         <StackPanel Orientation="Horizontal">
                                             <!--count-->
-                                            <TextBlock Text="{Binding Model.TestCount}" />
+                                            <TextBlock Text="{Binding Model.ContentTargetCount}" />
 
                                             <!--test icon-->
                                             <ContentControl Margin="3 0 0 0"
@@ -322,11 +326,11 @@
 
                                     <!--test list-->
                                     <Border Grid.Row="1">
-                                        <ListBox ScrollViewer.CanContentScroll="False"
+                                        <ListBox x:Name="ContentTestList" ScrollViewer.CanContentScroll="False"
                                                  MinWidth="200"
-                                                 SelectedIndex="{Binding Model.TestSelectedIndex}"
-                                                 caliburn:Message.Attach="[Event SelectionChanged] = [OnTestSelectionChanged ()]"
-                                                 ItemsSource="{Binding Source={StaticResource TestModelItemsViewSource}}"
+                                                 SelectedIndex="{Binding Model.ContentTargetSelectedIndex}"
+                                                 caliburn:Message.Attach="[Event SelectionChanged] = [OnContentTargetSelectionChanged (ContentTestList.SelectedItem)]"
+                                                 ItemsSource="{Binding Source={StaticResource ContentTargetModelItemsViewSource}}"
                                                  ItemTemplate="{StaticResource ContentTargetListDataTemplate}" />
                                     </Border>
                                 </Grid>
@@ -344,7 +348,7 @@
                                     <!--test-->
                                     <Border Grid.Row="0">
                                         <TextBlock  FontWeight="Bold"
-                                                    Text="{Binding Model.Current.GadgetName}" />
+                                                    Text="{Binding Model.ContentTargetCurrent.GadgetName}" />
                                     </Border>
 
                                     <Border Grid.Row="1">
@@ -353,7 +357,7 @@
 
                                     <Border Grid.Row="2">
                                         <ListBox ScrollViewer.CanContentScroll="False"
-                                                 ItemsSource="{Binding Model.Current.ContentTargetCollection}"
+                                                 ItemsSource="{Binding Model.ContentTargetCurrent.ContentTargetCollection}"
                                                  ItemTemplate="{StaticResource ContentTargetDataTemplate}" />
                                     </Border>
                                 </Grid>

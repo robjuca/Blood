@@ -24,36 +24,65 @@ namespace Gadget.Factory.Pattern.Models
       get; 
     }
 
-    public ObservableCollection<GadgetTest> TestItemsSource
+    #region content test
+    public ObservableCollection<GadgetTest> ContentTestItemsSource
     {
       get;
     }
 
-    public GadgetTest Current
+    public string ContentTestCount
     {
       get
       {
-        return (TestSelectedIndex.Equals (-1) ? GadgetTest.CreateDefault : TestItemsSource [TestSelectedIndex]);
+        return ($"[ {ContentTestItemsSource.Count} ]");
       }
     }
 
-    public string TestCount
+    public int ContentTestSelectedIndex
     {
-      get
-      {
-        return ($"[ {TestItemsSource.Count} ]");
-      }
-    }
-
-    public int TestSelectedIndex
-    {
-      get; 
+      get;
       set;
     }
 
+    public GadgetTest ContentTestTargetCurrent
+    {
+      get;
+    }
+    #endregion
+
+    #region content target
+    public ObservableCollection<GadgetTest> ContentTargetItemsSource
+    {
+      get;
+    }
+
+    public string ContentTargetCount
+    {
+      get
+      {
+        return ($"[ {ContentTargetItemsSource.Count} ]");
+      }
+    }
+
+    public int ContentTargetSelectedIndex
+    {
+      get;
+      set;
+    }
+
+    public GadgetTest ContentTargetCurrent
+    {
+      get
+      {
+        return (ContentTargetSelectedIndex.Equals (-1) ? GadgetTest.CreateDefault : ContentTargetItemsSource [ContentTargetSelectedIndex]);
+      }
+    }
+    #endregion
+
+    #region selector
     public bool SelectorContentTestEnabled
     {
-      get; 
+      get;
       set;
     }
 
@@ -65,7 +94,7 @@ namespace Gadget.Factory.Pattern.Models
 
     public bool SelectorContentTestChecked
     {
-      get; 
+      get;
       set;
     }
 
@@ -73,7 +102,8 @@ namespace Gadget.Factory.Pattern.Models
     {
       get;
       set;
-    }
+    } 
+    #endregion
 
     public int SlideIndex
     {
@@ -87,9 +117,13 @@ namespace Gadget.Factory.Pattern.Models
     {
       Registration = GadgetRegistration.CreateDefault;
 
-      TestItemsSource = new ObservableCollection<GadgetTest> ();
+      ContentTestItemsSource = new ObservableCollection<GadgetTest> ();
+      ContentTestSelectedIndex = -1;
+      ContentTestTargetCurrent = GadgetTest.CreateDefault;
 
-      TestSelectedIndex = -1;
+      ContentTargetItemsSource = new ObservableCollection<GadgetTest> ();
+      ContentTargetSelectedIndex = -1;
+
       SlideIndex = -1;
 
       SelectorContentTestEnabled = false;
@@ -140,21 +174,34 @@ namespace Gadget.Factory.Pattern.Models
         }
       }
     }
-
+    
     internal void SelectorContentTestIsChecked ()
     {
       SlideIndex = 0;
 
-      TestItemsSource.Clear ();
+      ContentTestItemsSource.Clear ();
 
       foreach (var item in m_FullCollection) {
         if (item.IsContentTest) {
-          TestItemsSource.Add (item);
+          ContentTestItemsSource.Add (item);
         }
       }
 
-      if (TestItemsSource.Any ()) {
-        TestSelectedIndex = 0;
+      if (ContentTestItemsSource.Any ()) {
+        ContentTestSelectedIndex = 0;
+
+        var gadget = ContentTestItemsSource [0];
+
+        if (gadget.HasContent) {
+          if (gadget.IsContentTest) {
+            var list = new Collection<GadgetTest> ();
+            gadget.RequestContent (list);
+
+            if (list.Any ()) {
+              ContentTestTargetChanged (list [0]);
+            }
+          }
+        }
       }
     }
 
@@ -162,31 +209,41 @@ namespace Gadget.Factory.Pattern.Models
     {
       SlideIndex = 1;
 
-      TestItemsSource.Clear ();
+      ContentTargetItemsSource.Clear ();
 
       foreach (var item in m_FullCollection) {
         if (item.IsContentTarget) {
-          TestItemsSource.Add (item);
+          ContentTargetItemsSource.Add (item);
         }
       }
 
-      if (TestItemsSource.Any ()) {
-        TestSelectedIndex = 0;
+      if (ContentTargetItemsSource.Any ()) {
+        ContentTargetSelectedIndex = 0;
       }
     }
 
-    internal void TestChanged ()
+    internal void ContentTestTargetChanged (GadgetTest gadget)
     {
-      
+      // content Test Target
+      ContentTestTargetCurrent.CopyFrom (gadget);
+    }
+
+    internal void ContentTargetChanged (GadgetTest gadget)
+    {
+      // content target
     }
 
     internal void Cleanup ()
     {
       Registration.CopyFrom (GadgetRegistration.CreateDefault);
 
-      TestItemsSource.Clear ();
+      ContentTestItemsSource.Clear ();
+      ContentTestSelectedIndex = -1;
+      ContentTestTargetCurrent.CopyFrom (GadgetTest.CreateDefault);
 
-      TestSelectedIndex = -1;
+      ContentTargetItemsSource.Clear ();
+      ContentTargetSelectedIndex = -1;
+
       SlideIndex = -1;
 
       SelectorContentTestEnabled = false;

@@ -8,6 +8,8 @@ using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+
+using rr.Library.Types;
 //---------------------------//
 
 namespace Shared.Gadget.Models.Component
@@ -134,6 +136,11 @@ namespace Shared.Gadget.Models.Component
       get;
       private set;
     }
+
+    public TObservableCommand ObservableCommand
+    {
+      get; 
+    }
     #endregion
 
     #region Constructor
@@ -151,6 +158,8 @@ namespace Shared.Gadget.Models.Component
       IsChecked = false;
       Image = new Collection<byte> ();
       Date = DateTime.Now;
+
+      ObservableCommand = new TObservableCommand (new DelegateCommand<object> (ObservableCommandHandler));
     }
 
     protected TGadgetBase (TGadgetBase alias)
@@ -229,6 +238,35 @@ namespace Shared.Gadget.Models.Component
         Date = date;
       }
     }
+    #endregion
+
+    #region Event
+    public event EventHandler<TObservableCommandEventArgs> ObservableCommandEvent;
+
+    void ObservableCommandHandler (object context)
+    {
+      ObservableCommandEvent?.Invoke (this, new TObservableCommandEventArgs (context));
+    }
+    #endregion
+
+    #region class
+    // TObservableCommandEventArgs
+    public class TObservableCommandEventArgs : EventArgs
+    {
+      #region Property
+      public object Context
+      {
+        get;
+      }
+      #endregion
+
+      #region Constructor
+      public TObservableCommandEventArgs (object context)
+      {
+        Context = context;
+      }
+      #endregion
+    } 
     #endregion
   };
   //---------------------------//

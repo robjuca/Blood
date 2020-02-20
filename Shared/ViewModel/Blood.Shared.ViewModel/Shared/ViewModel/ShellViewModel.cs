@@ -5,6 +5,9 @@
 
 //----- Include
 using System;
+using System.Windows.Media;
+
+using MaterialDesignThemes.Wpf;
 
 using rr.Library.Helper;
 using rr.Library.Infrastructure;
@@ -186,10 +189,27 @@ namespace Shared.ViewModel
           var palettePrimary = iniFileManager.RequestKey (ProcessName, TProcess.PALETTEPRIMARY);
           var paletteAccent = iniFileManager.RequestKey (ProcessName, TProcess.PALETTEACCENT);
 
-          var paletteHelper = new MaterialDesignThemes.Wpf.PaletteHelper ();
-          paletteHelper.SetLightDark (isDark);
-          paletteHelper.ReplacePrimaryColor (string.IsNullOrEmpty (palettePrimary) ? "blue" : palettePrimary);
-          paletteHelper.ReplaceAccentColor (string.IsNullOrEmpty (paletteAccent) ? "lime" : paletteAccent);
+          var primaryColor = Colors.Blue;
+          var secondaryColor = Colors.Lime;
+
+          if (string.IsNullOrEmpty (palettePrimary).IsFalse ()) {
+            var c = System.Drawing.Color.FromName (palettePrimary);
+            primaryColor = Color.FromRgb (c.R, c.G, c.B);
+          }
+
+          if (string.IsNullOrEmpty (paletteAccent).IsFalse ()) {
+            var c = System.Drawing.Color.FromName (paletteAccent);
+            secondaryColor = Color.FromRgb (c.R, c.G, c.B);
+          }
+
+          var paletteHelper = new PaletteHelper ();
+
+          ITheme themes = paletteHelper.GetTheme ();
+          themes.SetBaseTheme (isDark ? Theme.Dark : Theme.Light);
+          themes.SetPrimaryColor (primaryColor);
+          themes.SetSecondaryColor (secondaryColor);
+
+          paletteHelper.SetTheme (themes);
         }
       }
     }

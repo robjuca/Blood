@@ -102,7 +102,12 @@ namespace Module.Settings.Factory.Support.Pattern.Models
     #region Event
     void ApplyBaseCommandHandler (bool isDark)
     {
-      new PaletteHelper ().SetLightDark (isDark);
+      var paletteHelper = new PaletteHelper ();
+
+      ITheme themes = paletteHelper.GetTheme ();
+      themes.SetBaseTheme (isDark ? Theme.Dark : Theme.Light);
+
+      paletteHelper.SetTheme (themes);
 
       var baseTheme = isDark ? TProcess.PALETTETHEMEDARK : TProcess.PALETTETHEMELIGHT;
       CurrentProcess.PaletteInfo.SetBaseTheme (baseTheme);
@@ -110,14 +115,31 @@ namespace Module.Settings.Factory.Support.Pattern.Models
 
     void ApplyPrimaryCommandHandler (Swatch swatch)
     {
-      new PaletteHelper ().ReplacePrimaryColor (swatch);
+      var c = System.Drawing.Color.FromName (swatch.Name);
+      var primaryColor = System.Windows.Media.Color.FromRgb (c.R, c.G, c.B);
+
+      var paletteHelper = new PaletteHelper ();
+
+      ITheme themes = paletteHelper.GetTheme ();
+      themes.SetPrimaryColor (primaryColor);
+
+      paletteHelper.SetTheme (themes);
 
       CurrentProcess.PaletteInfo.SetPalettePrimary (swatch.Name);
     }
 
     void ApplyAccentCommandHandler (Swatch swatch)
     {
-      new PaletteHelper ().ReplaceAccentColor (swatch);
+      var c = System.Drawing.Color.FromName (swatch.Name);
+      var secondaryColor = System.Windows.Media.Color.FromRgb (c.R, c.G, c.B);
+
+      var paletteHelper = new PaletteHelper ();
+
+      ITheme themes = paletteHelper.GetTheme ();
+      themes.SetSecondaryColor (secondaryColor);
+
+      paletteHelper.SetTheme (themes);
+
 
       CurrentProcess.PaletteInfo.SetPaletteAccent (swatch.Name);
     }
@@ -133,9 +155,20 @@ namespace Module.Settings.Factory.Support.Pattern.Models
     {
       BaseThemeDarkChecked = processInfo.IsBaseThemeDark;
 
-      new PaletteHelper ().SetLightDark (BaseThemeDarkChecked);
-      new PaletteHelper ().ReplacePrimaryColor (processInfo.PaletteInfo.PalettePrimary);
-      new PaletteHelper ().ReplaceAccentColor (processInfo.PaletteInfo.PaletteAccent);
+      var c = System.Drawing.Color.FromName (processInfo.PaletteInfo.PalettePrimary);
+      var primaryColor = System.Windows.Media.Color.FromRgb (c.R, c.G, c.B);
+
+      c = System.Drawing.Color.FromName (processInfo.PaletteInfo.PaletteAccent);
+      var secondaryColor = System.Windows.Media.Color.FromRgb (c.R, c.G, c.B);
+
+      var paletteHelper = new PaletteHelper ();
+
+      ITheme themes = paletteHelper.GetTheme ();
+      themes.SetBaseTheme (BaseThemeDarkChecked ? Theme.Dark : Theme.Light);
+      themes.SetPrimaryColor (primaryColor);
+      themes.SetSecondaryColor (secondaryColor);
+
+      paletteHelper.SetTheme (themes);
     }
 
     internal bool SelectProcess ()

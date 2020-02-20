@@ -24,8 +24,6 @@ namespace Gadget.Factory.Pattern.Models
       SlideIndex = 0;
     }
     #endregion
-
-    
   };
   //---------------------------//
 
