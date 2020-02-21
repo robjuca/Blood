@@ -5,10 +5,8 @@
 
 //----- Include
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows;
 
 using Shared.Gadget.Models.Action;
 using Shared.Gadget.Models.Component;
@@ -179,26 +177,30 @@ namespace Gadget.Factory.Pattern.Models
     {
       SlideIndex = 0;
 
-      ContentTestItemsSource.Clear ();
+      if (m_SelectorContentTestDone.IsFalse ()) {
+        m_SelectorContentTestDone = true;
 
-      foreach (var item in m_FullCollection) {
-        if (item.IsContentTest) {
-          ContentTestItemsSource.Add (item);
+        ContentTestItemsSource.Clear ();
+
+        foreach (var item in m_FullCollection) {
+          if (item.IsContentTest) {
+            ContentTestItemsSource.Add (item);
+          }
         }
-      }
 
-      if (ContentTestItemsSource.Any ()) {
-        ContentTestSelectedIndex = 0;
+        if (ContentTestItemsSource.Any ()) {
+          ContentTestSelectedIndex = 0;
 
-        var gadget = ContentTestItemsSource [0];
+          var gadget = ContentTestItemsSource [0];
 
-        if (gadget.HasContent) {
-          if (gadget.IsContentTest) {
-            var list = new Collection<GadgetTest> ();
-            gadget.RequestContent (list);
+          if (gadget.HasContent) {
+            if (gadget.IsContentTest) {
+              var list = new Collection<GadgetTest> ();
+              gadget.RequestContent (list);
 
-            if (list.Any ()) {
-              ContentTestTargetChanged (list [0]);
+              if (list.Any ()) {
+                ContentTestTargetChanged (list [0]);
+              }
             }
           }
         }
@@ -209,16 +211,20 @@ namespace Gadget.Factory.Pattern.Models
     {
       SlideIndex = 1;
 
-      ContentTargetItemsSource.Clear ();
+      if (m_SelectorContentTargetDone.IsFalse ()) {
+        m_SelectorContentTargetDone = true;
 
-      foreach (var item in m_FullCollection) {
-        if (item.IsContentTarget) {
-          ContentTargetItemsSource.Add (item);
+        ContentTargetItemsSource.Clear ();
+
+        foreach (var item in m_FullCollection) {
+          if (item.IsContentTarget) {
+            ContentTargetItemsSource.Add (item);
+          }
         }
-      }
 
-      if (ContentTargetItemsSource.Any ()) {
-        ContentTargetSelectedIndex = 0;
+        if (ContentTargetItemsSource.Any ()) {
+          ContentTargetSelectedIndex = 0;
+        }
       }
     }
 
@@ -253,11 +259,16 @@ namespace Gadget.Factory.Pattern.Models
       SelectorContentTargetChecked = false;
 
       m_FullCollection.Clear ();
+
+      m_SelectorContentTestDone = false;
+      m_SelectorContentTargetDone = false;
     }
     #endregion
 
     #region Fields
     readonly Collection<GadgetTest>                             m_FullCollection;
+    bool                                                        m_SelectorContentTestDone;
+    bool                                                        m_SelectorContentTargetDone;
     #endregion
   };
   //---------------------------//

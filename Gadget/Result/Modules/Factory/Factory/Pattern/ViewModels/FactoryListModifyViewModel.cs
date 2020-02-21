@@ -6,13 +6,9 @@
 //----- Include
 using System;
 using System.ComponentModel.Composition;
-using System.Collections.ObjectModel;
 
 using rr.Library.Infrastructure;
 using rr.Library.Helper;
-
-using Server.Models.Infrastructure;
-using Server.Models.Action;
 
 using Shared.Types;
 using Shared.Resources;
@@ -61,6 +57,12 @@ namespace Gadget.Factory.Pattern.ViewModels
                 TDispatcher.BeginInvoke (ModifyDispatcher, component);
               }
             }
+          }
+
+          // Cleanup
+          if (message.IsAction (TInternalMessageAction.Cleanup)) {
+            Model.Cleanup ();
+            TDispatcher.Invoke (RefreshAllDispatcher);
           }
         }
       }
