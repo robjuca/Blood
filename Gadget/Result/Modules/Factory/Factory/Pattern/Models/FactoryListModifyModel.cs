@@ -131,6 +131,8 @@ namespace Gadget.Factory.Pattern.Models
       SelectorContentTargetChecked = false;
 
       m_FullCollection = new Collection<GadgetTest> ();
+
+      m_Gadget = GadgetResult.CreateDefault;
     }
     #endregion
 
@@ -141,9 +143,9 @@ namespace Gadget.Factory.Pattern.Models
 
       Cleanup ();
 
-      var gadget = component.Models.GadgetResultModel;
-      gadget.RequestContent (Registration);
-      gadget.RequestContent (m_FullCollection);
+      m_Gadget.CopyFrom (component.Models.GadgetResultModel);
+      m_Gadget.RequestContent (Registration);
+      m_Gadget.RequestContent (m_FullCollection);
 
       foreach (var item in m_FullCollection) {
         if (item.IsContentTest) {
@@ -231,12 +233,34 @@ namespace Gadget.Factory.Pattern.Models
     internal void ContentTestTargetChanged (GadgetTest gadget)
     {
       // content Test Target
+
+      // save result
+      foreach (var item in ContentTestItemsSource) {
+        if (item.UpdateValue (ContentTestTargetCurrent)) {
+          break;
+        }
+      }
+
       ContentTestTargetCurrent.CopyFrom (gadget);
     }
 
     internal void ContentTargetChanged (GadgetTest gadget)
     {
       // content target
+    }
+
+    internal void Request (TActionComponent component)
+    {
+      component.ThrowNull ();
+
+      // save result
+      foreach (var item in ContentTestItemsSource) {
+        if (item.UpdateValue (ContentTestTargetCurrent)) {
+          break;
+        }
+      }
+
+      component.Models.GadgetResultModel.CopyFrom (m_Gadget);
     }
 
     internal void Cleanup ()
@@ -266,6 +290,7 @@ namespace Gadget.Factory.Pattern.Models
     #endregion
 
     #region Fields
+    readonly GadgetResult                                       m_Gadget;
     readonly Collection<GadgetTest>                             m_FullCollection;
     bool                                                        m_SelectorContentTestDone;
     bool                                                        m_SelectorContentTargetDone;

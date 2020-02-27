@@ -162,42 +162,6 @@ namespace Shared.Gadget.Models.Component
         return (res);
       }
 
-      //public void Add (Shared.Gadget.Models.Component.TEntityAction action)
-      //{
-      //  /*
-      //  action.CollectionAction.EntityCollection (contents to add)
-      //  action.CollectionAction.EntityCollection [id] (ModelAction content to add Test or Target)
-      //  */
-
-      //  if (action.NotNull ()) {
-      //    if (IsEmpty.IsFalse ()) {
-      //      foreach (var id in IdCollection) {
-      //        if (action.CollectionAction.EntityCollection.ContainsKey (id)) {
-      //          var contentAction = action.CollectionAction.EntityCollection [id];
-
-      //          if (IsCategoryTest) {
-      //            var gadget = contentAction.ModelAction.GadgetTestModel;
-
-      //            if (ContainsTest (gadget.Id).IsFalse ()) {
-      //              gadget.AddContent (contentAction);
-
-      //              TestCollection.Add (gadget);
-      //            }
-      //          }
-
-      //          if (IsCategoryTarget) {
-      //            var gadget = contentAction.ModelAction.GadgetTargetModel;
-
-      //            if (ContainsTarget (gadget.Id).IsFalse ()) {
-      //              TargetCollection.Add (gadget);
-      //            }
-      //          }
-      //        }
-      //      }
-      //    }
-      //  }
-      //}
-
       public bool Remove (Guid id)
       {
         return (RemoveFromCollection (id));
@@ -310,6 +274,28 @@ namespace Shared.Gadget.Models.Component
         }
       }
 
+      public GadgetTest RequestTest (Guid id)
+      {
+        foreach (var gadget in TestCollection) {
+          if (gadget.Id.Equals (id)) {
+            return (gadget);
+          }
+        }
+
+        return (null);
+      }
+
+      public GadgetTarget RequestTarget (Guid id)
+      {
+        foreach (var gadget in TargetCollection) {
+          if (gadget.Id.Equals (id)) {
+            return (gadget);
+          }
+        }
+
+        return (null);
+      }
+
       public Collection<string> ContentNames ()
       {
         var names = new Collection<string> ();
@@ -339,40 +325,6 @@ namespace Shared.Gadget.Models.Component
         return (names);
       }
 
-      //public void Update (TEntityAction action)
-      //{
-      //  /*
-      //   action.CollectionAction.EntityCollection[id]{ModelAction}
-      //  */
-
-      //  if (action.NotNull ()) {
-      //    if (IsEmpty.IsFalse ()) {
-      //      foreach (var id in IdCollection) {
-      //        if (action.CollectionAction.EntityCollection.ContainsKey (id)) {
-      //          var contentAction = action.CollectionAction.EntityCollection [id];
-
-      //          if (IsCategoryTest) {
-      //            var gadget = contentAction.ModelAction.GadgetTestModel;
-      //            gadget.AddContent (contentAction);
-
-      //            if (ContainsTest (gadget.Id).IsFalse ()) {
-      //              TestCollection.Add (gadget);
-      //            }
-      //          }
-
-      //          if (IsCategoryTarget) {
-      //            var gadget = contentAction.ModelAction.GadgetTargetModel;
-
-      //            if (ContainsTarget (gadget.Id).IsFalse ()) {
-      //              TargetCollection.Add (gadget);
-      //            }
-      //          }
-      //        }
-      //      }
-      //    }
-      //  }
-      //}
-
       public void Update (Collection<GadgetTest> list)
       {
         if (list.NotNull ()) {
@@ -388,6 +340,47 @@ namespace Shared.Gadget.Models.Component
             }
           }
         }
+      }
+
+      public bool UpdateValue (GadgetTest gadgetContent)
+      {
+        bool res = false;
+
+        if (gadgetContent.NotNull ()) {
+          if (gadgetContent.ValidateId) {
+            if (Contains (gadgetContent.Id)) {
+              if (RequestTest (gadgetContent.Id) is GadgetTest gadgetItem) {
+                if (gadgetItem.IsContentTarget) {
+                  var list = new Collection<GadgetTarget> ();
+                  gadgetItem.RequestContent (list);
+
+                  foreach (var item in list) {
+                    if (gadgetContent.RequestContentTarget (item.Id) is GadgetTarget gadget) {
+                      item.ChangeValue (gadget.Value);
+                      res = true;
+                      break;
+                    }
+                  }
+                }
+
+                if (gadgetItem.IsContentTest) {
+                  var list = new Collection<GadgetTest> ();
+                  gadgetItem.RequestContent (list);
+
+                  foreach (var item in list) {
+                    if (gadgetContent.RequestContentTest (item.Id) is GadgetTest gadget) {
+                      item.ChangeValue (gadget.Value);
+                      res = true;
+                      break;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        return (res);
       }
 
       public void CopyFrom (TContent alias)
@@ -465,6 +458,7 @@ namespace Shared.Gadget.Models.Component
 
         return (false);
       }
+
 
       bool ContainsTarget (Guid id)
       {
@@ -744,32 +738,59 @@ namespace Shared.Gadget.Models.Component
 
     public void RequestContent (IList<GadgetTest> collection)
     {
-      Content.Request (collection);
+      if (collection.NotNull ()) {
+        Content.Request (collection);
+      }
+    }
+
+    public GadgetTest RequestContentTest (Guid id)
+    {
+      return (Content.RequestTest (id));
+    }
+
+    public GadgetTarget RequestContentTarget (Guid id)
+    {
+      return (Content.RequestTarget (id));
     }
 
     public void RequestContent (IList<GadgetTarget> collection)
     {
-      Content.Request (collection);
+      if (collection.NotNull ()) {
+        Content.Request (collection);
+      }
     }
 
     public void RequestContentNames (IList<string> collection, bool useSeparator = true)
     {
-      Content.Request (collection, useSeparator, full:false);
+      if (collection.NotNull ()) {
+        Content.Request (collection, useSeparator, full: false);
+      }
     }
 
     public void RequestContentNamesFull (IList<string> collection)
     {
-      Content.Request (collection, useSeparator:true, full:true);
+      if (collection.NotNull ()) {
+        Content.Request (collection, useSeparator: true, full: true);
+      }
     }
 
     public void RequestContentId (IList<Guid> collection)
     {
-      Content.Request (collection);
+      if (collection.NotNull ()) {
+        Content.Request (collection);
+      }
     }
 
     public void UpdateContents (Collection <GadgetTest> list)
     {
-      Content.Update (list);
+      if (list.NotNull ()) {
+        Content.Update (list);
+      }
+    }
+
+    public bool UpdateValue (GadgetTest gadget)
+    {
+      return (Content.UpdateValue (gadget));
     }
 
     public GadgetTest Clone ()

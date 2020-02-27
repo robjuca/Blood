@@ -194,189 +194,187 @@
             <!--selector test-->
             <Border Grid.Row="1"
                     Margin="0 6 0 0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
 
-                <materialDesign:Transitioner SelectedIndex="{Binding Model.SlideIndex, Mode=TwoWay}">
-                    <!--content test-->
-                    <materialDesign:TransitionerSlide OpeningEffect="{materialDesign:TransitionEffect FadeIn}">
-                        <materialDesign:TransitionerSlide.BackwardWipe>
-                            <materialDesign:CircleWipe />
-                        </materialDesign:TransitionerSlide.BackwardWipe>
+                    <!--content-->
+                    <Border Grid.Column="0">
+                        <materialDesign:Transitioner SelectedIndex="{Binding Model.SlideIndex, Mode=TwoWay}">
+                            <!--content test-->
+                            <materialDesign:TransitionerSlide OpeningEffect="{materialDesign:TransitionEffect FadeIn}">
+                                <materialDesign:TransitionerSlide.BackwardWipe>
+                                    <materialDesign:CircleWipe />
+                                </materialDesign:TransitionerSlide.BackwardWipe>
 
-                        <!--content test-->
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="2*" />
-                                <ColumnDefinition />
-                            </Grid.ColumnDefinitions>
-
-                            <!--test-->
-                            <Border Grid.Column="0"
-                                    Padding="0 0 10 0">
+                                <!--content test-->
                                 <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition />
-                                    </Grid.RowDefinitions>
-
-                                    <!--count, test-->
-                                    <Border Grid.Row="0">
-                                        <StackPanel Orientation="Horizontal">
-                                            <!--count-->
-                                            <TextBlock Text="{Binding Model.ContentTestCount}" />
-
-                                            <!--test icon-->
-                                            <ContentControl Margin="3 0 0 0"
-                                                            Style="{DynamicResource GadgetTestMiniIcon}" />
-
-                                            <!--test-->
-                                            <TextBlock Margin="3 0 0 0"
-                                                       Text="Test" />
-                                        </StackPanel>
-                                    </Border>
-
-                                    <!--test list-->
-                                    <Border Grid.Row="1">
-                                        <ListBox ScrollViewer.CanContentScroll="False"
-                                                      MinWidth="200"
-                                                      ItemsSource="{Binding Source={StaticResource ContentTestModelItemsViewSource}}"
-                                                      ItemTemplate="{StaticResource ContentTestListDataTemplate}" />
-                                    </Border>
-                                </Grid>
-                            </Border>
-
-                            <!--Result Modify-->
-                            <Border Grid.Column="1">
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition />
-                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="2*" />
+                                    </Grid.ColumnDefinitions>
 
                                     <!--test-->
-                                    <Border Grid.Row="0">
-                                        <TextBlock  FontWeight="Bold"
-                                                    Text="{Binding Model.ContentTestTargetCurrent.GadgetName}" />
+                                    <Border Grid.Column="0"
+                                            Padding="0 0 10 0">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition />
+                                            </Grid.RowDefinitions>
+
+                                            <!--count, test-->
+                                            <Border Grid.Row="0">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <!--count-->
+                                                    <TextBlock Text="{Binding Model.ContentTestCount}" />
+
+                                                    <!--test icon-->
+                                                    <ContentControl Margin="3 0 0 0"
+                                                                    Style="{DynamicResource GadgetTestMiniIcon}" />
+
+                                                    <!--test-->
+                                                    <TextBlock Margin="3 0 0 0"
+                                                               Text="Test" />
+                                                </StackPanel>
+                                            </Border>
+
+                                            <!--test list-->
+                                            <Border Grid.Row="1">
+                                                <ListBox ScrollViewer.CanContentScroll="False"
+                                                         MinWidth="200"
+                                                         ItemsSource="{Binding Source={StaticResource ContentTestModelItemsViewSource}}"
+                                                         ItemTemplate="{StaticResource ContentTestListDataTemplate}" />
+                                            </Border>
+                                        </Grid>
                                     </Border>
 
-                                    <Border Grid.Row="1">
-                                        <Separator />
-                                    </Border>
-
-                                    <Border Grid.Row="2">
-                                        <ListBox ScrollViewer.CanContentScroll="False"
-                                                 ItemsSource="{Binding Model.ContentTestTargetCurrent.ContentTargetCollection}"
-                                                 ItemTemplate="{StaticResource ContentTargetDataTemplate}" />
-                                    </Border>
-                                </Grid>
-                            </Border>
-
-                            <!--comands-->
-                            <Border Grid.Column="2">
-                                <StackPanel>
-                                    <Button BorderThickness="0"
-                                            HorizontalAlignment="Center"
-                                            VerticalAlignment="Top"
-                                            Background="Transparent"
-                                            Content="Modify">
-                                    </Button>
-                                </StackPanel>
-                            </Border>
-                        </Grid>
-                    </materialDesign:TransitionerSlide>
-
-                    <!--content target-->
-                    <materialDesign:TransitionerSlide OpeningEffect="{materialDesign:TransitionEffect FadeIn}">
-                        <materialDesign:TransitionerSlide.BackwardWipe>
-                            <materialDesign:SlideOutWipe />
-                        </materialDesign:TransitionerSlide.BackwardWipe>
-
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="2*" />
-                                <ColumnDefinition />
-                            </Grid.ColumnDefinitions>
-
-                            <!--test-->
-                            <Border Grid.Column="0"
-                                    Padding="0 0 10 0">
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition />
-                                    </Grid.RowDefinitions>
-
-                                    <!--count, test-->
-                                    <Border Grid.Row="0">
-                                        <StackPanel Orientation="Horizontal">
-                                            <!--count-->
-                                            <TextBlock Text="{Binding Model.ContentTargetCount}" />
-
-                                            <!--test icon-->
-                                            <ContentControl Margin="3 0 0 0"
-                                                            Style="{DynamicResource GadgetTestMiniIcon}" />
+                                    <!--Result Modify-->
+                                    <Border Grid.Column="1">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition />
+                                            </Grid.RowDefinitions>
 
                                             <!--test-->
-                                            <TextBlock Margin="3 0 0 0"
-                                                       Text="Test" />
-                                        </StackPanel>
-                                    </Border>
+                                            <Border Grid.Row="0">
+                                                <TextBlock  FontWeight="Bold"
+                                                            Text="{Binding Model.ContentTestTargetCurrent.GadgetName}" />
+                                            </Border>
 
-                                    <!--test list-->
-                                    <Border Grid.Row="1">
-                                        <ListBox x:Name="ContentTestList" ScrollViewer.CanContentScroll="False"
-                                                 MinWidth="200"
-                                                 SelectedIndex="{Binding Model.ContentTargetSelectedIndex}"
-                                                 caliburn:Message.Attach="[Event SelectionChanged] = [OnContentTargetSelectionChanged (ContentTestList.SelectedItem)]"
-                                                 ItemsSource="{Binding Source={StaticResource ContentTargetModelItemsViewSource}}"
-                                                 ItemTemplate="{StaticResource ContentTargetListDataTemplate}" />
+                                            <Border Grid.Row="1">
+                                                <Separator />
+                                            </Border>
+
+                                            <Border Grid.Row="2">
+                                                <ListBox ScrollViewer.CanContentScroll="False"
+                                                         ItemsSource="{Binding Model.ContentTestTargetCurrent.ContentTargetCollection}"
+                                                         ItemTemplate="{StaticResource ContentTargetDataTemplate}" />
+                                            </Border>
+                                        </Grid>
                                     </Border>
                                 </Grid>
-                            </Border>
+                            </materialDesign:TransitionerSlide>
 
-                            <!--Result Modify-->
-                            <Border Grid.Column="1">
+                            <!--content target-->
+                            <materialDesign:TransitionerSlide OpeningEffect="{materialDesign:TransitionEffect FadeIn}">
+                                <materialDesign:TransitionerSlide.BackwardWipe>
+                                    <materialDesign:SlideOutWipe />
+                                </materialDesign:TransitionerSlide.BackwardWipe>
+
                                 <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition />
-                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="2*" />
+                                    </Grid.ColumnDefinitions>
 
                                     <!--test-->
-                                    <Border Grid.Row="0">
-                                        <TextBlock  FontWeight="Bold"
-                                                    Text="{Binding Model.ContentTargetCurrent.GadgetName}" />
+                                    <Border Grid.Column="0"
+                                            Padding="0 0 10 0">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition />
+                                            </Grid.RowDefinitions>
+
+                                            <!--count, test-->
+                                            <Border Grid.Row="0">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <!--count-->
+                                                    <TextBlock Text="{Binding Model.ContentTargetCount}" />
+
+                                                    <!--test icon-->
+                                                    <ContentControl Margin="3 0 0 0"
+                                                                    Style="{DynamicResource GadgetTestMiniIcon}" />
+
+                                                    <!--test-->
+                                                    <TextBlock Margin="3 0 0 0"
+                                                               Text="Test" />
+                                                </StackPanel>
+                                            </Border>
+
+                                            <!--test list-->
+                                            <Border Grid.Row="1">
+                                                <ListBox x:Name="ContentTestList"
+                                                         ScrollViewer.CanContentScroll="False"
+                                                         MinWidth="200"
+                                                         SelectedIndex="{Binding Model.ContentTargetSelectedIndex}"
+                                                         caliburn:Message.Attach="[Event SelectionChanged] = [OnContentTargetSelectionChanged (ContentTestList.SelectedItem)]"
+                                                         ItemsSource="{Binding Source={StaticResource ContentTargetModelItemsViewSource}}"
+                                                         ItemTemplate="{StaticResource ContentTargetListDataTemplate}" />
+                                            </Border>
+                                        </Grid>
                                     </Border>
 
-                                    <Border Grid.Row="1">
-                                        <Separator />
-                                    </Border>
+                                    <!--Result Modify-->
+                                    <Border Grid.Column="1">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition />
+                                            </Grid.RowDefinitions>
 
-                                    <Border Grid.Row="2">
-                                        <ListBox ScrollViewer.CanContentScroll="False"
-                                                 ItemsSource="{Binding Model.ContentTargetCurrent.ContentTargetCollection}"
-                                                 ItemTemplate="{StaticResource ContentTargetDataTemplate}" />
+                                            <!--test-->
+                                            <Border Grid.Row="0">
+                                                <TextBlock  FontWeight="Bold"
+                                                            Text="{Binding Model.ContentTargetCurrent.GadgetName}" />
+                                            </Border>
+
+                                            <Border Grid.Row="1">
+                                                <Separator />
+                                            </Border>
+
+                                            <Border Grid.Row="2">
+                                                <ListBox ScrollViewer.CanContentScroll="False"
+                                                         ItemsSource="{Binding Model.ContentTargetCurrent.ContentTargetCollection}"
+                                                         ItemTemplate="{StaticResource ContentTargetDataTemplate}" />
+                                            </Border>
+                                        </Grid>
                                     </Border>
                                 </Grid>
-                            </Border>
+                            </materialDesign:TransitionerSlide>
+                        </materialDesign:Transitioner>
+                    </Border>
 
-                            <!--comands-->
-                            <Border Grid.Column="2">
-                                <StackPanel>
-                                    <Button BorderThickness="0"
-                                            HorizontalAlignment="Center"
-                                            VerticalAlignment="Top"
-                                            Background="Transparent"
-                                            Content="Modify">
-                                    </Button>
-                                </StackPanel>
-                            </Border>
-                        </Grid>
-                    </materialDesign:TransitionerSlide>
-                </materialDesign:Transitioner>
+                    <!--commands-->
+                    <Border Grid.Column="1"
+                            Width="150">
+                        <StackPanel>
+                            <Button BorderThickness="0"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Top"
+                                    Background="Transparent"
+                                    Content="Modify"
+                                    caliburn:Message.Attach="[Event Click] = [OnModifyCommandClicked ()]">
+                            </Button>
+                        </StackPanel>
+                    </Border>
+                </Grid>
             </Border>
         </Grid>
     </Border>

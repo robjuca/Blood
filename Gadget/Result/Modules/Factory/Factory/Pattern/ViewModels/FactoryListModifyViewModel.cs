@@ -10,6 +10,8 @@ using System.ComponentModel.Composition;
 using rr.Library.Infrastructure;
 using rr.Library.Helper;
 
+using Server.Models.Infrastructure;
+
 using Shared.Types;
 using Shared.Resources;
 using Shared.ViewModel;
@@ -95,6 +97,11 @@ namespace Gadget.Factory.Pattern.ViewModels
         TDispatcher.BeginInvoke (ContentTargetChangedDispatcher, gadget);
       }
     }
+
+    public void OnModifyCommandClicked ()
+    {
+      TDispatcher.Invoke (ModifyCommandDispatcher);
+    }
     #endregion
 
     #region Dispatcher
@@ -137,6 +144,12 @@ namespace Gadget.Factory.Pattern.ViewModels
     {
       Model.ContentTargetChanged (gadget);
       RaiseChanged ();
+    }
+
+    void ModifyCommandDispatcher ()
+    {
+      var component = TActionComponent.Create (TCategory.Result);
+      Model.Request (component);
     }
     #endregion
 

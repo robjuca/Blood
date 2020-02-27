@@ -422,53 +422,6 @@ namespace Shared.Gadget.Models.Component
       return (model);
     }
 
-    //public void RefreshModel (TEntityAction action)
-    //{
-    //  if (action.NotNull ()) {
-    //    if (action.CategoryType.IsCategory (Infrastructure.TCategory.Result)) {
-    //      // update model action
-    //      if (action.ModelAction.ComponentInfoModel.Id.NotEmpty ()) {
-    //        CopyFrom (action.ModelAction); // my self
-    //        action.ModelAction.GadgetResultModel.CopyFrom (this);
-    //      }
-
-    //      foreach (var modelAction in action.CollectionAction.ModelCollection) {
-    //        if (modelAction.Value.ComponentInfoModel.Id.NotEmpty ()) {
-    //          var gadget = GadgetResult.CreateDefault;
-    //          gadget.CopyFrom (modelAction.Value);
-
-    //          action.CollectionAction.GadgetResultCollection.Add (gadget);
-    //        }
-    //      }
-
-    //      // relation
-    //      if (action.CollectionAction.IsComponentOperation (TComponentOperation.TInternalOperation.Category)) {
-    //        foreach (var gadget in action.CollectionAction.GadgetResultCollection) {
-    //          foreach (var item in action.CollectionAction.ComponentOperation.ParentCategoryCollection) {
-    //            foreach (var relation in item.Value) {
-    //              if (relation.ParentId.Equals (gadget.Id)) {
-    //                gadget.AddContentId (relation.ChildId, relation.ChildCategory);
-    //              }
-    //            }
-    //          }
-    //        }
-    //      }
-    //    }
-    //  }
-    //}
-
-    //public void Refresh (TEntityAction action)
-    //{
-    //  //TODO: what for????
-    //  if (action.NotNull ()) {
-    //    if (action.CategoryType.IsCategory (Infrastructure.TCategory.Result)) {
-    //      // update model action
-    //      CopyFrom (action.ModelAction); // my self
-    //      action.ModelAction.GadgetResultModel.CopyFrom (this);
-    //    }
-    //  }
-    //}
-
     public bool IsRegistrationContent (Guid id)
     {
       return (Content.IsRegistration (id));

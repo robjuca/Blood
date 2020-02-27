@@ -35,6 +35,12 @@ namespace Shared.Gadget.Models.Component
       set;
     }
 
+    public Guid MaterialId
+    {
+      get;
+      set;
+    }
+
     public string Material
     {
       get;
@@ -137,6 +143,18 @@ namespace Shared.Gadget.Models.Component
       private set;
     }
 
+    public string Reference
+    {
+      get;
+      set;
+    }
+
+    public string Value
+    {
+      get;
+      set;
+    }
+
     public TObservableCommand ObservableCommand
     {
       get; 
@@ -158,6 +176,10 @@ namespace Shared.Gadget.Models.Component
       IsChecked = false;
       Image = new Collection<byte> ();
       Date = DateTime.Now;
+
+      MaterialId = Guid.Empty;
+      Reference = string.Empty;
+      Value = string.Empty;
 
       ObservableCommand = new TObservableCommand (new DelegateCommand<object> (ObservableCommandHandler));
     }
@@ -191,6 +213,9 @@ namespace Shared.Gadget.Models.Component
         IsChecked = alias.IsChecked;
         SetImage (alias.Image);
         Date = alias.Date;
+        MaterialId = alias.MaterialId;
+        Reference = alias.Reference;
+        Value = alias.Value;
       }
     }
 
@@ -207,6 +232,15 @@ namespace Shared.Gadget.Models.Component
         IsChecked = alias.IsChecked;
         SetImage (alias.Image);
         Date = alias.Date;
+        Reference = alias.Reference;
+        Value = alias.Value;
+      }
+    }
+
+    public void ChangeValue (string value)
+    {
+      if (value.NotNull ()) {
+        Value = value;
       }
     }
 
