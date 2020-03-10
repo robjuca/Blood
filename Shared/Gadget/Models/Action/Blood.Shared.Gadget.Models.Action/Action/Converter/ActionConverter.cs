@@ -127,9 +127,19 @@ namespace Shared.Gadget.Models.Action
             break;
         }
       }
-    }  
-    #endregion
+    }
 
+    public static void Modify (TCategory category, TActionComponent component, TEntityAction entityAction)
+    {
+      if (component.NotNull () && entityAction.NotNull ()) {
+        switch (category) {
+          case TCategory.Result:
+            TGadgetResultConverter.Modify (component, entityAction);
+            break;
+        }
+      }
+    }
+    #endregion
     #endregion
   };
   //---------------------------//

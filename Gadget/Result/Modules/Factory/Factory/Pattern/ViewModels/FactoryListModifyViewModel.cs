@@ -11,10 +11,12 @@ using rr.Library.Infrastructure;
 using rr.Library.Helper;
 
 using Server.Models.Infrastructure;
+using Server.Models.Action;
 
 using Shared.Types;
 using Shared.Resources;
 using Shared.ViewModel;
+
 using Shared.Gadget.Models.Action;
 using Shared.Gadget.Models.Component;
 
@@ -45,7 +47,13 @@ namespace Gadget.Factory.Pattern.ViewModels
       if (message.IsModule (TResource.TModule.Factory)) {
         // from parent
         if (message.Node.IsParentToMe (TChild.List)) {
-
+          // Response
+          if (message.IsAction (TInternalMessageAction.Response)) {
+            // Change - Many
+            if (message.Support.Argument.Types.IsOperation (TOperation.Change, TExtension.Many)) {
+              TDispatcher.Invoke (ChangeSuccessDispatcher);
+            }
+          }
         }
 
         // from Sibling
@@ -150,6 +158,19 @@ namespace Gadget.Factory.Pattern.ViewModels
     {
       var component = TActionComponent.Create (TCategory.Result);
       Model.Request (component);
+
+      var entityAction = TEntityAction.Create (TCategory.Result, TOperation.Change, TExtension.Many);
+      TActionConverter.Modify (TCategory.Result, component, entityAction);
+
+      // to parent
+      var message = new TFactoryMessageInternal (TInternalMessageAction.Request, TChild.List, TypeInfo);
+      message.Support.Argument.Types.Select (entityAction);
+
+      DelegateCommand.PublishInternalMessage.Execute (message);
+    }
+
+    void ChangeSuccessDispatcher ()
+    {
     }
     #endregion
 

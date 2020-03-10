@@ -358,7 +358,6 @@ namespace Shared.Gadget.Models.Component
                     if (gadgetContent.RequestContentTarget (item.Id) is GadgetTarget gadget) {
                       item.ChangeValue (gadget.Value);
                       res = true;
-                      break;
                     }
                   }
                 }
@@ -371,7 +370,6 @@ namespace Shared.Gadget.Models.Component
                     if (gadgetContent.RequestContentTest (item.Id) is GadgetTest gadget) {
                       item.ChangeValue (gadget.Value);
                       res = true;
-                      break;
                     }
                   }
                 }

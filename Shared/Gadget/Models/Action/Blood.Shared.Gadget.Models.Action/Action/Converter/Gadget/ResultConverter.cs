@@ -154,6 +154,10 @@ namespace Shared.Gadget.Models.Action
         entityAction.ModelAction.ExtensionContentModel.Contents = contentString.ToString ();
       }
     }
+
+    public static void Modify (TActionComponent component, TEntityAction entityAction)
+    {
+    }
     #endregion
   };
   //---------------------------//

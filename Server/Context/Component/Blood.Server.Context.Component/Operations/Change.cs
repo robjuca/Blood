@@ -16,49 +16,57 @@ using Server.Models.Action;
 
 namespace Server.Context.Component
 {
-  public sealed class TOperationChange : Server.Models.Infrastructure.IOperation
+  public sealed class TOperationChange : IOperation
   {
     #region Interface
-    public void Invoke (IModelContext modelContext, IEntityAction entityAction, Server.Models.Infrastructure.TExtension extension)
+    public void Invoke (IModelContext modelContext, IEntityAction entityAction, TExtension extension)
     {
-      var context = TModelContext.CastTo (modelContext);
+      if (modelContext != null) {
+        var context = TModelContext.CastTo (modelContext);
 
-      var relationList = context.CategoryRelation
-        .ToList ()
-      ;
+        var relationList = context.CategoryRelation
+          .ToList ()
+        ;
 
-      var action = TEntityAction.Request (entityAction);
-      action.CollectionAction.SetCollection (relationList);
+        if (entityAction .NotNull ()) {
+          var action = TEntityAction.Request (entityAction);
+          action.CollectionAction.SetCollection (relationList);
 
-      if (action.Operation.HasExtension) {
-        switch (extension) {
-          case Models.Infrastructure.TExtension.Settings: {
-              ChangeSettings (context, action);
+          if (action.Operation.HasExtension) {
+            switch (extension) {
+              case TExtension.Settings: {
+                  ChangeSettings (context, action);
+                }
+                break;
+
+              case TExtension.Many: {
+                  ChangeMany (context, action);
+                }
+                break;
+
+              case TExtension.Full: {
+                  ChangeFull (context, action);
+                }
+                break;
+
+              case TExtension.Active: {
+                  ChangeActive (context, action);
+                }
+                break;
+
+              case TExtension.ById:
+              case TExtension.Idle:
+              case TExtension.Zap: {
+                  Models.Infrastructure.THelper.FormatExtensionNotImplementedException (action);
+                }
+                break;
             }
-            break;
+          }
 
-          case Models.Infrastructure.TExtension.Full: {
-              ChangeFull (context, action);
-            }
-            break;
-
-          case Models.Infrastructure.TExtension.Active: {
-              ChangeActive (context, action);
-            }
-            break;
-
-          case Models.Infrastructure.TExtension.ById:
-          case Models.Infrastructure.TExtension.Idle:
-          case Models.Infrastructure.TExtension.Many:
-          case Models.Infrastructure.TExtension.Zap: {
-              Server.Models.Infrastructure.THelper.FormatExtensionNotImplementedException (action);
-            }
-            break;
+          else {
+            Models.Infrastructure.THelper.FormatExtensionMustExistException (action);
+          }
         }
-      }
-
-      else {
-        Server.Models.Infrastructure.THelper.FormatExtensionMustExistException (action);
       }
     }
     #endregion
@@ -73,8 +81,8 @@ namespace Server.Context.Component
 
       try {
         var modelList = context.Settings
-        .ToList ()
-      ;
+          .ToList ()
+        ;
 
         // only one record
         if (modelList.Count.Equals (1)) {
@@ -94,11 +102,26 @@ namespace Server.Context.Component
       }
 
       catch (Exception exception) {
-        Server.Models.Infrastructure.THelper.FormatException ("Change - Settings", exception, action);
+        Models.Infrastructure.THelper.FormatException ("Change - Settings", exception, action);
       }
     }
 
-    void ChangeFull (TModelContext context, TEntityAction action)
+    void ChangeMany (TModelContext context, TEntityAction action)
+    {
+      /*
+      DATA IN
+      - action.CollectionAction.EntityCollection
+      */
+
+      foreach (var item in action.CollectionAction.EntityCollection) {
+        var entityAction = item.Value;
+        entityAction.Id = item.Key;
+
+        ChangeFull (context, entityAction);
+      }
+    }
+
+    static void ChangeFull (TModelContext context, TEntityAction action)
     {
       /*
       DATA IN
@@ -466,7 +489,7 @@ namespace Server.Context.Component
         }
 
         catch (Exception exception) {
-          Server.Models.Infrastructure.THelper.FormatException ("Change - Full", exception, action);
+          Models.Infrastructure.THelper.FormatException ("Change - Full", exception, action);
         }
       }
     }
@@ -567,12 +590,11 @@ namespace Server.Context.Component
       }
 
       catch (Exception exception) {
-        Server.Models.Infrastructure.THelper.FormatException ("Change - Active", exception, action);
+        Models.Infrastructure.THelper.FormatException ("Change - Active", exception, action);
       }
-      
     }
 
-    bool ValidateString (TEntityAction action)
+    static bool ValidateString (TEntityAction action)
     {
       if (string.IsNullOrEmpty (action.ModelAction.ComponentInfoModel.Name.Trim ())) {
         action.Result = new TValidationResult ($"[{action.Operation.CategoryType.Category} - Change] Name can NOT be NULL or EMPTY!");
