@@ -8,10 +8,10 @@
 
 namespace Shared.Message
 {
-  public class TArgumentInternal<I> : TArgumentTypesDefault
+  public class TArgumentInternal<T> : TArgumentTypesDefault
   {
     #region Property
-    public I Item
+    public T Item
     {
       get;
       private set;
@@ -19,7 +19,7 @@ namespace Shared.Message
     #endregion
 
     #region Constructor
-    public TArgumentInternal (I item)
+    public TArgumentInternal (T item)
     {
       Item = item;
     }

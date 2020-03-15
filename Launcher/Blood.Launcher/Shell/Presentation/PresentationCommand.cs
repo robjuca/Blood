@@ -12,13 +12,20 @@ namespace Launcher.Shell.Presentation
   {
     #region IDelegateCommand Members
 
-    
+
     #endregion
 
     #region Constructor
     public TPresentationCommand (TShellPresentation presentation)
     {
     }
+
+    #region Interface
+    public void DoNothing ()
+    {
+      // dummy
+    } 
+    #endregion
     #endregion
   }
   //---------------------------//

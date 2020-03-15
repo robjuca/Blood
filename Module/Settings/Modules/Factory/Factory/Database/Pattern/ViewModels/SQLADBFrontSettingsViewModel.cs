@@ -4,6 +4,7 @@
 ----------------------------------------------------------------*/
 
 //----- Include
+using System;
 using System.ComponentModel.Composition;
 
 using rr.Library.Infrastructure;
@@ -25,48 +26,47 @@ namespace Module.Settings.Factory.Database.Pattern.ViewModels
     #region Constructor
     [ImportingConstructor]
     public TSQLADBFrontSettingsViewModel (IFactoryDatabasePresentation presentation)
-      : base (new TSQLADBFrontSettingsModel ())
+      : base (presentation, new TSQLADBFrontSettingsModel ())
     {
       TypeName = GetType ().Name;
-
-      presentation.RequestPresentationCommand (this);
-      presentation.EventSubscribe (this);
     }
     #endregion
 
     #region Handle
     public void Handle (TMessageInternal message)
     {
-      // from parent
-      if (message.Node.IsParentToMe (TChild.Front)) {
-        if (message.Support.Argument.Types.Authentication.Equals (TAuthentication.SQL)) {
-          if (message.IsAction (TInternalMessageAction.DatabaseResponse)) {
-            Model.Populate (message.Support.Argument.Types.ConnectionData);
-            RaiseChanged ();
+      if (message.NotNull ()) {
+        // from parent
+        if (message.Node.IsParentToMe (TChild.Front)) {
+          if (message.Support.Argument.Types.Authentication.Equals (TAuthentication.SQL)) {
+            if (message.IsAction (TInternalMessageAction.DatabaseResponse)) {
+              Model.Populate (message.Support.Argument.Types.ConnectionData);
+              ApplyChanges ();
+            }
           }
         }
-      }
 
-      // from sibiling
-      if (message.Node.IsSiblingToMe (TChild.Front, TypeInfo)) {
-        if (message.Support.Argument.Types.Authentication.Equals (TAuthentication.SQL)) {
-          if (message.IsAction (TInternalMessageAction.Request)) {
-            TDispatcher.Invoke (ResponseDataDispatcher);
-          }
+        // from sibiling
+        if (message.Node.IsSiblingToMe (TChild.Front, TypeInfo)) {
+          if (message.Support.Argument.Types.Authentication.Equals (TAuthentication.SQL)) {
+            if (message.IsAction (TInternalMessageAction.Request)) {
+              TDispatcher.Invoke (ResponseDataDispatcher);
+            }
 
-          if (message.IsAction (TInternalMessageAction.EditEnter)) {
-            Model.FactoryEnter ();
-            RaiseChanged ();
-          }
+            if (message.IsAction (TInternalMessageAction.EditEnter)) {
+              Model.FactoryEnter ();
+              ApplyChanges ();
+            }
 
-          if (message.IsAction (TInternalMessageAction.EditLeave)) {
-            Model.FactoryLeave ();
-            RaiseChanged ();
-          }
+            if (message.IsAction (TInternalMessageAction.EditLeave)) {
+              Model.FactoryLeave ();
+              ApplyChanges ();
+            }
 
-          if (message.IsAction (TInternalMessageAction.Change)) {
-            Model.Populate (message.Support.Argument.Types.ConnectionData);
-            RaiseChanged ();
+            if (message.IsAction (TInternalMessageAction.Change)) {
+              Model.Populate (message.Support.Argument.Types.ConnectionData);
+              ApplyChanges ();
+            }
           }
         }
       }

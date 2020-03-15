@@ -4,6 +4,7 @@
 ----------------------------------------------------------------*/
 
 //----- Include
+using System;
 using System.ComponentModel.Composition;
 
 using rr.Library.Infrastructure;
@@ -29,26 +30,25 @@ namespace Module.Settings.Factory.Support.Pattern.ViewModels
     #region Constructor
     [ImportingConstructor]
     public TFactorySupportViewModel (IFactorySupportPresentation presentation)
-      : base (new TFactorySupportModel ())
+      : base (presentation, new TFactorySupportModel ())
     {
       TypeName = GetType ().Name;
-
-      presentation.ViewModel = this;
-      presentation.EventSubscribe (this);
     }
     #endregion
 
     #region IHandle
     public void Handle (TMessageModule message)
     {
-      // shell
-      if (message.IsModule (TResource.TModule.Shell)) {
-        if (message.IsAction (TMessageAction.DatabaseValidated)) {
-          if (message.Support.Argument.Types.EntityAction.Param1 is TComponentModelItem item) {
-            Model.Select (item);
+      if (message.NotNull ()) {
+        // shell
+        if (message.IsModule (TResource.TModule.Shell)) {
+          if (message.IsAction (TMessageAction.DatabaseValidated)) {
+            if (message.Support.Argument.Types.EntityAction.Param1 is TComponentModelItem item) {
+              Model.Select (item);
 
-            RaiseChanged ();
-          } 
+              ApplyChanges ();
+            }
+          }
         }
       }
     }
@@ -61,7 +61,7 @@ namespace Module.Settings.Factory.Support.Pattern.ViewModels
         TDispatcher.Invoke (ApplyDispatcher);
       }
 
-      RaiseChanged ();
+      ApplyChanges ();
     }
     #endregion
 

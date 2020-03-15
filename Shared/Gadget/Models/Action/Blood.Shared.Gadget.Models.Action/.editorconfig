@@ -1,0 +1,5 @@
+
+###############################
+# FxCopAnalyzer v2.9.8       #
+###############################
+dotnet_code_quality.null_check_validation_methods = NotNull 

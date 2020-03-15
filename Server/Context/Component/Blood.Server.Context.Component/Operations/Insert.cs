@@ -21,21 +21,25 @@ namespace Server.Context.Component
     #region Interface
     public void Invoke (IModelContext modelContext, IEntityAction entityAction, Server.Models.Infrastructure.TExtension extension)
     {
-      var context = TModelContext.CastTo (modelContext);
+      if (modelContext.NotNull ()) {
+        var context = TModelContext.CastTo (modelContext);
 
-      var relationList = context.CategoryRelation
-        .ToList ()
-      ;
+        var relationList = context.CategoryRelation
+          .ToList ()
+        ;
 
-      var action = TEntityAction.Request (entityAction);
-      action.CollectionAction.SetCollection (relationList);
+        if (entityAction.NotNull ()) {
+          var action = TEntityAction.Request (entityAction);
+          action.CollectionAction.SetCollection (relationList);
 
-      if (action.Operation.HasExtension) {
-        Server.Models.Infrastructure.THelper.FormatExtensionNotImplementedException (action);
-      }
+          if (action.Operation.HasExtension) {
+            Server.Models.Infrastructure.THelper.FormatExtensionNotImplementedException (action);
+          }
 
-      else {
-        Insert (context, action);
+          else {
+            Insert (context, action);
+          }
+        }
       }
     }
     #endregion
@@ -85,7 +89,7 @@ namespace Server.Context.Component
 
           // status collection
           foreach (var item in action.CollectionAction.ComponentStatusCollection) {
-            var list = context.ComponentStatus
+            var list = context.ComponentStatus.AsQueryable()
               .Where (p => p.Id.Equals (item.Id))
               .ToList ()
             ;
@@ -107,7 +111,7 @@ namespace Server.Context.Component
           // Component Relation Collection
           foreach (var item in action.CollectionAction.ComponentRelationCollection) {
             // change child status busy to true
-            var childList = context.ComponentStatus
+            var childList = context.ComponentStatus.AsQueryable()
               .Where (p => p.Id.Equals (item.ChildId))
               .ToList ()
             ;
@@ -141,7 +145,7 @@ namespace Server.Context.Component
 
             foreach (var extensionName in extension.ExtensionList) {
               switch (extensionName) {
-                case TComponentExtensionName.Document: {
+                case TComponentExtensionNames.Document: {
                     //action.ModelAction.ExtensionDocumentModel.Id = id;
 
                     //var extDocument = ExtensionDocument.CreateDefault;
@@ -151,7 +155,7 @@ namespace Server.Context.Component
                   }
                   break;
 
-                case TComponentExtensionName.Geometry: {
+                case TComponentExtensionNames.Geometry: {
                     action.ModelAction.ExtensionGeometryModel.Id = id;
 
                     var extGeometry = ExtensionGeometry.CreateDefault;
@@ -161,7 +165,7 @@ namespace Server.Context.Component
                   }
                   break;
 
-                case TComponentExtensionName.Image: {
+                case TComponentExtensionNames.Image: {
                     action.ModelAction.ExtensionImageModel.Id = id;
 
                     var extImage = ExtensionImage.CreateDefault;
@@ -171,7 +175,7 @@ namespace Server.Context.Component
                   }
                   break;
 
-                case TComponentExtensionName.Layout: {
+                case TComponentExtensionNames.Layout: {
                     action.ModelAction.ExtensionLayoutModel.Id = id;
 
                     var extLayout = ExtensionLayout.CreateDefault;
@@ -181,7 +185,7 @@ namespace Server.Context.Component
                   }
                   break;
 
-                case TComponentExtensionName.Node: {
+                case TComponentExtensionNames.Node: {
                     // Node reverse
                     if (compStatus.NodeReverse) {
                       // use Node from ModelAction (only)
@@ -192,7 +196,7 @@ namespace Server.Context.Component
                         // update status
                         var parentId = action.ModelAction.ExtensionNodeModel.ParentId;
 
-                        var statusList = context.ComponentStatus
+                        var statusList = context.ComponentStatus.AsQueryable()
                           .Where (p => p.Id.Equals (parentId))
                           .ToList ()
                         ;
@@ -227,13 +231,13 @@ namespace Server.Context.Component
                       context.SaveChanges (); // update all
 
                       // update status
-                      var nodeList = context.ExtensionNode
+                      var nodeList = context.ExtensionNode.AsQueryable()
                         .Where (p => p.ParentId.Equals (id))
                         .ToList ()
                       ;
 
                       foreach (var node in nodeList) {
-                        var statusList = context.ComponentStatus
+                        var statusList = context.ComponentStatus.AsQueryable()
                           .Where (p => p.Id.Equals (node.ChildId))
                           .ToList ()
                         ;
@@ -252,7 +256,7 @@ namespace Server.Context.Component
                   }
                   break;
 
-                case TComponentExtensionName.Text: {
+                case TComponentExtensionNames.Text: {
                     action.ModelAction.ExtensionTextModel.Id = id;
 
                     var extText = ExtensionText.CreateDefault;
@@ -262,7 +266,7 @@ namespace Server.Context.Component
                   }
                   break;
 
-                case TComponentExtensionName.Content: {
+                case TComponentExtensionNames.Content: {
                     action.ModelAction.ExtensionContentModel.Id = id;
 
                     var extContent = ExtensionContent.CreateDefault;
@@ -286,7 +290,7 @@ namespace Server.Context.Component
       }
     }
 
-    bool ValidateString (TEntityAction action)
+    static bool ValidateString (TEntityAction action)
     {
       if (string.IsNullOrEmpty (action.ModelAction.ComponentInfoModel.Name.Trim ())) {
         action.Result = new TValidationResult ($"[{action.Operation.CategoryType.Category} - Insert] Name can NOT be NULL or EMPTY!");

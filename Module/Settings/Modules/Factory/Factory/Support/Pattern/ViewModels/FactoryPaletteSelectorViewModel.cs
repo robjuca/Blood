@@ -4,6 +4,7 @@
 ----------------------------------------------------------------*/
 
 //----- Include
+using System;
 using System.ComponentModel.Composition;
 
 using rr.Library.Infrastructure;
@@ -25,31 +26,30 @@ namespace Module.Settings.Factory.Support.Pattern.ViewModels
     #region Constructor
     [ImportingConstructor]
     public TFactoryPaletteSelectorViewModel (IFactorySupportPresentation presentation)
-      : base (new TFactoryPaletteSelectorModel ())
+      : base (presentation, new TFactoryPaletteSelectorModel ())
     {
       TypeName = GetType ().Name;
-
-      presentation.ViewModel = this;
-      presentation.EventSubscribe (this);
     }
     #endregion
 
     #region IHandle
     public void Handle (TMessageModule message)
     {
-      // shell
-      if (message.IsModule (TResource.TModule.Shell)) {
-        if (message.IsAction (TMessageAction.DatabaseValidated)) {
-          TDispatcher.Invoke (IniFileManagerDispatcher);
+      if (message.NotNull ()) {
+        // shell
+        if (message.IsModule (TResource.TModule.Shell)) {
+          if (message.IsAction (TMessageAction.DatabaseValidated)) {
+            TDispatcher.Invoke (IniFileManagerDispatcher);
+          }
         }
       }
     }
     #endregion
 
     #region Event
-    public void OnProcessChecked (object obj)
+    public void OnProcessChecked (object value)
     {
-      if (obj is TProcessInfo info) {
+      if (value is TProcessInfo info) {
         TDispatcher.BeginInvoke (ProcessSelectedDispatcher, info);
       }
     }
@@ -63,7 +63,7 @@ namespace Module.Settings.Factory.Support.Pattern.ViewModels
     #region Dispatcher
     void RefreshDispatcher ()
     {
-      RaiseChanged ();
+      ApplyChanges ();
       RefreshCollection ("ProcessInfoViewSource");
     }
 

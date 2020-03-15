@@ -6,13 +6,14 @@
 //----- Include
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 using rr.Library.Types;
 //---------------------------//
 
 namespace Shared.Types
 {
-  public class TContentStyle
+  public static class TContentStyle
   {
     #region Data
     public enum Style
@@ -33,7 +34,7 @@ namespace Shared.Types
     #endregion
 
     #region Property
-    public TSize WindowSize
+    public static TSize WindowSize
     {
       get
       {
@@ -45,7 +46,7 @@ namespace Shared.Types
       }
     }
 
-    public string WindowSizeString
+    public static string WindowSizeString
     {
       get
       {
@@ -53,7 +54,7 @@ namespace Shared.Types
       }
     }
 
-    public string HorizontalStyleSizeString
+    public static string HorizontalStyleSizeString
     {
       get
       {
@@ -61,7 +62,7 @@ namespace Shared.Types
       }
     }
 
-    public string VerticalStyleSizeString
+    public static string VerticalStyleSizeString
     {
       get
       {
@@ -69,7 +70,7 @@ namespace Shared.Types
       }
     }
 
-    public string DashBoardSizeString
+    public static string DashBoardSizeString
     {
       get
       {
@@ -91,66 +92,34 @@ namespace Shared.Types
 
     public static Array GetValues => (Enum.GetValues (typeof (Style)));
 
-    public static string [] Names = new string [] { MINI, SMALL, LARGE, BIG, NONE };
+    public static readonly string [] Names = new string [] { MINI, SMALL, LARGE, BIG, NONE };
 
     public static int ColumnWidth
     {
       get
       {
+        if (m_ColumnWidth.Equals (0)) {
+          var supportSettings = TSupportSettings.CreateDefault;
+
+          if (supportSettings.Validate ()) {
+            var settingsValue = TSupportSettingsData.Request ("ColumnWidth");
+
+            m_ColumnWidth = int.Parse (settingsValue, NumberStyles.Integer, CultureInfo.InvariantCulture);
+          }
+        }
+
         return (m_ColumnWidth);
       }
     }
     #endregion
 
-    #region Constructor
-    static TContentStyle ()
-    {
-      if (m_ColumnWidth.Equals (0)) {
-        var supportSettings = TSupportSettings.CreateDefault;
-
-        if (supportSettings.Validate ()) {
-          var supportData = TSupportSettingsData.CreateDefault;
-          var settingsValue = supportData.Request ("ColumnWidth");
-
-          m_ColumnWidth = int.Parse (settingsValue);
-        }
-      }
-
-      // columns (1 - 4)
-      m_HorizontalSizeStyles = new Dictionary<Style, int> ()
-      {
-        {TContentStyle.Style.mini, (MiniSize.Width * 1)},
-        {TContentStyle.Style.small, (MiniSize.Width * 2)},
-        {TContentStyle.Style.large, (MiniSize.Width * 3)},
-        {TContentStyle.Style.big, (MiniSize.Width * 4)},
-      };
-
-      // rows (1 - 4)
-      m_VerticalSizeStyles = new Dictionary<Style, int> ()
-      {
-        {TContentStyle.Style.mini, (MiniSize.Height * 1)},
-        {TContentStyle.Style.small, (MiniSize.Height * 2)},
-        {TContentStyle.Style.large, (MiniSize.Height * 3)},
-        {TContentStyle.Style.big, (MiniSize.Height * 4)},
-      };
-
-      m_BoardStyleSize = new Dictionary<TContentStyle.Style, int>
-      {
-        { TContentStyle.Style.mini, 1 },
-        { TContentStyle.Style.small, 2 },
-        { TContentStyle.Style.large, 3 },
-        { TContentStyle.Style.big, 4 },
-      };
-    }
-    #endregion
-
     #region Members
-    public void SelectColumnWidth (int columnWidth)
+    public static void SelectColumnWidth (int columnWidth)
     {
       m_ColumnWidth = columnWidth;
     }
 
-    public void RequestSize (TSize size)
+    public static void RequestSize (TSize size)
     {
       if (size.NotNull ()) {
         size.Width = (size.Columns * MiniSize.Width);
@@ -158,7 +127,7 @@ namespace Shared.Types
       }
     }
 
-    public int RequestStyleSize (TContentStyle.Mode mode, TContentStyle.Style style)
+    public static int RequestStyleSize (TContentStyle.Mode mode, TContentStyle.Style style)
     {
       int size = 0;
 
@@ -175,25 +144,25 @@ namespace Shared.Types
       return (size);
     }
 
-    public int RequestBoardStyleSize (TContentStyle.Style style)
+    public static int RequestBoardStyleSize (TContentStyle.Style style)
     {
       return (m_BoardStyleSize.ContainsKey (style) ? m_BoardStyleSize [style] : 0);
     }
 
-    public string RequestStyleSizeString (TContentStyle.Mode mode, TContentStyle.Style style)
+    public static string RequestStyleSizeString (TContentStyle.Mode mode, TContentStyle.Style style)
     {
-      return (RequestStyleSize (mode, style).ToString ());
+      return (RequestStyleSize (mode, style).ToString (CultureInfo.InvariantCulture));
     }
 
     public static Style TryToParse (string style)
     {
-      Style someStyle = Style.None;
-
-      if (string.IsNullOrEmpty (style).IsFalse ()) {
-        Enum.TryParse (style.Trim (), out someStyle);
+      if (style.NotNull ()) {
+        if (Enum.TryParse (style.Trim (), out Style someStyle)) {
+          return (someStyle);
+        }
       }
 
-      return (someStyle);
+      return (Style.None);
     }
     #endregion
 
@@ -218,13 +187,31 @@ namespace Shared.Types
     #region Fields
     static TSize                                                          m_MiniSize; 
     static int                                                            m_ColumnWidth = 0;
-    static readonly Dictionary<TContentStyle.Style, int>                  m_HorizontalSizeStyles;
-    static readonly Dictionary<TContentStyle.Style, int>                  m_VerticalSizeStyles;
-    static readonly Dictionary<TContentStyle.Style, int>                  m_BoardStyleSize;
-    #endregion
 
-    #region Static
-    public static TContentStyle CreateDefault => new TContentStyle (); 
+    static readonly Dictionary<TContentStyle.Style, int>                  m_HorizontalSizeStyles = new Dictionary<Style, int> ()
+      {
+        {TContentStyle.Style.mini, (MiniSize.Width * 1)},
+        {TContentStyle.Style.small, (MiniSize.Width * 2)},
+        {TContentStyle.Style.large, (MiniSize.Width * 3)},
+        {TContentStyle.Style.big, (MiniSize.Width * 4)},
+      };
+
+
+    static readonly Dictionary<TContentStyle.Style, int>                  m_VerticalSizeStyles = new Dictionary<Style, int> ()
+      {
+        {TContentStyle.Style.mini, (MiniSize.Height * 1)},
+        {TContentStyle.Style.small, (MiniSize.Height * 2)},
+        {TContentStyle.Style.large, (MiniSize.Height * 3)},
+        {TContentStyle.Style.big, (MiniSize.Height * 4)},
+      };
+
+    static readonly Dictionary<TContentStyle.Style, int>                  m_BoardStyleSize= new Dictionary<TContentStyle.Style, int>
+      {
+        { TContentStyle.Style.mini, 1 },
+        { TContentStyle.Style.small, 2 },
+        { TContentStyle.Style.large, 3 },
+        { TContentStyle.Style.big, 4 },
+      };
     #endregion
   };
   //---------------------------//

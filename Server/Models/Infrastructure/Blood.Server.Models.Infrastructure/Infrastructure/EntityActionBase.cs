@@ -76,7 +76,9 @@ namespace Server.Models.Infrastructure
       IdCollection = new Collection<Guid> ();
 
       Result = TValidationResult.CreateDefault;
-      Operation = TEntityOperation<TCategoryType>.Create (TCategoryType.Create (TCategory.None));
+
+      var categoryType = TCategoryType.Create (TCategory.None);
+      Operation = new TEntityOperation<TCategoryType> (categoryType);
 
       SupportAction = TSupportAction.CreateDefault;
     }

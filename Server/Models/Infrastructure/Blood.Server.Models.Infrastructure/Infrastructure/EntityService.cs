@@ -9,18 +9,18 @@ using System.Threading.Tasks;
 
 namespace Server.Models.Infrastructure
 {
-  public class TEntityService<M>
-    where M : IEntityDataContext
+  public class TEntityService<TDataContextType>
+    where TDataContextType : IEntityDataContext
   {
     #region Property
-    public M DataContext
+    public TDataContextType DataContext
     {
       get; 
     }
     #endregion
 
     #region Constructor
-    public TEntityService (M dataContext)
+    public TEntityService (TDataContextType dataContext)
     {
       DataContext = dataContext;
     }
@@ -29,7 +29,7 @@ namespace Server.Models.Infrastructure
     #region Interface
     public async Task<IEntityAction> OperationAsync (IEntityAction entityAction)
     {
-      return (await DataContext.OperationAsync (entityAction));
+      return (await DataContext.OperationAsync (entityAction).ConfigureAwait (false));
     }
     #endregion
   };

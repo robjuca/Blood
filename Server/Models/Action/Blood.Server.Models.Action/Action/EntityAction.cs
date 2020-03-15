@@ -126,17 +126,25 @@ namespace Server.Models.Action
 
     public static TEntityAction Request (IEntityAction action, string databaseConnectionString)
     {
-      (action as TEntityAction).SelectConnection (databaseConnectionString);
+      if (action is TEntityAction entityAction) {
+        entityAction.SelectConnection (databaseConnectionString);
 
-      return (action as TEntityAction);
+        return (entityAction);
+      }
+
+      return (null);
     }
 
     public static TEntityAction Request (IEntityAction action, string databaseConnectionString, object param1)
     {
-      (action as TEntityAction).SelectConnection (databaseConnectionString);
-      (action as TEntityAction).Param1 = param1;
+      if (action is TEntityAction entityAction) {
+        entityAction.SelectConnection (databaseConnectionString);
+        entityAction.Param1 = param1;
 
-      return (action as TEntityAction);
+        return (entityAction);
+      }
+
+      return (null);
     }
 
     public static TEntityAction Create (TCategory category, TOperation operation)

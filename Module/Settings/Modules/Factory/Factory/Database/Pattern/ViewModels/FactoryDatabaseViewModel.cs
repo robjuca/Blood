@@ -27,12 +27,9 @@ namespace Module.Settings.Factory.Database.Pattern.ViewModels
     #region Constructor
     [ImportingConstructor]
     public TFactoryDatabaseViewModel (IFactoryDatabasePresentation presentation)
-      : base (new TFactoryDatabaseModel ())
+      : base (presentation, new TFactoryDatabaseModel ())
     {
       TypeName = GetType ().Name;
-
-      presentation.ViewModel = this;
-      presentation.EventSubscribe (this);
     }
     #endregion
 
@@ -40,35 +37,39 @@ namespace Module.Settings.Factory.Database.Pattern.ViewModels
     public void Handle (TMessageModule message)
     {
       // shell
-      if (message.IsModule (TResource.TModule.Shell)) {
-        if (message.IsAction (TMessageAction.Response)) {
-          Model.Select (message.Support.Argument.Types.ConnectionData);
+      if (message.NotNull ()) {
+        if (message.IsModule (TResource.TModule.Shell)) {
+          if (message.IsAction (TMessageAction.Response)) {
+            Model.Select (message.Support.Argument.Types.ConnectionData);
+          }
         }
       }
     }
 
     public void Handle (TMessageInternal message)
     {
-      if (message.IsModule (TResource.TModule.Factory)) {
-        // from child only
-        if (message.Node.IsRelationChild) {
-          if (message.IsAction (TInternalMessageAction.DatabaseRequest)) {
-            var authentication = message.Support.Argument.Types.Authentication;
-            
-            // to sibiling
-            var messageInternal = new TFactoryMessageInternal (TInternalMessageAction.DatabaseResponse, authentication, TypeInfo);
-            messageInternal.Node.SelectRelationParent (TChild.Front);
-            messageInternal.Support.Argument.Types.ConnectionData.CopyFrom (Model.Request (authentication));
+      if (message.NotNull ()) {
+        if (message.IsModule (TResource.TModule.Factory)) {
+          // from child only
+          if (message.Node.IsRelationChild) {
+            if (message.IsAction (TInternalMessageAction.DatabaseRequest)) {
+              var authentication = message.Support.Argument.Types.Authentication;
 
-            DelegateCommand.PublishInternalMessage.Execute (messageInternal);
-          }
+              // to sibiling
+              var messageInternal = new TFactoryMessageInternal (TInternalMessageAction.DatabaseResponse, authentication, TypeInfo);
+              messageInternal.Node.SelectRelationParent (TChild.Front);
+              messageInternal.Support.Argument.Types.ConnectionData.CopyFrom (Model.Request (authentication));
 
-          if (message.IsAction (TInternalMessageAction.Change)) {
-            // to module
-            var messageModule = new TFactoryMessage (TMessageAction.Changed, TypeInfo);
-            messageModule.Support.Argument.Types.ConnectionData.CopyFrom (message.Support.Argument.Types.ConnectionData);
+              DelegateCommand.PublishInternalMessage.Execute (messageInternal);
+            }
 
-            DelegateCommand.PublishMessage.Execute (messageModule);
+            if (message.IsAction (TInternalMessageAction.Change)) {
+              // to module
+              var messageModule = new TFactoryMessage (TMessageAction.Changed, TypeInfo);
+              messageModule.Support.Argument.Types.ConnectionData.CopyFrom (message.Support.Argument.Types.ConnectionData);
+
+              DelegateCommand.PublishMessage.Execute (messageModule);
+            }
           }
         }
       }

@@ -13,7 +13,7 @@ namespace Server.Models.Infrastructure
   public class TComponentExtension
   {
     #region Property
-    public Collection<TComponentExtensionName> ExtensionList
+    public Collection<TComponentExtensionNames> ExtensionList
     {
       get;
       private set;
@@ -30,7 +30,7 @@ namespace Server.Models.Infrastructure
     TComponentExtension ()
     {
       Extension = 0;
-      ExtensionList = new Collection<TComponentExtensionName> ();
+      ExtensionList = new Collection<TComponentExtensionNames> ();
     }
     #endregion
 
@@ -39,9 +39,9 @@ namespace Server.Models.Infrastructure
     {
       ExtensionList.Clear ();
 
-      foreach (short extensionNameValue in Enum.GetValues (typeof (TComponentExtensionName))) {
+      foreach (short extensionNameValue in Enum.GetValues (typeof (TComponentExtensionNames))) {
         if ((extensionNameValue & Extension) != 0) {
-          ExtensionList.Add ((TComponentExtensionName) extensionNameValue);
+          ExtensionList.Add ((TComponentExtensionNames) extensionNameValue);
         }
       }
     }
@@ -50,7 +50,7 @@ namespace Server.Models.Infrastructure
     {
       if (alias.NotNull ()) {
         Extension = alias.Extension;
-        ExtensionList = new Collection<TComponentExtensionName> (alias.ExtensionList);
+        ExtensionList = new Collection<TComponentExtensionNames> (alias.ExtensionList);
       }
     }
     #endregion

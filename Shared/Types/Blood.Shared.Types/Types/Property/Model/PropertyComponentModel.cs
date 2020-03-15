@@ -33,7 +33,7 @@ namespace Shared.Types
       set
       {
         m_InfoModel.Enabled = value;
-        RaisePropertyChanged ("EnabledProperty");
+        RaisePropertyChanged (nameof (EnabledProperty));
       }
     }
 
@@ -51,7 +51,7 @@ namespace Shared.Types
       set
       {
         m_InfoModel.Name = value;
-        RaisePropertyChanged ("NameProperty");
+        RaisePropertyChanged (nameof (NameProperty));
       }
     }
     #endregion

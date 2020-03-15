@@ -154,7 +154,7 @@ namespace Shared.ViewModel
       IsActiveProgress = true;
       ProgressValue = 80;
 
-      Message = "application is busy...";
+      Message = Properties.Resource.RES_BUSY;
     }
 
     public void ClearPanels ()

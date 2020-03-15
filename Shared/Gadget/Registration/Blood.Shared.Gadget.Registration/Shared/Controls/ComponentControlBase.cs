@@ -78,8 +78,8 @@ namespace Shared.Gadget.Registration
       m_Grid.Children.Clear ();
 
       // image (row 0)
-      if (Model.ControlModel.Image.NotNull ()) {
-        var imageSource = rr.Library.Helper.THelper.ByteArrayToBitmapImage (Model.ControlModel.Image);
+      if (Model.ControlModel.HasImage) {
+        var imageSource = rr.Library.Helper.THelper.ByteArrayToBitmapImage (Model.ControlModel.GetImage ());
 
         if (imageSource.NotNull ()) {
           var image = new Image ()

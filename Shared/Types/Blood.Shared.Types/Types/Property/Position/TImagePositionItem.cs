@@ -56,27 +56,28 @@ namespace Shared.Types
       Position = imagePosition;
 
       if (imagePosition.Equals (TImagePosition.None).IsFalse ())  {
-        var contentStyle = TContentStyle.CreateDefault;
-        var width = contentStyle.RequestStyleSize (styleHorizontalInfo.StyleMode, styleHorizontalInfo.Style);
-        var height = contentStyle.RequestStyleSize (styleVerticalInfo.StyleMode, styleVerticalInfo.Style);
+        if (styleHorizontalInfo.NotNull () && styleVerticalInfo.NotNull ()) {
+          var width = TContentStyle.RequestStyleSize (styleHorizontalInfo.StyleMode, styleHorizontalInfo.Style);
+          var height = TContentStyle.RequestStyleSize (styleVerticalInfo.StyleMode, styleVerticalInfo.Style);
 
-        switch (Position) {
-          case TImagePosition.Left:
-          case TImagePosition.Right:
-            Size.Width = (int) (width * .4); // 40%
-            Size.Height = height;
-            break;
+          switch (Position) {
+            case TImagePosition.Left:
+            case TImagePosition.Right:
+              Size.Width = (int) (width * .4); // 40%
+              Size.Height = height;
+              break;
 
-          case TImagePosition.Top:
-          case TImagePosition.Bottom:
-            Size.Width = width;
-            Size.Height = (int) (height * .4); // 40%
-            break;
+            case TImagePosition.Top:
+            case TImagePosition.Bottom:
+              Size.Width = width;
+              Size.Height = (int) (height * .4); // 40%
+              break;
 
-          case TImagePosition.Full:
-            Size.Width = width;
-            Size.Height = height;
-            break;
+            case TImagePosition.Full:
+              Size.Width = width;
+              Size.Height = height;
+              break;
+          }
         }
       }
     }

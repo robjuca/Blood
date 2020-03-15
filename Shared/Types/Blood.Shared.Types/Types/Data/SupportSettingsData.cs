@@ -35,14 +35,14 @@ namespace Shared.Types
     #endregion
 
     #region Members
-    public void Select (string settingsName, string settingsValue)
+    public static void Select (string settingsName, string settingsValue)
     {
       if (m_Settings.ContainsKey (settingsName)) {
         m_Settings [settingsName] = settingsValue;
       }
     }
 
-    public string Request (string settingsName)
+    public static string Request (string settingsName)
     {
       return (m_Settings.ContainsKey (settingsName) ? m_Settings [settingsName] : string.Empty);
     }

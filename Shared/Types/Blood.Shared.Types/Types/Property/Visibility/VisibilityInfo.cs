@@ -4,6 +4,8 @@
 ----------------------------------------------------------------*/
 
 //----- Include
+using System;
+
 using rr.Library.Types;
 //---------------------------//
 
@@ -60,16 +62,18 @@ namespace Shared.Types
     #region Members
     public void Select (string headerVisibility, string footerVisibility)
     {
-      switch (Client) {
-        case "header":
-          VisibleChecked = (headerVisibility.Equals ("visible"));
-          CollapsedChecked = (headerVisibility.Equals ("collapsed"));
-          break;
+      if (headerVisibility.NotNull () && footerVisibility.NotNull ()) {
+        switch (Client) {
+          case "header":
+            VisibleChecked = (headerVisibility.Equals ("visible", StringComparison.InvariantCulture));
+            CollapsedChecked = (headerVisibility.Equals ("collapsed", StringComparison.InvariantCulture));
+            break;
 
-        case "footer":
-          VisibleChecked = (footerVisibility.Equals ("visible"));
-          CollapsedChecked = (footerVisibility.Equals ("collapsed"));
-          break;
+          case "footer":
+            VisibleChecked = (footerVisibility.Equals ("visible", StringComparison.InvariantCulture));
+            CollapsedChecked = (footerVisibility.Equals ("collapsed", StringComparison.InvariantCulture));
+            break;
+        }
       }
     }
     #endregion

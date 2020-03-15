@@ -7,6 +7,7 @@
 using System;
 using System.ComponentModel.Composition;
 using System.Threading;
+using System.Threading.Tasks;
 
 using rr.Library.Types;
 using rr.Library.Helper;
@@ -33,9 +34,8 @@ namespace Module.Settings.Shell.Pattern.ViewModels
     #region Constructor
     [ImportingConstructor]
     public TShellViewModel (IShellPresentation presentation)
-      : base (new TShellModel (), TProcess.MODULESETTINGS)
+      : base (presentation, new TShellModel (), TProcess.MODULESETTINGS)
     {
-      presentation.ViewModel = this;
     }
     #endregion
 
@@ -44,101 +44,103 @@ namespace Module.Settings.Shell.Pattern.ViewModels
     {
       DelegateCommand.NotifyNavigateRequestMessage.Execute (new TNavigateRequestMessage (TNavigateMessage.TSender.Shell, TNavigateMessage.TWhere.Report));
 
-      RaiseChanged ();
+      ApplyChanges ();
     }
 
     public void OnFactoryDatabaseCommadClicked ()
     {
       DelegateCommand.NotifyNavigateRequestMessage.Execute (new TNavigateRequestMessage (TNavigateMessage.TSender.Shell, TNavigateMessage.TWhere.Database));
 
-      RaiseChanged ();
+      ApplyChanges ();
     }
 
     public void OnFactorySupportCommadClicked ()
     {
       DelegateCommand.NotifyNavigateRequestMessage.Execute (new TNavigateRequestMessage (TNavigateMessage.TSender.Shell, TNavigateMessage.TWhere.Support));
 
-      RaiseChanged ();
+      ApplyChanges ();
     }
     #endregion
 
     #region Overrides
     public override void ProcessMessage (TMessageModule message)
     {
-      // services
-      if (message.IsModule (TResource.TModule.Services)) {
-        SelectAuthentication (message.Support.Argument.Types.Authentication);
+      if (message.NotNull ()) {
+        // services
+        if (message.IsModule (TResource.TModule.Services)) {
+          SelectAuthentication (message.Support.Argument.Types.Authentication);
 
-        // SettingsValidated
-        if (message.IsAction (TMessageAction.SettingsValidated)) {
-          // Success
-          if (message.Support.IsActionStatus (TActionStatus.Success)) {
-            TDispatcher.Invoke (DatabaseSettingsSuccessDispatcher);
+          // SettingsValidated
+          if (message.IsAction (TMessageAction.SettingsValidated)) {
+            // Success
+            if (message.Support.IsActionStatus (TActionStatus.Success)) {
+              TDispatcher.Invoke (DatabaseSettingsSuccessDispatcher);
+            }
+
+            // Error
+            if (message.Support.IsActionStatus (TActionStatus.Error)) {
+              TDispatcher.Invoke (DatabaseSettingsErrorDispatcher);
+            }
           }
 
-          // Error
-          if (message.Support.IsActionStatus (TActionStatus.Error)) {
-            TDispatcher.Invoke (DatabaseSettingsErrorDispatcher);
+          // Response
+          if (message.IsAction (TMessageAction.Response)) {
+            // (Select - Settings)
+            if (message.Support.Argument.Types.IsOperation (TOperation.Select, TExtension.Settings)) {
+              var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
+
+              TDispatcher.BeginInvoke (SelectSettingsDispatcher, action);
+            }
+
+            // (Change - Settings)
+            if (message.Support.Argument.Types.IsOperation (TOperation.Change, TExtension.Settings)) {
+              var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
+
+              TDispatcher.BeginInvoke (SelectSettingsDispatcher, action);
+            }
           }
         }
 
-        // Response
-        if (message.IsAction (TMessageAction.Response)) {
-          // (Select - Settings)
-          if (message.Support.Argument.Types.IsOperation (TOperation.Select, TExtension.Settings)) {
+        // factory
+        if (message.IsModule (TResource.TModule.Factory)) {
+          // Changed
+          if (message.IsAction (TMessageAction.Changed)) {
+            Model.Lock ();
+            Model.ShowPanels ();
+            Model.SnackbarContent.SetMessage (Properties.Resource.RES_VALIDATING);
+            ApplyChanges ();
+
+            TDispatcher.Invoke (OpenSnackbarDispatcher);
+            TDispatcher.BeginInvoke (SaveSettingsDispatcher, message.Support.Argument.Types.ConnectionData);
+          }
+
+          // Authentication
+          if (message.IsAction (TMessageAction.Authentication)) {
+            Model.Lock ();
+            Model.ShowPanels ();
+            Model.SnackbarContent.SetMessage (Properties.Resource.RES_VALIDATING);
+            ApplyChanges ();
+
+            TDispatcher.Invoke (OpenSnackbarDispatcher);
+            TDispatcher.BeginInvoke (ChangeAuthenticationDispatcher, message.Support.Argument.Types.Authentication);
+          }
+
+          // Request
+          if (message.IsAction (TMessageAction.Request)) {
+            Model.Lock ();
+            Model.ShowPanels ();
+            Model.SnackbarContent.SetMessage (Properties.Resource.RES_VALIDATING);
+            ApplyChanges ();
+
+            TDispatcher.Invoke (OpenSnackbarDispatcher);
+
             var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
 
-            TDispatcher.BeginInvoke (SelectSettingsDispatcher, action);
+            var msg = new TShellMessage (TMessageAction.Request, TypeInfo);
+            msg.Support.Argument.Types.Select (action);
+
+            DelegateCommand.PublishModuleMessage.Execute (msg);
           }
-
-          // (Change - Settings)
-          if (message.Support.Argument.Types.IsOperation (TOperation.Change, TExtension.Settings)) {
-            var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
-
-            TDispatcher.BeginInvoke (SelectSettingsDispatcher, action);
-          }
-        }
-      }
-
-      // factory
-      if (message.IsModule (TResource.TModule.Factory)) {
-        // Changed
-        if (message.IsAction (TMessageAction.Changed)) {
-          Model.Lock ();
-          Model.ShowPanels ();
-          Model.SnackbarContent.SetMessage ("settings validating...");
-          RaiseChanged ();
-
-          TDispatcher.Invoke (OpenSnackbarDispatcher);
-          TDispatcher.BeginInvoke (SaveSettingsDispatcher, message.Support.Argument.Types.ConnectionData);
-        }
-
-        // Authentication
-        if (message.IsAction (TMessageAction.Authentication)) {
-          Model.Lock ();
-          Model.ShowPanels ();
-          Model.SnackbarContent.SetMessage ("settings validating...");
-          RaiseChanged ();
-
-          TDispatcher.Invoke (OpenSnackbarDispatcher);
-          TDispatcher.BeginInvoke (ChangeAuthenticationDispatcher, message.Support.Argument.Types.Authentication);
-        }
-
-        // Request
-        if (message.IsAction (TMessageAction.Request)) {
-          Model.Lock ();
-          Model.ShowPanels ();
-          Model.SnackbarContent.SetMessage ("settings validating...");
-          RaiseChanged ();
-
-          TDispatcher.Invoke (OpenSnackbarDispatcher);
-
-          var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
-
-          var msg = new TShellMessage (TMessageAction.Request, TypeInfo);
-          msg.Support.Argument.Types.Select (action);
-
-          DelegateCommand.PublishModuleMessage.Execute (msg);
         }
       }
     }
@@ -147,20 +149,25 @@ namespace Module.Settings.Shell.Pattern.ViewModels
     #region Dispatcher
     void ShowSnackbarDispatcher (bool shutdown = false)
     {
-      System.Threading.Tasks.Task.Factory.StartNew (() =>
-      {
+      Task.Factory.StartNew (() =>
+        {
         Thread.Sleep (500);
-      }).ContinueWith (t =>
-      {
-        if (FrameworkElementView.FindName ("MainSnackbar") is MaterialDesignThemes.Wpf.Snackbar bar) {
-          bar.MessageQueue.Enqueue (Model.SnackbarContent.Message);
-        }
+        }, 
+        CancellationToken.None, 
+        TaskCreationOptions.None, 
+        TaskScheduler.Default).
+        ContinueWith (t =>
+          {
+            if (FrameworkElementView.FindName ("MainSnackbar") is MaterialDesignThemes.Wpf.Snackbar bar) {
+              bar.MessageQueue.Enqueue (Model.SnackbarContent.Message);
+            }
 
-        if (shutdown) {
-          TDispatcher.Invoke (ShutdownDispatcher);
-        }
-
-      }, System.Threading.Tasks.TaskScheduler.FromCurrentSynchronizationContext ());
+            if (shutdown) {
+              TDispatcher.Invoke (ShutdownDispatcher);
+            }
+          }, 
+          TaskScheduler.FromCurrentSynchronizationContext ()
+      );
     }
 
     void OpenSnackbarDispatcher ()
@@ -209,7 +216,7 @@ namespace Module.Settings.Shell.Pattern.ViewModels
       else {
         TDispatcher.Invoke (CloseSnackbarDispatcher);
 
-        var errorMessage = new TErrorMessage ("Settings ERROR", "Save Settings Dispatcher", (string) DatabaseConnection.Result.ErrorContent)
+        var errorMessage = new TErrorMessage (Properties.Resource.RES_ERROR, Properties.Resource.RES_SAVE, (string) DatabaseConnection.Result.ErrorContent)
         {
           Severity = TSeverity.Hight
         };
@@ -248,14 +255,14 @@ namespace Module.Settings.Shell.Pattern.ViewModels
       if (data.Request ()) {
         TDispatcher.Invoke (CloseSnackbarDispatcher);
 
-        Model.SnackbarContent.SetMessage ("Welcome to Blood application");
+        Model.SnackbarContent.SetMessage (Properties.Resource.RES_WELLCOME);
         TDispatcher.BeginInvoke (ShowSnackbarDispatcher, false);
 
         TDispatcher.Invoke (DatabaseValidateDispatcher);
       }
 
       else {
-        var errorMessage = new TErrorMessage ("Settings ERROR", "Load Settings Dispatcher", (string) data.Result.ErrorContent)
+        var errorMessage = new TErrorMessage (Properties.Resource.RES_ERROR, Properties.Resource.RES_LOAD, (string) data.Result.ErrorContent)
         {
           Severity = TSeverity.Hight
         };
@@ -273,7 +280,7 @@ namespace Module.Settings.Shell.Pattern.ViewModels
       Model.DatabaseStatus (false);
       Model.Unlock ();
 
-      RaiseChanged ();
+      ApplyChanges ();
 
       TDispatcher.Invoke (CloseSnackbarDispatcher);
 
@@ -304,7 +311,7 @@ namespace Module.Settings.Shell.Pattern.ViewModels
         }
       }
 
-      RaiseChanged ();
+      ApplyChanges ();
     }
 
     void SelectSettingsDispatcher (TEntityAction action)
@@ -336,7 +343,7 @@ namespace Module.Settings.Shell.Pattern.ViewModels
         Model.MenuLeftDisable ();
       }
 
-      RaiseChanged ();
+      ApplyChanges ();
     }
 
     void ShutdownDispatcher ()
@@ -345,15 +352,21 @@ namespace Module.Settings.Shell.Pattern.ViewModels
         Properties.Settings.Default.Shutdown = false;
         Properties.Settings.Default.Save ();
 
-        System.Threading.Tasks.Task.Factory.StartNew (() =>
-        {
-          Thread.Sleep (4500);
-        }).ContinueWith (t =>
-        {
-          NotifyProcess (TCommandComm.Shutdown);
+        Task.Factory.StartNew (() =>
+          {
+            Thread.Sleep (4500);
+          }, 
+          CancellationToken.None, 
+          TaskCreationOptions.None, 
+          TaskScheduler.Default)
+          .ContinueWith (t =>
+            {
+              NotifyProcess (TCommandComm.Shutdown);
 
-          (FrameworkElementView as System.Windows.Window).Close ();
-        }, System.Threading.Tasks.TaskScheduler.FromCurrentSynchronizationContext ());
+              (FrameworkElementView as System.Windows.Window).Close ();
+            }, 
+            TaskScheduler.FromCurrentSynchronizationContext ()
+        );
       }
     }
     #endregion
@@ -367,8 +380,8 @@ namespace Module.Settings.Shell.Pattern.ViewModels
 
       Model.Lock ();
       Model.ShowPanels ();
-      Model.SnackbarContent.SetMessage ("settings validating...");
-      RaiseChanged ();
+      Model.SnackbarContent.SetMessage (Properties.Resource.RES_VALIDATING);
+      ApplyChanges ();
 
       TDispatcher.Invoke (OpenSnackbarDispatcher);
       TDispatcher.Invoke (LoadSettingsDispatcher);
@@ -426,7 +439,7 @@ namespace Module.Settings.Shell.Pattern.ViewModels
       }
 
       else {
-        var errorMessage = new TErrorMessage ("Settings ERROR", "Load Settings Dispatcher (Database)", (string) DatabaseConnection.Result.ErrorContent)
+        var errorMessage = new TErrorMessage (Properties.Resource.RES_ERROR, Properties.Resource.RES_LOAD_DATABASE, (string) DatabaseConnection.Result.ErrorContent)
         {
           Severity = TSeverity.Hight
         };
@@ -441,7 +454,7 @@ namespace Module.Settings.Shell.Pattern.ViewModels
 
       // supprt
       if (SupportSettings.Validate ().IsFalse ()) {
-        var errorMessage = new TErrorMessage ("Settings ERROR", "Load Settings Dispatcher (Support)", (string) SupportSettings.Result.ErrorContent)
+        var errorMessage = new TErrorMessage (Properties.Resource.RES_ERROR, Properties.Resource.RES_LOAD_SUPPORT, (string) SupportSettings.Result.ErrorContent)
         {
           Severity = TSeverity.Hight
         };

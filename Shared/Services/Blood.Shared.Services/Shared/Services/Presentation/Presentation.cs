@@ -41,32 +41,34 @@ namespace Shared.Services.Presentation
     #region IHandle
     public void Handle (TMessageModule message)
     {
-      // shell
-      if (message.IsModule (TResource.TModule.Shell)) {
-        // SettingsValidating
-        if (message.IsAction (TMessageAction.SettingsValidating)) {
-          TDispatcher.Invoke (SettingsValidatingDispatcher);
+      if (message.NotNull ()) {
+        // shell
+        if (message.IsModule (TResource.TModule.Shell)) {
+          // SettingsValidating
+          if (message.IsAction (TMessageAction.SettingsValidating)) {
+            TDispatcher.Invoke (SettingsValidatingDispatcher);
+          }
+
+          // Request
+          if (message.IsAction (TMessageAction.Request)) {
+            TDispatcher.BeginInvoke (RequestDispatcher, TServiceRequest.Create (message));
+          }
         }
 
-        // Request
-        if (message.IsAction (TMessageAction.Request)) {
-          TDispatcher.BeginInvoke (RequestDispatcher, TServiceRequest.Create (message));
+        // collection
+        if (message.IsModule (TResource.TModule.Collection)) {
+          // Request
+          if (message.IsAction (TMessageAction.Request)) {
+            TDispatcher.BeginInvoke (RequestDispatcher, TServiceRequest.Create (message));
+          }
         }
-      }
 
-      // collection
-      if (message.IsModule (TResource.TModule.Collection)) {
-        // Request
-        if (message.IsAction (TMessageAction.Request)) {
-          TDispatcher.BeginInvoke (RequestDispatcher, TServiceRequest.Create (message));
-        }
-      }
-
-      // factory
-      if (message.IsModule (TResource.TModule.Factory)) {
-        // Request
-        if (message.IsAction (TMessageAction.Request)) {
-          TDispatcher.BeginInvoke (RequestDispatcher, TServiceRequest.Create (message));
+        // factory
+        if (message.IsModule (TResource.TModule.Factory)) {
+          // Request
+          if (message.IsAction (TMessageAction.Request)) {
+            TDispatcher.BeginInvoke (RequestDispatcher, TServiceRequest.Create (message));
+          }
         }
       }
     }
@@ -132,7 +134,7 @@ namespace Shared.Services.Presentation
         }
 
         else {
-          var errorMessage = new TErrorMessage ("Settings ERROR", "Load Settings Dispatcher", "Database Connection String not validated!")
+          var errorMessage = new TErrorMessage (Properties.Resource.RES_ERROR, Properties.Resource.RES_LOAD_SETTINGS, Properties.Resource.RES_BAD_CONNECTION)
           {
             Severity = TSeverity.Hight
           };
@@ -143,7 +145,7 @@ namespace Shared.Services.Presentation
       }
 
       else {
-        var errorMessage = new TErrorMessage ("Settings ERROR", "Load Settings Dispatcher", (string) data.Result.ErrorContent)
+        var errorMessage = new TErrorMessage (Properties.Resource.RES_ERROR, Properties.Resource.RES_LOAD_SETTINGS, (string) data.Result.ErrorContent)
         {
           Severity = TSeverity.Hight
         };

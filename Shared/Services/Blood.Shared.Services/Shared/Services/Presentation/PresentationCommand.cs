@@ -4,6 +4,8 @@
 ----------------------------------------------------------------*/
 
 //----- Include
+using System;
+
 using rr.Library.Types;
 //---------------------------//
 
@@ -22,8 +24,17 @@ namespace Shared.Services.Presentation
     #region Constructor
     public TPresentationCommand (TServicesPresentation presentation)
     {
-      NotifyDatabaseError = new DelegateCommand<TErrorMessage> (presentation.NotifyDatabaseErrorHandler);
+      if (presentation.NotNull ()) {
+        NotifyDatabaseError = new DelegateCommand<TErrorMessage> (presentation.NotifyDatabaseErrorHandler);
+      }
     }
+
+    #region Interface
+    public void DoNothing ()
+    {
+      // do nothing
+    } 
+    #endregion
     #endregion
   };
   //---------------------------//

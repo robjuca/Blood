@@ -57,11 +57,11 @@ namespace Shared.Types
 
         // ValueString
         if (alias.Tag.IsNull ()) {
-          return (ValueString.Equals (alias.ValueString));
+          return (ValueString.Equals (alias.ValueString, StringComparison.InvariantCulture));
         }
 
         // both
-        return (ValueString.Equals (alias.ValueString) && Tag.Equals (alias.Tag));
+        return (ValueString.Equals (alias.ValueString, StringComparison.InvariantCulture) && Tag.Equals (alias.Tag));
       }
 
       return (false);
@@ -69,7 +69,7 @@ namespace Shared.Types
 
     public bool Contains (string valueString)
     {
-      return (ValueString.Equals (valueString));
+      return (ValueString.Equals (valueString, StringComparison.InvariantCulture));
     }
 
     public byte [] GetImage ()

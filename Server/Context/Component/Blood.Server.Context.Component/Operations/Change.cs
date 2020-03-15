@@ -21,7 +21,7 @@ namespace Server.Context.Component
     #region Interface
     public void Invoke (IModelContext modelContext, IEntityAction entityAction, TExtension extension)
     {
-      if (modelContext != null) {
+      if (modelContext.NotNull ()) {
         var context = TModelContext.CastTo (modelContext);
 
         var relationList = context.CategoryRelation
@@ -141,7 +141,7 @@ namespace Server.Context.Component
 
           else {
             // search Id
-            var descriptors = context.ComponentDescriptor
+            var descriptors = context.ComponentDescriptor.AsQueryable().AsQueryable()
               .Where (p => p.Id.Equals (id))
               .ToList ()
             ;
@@ -152,7 +152,7 @@ namespace Server.Context.Component
               var categoryValue = descriptor.Category;
 
               // Info
-              var infoList = context.ComponentInfo
+              var infoList = context.ComponentInfo.AsQueryable().AsQueryable ()
                 .Where (p => p.Id.Equals (id))
                 .ToList ()
               ;
@@ -167,7 +167,7 @@ namespace Server.Context.Component
               // Status 
               var compStatus = ComponentStatus.CreateDefault;
 
-              var statusList = context.ComponentStatus
+              var statusList = context.ComponentStatus.AsQueryable().AsQueryable ()
                 .Where (p => p.Id.Equals (id))
                 .ToList ()
               ;
@@ -183,7 +183,7 @@ namespace Server.Context.Component
 
               // status collection
               foreach (var item in action.CollectionAction.ComponentStatusCollection) {
-                var list = context.ComponentStatus
+                var list = context.ComponentStatus.AsQueryable().AsQueryable ()
                   .Where (p => p.Id.Equals (item.Id))
                   .ToList ()
                 ;
@@ -201,14 +201,14 @@ namespace Server.Context.Component
               // Component Relation Collection
 
               //remove old first (Parent)
-              var relationList = context.ComponentRelation
+              var relationList = context.ComponentRelation.AsQueryable ()
                 .Where (p => p.ParentId.Equals (id))
                 .ToList ()
               ;
 
               foreach (var relation in relationList) {
                 // change old child status busy to false
-                var childList = context.ComponentStatus
+                var childList = context.ComponentStatus.AsQueryable().AsQueryable ()
                   .Where (p => p.Id.Equals (relation.ChildId))
                   .ToList ()
                 ;
@@ -227,7 +227,7 @@ namespace Server.Context.Component
               // insert new
               foreach (var item in action.CollectionAction.ComponentRelationCollection) {
                 // change child status busy to true
-                var childList = context.ComponentStatus
+                var childList = context.ComponentStatus.AsQueryable().AsQueryable ()
                   .Where (p => p.Id.Equals (item.ChildId))
                   .ToList ()
                 ;
@@ -261,7 +261,7 @@ namespace Server.Context.Component
 
                 foreach (var extensionName in extension.ExtensionList) {
                   switch (extensionName) {
-                    //case TComponentExtensionName.Document: {
+                    //case TComponentExtensionNames.Document: {
                     //    var list = context.ExtensionDocument
                     //      .Where (p => p.Id.Equals (id))
                     //      .ToList ()
@@ -275,8 +275,8 @@ namespace Server.Context.Component
                     //  }
                     //  break;
 
-                    case TComponentExtensionName.Geometry: {
-                        var list = context.ExtensionGeometry
+                    case TComponentExtensionNames.Geometry: {
+                        var list = context.ExtensionGeometry.AsQueryable().AsQueryable ()
                           .Where (p => p.Id.Equals (id))
                           .ToList ()
                         ;
@@ -289,8 +289,8 @@ namespace Server.Context.Component
                       }
                       break;
 
-                    case TComponentExtensionName.Image: {
-                        var list = context.ExtensionImage
+                    case TComponentExtensionNames.Image: {
+                        var list = context.ExtensionImage.AsQueryable().AsQueryable ()
                           .Where (p => p.Id.Equals (id))
                           .ToList ()
                         ;
@@ -303,8 +303,8 @@ namespace Server.Context.Component
                       }
                       break;
 
-                    case TComponentExtensionName.Layout: {
-                        var list = context.ExtensionLayout
+                    case TComponentExtensionNames.Layout: {
+                        var list = context.ExtensionLayout.AsQueryable().AsQueryable ()
                           .Where (p => p.Id.Equals (id))
                           .ToList ()
                         ;
@@ -317,11 +317,11 @@ namespace Server.Context.Component
                       }
                       break;
 
-                    case TComponentExtensionName.Node: {
+                    case TComponentExtensionNames.Node: {
                         // Node reverse
                         if (compStatus.NodeReverse) {
                           // remove old first (use ChildId)
-                          var nodeList = context.ExtensionNode
+                          var nodeList = context.ExtensionNode.AsQueryable().AsQueryable ()
                             .Where (p => p.ChildId.Equals (id))
                             .ToList ()
                           ;
@@ -334,7 +334,7 @@ namespace Server.Context.Component
                             context.ExtensionNode.Remove (node);
                             context.SaveChanges (); // update
 
-                            var nodeListParent = context.ExtensionNode
+                            var nodeListParent = context.ExtensionNode.AsQueryable()
                               .Where (p => p.ParentId.Equals (node.ParentId))
                               .ToList ()
                             ;
@@ -342,7 +342,7 @@ namespace Server.Context.Component
                             // just me
                             if (nodeListParent.Count.Equals (1)) {
                               // status
-                              var list = context.ComponentStatus
+                              var list = context.ComponentStatus.AsQueryable()
                                 .Where (p => p.Id.Equals (node.ParentId))
                                 .ToList ()
                               ;
@@ -368,7 +368,7 @@ namespace Server.Context.Component
                           context.SaveChanges (); // update
 
                           // update status
-                          nodeList = context.ExtensionNode
+                          nodeList = context.ExtensionNode.AsQueryable()
                             .Where (p => p.ChildId.Equals (id))
                             .ToList ()
                           ;
@@ -377,7 +377,7 @@ namespace Server.Context.Component
                           if (nodeList.Count.Equals (1)) {
                             var node = nodeList [0];
 
-                            var list = context.ComponentStatus
+                            var list = context.ComponentStatus.AsQueryable()
                               .Where (p => p.Id.Equals (node.ParentId))
                               .ToList ()
                             ;
@@ -394,14 +394,14 @@ namespace Server.Context.Component
 
                         else {
                           // remove old first (use ParentId)
-                          var nodeList = context.ExtensionNode
+                          var nodeList = context.ExtensionNode.AsQueryable()
                             .Where (p => p.ParentId.Equals (id))
                             .ToList ()
                           ;
 
                           foreach (var node in nodeList) {
                             // status
-                            var list = context.ComponentStatus
+                            var list = context.ComponentStatus.AsQueryable()
                               .Where (p => p.Id.Equals (node.ChildId))
                               .ToList ()
                             ;
@@ -428,13 +428,13 @@ namespace Server.Context.Component
                           context.SaveChanges (); // update
 
                           // update status
-                          nodeList = context.ExtensionNode
+                          nodeList = context.ExtensionNode.AsQueryable()
                             .Where (p => p.ParentId.Equals (id))
                             .ToList ()
                           ;
 
                           foreach (var node in nodeList) {
-                            var list = context.ComponentStatus
+                            var list = context.ComponentStatus.AsQueryable()
                               .Where (p => p.Id.Equals (node.ChildId))
                               .ToList ()
                             ;
@@ -450,8 +450,8 @@ namespace Server.Context.Component
                       }
                       break;
 
-                    case TComponentExtensionName.Text: {
-                        var list = context.ExtensionText
+                    case TComponentExtensionNames.Text: {
+                        var list = context.ExtensionText.AsQueryable()
                           .Where (p => p.Id.Equals (id))
                           .ToList ()
                         ;
@@ -464,8 +464,8 @@ namespace Server.Context.Component
                       }
                       break;
 
-                    case TComponentExtensionName.Content: {
-                        var list = context.ExtensionContent
+                    case TComponentExtensionNames.Content: {
+                        var list = context.ExtensionContent.AsQueryable()
                           .Where (p => p.Id.Equals (id))
                           .ToList ()
                         ;
@@ -512,7 +512,7 @@ namespace Server.Context.Component
 
         else {
           // search Id
-          var descriptors = context.ComponentDescriptor
+          var descriptors = context.ComponentDescriptor.AsQueryable()
             .Where (p => p.Id.Equals (id))
             .ToList ()
           ;
@@ -524,7 +524,7 @@ namespace Server.Context.Component
 
             // only one component has active status as true
             // reset old
-            var statusList = context.ComponentStatus
+            var statusList = context.ComponentStatus.AsQueryable()
               .Where (p => p.Active.Equals (true))
               .ToList ()
             ;
@@ -537,7 +537,7 @@ namespace Server.Context.Component
 
             // status collection
             foreach (var item in action.CollectionAction.ComponentStatusCollection) {
-              var list = context.ComponentStatus
+              var list = context.ComponentStatus.AsQueryable()
                 .Where (p => p.Active.Equals (true))
                 .ToList ()
               ;
@@ -553,7 +553,7 @@ namespace Server.Context.Component
             }
 
             // new Status 
-            statusList = context.ComponentStatus
+            statusList = context.ComponentStatus.AsQueryable()
               .Where (p => p.Id.Equals (id))
               .ToList ()
             ;
@@ -567,7 +567,7 @@ namespace Server.Context.Component
 
             // status collection
             foreach (var item in action.CollectionAction.ComponentStatusCollection) {
-              var list = context.ComponentStatus
+              var list = context.ComponentStatus.AsQueryable()
                 .Where (p => p.Id.Equals (item.Id))
                 .ToList ()
               ;

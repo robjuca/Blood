@@ -16,13 +16,28 @@ namespace Module.Settings
     #region Overrides
     protected override void ConfigureCatalog ()
     {
-      // modules
-      AddToCatalog (new AssemblyCatalog (typeof (Module.Settings.Factory.TModuleCatalog).Assembly));
-      AddToCatalog (new AssemblyCatalog (typeof (Shared.Services.TModuleCatalog).Assembly));
+      m_FactoryCatalog = new AssemblyCatalog (typeof (Module.Settings.Factory.TModuleCatalog).Assembly);
+      m_ServicesCatalog = new AssemblyCatalog (typeof (Shared.Services.TModuleCatalog).Assembly);
+
+      AddToCatalog (m_FactoryCatalog);
+      AddToCatalog (m_ServicesCatalog);
 
       // create instance
       GetInstance (typeof (Shared.Services.Presentation.IServicesPresentation), null);
     }
+
+    protected override void Dispose (bool disposing)
+    {
+      m_FactoryCatalog.Dispose ();
+      m_ServicesCatalog.Dispose ();
+
+      base.Dispose (disposing);
+    }
+    #endregion
+
+    #region Fields
+    AssemblyCatalog                         m_FactoryCatalog;
+    AssemblyCatalog                         m_ServicesCatalog;
     #endregion
   };
   //---------------------------//

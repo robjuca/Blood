@@ -6,6 +6,11 @@
 //----- Include
 using System;
 using System.Threading.Tasks;
+
+using rr.Library.Types;
+using rr.Library.Services;
+
+using Server.Models.Infrastructure;
 //---------------------------//
 
 namespace Shared.ViewModel
@@ -14,16 +19,16 @@ namespace Shared.ViewModel
   public class TErrorEventArgs
   {
     #region Property
-    public rr.Library.Types.TErrorMessage Error
+    public TErrorMessage Error
     {
       get;
     }
     #endregion
 
     #region Constructor
-    public TErrorEventArgs (rr.Library.Types.TErrorMessage error)
+    public TErrorEventArgs (TErrorMessage error)
     {
-      Error = rr.Library.Types.TErrorMessage.CreateDefault;
+      Error = TErrorMessage.CreateDefault;
       Error.CopyFrom (error);
     }
     #endregion
@@ -31,10 +36,10 @@ namespace Shared.ViewModel
   //---------------------------//
 
   //----- TEntityService
-  public class TEntityService : Server.Models.Infrastructure.IEntityOperation
+  public class TEntityService : IEntityOperation
   {
     #region Property
-    public Server.Models.Infrastructure.TEntityService<Server.Models.Infrastructure.IEntityDataContext> Service
+    public TEntityService<IEntityDataContext> Service
     {
       get;
       private set;
@@ -48,11 +53,11 @@ namespace Shared.ViewModel
     #endregion
 
     #region Interface Members
-    public void Operation (rr.Library.Services.TServiceAction<Server.Models.Infrastructure.IEntityAction> serviceAction)
+    public void Operation (rr.Library.Services.TServiceAction<IEntityAction> serviceAction)
     {
       if (serviceAction.NotNull ()) {
         OperationAsync (serviceAction).ContinueWith (delegate
-        {
+          {
           //?
         });
       }
@@ -66,7 +71,7 @@ namespace Shared.ViewModel
     #endregion
 
     #region Members
-    public void SelectService (Server.Models.Infrastructure.TEntityService<Server.Models.Infrastructure.IEntityDataContext> service)
+    public void SelectService (TEntityService<IEntityDataContext> service)
     {
       if (service.NotNull ()) {
         Service = service;
@@ -75,20 +80,20 @@ namespace Shared.ViewModel
     #endregion
 
     #region Await
-    async Task OperationAsync (rr.Library.Services.TServiceAction<Server.Models.Infrastructure.IEntityAction> serviceAction)
+    async Task OperationAsync (TServiceAction<IEntityAction> serviceAction)
     {
       if (Service.NotNull ()) {
-        var param = serviceAction.Param as Server.Models.Infrastructure.IEntityAction;
+        var param = serviceAction.Param as IEntityAction;
         string messageError = $"[{param.Operation.CategoryType.Category} - {param.Operation.Operation}]";
 
         try {
           var task = Service.OperationAsync (param);
 
-          if (task == await Task.WhenAny (task)) {
-            if (task.Result.Result.IsValid == false) {
-              var error = new rr.Library.Types.TErrorMessage ("Database ERROR Services", messageError, task.Result.Result.ErrorContent as string)
+          if (task == await Task.WhenAny (task).ConfigureAwait (false)) {
+            if (task.Result.Result.IsValid.IsFalse ()) {
+              var error = new TErrorMessage ("Database ERROR Services", messageError, task.Result.Result.ErrorContent as string)
               {
-                Severity = rr.Library.Types.TSeverity.Low
+                Severity = TSeverity.Low
               };
 
 
@@ -102,9 +107,9 @@ namespace Shared.ViewModel
         catch (Exception exception) {
           string msg = rr.Library.Helper.THelper.ExceptionStringFormat (serviceAction.ServiceArgs.CompletedCallbackName, exception);
 
-          var error = new rr.Library.Types.TErrorMessage ("Database ERROR", messageError, msg)
+          var error = new TErrorMessage ("Database ERROR", messageError, msg)
           {
-            Severity = rr.Library.Types.TSeverity.Low
+            Severity = TSeverity.Low
           };
 
           ErrorToShow (error);
@@ -121,7 +126,7 @@ namespace Shared.ViewModel
     #endregion
 
     #region Support
-    void ErrorToShow (rr.Library.Types.TErrorMessage error)
+    void ErrorToShow (TErrorMessage error)
     {
       ShowError?.Invoke (this, new TErrorEventArgs (error));
     } 

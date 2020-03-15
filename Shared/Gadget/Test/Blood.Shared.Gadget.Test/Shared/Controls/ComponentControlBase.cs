@@ -141,7 +141,7 @@ namespace Shared.Gadget.Test
       // external link (row 2)
       if (string.IsNullOrEmpty (Model.ControlModel.ExternalLink).IsFalse ()) {
         try {
-          var externalLink = new System.Windows.Documents.Hyperlink (new System.Windows.Documents.Run ("more info"))
+          var externalLink = new System.Windows.Documents.Hyperlink (new System.Windows.Documents.Run (Properties.Resource.RES_MORE_INFO))
           {
             NavigateUri = new Uri (Model.ControlModel.ExternalLink),
             TargetName = "_blanc",

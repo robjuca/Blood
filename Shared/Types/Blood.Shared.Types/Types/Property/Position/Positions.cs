@@ -8,7 +8,7 @@
 
 namespace Shared.Types
 {
-  public struct Positions
+  public struct Positions : System.IEquatable<Positions>
   {
     public enum Image
     {
@@ -70,7 +70,32 @@ namespace Shared.Types
     }
     #endregion
 
-    static public string [] Names = new string [] { LEFT, RIGHT, TOP, BOTTOM, FULL, NONE };
+    public static readonly string [] Names = new string [] { LEFT, RIGHT, TOP, BOTTOM, FULL, NONE };
+
+    public override bool Equals (object obj)
+    {
+      return (false);
+    }
+
+    public override int GetHashCode ()
+    {
+      return (0);
+    }
+
+    public static bool operator == (Positions left, Positions right)
+    {
+      return (left.Equals (right));
+    }
+
+    public static bool operator != (Positions left, Positions right)
+    {
+      return (!(left == right));
+    }
+
+    public bool Equals (Positions other)
+    {
+      return (false);
+    }
   };
   //---------------------------//
 

@@ -4,6 +4,8 @@
 ----------------------------------------------------------------*/
 
 //----- Include
+using System.Globalization;
+
 using rr.Library.Types;
 //---------------------------//
 
@@ -35,7 +37,7 @@ namespace Shared.Types
     {
       get
       {
-        return (StyleInfo.IsStyleModeHorizontal ? Size.Width.ToString () : StyleInfo.IsStyleModeVertical ? Size.Height.ToString () : string.Empty);
+        return (StyleInfo.IsStyleModeHorizontal ? Size.Width.ToString (CultureInfo.InvariantCulture) : StyleInfo.IsStyleModeVertical ? Size.Height.ToString (CultureInfo.InvariantCulture) : string.Empty);
       }
     }
     #endregion
@@ -54,8 +56,7 @@ namespace Shared.Types
       StyleInfo = TStyleInfo.Create (styleMode);
       StyleInfo.Select (style);
 
-      var contentStyle = TContentStyle.CreateDefault;
-      var size = contentStyle.RequestStyleSize (styleMode, style);
+      var size = TContentStyle.RequestStyleSize (styleMode, style);
 
       switch (styleMode) {
         case TContentStyle.Mode.Horizontal:

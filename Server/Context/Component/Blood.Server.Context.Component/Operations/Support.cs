@@ -41,16 +41,20 @@ namespace Server.Context.Component
       - action.CollectionAction.ModeCollection {id, model} (for each node)
       */
 
-      Id = action.Id;
+      if (action.NotNull ()) {
+        Id = action.Id;
 
-      var descriptors = context.ComponentDescriptor
-        .Where (p => p.Id.Equals (Id))
-        .ToList ()
-      ;
+        if (context.NotNull ()) {
+          var descriptors = context.ComponentDescriptor.AsQueryable ()
+          .Where (p => p.Id.Equals (Id))
+          .ToList ()
+        ;
 
-      // found (request Category)
-      if (descriptors.Any ()) {
-        CategoryValue = descriptors [0].Category;
+          // found (request Category)
+          if (descriptors.Any ()) {
+            CategoryValue = descriptors [0].Category;
+          }
+        }
       }
     }
 
@@ -62,17 +66,21 @@ namespace Server.Context.Component
     #endregion
 
     #region Members
-    public void RequestComponent (TModelContext context, TEntityAction action)
+    internal void RequestComponent (TModelContext context, TEntityAction action)
     {
-      RequestComponent (Id, context, action, action.ModelAction);
+      if (context.NotNull () && action.NotNull ()) {
+        RequestComponent (Id, context, action, action.ModelAction);
+      }
     }
 
     public void RequestExtension (TModelContext context, TEntityAction action)
     {
-      RequestExtension (CategoryValue, Id, context, action, action.ModelAction);
+      if (context.NotNull () && action.NotNull ()) {
+        RequestExtension (CategoryValue, Id, context, action, action.ModelAction);
+      }
     }
 
-    public void RequestNode (TModelContext context, TEntityAction action)
+    internal static void RequestNode (TModelContext context, TEntityAction action)
     {
       /*
        DATA IN
@@ -83,44 +91,46 @@ namespace Server.Context.Component
        - action.CollectionAction.ModelCollection {id, modelAction}    // node model
       */
 
-      var nodesCollection = context.ExtensionNode
-        .Where (p => p.ParentId.Equals (action.Id))
-        .ToList ()
-      ;
-
-      var nodeReverse = action.ModelAction.ComponentStatusModel.NodeReverse;
-
-      if (nodeReverse) {
-        nodesCollection = context.ExtensionNode
-          .Where (p => p.ChildId.Equals (action.Id))
+      if (context.NotNull () && action.NotNull ()) {
+        var nodesCollection = context.ExtensionNode.AsQueryable ()
+          .Where (p => p.ParentId.Equals (action.Id))
           .ToList ()
         ;
-      }
 
-      try {
-        // node (child)
-        foreach (var node in nodesCollection) {
-          action.CollectionAction.ExtensionNodeCollection.Add (node);
+        var nodeReverse = action.ModelAction.ComponentStatusModel.NodeReverse;
 
-          var id = nodeReverse ? node.ParentId : node.ChildId;
-          var categoryValue = nodeReverse ? node.ParentCategory : node.ChildCategory;
+        if (nodeReverse) {
+          nodesCollection = context.ExtensionNode.AsQueryable ()
+            .Where (p => p.ChildId.Equals (action.Id))
+            .ToList ()
+          ;
+        }
 
-          var modelAction = TModelAction.CreateDefault;
+        try {
+          // node (child)
+          foreach (var node in nodesCollection) {
+            action.CollectionAction.ExtensionNodeCollection.Add (node);
 
-          if (RequestComponent (id, context, action, modelAction)) {
-            if (RequestExtension (categoryValue, id, context, action, modelAction)) {
-              action.CollectionAction.ModelCollection.Add (id, modelAction);    // add node model
+            var id = nodeReverse ? node.ParentId : node.ChildId;
+            var categoryValue = nodeReverse ? node.ParentCategory : node.ChildCategory;
+
+            var modelAction = TModelAction.CreateDefault;
+
+            if (RequestComponent (id, context, action, modelAction)) {
+              if (RequestExtension (categoryValue, id, context, action, modelAction)) {
+                action.CollectionAction.ModelCollection.Add (id, modelAction);    // add node model
+              }
             }
           }
         }
-      }
 
-      catch (Exception exception) {
-        THelper.FormatException ("RequestNode - TOperationSupport", exception, action);
+        catch (Exception exception) {
+          THelper.FormatException ("RequestNode - TOperationSupport", exception, action);
+        }
       }
     }
 
-    public static void RequestRelation (TModelContext context, TEntityAction action)
+    internal static void RequestRelation (TModelContext context, TEntityAction action)
     {
       /*
        DATA IN
@@ -130,57 +140,59 @@ namespace Server.Context.Component
       - action.ComponentOperation
       */
 
-      // Component Relation
-      var componentRelationFullList = context.ComponentRelation
+      if (context.NotNull () && action.NotNull ()) {
+        // Component Relation
+        var componentRelationFullList = context.ComponentRelation
           .ToList ()
         ;
 
-      // by Category
-      if (action.ComponentOperation.IsComponentOperation (TComponentOperation.TInternalOperation.Category)) {
-        foreach (var categoryValue in action.ComponentOperation.CategoryCollection) {
-          // parent 
-          var parentList = componentRelationFullList
-            .Where (p => p.ParentCategory.Equals (categoryValue))
-            .ToList ()
-          ;
+        // by Category
+        if (action.ComponentOperation.IsComponentOperation (TComponentOperation.TInternalOperation.Category)) {
+          foreach (var categoryValue in action.ComponentOperation.CategoryCollection) {
+            // parent 
+            var parentList = componentRelationFullList
+              .Where (p => p.ParentCategory.Equals (categoryValue))
+              .ToList ()
+            ;
 
-          if (parentList.Any ()) {
-            action.CollectionAction.ComponentOperation.SelectParent (categoryValue, parentList);
-          }
+            if (parentList.Any ()) {
+              action.CollectionAction.ComponentOperation.SelectParent (categoryValue, parentList);
+            }
 
-          // child
-          var childList = componentRelationFullList
-            .Where (p => p.ChildCategory.Equals (categoryValue))
-            .ToList ()
-          ;
+            // child
+            var childList = componentRelationFullList
+              .Where (p => p.ChildCategory.Equals (categoryValue))
+              .ToList ()
+            ;
 
-          if (childList.Any ()) {
-            action.CollectionAction.ComponentOperation.SelectChild (categoryValue, childList);
+            if (childList.Any ()) {
+              action.CollectionAction.ComponentOperation.SelectChild (categoryValue, childList);
+            }
           }
         }
-      }
 
-      // by Id
-      if (action.ComponentOperation.IsComponentOperation (TComponentOperation.TInternalOperation.Id)) {
-        foreach (var id in action.ComponentOperation.IdCollection) {
-          // parent 
-          var parentList = componentRelationFullList
-            .Where (p => p.ParentId.Equals (id))
-            .ToList ()
-          ;
+        // by Id
+        if (action.ComponentOperation.IsComponentOperation (TComponentOperation.TInternalOperation.Id)) {
+          foreach (var id in action.ComponentOperation.IdCollection) {
+            // parent 
+            var parentList = componentRelationFullList
+              .Where (p => p.ParentId.Equals (id))
+              .ToList ()
+            ;
 
-          if (parentList.Any ()) {
-            action.CollectionAction.ComponentOperation.SelectParent (id, parentList);
-          }
+            if (parentList.Any ()) {
+              action.CollectionAction.ComponentOperation.SelectParent (id, parentList);
+            }
 
-          // child
-          var childList = componentRelationFullList
-            .Where (p => p.ChildId.Equals (id))
-            .ToList ()
-          ;
+            // child
+            var childList = componentRelationFullList
+              .Where (p => p.ChildId.Equals (id))
+              .ToList ()
+            ;
 
-          if (childList.Any ()) {
-            action.CollectionAction.ComponentOperation.SelectChild (id, childList);
+            if (childList.Any ()) {
+              action.CollectionAction.ComponentOperation.SelectChild (id, childList);
+            }
           }
         }
       }
@@ -188,7 +200,7 @@ namespace Server.Context.Component
     #endregion
 
     #region Support
-    bool RequestComponent (Guid id, TModelContext context, TEntityAction action, TModelAction modelAction)
+    static bool RequestComponent (Guid id, TModelContext context, TEntityAction action, TModelAction modelAction)
     {
       /*
       DATA OUT
@@ -199,7 +211,7 @@ namespace Server.Context.Component
 
       try {
         // info
-        var infoList = context.ComponentInfo
+        var infoList = context.ComponentInfo.AsQueryable()
           .Where (p => p.Id.Equals (id))
           .ToList ()
         ;
@@ -211,7 +223,7 @@ namespace Server.Context.Component
 
           // update category
           if (action.CategoryType.IsCategory (TCategory.None)) {
-            var descList = context.ComponentDescriptor
+            var descList = context.ComponentDescriptor.AsQueryable()
               .Where (p => p.Id.Equals (action.Id))
               .ToList ()
             ;
@@ -225,7 +237,7 @@ namespace Server.Context.Component
         }
 
         // status
-        var statusList = context.ComponentStatus
+        var statusList = context.ComponentStatus.AsQueryable()
           .Where (p => p.Id.Equals (id))
           .ToList ()
         ;
@@ -246,7 +258,7 @@ namespace Server.Context.Component
       return (res);
     }
 
-    bool RequestExtension (int categoryValue, Guid id, TModelContext context, TEntityAction action, TModelAction modelAction)
+    static bool RequestExtension (int categoryValue, Guid id, TModelContext context, TEntityAction action, TModelAction modelAction)
     {
       /*
       DATA OUT
@@ -273,7 +285,7 @@ namespace Server.Context.Component
         try {
           foreach (var extensionName in extension.ExtensionList) {
             switch (extensionName) {
-              //case TComponentExtensionName.Document: {
+              //case TComponentExtensionNames.Document: {
               //    var list = context.ExtensionDocument
               //      .Where (p => p.Id.Equals (id))
               //      .ToList ()
@@ -285,8 +297,8 @@ namespace Server.Context.Component
               //  }
               //  break;
 
-              case TComponentExtensionName.Geometry: {
-                  var list = context.ExtensionGeometry
+              case TComponentExtensionNames.Geometry: {
+                  var list = context.ExtensionGeometry.AsQueryable()
                     .Where (p => p.Id.Equals (id))
                     .ToList ()
                   ;
@@ -297,8 +309,8 @@ namespace Server.Context.Component
                 }
                 break;
 
-              case TComponentExtensionName.Image: {
-                  var list = context.ExtensionImage
+              case TComponentExtensionNames.Image: {
+                  var list = context.ExtensionImage.AsQueryable()
                     .Where (p => p.Id.Equals (id))
                     .ToList ()
                   ;
@@ -309,8 +321,8 @@ namespace Server.Context.Component
                 }
                 break;
 
-              case TComponentExtensionName.Layout: {
-                  var list = context.ExtensionLayout
+              case TComponentExtensionNames.Layout: {
+                  var list = context.ExtensionLayout.AsQueryable()
                     .Where (p => p.Id.Equals (id))
                     .ToList ()
                   ;
@@ -321,9 +333,9 @@ namespace Server.Context.Component
                 }
                 break;
 
-              case TComponentExtensionName.Node: {
+              case TComponentExtensionNames.Node: {
                   // child first
-                  var childList = context.ExtensionNode
+                  var childList = context.ExtensionNode.AsQueryable()
                     .Where (p => p.ChildId.Equals (id))
                     .ToList ()
                   ;
@@ -346,7 +358,7 @@ namespace Server.Context.Component
 
                   //else {
                   //  // parent next
-                  //  //var parentList = context.ExtensionNode
+                  //  //var parentList = context.ExtensionNode.AsQueryable()
                   //  //  .Where (p => p.ParentId.Equals (id))
                   //  //  .ToList ()
                   //  //;
@@ -367,8 +379,8 @@ namespace Server.Context.Component
                 }
                 break;
 
-              case TComponentExtensionName.Text: {
-                  var list = context.ExtensionText
+              case TComponentExtensionNames.Text: {
+                  var list = context.ExtensionText.AsQueryable()
                     .Where (p => p.Id.Equals (id))
                     .ToList ()
                   ;
@@ -379,8 +391,8 @@ namespace Server.Context.Component
                 }
                 break;
 
-              case TComponentExtensionName.Content: {
-                  var list = context.ExtensionContent
+              case TComponentExtensionNames.Content: {
+                  var list = context.ExtensionContent.AsQueryable()
                     .Where (p => p.Id.Equals (id))
                     .ToList ()
                   ;

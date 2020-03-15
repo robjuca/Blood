@@ -64,24 +64,26 @@ namespace Shared.Types
 
     public void Select (TStyleInfo styleInfo, bool locked)
     {
-      TStylePropertyItem styleItem = null;
+      if (styleInfo.NotNull ()) {
+        TStylePropertyItem styleItem = null;
 
-      for (int index = 0; index < StyleItemsSource.Count; index++) {
-        styleItem = StyleItemsSource [index];
+        for (int index = 0; index < StyleItemsSource.Count; index++) {
+          styleItem = StyleItemsSource [index];
 
-        if (styleInfo.Contains (styleItem.StyleInfo)) {
-          StyleSelectedIndex = index;
-          break;
+          if (styleInfo.Contains (styleItem.StyleInfo)) {
+            StyleSelectedIndex = index;
+            break;
+          }
         }
-      }
 
-      if (styleItem.NotNull () && locked) {
-        StyleItemsSource = new Collection<TStylePropertyItem>
+        if (styleItem.NotNull () && locked) {
+          StyleItemsSource = new Collection<TStylePropertyItem>
         {
           styleItem
         };
 
-        StyleSelectedIndex = 0;
+          StyleSelectedIndex = 0;
+        }
       }
     }
     #endregion

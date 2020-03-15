@@ -14,40 +14,40 @@ using Shared.Types;
 
 namespace Shared.ViewModel
 {
-  public abstract class TStyleSelectorModel<S>
+  public abstract class TStyleSelectorModel<T>
   {
     #region Property
-    public S StyleMini
+    public T StyleMini
     {
       get;
       private set;
     }
 
-    public S StyleSmall
+    public T StyleSmall
     {
       get;
       private set;
     }
 
-    public S StyleLarge
+    public T StyleLarge
     {
       get;
       private set;
     }
 
-    public S StyleBig
+    public T StyleBig
     {
       get;
       private set;
     }
 
-    public S StyleNone
+    public T StyleNone
     {
       get;
       private set;
     }
 
-    public S Current
+    public T Current
     {
       get
       {
@@ -57,7 +57,7 @@ namespace Shared.ViewModel
     #endregion
 
     #region Constructor
-    public TStyleSelectorModel (S styleMini, S styleSmall, S styleLarge, S styleBig, S styleNone)
+    public TStyleSelectorModel (T styleMini, T styleSmall, T styleLarge, T styleBig, T styleNone)
     {
       StyleMini = styleMini;
       StyleSmall = styleSmall;
@@ -65,7 +65,7 @@ namespace Shared.ViewModel
       StyleBig = styleBig;
       StyleNone = styleNone;
 
-      m_Styles = new Dictionary<TContentStyle.Style, S>
+      m_Styles = new Dictionary<TContentStyle.Style, T>
       {
         { TContentStyle.Style.mini, StyleMini },
         { TContentStyle.Style.small, StyleSmall },
@@ -79,17 +79,17 @@ namespace Shared.ViewModel
     #endregion
     
     #region Virtual Members
-    public virtual void SelectItem (S styleItem, TEntityAction action)
+    public virtual void SelectItem (T styleItem, TEntityAction action)
     {
     }
 
-    public virtual void SelectContent (S styleItem, TEntityAction action)
+    public virtual void SelectContent (T styleItem, TEntityAction action)
     {
     }
     #endregion
 
     #region Members
-    public S Request (TContentStyle.Style style)
+    public T Request (TContentStyle.Style style)
     {
       return (m_Styles [style]);
     }
@@ -126,7 +126,7 @@ namespace Shared.ViewModel
     #endregion
 
     #region Fields
-    readonly Dictionary<TContentStyle.Style, S>                           m_Styles;
+    readonly Dictionary<TContentStyle.Style, T>                           m_Styles;
     TContentStyle.Style                                                   m_SelectedStyle; 
     #endregion
   };

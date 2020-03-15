@@ -4,6 +4,7 @@
 ----------------------------------------------------------------*/
 
 //----- Include
+using System.Resources;
 using System.Reflection;
 //---------------------------//
 
@@ -17,4 +18,5 @@ using System.Reflection;
 [assembly: AssemblyCulture ("")]
 [assembly: AssemblyVersion ("1.0.2019.10")]
 [assembly: AssemblyFileVersion ("1.0.2019.10")]
+[assembly:NeutralResourcesLanguage ("none")]
 //---------------------------//

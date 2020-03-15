@@ -5,6 +5,7 @@
 
 //----- Include
 using System;
+using System.Globalization;
 
 using Server.Models.Action;
 
@@ -66,7 +67,7 @@ namespace Module.Settings.Factory.Support.Pattern.Models
     public void Update (TComponentModelItem item)
     {
       if (item.NotNull ()) {
-        if (PropertyName.Equals ("ColumnWidth")) {
+        if (PropertyName.Equals ("ColumnWidth", StringComparison.InvariantCulture)) {
           //PropertyValue = item.SettingsModel.ColumnWidth;
         }
       }
@@ -74,7 +75,7 @@ namespace Module.Settings.Factory.Support.Pattern.Models
 
     public bool Validate ()
     {
-      var intValue = int.Parse (PropertyValue.ToString ());
+      var intValue = int.Parse (PropertyValue.ToString (), CultureInfo.InvariantCulture);
 
       if ((intValue >= 260) && (intValue <= 460)) {
         ErrorMessage = string.Empty;
@@ -88,6 +89,7 @@ namespace Module.Settings.Factory.Support.Pattern.Models
 
     public void Request (TEntityAction action)
     {
+      // TODO:????
       //action.ModelAction.SettingsModel.ColumnWidth = int.Parse (PropertyValue.ToString ());
     }
     #endregion

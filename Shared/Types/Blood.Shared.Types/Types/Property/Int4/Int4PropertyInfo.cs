@@ -6,6 +6,7 @@
 //----- Include
 using System;
 using System.Collections.ObjectModel;
+using System.Globalization;
 
 using rr.Library.Types;
 //---------------------------//
@@ -152,7 +153,7 @@ namespace Shared.Types
       Int4ItemsSource = new Collection<TInt4Item> ();
 
       for (int i = 1; i <= MaxInt4; i++) {
-        Int4ItemsSource.Add (new TInt4Item (i.ToString (), i));
+        Int4ItemsSource.Add (new TInt4Item (i.ToString (CultureInfo.InvariantCulture), i));
       }
     }
     #endregion

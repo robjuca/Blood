@@ -17,11 +17,13 @@ namespace Shared.Services
     #region Constructor
     public TEntityService (Presentation.IServicesPresentation presentation)
     {
-      presentation.RequestPresentationCommand (this);
+      if (presentation.NotNull ()) {
+        presentation.RequestPresentationCommand (this);
 
-      m_EntityService = Shared.ViewModel.TEntityService.CreateDefault;
-      m_EntityService.ShowError += ServiceShowError;
-      m_EntityService.SelectService (new Server.Services.Component.TEntityServiceAsync ());
+        m_EntityService = Shared.ViewModel.TEntityService.CreateDefault;
+        m_EntityService.ShowError += ServiceShowError;
+        m_EntityService.SelectService (new Server.Services.Component.TEntityServiceAsync ());
+      }
     }
     #endregion
 

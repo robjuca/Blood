@@ -8,6 +8,7 @@ using System;
 using System.ComponentModel.Composition;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 
 using rr.Library.Infrastructure;
 using rr.Library.Helper;
@@ -33,7 +34,9 @@ namespace Launcher.Shell.Pattern.ViewModels
     {
       TypeName = GetType ().Name;
 
-      presentation.ViewModel = this;
+      if (presentation.NotNull ()) {
+        presentation.ViewModel = this;
+      }
 
       m_Process = new Dictionary<TProcess.TName, Process> ();
 
@@ -100,7 +103,7 @@ namespace Launcher.Shell.Pattern.ViewModels
       StartProcess (TProcess.TName.ModuleSettings);
 
       Model.DisableAll ();
-      RaiseChanged ();
+      ApplyChanges ();
     }
 
     void StartProcessDispatcher (TProcess.TName name)
@@ -108,13 +111,13 @@ namespace Launcher.Shell.Pattern.ViewModels
       StartProcess (name);
 
       Model.MenuOnly ();
-      RaiseChanged ();
+      ApplyChanges ();
     }
 
     void RemoveProcessPartialDispatcher ()
     {
       foreach (var name in Enum.GetNames (typeof (TProcess.TName))) {
-        if (name.Equals (TProcess.TName.ModuleSettings.ToString ())) {
+        if (name.Equals (TProcess.TName.ModuleSettings.ToString (), StringComparison.InvariantCulture)) {
           continue;
         }
 
@@ -160,19 +163,19 @@ namespace Launcher.Shell.Pattern.ViewModels
               case TCommandComm.Closed: {
                   RemoveProcess (module);
                   Model.EnableAll ();
-                  RaiseChanged ();
+                  ApplyChanges ();
                 }
                 break;
 
               case TCommandComm.Success: {
                   Model.SettingsValidated ();
-                  RaiseChanged ();
+                  ApplyChanges ();
                 }
                 break;
 
               case TCommandComm.Error: {
                   Model.SettingsHasError ();
-                  RaiseChanged ();
+                  ApplyChanges ();
 
                   THelper.DispatcherLater (RemoveProcessPartialDispatcher);
                 }
@@ -300,7 +303,7 @@ namespace Launcher.Shell.Pattern.ViewModels
         Model.ProcessAlive (processName, alive);
       }
 
-      RaiseChanged ();
+      ApplyChanges ();
     }
 
     void StartProcess (TProcess.TName name)
@@ -346,7 +349,7 @@ namespace Launcher.Shell.Pattern.ViewModels
 
           if (m_Process.Count.Equals (0)) {
             Model.EnableAll ();
-            RaiseChanged ();
+            ApplyChanges ();
           }
         }
 
@@ -380,7 +383,7 @@ namespace Launcher.Shell.Pattern.ViewModels
 
           foreach (var process in Model.RequestProcess ()) {
             var section = process.Key.ToString ();
-            var key = process.Value.ToString ();
+            var key = process.Value.ToString (CultureInfo.InvariantCulture);
 
             // section (Process name)
             token = IniFileManager.AddSection (section);
@@ -397,7 +400,7 @@ namespace Launcher.Shell.Pattern.ViewModels
         else {
           foreach (var process in Model.RequestProcess ()) {
             var section = process.Key.ToString ();
-            var key = process.Value.ToString ();
+            var key = process.Value.ToString (CultureInfo.InvariantCulture);
 
             // key
             IniFileManager.ChangeKey (section, TProcess.PROCESSISALIVE, key);

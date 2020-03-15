@@ -173,11 +173,11 @@ namespace Shared.Message
   };
   //---------------------------//
 
-  //----- TModuleArgument<B>
-  public class TModuleArgument<B> 
+  //----- TModuleArgument<T>
+  public class TModuleArgument<T> 
   {
     #region Property
-    public B Types
+    public T Types
     {
       get;
       private set;
@@ -191,7 +191,7 @@ namespace Shared.Message
     #endregion
 
     #region Constructor
-    public TModuleArgument (B argumentTypes)
+    public TModuleArgument (T argumentTypes)
     {
       Types = argumentTypes;
       Args = new TModuleArgs ();
@@ -254,11 +254,11 @@ namespace Shared.Message
   };
   //---------------------------//
 
-  //----- TInternalArgument<B> 
-  public class TInternalArgument<B> 
+  //----- TInternalArgument<T> 
+  public class TInternalArgument<T> 
   {
     #region Property
-    public B Types
+    public T Types
     {
       get;
       private set;
@@ -272,7 +272,7 @@ namespace Shared.Message
     #endregion
 
     #region Constructor
-    public TInternalArgument (B argumentTypes)
+    public TInternalArgument (T argumentTypes)
     {
       Types = argumentTypes;
       Args = new TInternalArgs ();

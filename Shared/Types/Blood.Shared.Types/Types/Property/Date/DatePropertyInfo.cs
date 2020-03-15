@@ -5,6 +5,7 @@
 
 //----- Include
 using System;
+using System.Globalization;
 
 using rr.Library.Types;
 //---------------------------//
@@ -37,7 +38,7 @@ namespace Shared.Types
     #endregion
 
     #region Overrides
-    public override string ToString () => (TheDate.ToString ("dd-MMM-yyyy"));
+    public override string ToString () => (TheDate.ToString ("dd-MMM-yyyy", CultureInfo.InvariantCulture));
     #endregion
 
     #region Fields

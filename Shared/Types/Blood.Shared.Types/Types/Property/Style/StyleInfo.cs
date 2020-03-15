@@ -44,10 +44,8 @@ namespace Shared.Types
     {
       get
       {
-        var contentStyle = TContentStyle.CreateDefault;
-
         return (
-          $"{StyleString} ({contentStyle.RequestStyleSizeString (StyleMode, Style)})"
+          $"{StyleString} ({TContentStyle.RequestStyleSizeString (StyleMode, Style)})"
         );
       }
     }
@@ -107,7 +105,7 @@ namespace Shared.Types
 
     public bool Contains (TStyleInfo styleInfo)
     {
-      return (Style.Equals (styleInfo.Style));
+      return (styleInfo.NotNull () ? Style.Equals (styleInfo.Style) : false);
     }
 
     public void CopyFrom (TStyleInfo alias)

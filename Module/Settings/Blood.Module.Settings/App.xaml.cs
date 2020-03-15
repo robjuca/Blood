@@ -4,6 +4,7 @@
 ----------------------------------------------------------------*/
 
 //----- Include
+using System;
 using System.Windows;
 //---------------------------//
 
@@ -12,27 +13,29 @@ namespace Module.Settings
   public partial class TApp : Application
   {
     #region Overrides
-    protected override void OnStartup (StartupEventArgs e)
+    protected override void OnStartup (StartupEventArgs eventArgs)
     {
-      if (e.Args.Length > 0) {
-        var key = e.Args [0];
+      if (eventArgs.NotNull ()) {
+        if (eventArgs.Args.Length > 0) {
+          var key = eventArgs.Args [0];
 
-        if (key.Contains ("Module.Settings")) {
-          Settings.Properties.Settings.Default.Shutdown = false;
-          Settings.Properties.Settings.Default.Save ();
+          if (key.Contains ("Module.Settings")) {
+            Settings.Properties.Settings.Default.Shutdown = false;
+            Settings.Properties.Settings.Default.Save ();
 
-          rr.Library.Types.TSingleInstance.Make ();
+            rr.Library.Types.TSingleInstance.Make ();
 
-          base.OnStartup (e);
+            base.OnStartup (eventArgs);
+          }
+
+          else {
+            Shutdown ();
+          }
         }
 
         else {
           Shutdown ();
         }
-      }
-
-      else {
-        Shutdown ();
       }
     }
     #endregion

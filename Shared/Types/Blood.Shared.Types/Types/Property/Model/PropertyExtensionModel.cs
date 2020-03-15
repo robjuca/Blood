@@ -272,13 +272,15 @@ namespace Shared.Types
         }
 
         else {
-          m_ImageModel.Width = value.PixelWidth;
-          m_ImageModel.Height = value.PixelHeight;
+          if (value.NotNull ()) {
+            m_ImageModel.Width = value.PixelWidth;
+            m_ImageModel.Height = value.PixelHeight;
 
-          m_ImageModel.Image = THelper.BitmapImageToByteArray (value);
+            m_ImageModel.Image = THelper.BitmapImageToByteArray (value);
 
-          if (m_ImageModel.Image.NotNull ()) {
-            RaisePropertyChanged (nameof (ImageProperty));
+            if (m_ImageModel.Image.NotNull ()) {
+              RaisePropertyChanged (nameof (ImageProperty));
+            }
           }
         }
       }
@@ -631,7 +633,7 @@ namespace Shared.Types
     {
       string propertyName = e.PropertyName;
 
-      if (propertyName.Equals ("StyleHorizontalProperty") || propertyName.Equals ("StyleVerticalProperty")) {
+      if (propertyName.Equals ("StyleHorizontalProperty", StringComparison.InvariantCulture) || propertyName.Equals ("StyleVerticalProperty", StringComparison.InvariantCulture)) {
         ImagePositionProperty.SetupCollection (StyleHorizontalProperty.Current.StyleInfo, StyleVerticalProperty.Current.StyleInfo);
       }
 
@@ -651,7 +653,7 @@ namespace Shared.Types
     #endregion
 
     #region Support
-    void ChangeAttribute (Attribute attribute)
+    static void ChangeAttribute (Attribute attribute)
     {
       System.Reflection.FieldInfo browsable = attribute.GetType ().GetField ("browsable", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
       browsable.SetValue (attribute, false);

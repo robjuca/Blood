@@ -4,8 +4,6 @@
 ----------------------------------------------------------------*/
 
 //----- Include
-using Server.Models.Infrastructure;
-
 using Shared.Gadget.Models.Component;
 //---------------------------//
 

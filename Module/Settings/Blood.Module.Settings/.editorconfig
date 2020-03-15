@@ -1,0 +1,13 @@
+
+###############################
+# FxCopAnalyzer v2.9.8       #
+###############################
+dotnet_code_quality.null_check_validation_methods = NotNull 
+
+[*.cs]
+
+# CA1031: Do not catch general exception types
+dotnet_diagnostic.CA1031.severity = silent
+
+# CA1716: Identifiers should not match keywords
+dotnet_diagnostic.CA1716.severity = none

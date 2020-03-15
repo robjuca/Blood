@@ -5,6 +5,7 @@
 
 //----- Include
 using System;
+using System.ComponentModel;
 using System.Windows.Media;
 
 using MaterialDesignThemes.Wpf;
@@ -17,12 +18,13 @@ using rr.Library.Communication;
 using Shared.Types;
 using Shared.Communication;
 using Shared.Resources;
+using Shared.Message;
 //---------------------------//
 
 namespace Shared.ViewModel
 {
-  public class TShellViewModel<M> : TViewModelAware<M>, IShellViewModel
-    where M : TShellModelReference
+  public class TShellViewModel<T> : TViewModelAware<T>, IShellViewModel
+    where T : TShellModelReference
   {
     #region Property
     public string ProcessName
@@ -32,7 +34,7 @@ namespace Shared.ViewModel
     #endregion
 
     #region Constructor
-    public TShellViewModel (M model, string processName)
+    public TShellViewModel (T model, string processName)
       : base (model)
     {
       ProcessName = processName;
@@ -46,72 +48,82 @@ namespace Shared.ViewModel
       m_Communication = new TMessagingComm<TDataComm> (m_DataComm);
       m_Communication.Handle += OnCommunicationHandle;
     }
+
+    public TShellViewModel (IPresentation presentation, T model, string processName)
+      : this (model, processName)
+    {
+      if (presentation.NotNull ()) {
+        presentation.ViewModel = this;
+      }
+    }
     #endregion
 
     #region Interface Members
-    public void Message (Shared.Message.TMessageModule message)
+    public void Message (TMessageModule message)
     {
-      // error
-      if (message.IsAction (TMessageAction.Error)) {
-        TDispatcher.BeginInvoke (ShowErrorBoxDispatcher, message.Support.ErrorMessage);
-      }
-
-      // modal enter
-      if (message.IsAction (TMessageAction.ModalEnter)) {
-        if (m_ModalCount.Equals (0)) {
-          Model.ModalEnter ();
-          Model.ShowPanels ();
-
-          RaiseChanged ();
+      if (message.NotNull ()) {
+        // error
+        if (message.IsAction (TMessageAction.Error)) {
+          TDispatcher.BeginInvoke (ShowErrorBoxDispatcher, message.Support.ErrorMessage);
         }
 
-        m_ModalCount++;
-      }
-
-      // modal leave
-      if (message.IsAction (TMessageAction.ModalLeave)) {
-        if (m_ModalCount > 0) {
-          m_ModalCount--;
-
+        // modal enter
+        if (message.IsAction (TMessageAction.ModalEnter)) {
           if (m_ModalCount.Equals (0)) {
-            Model.ModalLeave ();
-            Model.ClearPanels ();
+            Model.ModalEnter ();
+            Model.ShowPanels ();
 
-            RaiseChanged ();
+            ApplyChanges ();
+          }
+
+          m_ModalCount++;
+        }
+
+        // modal leave
+        if (message.IsAction (TMessageAction.ModalLeave)) {
+          if (m_ModalCount > 0) {
+            m_ModalCount--;
+
+            if (m_ModalCount.Equals (0)) {
+              Model.ModalLeave ();
+              Model.ClearPanels ();
+
+              ApplyChanges ();
+            }
           }
         }
-      }
 
-      // edit enter
-      if (message.IsAction (TMessageAction.EditEnter)) {
-        Model.EditEnter ();
-        RaiseChanged ();
-      }
+        // edit enter
+        if (message.IsAction (TMessageAction.EditEnter)) {
+          Model.EditEnter ();
+          ApplyChanges ();
+        }
 
-      // edit leave
-      if (message.IsAction (TMessageAction.EditLeave)) {
-        Model.EditLeave ();
-        RaiseChanged ();
-      }
+        // edit leave
+        if (message.IsAction (TMessageAction.EditLeave)) {
+          Model.EditLeave ();
+          ApplyChanges ();
+        }
 
-      // show service report
-      if (message.IsAction (TMessageAction.ReportShow)) {
-        Model.ServiceReportShow (message.Support.Argument.Types.ReportData.Message);
-        RaiseChanged ();
-      }
+        // show service report
+        if (message.IsAction (TMessageAction.ReportShow)) {
+          Model.ServiceReportShow (message.Support.Argument.Types.ReportData.Message);
+          ApplyChanges ();
+        }
 
-      // clear service report
-      if (message.IsAction (TMessageAction.ReportClear)) {
-        Model.ServiceReportClear ();
-        RaiseChanged ();
-      }
+        // clear service report
+        if (message.IsAction (TMessageAction.ReportClear)) {
+          Model.ServiceReportClear ();
+          ApplyChanges ();
+        }
 
-      // Update
-      if (message.IsAction (TMessageAction.Update)) {
-        NotifyProcess (TCommandComm.Refresh);
-      }
+        // Update
+        if (message.IsAction (TMessageAction.Update)) {
+          NotifyProcess (TCommandComm.Refresh);
+        }
 
-      ProcessMessage (message);
+        ProcessMessage (message);
+      }
     }
 
     public void SelectAuthentication (TAuthentication authentication)
@@ -128,7 +140,7 @@ namespace Shared.ViewModel
     #endregion
 
     #region Virtal Members
-    public virtual void ProcessMessage (Shared.Message.TMessageModule message)
+    public virtual void ProcessMessage (TMessageModule message)
     {
     }
 
@@ -149,7 +161,7 @@ namespace Shared.ViewModel
       }
     }
 
-    void OnClosing (object sender, System.ComponentModel.CancelEventArgs e)
+    void OnClosing (object sender, CancelEventArgs e)
     {
       NotifyProcess (TCommandComm.Closed);
     }
@@ -160,7 +172,7 @@ namespace Shared.ViewModel
     {
       Model.ShowErrorBox (errorMessage);
 
-      RaiseChanged ();
+      ApplyChanges ();
     }
     #endregion
 
@@ -168,7 +180,7 @@ namespace Shared.ViewModel
     protected override void Initialize ()
     {
       // restore palette
-      var filePath = System.Environment.CurrentDirectory;
+      var filePath = Environment.CurrentDirectory;
       var fileName = TNames.SettingsIniFileName;
 
       var iniFileManager = TIniFileManager.CreatDefault;
@@ -185,7 +197,7 @@ namespace Shared.ViewModel
           */
 
           var theme = iniFileManager.RequestKey (ProcessName, TProcess.PALETTETHEME);
-          bool isDark = theme.Equals (TProcess.PALETTETHEMEDARK);
+          bool isDark = theme.Equals (TProcess.PALETTETHEMEDARK, StringComparison.InvariantCulture);
           var palettePrimary = iniFileManager.RequestKey (ProcessName, TProcess.PALETTEPRIMARY);
           var paletteAccent = iniFileManager.RequestKey (ProcessName, TProcess.PALETTEACCENT);
 

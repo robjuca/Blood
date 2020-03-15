@@ -4,8 +4,8 @@
 ----------------------------------------------------------------*/
 
 //----- Include
-using System;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -45,10 +45,10 @@ namespace Shared.Gadget.Result
     {
       Background = Brushes.White;
 
-      m_Grid = new Grid () 
+      m_Grid = new Grid ()
       {
-        HorizontalAlignment= HorizontalAlignment.Stretch,
-        VerticalAlignment=VerticalAlignment.Stretch,
+        HorizontalAlignment = HorizontalAlignment.Stretch,
+        VerticalAlignment = VerticalAlignment.Stretch,
       };
 
       m_Grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Auto) }); // row 0 Result Property
@@ -89,7 +89,7 @@ namespace Shared.Gadget.Result
       {
         Padding = new Thickness (2),
         FontWeight = FontWeights.SemiBold,
-        Text = Model.ControlModel.Date.ToString ("dd-MMM-yy HH:mm"),
+        Text = Model.ControlModel.Date.ToString ("dd-MMM-yy HH:mm", CultureInfo.InvariantCulture),
         HorizontalAlignment = HorizontalAlignment.Right,
       };
 
@@ -223,7 +223,7 @@ namespace Shared.Gadget.Result
         };
 
         testStack.Children.Add (scroll);
-      } 
+      }
       #endregion
 
       #region Registration
@@ -273,7 +273,7 @@ namespace Shared.Gadget.Result
     #endregion
 
     #region Fields
-    readonly Grid                                     m_Grid;
+    readonly Grid m_Grid;
     #endregion
   };
   //---------------------------//

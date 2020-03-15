@@ -9,7 +9,7 @@ using System;
 
 namespace Server.Models.Infrastructure
 {
-  public class TEntityOperation<T> 
+  public class TEntityOperation<T>
     where T : TCategoryType
   {
     #region Property
@@ -49,7 +49,7 @@ namespace Server.Models.Infrastructure
     #endregion
 
     #region Constructor
-    TEntityOperation (T categoryType)
+    public TEntityOperation (T categoryType)
     {
       CategoryType = categoryType;
 
@@ -59,6 +59,11 @@ namespace Server.Models.Infrastructure
     #endregion
 
     #region Members
+    public TEntityOperation<TCategoryType> Create (TCategoryType categoryType)
+    {
+      return (new TEntityOperation<TCategoryType> (categoryType));
+    }
+
     public void Select (TCategoryType categoryType)
     {
       CategoryType.CopyFrom (categoryType);
@@ -111,10 +116,6 @@ namespace Server.Models.Infrastructure
     {
       return (Operation.Equals (operation) && Extension.Equals (extension));
     }
-    #endregion
-
-    #region Static 
-    public static TEntityOperation<TCategoryType> Create (TCategoryType categoryType) => new TEntityOperation<TCategoryType> (categoryType); 
     #endregion
   };
   //---------------------------//

@@ -112,8 +112,8 @@ namespace Shared.ViewModel
 
       if (ComponentModelCollection.Count > 0) {
         list = ComponentModelCollection
-          .Where (p => p.StyleHorizontal.Equals (selectedStyleHorizontal.ToString ()))
-          .Where (p => p.StyleVertical.Equals (selectedStyleVertical.ToString ()))
+          .Where (p => p.StyleHorizontal.Equals (selectedStyleHorizontal.ToString (), StringComparison.InvariantCulture))
+          .Where (p => p.StyleVertical.Equals (selectedStyleVertical.ToString (), StringComparison.InvariantCulture))
           .ToList ()
         ;
 

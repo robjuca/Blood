@@ -259,11 +259,11 @@ namespace Shared.Types
     #region Event
     void OnPropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
-      if (e.PropertyName.Equals ("NameProperty")) {
+      if (e.PropertyName.Equals ("NameProperty", StringComparison.InvariantCulture)) {
         ValidateApplyCommand ();
       }
 
-      if (e.PropertyName.Equals ("FrameImageCleanup")) {
+      if (e.PropertyName.Equals ("FrameImageCleanup", StringComparison.InvariantCulture)) {
         ImageCleanup ();
       }
 

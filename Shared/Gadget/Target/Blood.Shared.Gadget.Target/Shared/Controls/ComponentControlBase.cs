@@ -81,7 +81,7 @@ namespace Shared.Gadget.Target
         Stretch = Stretch.Uniform,
         Width = 16,
         Height = 16,
-        Source = rr.Library.Helper.THelper.ByteArrayToBitmapImage (Model.ChildControlModel.Image)
+        Source = rr.Library.Helper.THelper.ByteArrayToBitmapImage (Model.ChildControlModel.GetImage ())
       };
 
       stack.Children.Add (materialImage);
@@ -148,7 +148,7 @@ namespace Shared.Gadget.Target
       // external link 
       if (string.IsNullOrEmpty (Model.ControlModel.ExternalLink).IsFalse ()) {
         try {
-          var externalLink = new System.Windows.Documents.Hyperlink (new System.Windows.Documents.Run ("more info"))
+          var externalLink = new System.Windows.Documents.Hyperlink (new System.Windows.Documents.Run (Properties.Resource.RES_MORE_INFO))
           {
             NavigateUri = new Uri (Model.ControlModel.ExternalLink),
             TargetName = "_blanc",

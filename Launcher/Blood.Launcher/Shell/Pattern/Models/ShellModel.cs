@@ -179,7 +179,7 @@ namespace Launcher.Shell.Pattern.Models
         var message = $"Launcher (ERROR = {Result.ErrorContent})";
 
         AlertsModel.Select (TAlertsModel.TKind.Danger);
-        AlertsModel.Select ("DANGER", message);
+        AlertsModel.Select (Properties.Resource.RES_DANGER, message);
         AlertsModel.Select (isOpen: true);
 
         DisableAll ();

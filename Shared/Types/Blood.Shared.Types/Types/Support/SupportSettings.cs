@@ -55,7 +55,7 @@ namespace Shared.Types
 
           foreach (var settingsName in m_SupportSettingsData.SettingsNames) {
             var keyName = settingsName;
-            var keyValue = m_SupportSettingsData.Request (settingsName);
+            var keyValue = TSupportSettingsData.Request (settingsName);
 
             TIniFileManager.AddKey (token, keyName, keyValue);
           }
@@ -68,7 +68,7 @@ namespace Shared.Types
           foreach (var settingsName in m_SupportSettingsData.SettingsNames) {
             if (IniFileManager.ContainsKey (SupportSection, settingsName)) {
               var settingsValue = IniFileManager.RequestKey (SupportSection, settingsName);
-              m_SupportSettingsData.Select (settingsName, settingsValue);
+              TSupportSettingsData.Select (settingsName, settingsValue);
             }
           }
         }
@@ -85,7 +85,7 @@ namespace Shared.Types
         IniFileManager.ChangeKey (SupportSection, keyName, keyValue);
         IniFileManager.SaveChanges ();
 
-        m_SupportSettingsData.Select (keyName, keyValue);
+        TSupportSettingsData.Select (keyName, keyValue);
       }
     }
     #endregion

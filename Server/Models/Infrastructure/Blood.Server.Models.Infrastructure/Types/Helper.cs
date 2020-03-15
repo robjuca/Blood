@@ -16,27 +16,35 @@ namespace Server.Models.Infrastructure
   {
     public static void FormatException (string tag, Exception exception, IEntityAction entityAction)
     {
-      string msg = $"[{entityAction.Operation.CategoryType.Category} {tag} - {entityAction.Operation.Operation}] {exception.Message}";
+      if (entityAction.NotNull ()) {
+        if (exception.NotNull ()) {
+          string msg = $"[{entityAction.Operation.CategoryType.Category} {tag} - {entityAction.Operation.Operation}] {exception.Message}";
 
-      if (exception.InnerException != null) {
-        msg = $"[component: {entityAction.Operation.CategoryType} {tag} - operation: {entityAction.Operation.Operation}] {exception.Message}{Environment.NewLine}{exception.InnerException.Message}";
+          if (exception.InnerException.NotNull ()) {
+            msg = $"[component: {entityAction.Operation.CategoryType} {tag} - operation: {entityAction.Operation.Operation}] {exception.Message}{Environment.NewLine}{exception.InnerException.Message}";
+          }
+
+          entityAction.Result.CopyFrom (new TValidationResult (msg));
+        }
       }
-
-      entityAction.Result.CopyFrom (new TValidationResult (msg));
     }
 
     public static void FormatExtensionMustExistException (IEntityAction entityAction)
     {
-      string msg = $"[component: {entityAction.Operation.CategoryType.Category} - operation: {entityAction.Operation.Operation}] - extension: Extension MUST Exist!";
+      if (entityAction.NotNull ()) {
+        string msg = $"[component: {entityAction.Operation.CategoryType.Category} - operation: {entityAction.Operation.Operation}] - extension: Extension MUST Exist!";
 
-      entityAction.Result.CopyFrom (new TValidationResult (msg));
+        entityAction.Result.CopyFrom (new TValidationResult (msg));
+      }
     }
 
     public static void FormatExtensionNotImplementedException (IEntityAction entityAction)
     {
-      string msg = $"[component: {entityAction.Operation.CategoryType.Category} - operation: {entityAction.Operation.Operation}] - extension: {entityAction.Operation.Extension.ToString ()} Extension NOT implemented!";
+      if (entityAction.NotNull ()) {
+        string msg = $"[component: {entityAction.Operation.CategoryType.Category} - operation: {entityAction.Operation.Operation}] - extension: {entityAction.Operation.Extension.ToString ()} Extension NOT implemented!";
 
-      entityAction.Result.CopyFrom (new TValidationResult (msg));
+        entityAction.Result.CopyFrom (new TValidationResult (msg));
+      }
     }
   };
   //---------------------------//

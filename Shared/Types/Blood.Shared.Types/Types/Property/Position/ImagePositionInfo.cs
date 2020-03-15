@@ -4,6 +4,7 @@
 ----------------------------------------------------------------*/
 
 //----- Include
+using System;
 using System.Collections.ObjectModel;
 
 using rr.Library.Types;
@@ -72,7 +73,7 @@ namespace Shared.Types
       for (int index = 0; index < ImagePositionItemsSource.Count; index++) {
         var position = ImagePositionItemsSource [index].Position.ToString ();
 
-        if (imagePosition.Equals (position)) {
+        if (imagePosition.Equals (position, StringComparison.InvariantCulture)) {
           ImagePositionSelectedIndex = index;
           break;
         }

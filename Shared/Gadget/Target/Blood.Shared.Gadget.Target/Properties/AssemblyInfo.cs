@@ -1,6 +1,7 @@
-﻿/*----------------------------------------------------------------
-  Copyright (C) 2001 R&R Soft - All rights reserved.
-  author:     Roberto Oliveira Jucá
+﻿using System.Resources;
+/*----------------------------------------------------------------
+Copyright (C) 2001 R&R Soft - All rights reserved.
+author:     Roberto Oliveira Jucá
 ----------------------------------------------------------------*/
 
 //----- Include
@@ -17,4 +18,5 @@ using System.Reflection;
 [assembly: AssemblyCulture ("")]
 [assembly: AssemblyVersion ("1.0.2019.10")]
 [assembly: AssemblyFileVersion ("1.0.2019.10")]
+[assembly: NeutralResourcesLanguage ("en")]
 //---------------------------//

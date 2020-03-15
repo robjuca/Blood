@@ -4,6 +4,8 @@
 ----------------------------------------------------------------*/
 
 //----- Include
+using System;
+
 using rr.Library.Types;
 
 using Shared.Types;
@@ -110,8 +112,10 @@ namespace Shared.Message
 
     public void Request (TMessageModule message)
     {
-      message.Node.SelectRelationModule (Child, ModuleName);
-      message.Support.Argument.Types.RequestData.CopyFrom (RequestData);
+      if (message.NotNull ()) {
+        message.Node.SelectRelationModule (Child, ModuleName);
+        message.Support.Argument.Types.RequestData.CopyFrom (RequestData);
+      }
     }
 
     public bool IsCategory (Server.Models.Infrastructure.TCategory category)

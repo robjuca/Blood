@@ -123,17 +123,13 @@ namespace Shared.Gadget.Models.Component
       }
     }
 
-    public Collection<byte> Image
-    {
-      get;
-      private set;
-    }
+    
 
     public bool HasImage
     {
       get
       {
-        return (Image.Any ());
+        return (GetImage ().Any ());
       }
     }
 
@@ -174,7 +170,7 @@ namespace Shared.Gadget.Models.Component
       Enabled = false;
       Busy = false;
       IsChecked = false;
-      Image = new Collection<byte> ();
+      SetImage (new Collection<byte> ());
       Date = DateTime.Now;
 
       MaterialId = Guid.Empty;
@@ -211,7 +207,7 @@ namespace Shared.Gadget.Models.Component
         Enabled = alias.Enabled;
         Busy = alias.Busy;
         IsChecked = alias.IsChecked;
-        SetImage (alias.Image);
+        SetImage (alias.GetImage ());
         Date = alias.Date;
         MaterialId = alias.MaterialId;
         Reference = alias.Reference;
@@ -230,7 +226,7 @@ namespace Shared.Gadget.Models.Component
         Enabled = alias.Enabled;
         Busy = alias.Busy;
         IsChecked = alias.IsChecked;
-        SetImage (alias.Image);
+        SetImage (alias.GetImage ());
         Date = alias.Date;
         Reference = alias.Reference;
         Value = alias.Value;
@@ -246,8 +242,8 @@ namespace Shared.Gadget.Models.Component
 
     public byte [] GetImage ()
     {
-      var image = new byte [Image.Count];
-      Image.CopyTo (image, 0);
+      var image = new byte [m_Image.Count];
+      m_Image.CopyTo (image, 0);
 
       return (image);
     }
@@ -255,14 +251,24 @@ namespace Shared.Gadget.Models.Component
     public void SetImage (Collection<byte> image)
     {
       if (image.NotNull ()) {
-        Image = new Collection<byte> (image);
+        m_Image = new Collection<byte> (image);
       }
     }
 
     public void SetImage (byte [] image)
     {
       if (image.NotNull ()) {
-        Image = new Collection<byte> (image);
+        m_Image = new Collection<byte> (image);
+      }
+    }
+
+    public void SetImage (Array image)
+    {
+      if (image.NotNull ()) {
+        var byteArray = new byte [image.Length];
+        image.CopyTo (byteArray, 0);
+
+        m_Image = new Collection<byte> (byteArray);
       }
     }
 
@@ -283,24 +289,27 @@ namespace Shared.Gadget.Models.Component
     }
     #endregion
 
-    #region class
-    // TObservableCommandEventArgs
-    public class TObservableCommandEventArgs : EventArgs
-    {
-      #region Property
-      public object Context
-      {
-        get;
-      }
-      #endregion
+    #region Field
+    Collection<byte>                        m_Image; 
+    #endregion
+  };
+  //---------------------------//
 
-      #region Constructor
-      public TObservableCommandEventArgs (object context)
-      {
-        Context = context;
-      }
-      #endregion
-    } 
+  // TObservableCommandEventArgs
+  public class TObservableCommandEventArgs : EventArgs
+  {
+    #region Property
+    public object Context
+    {
+      get;
+    }
+    #endregion
+
+    #region Constructor
+    public TObservableCommandEventArgs (object context)
+    {
+      Context = context;
+    }
     #endregion
   };
   //---------------------------//

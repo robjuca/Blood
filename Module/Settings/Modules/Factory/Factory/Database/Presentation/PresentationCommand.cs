@@ -4,6 +4,8 @@
 ----------------------------------------------------------------*/
 
 //----- Include
+using System;
+
 using rr.Library.Types;
 
 using Shared.Message;
@@ -31,9 +33,18 @@ namespace Module.Settings.Factory.Database.Presentation
     #region Constructor
     public TPresentationCommand (TFactoryDatabasePresentation presentation)
     {
-      PublishMessage = new DelegateCommand<TMessageModule> (presentation.PublishMessageHandler);
-      PublishInternalMessage = new DelegateCommand<TMessageInternal> (presentation.PublishInternalMessageHandler);
+      if (presentation.NotNull ()) {
+        PublishMessage = new DelegateCommand<TMessageModule> (presentation.PublishMessageHandler);
+        PublishInternalMessage = new DelegateCommand<TMessageInternal> (presentation.PublishInternalMessageHandler);
+      }
     }
+
+    #region Interface
+    public void DoNothing ()
+    {
+      // do nothing
+    } 
+    #endregion
     #endregion
   };
   //---------------------------//

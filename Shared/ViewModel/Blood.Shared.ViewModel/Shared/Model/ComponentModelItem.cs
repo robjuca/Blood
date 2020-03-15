@@ -6,6 +6,7 @@
 //----- Include
 using System;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Windows;
 
 using rr.Library.Types;
@@ -394,10 +395,8 @@ namespace Shared.ViewModel
       var styleVertical = TContentStyle.TryToParse (LayoutModel.StyleVertical);
 
       if (styleHorizontal.NotEquals (TContentStyle.Style.None) && styleVertical.NotEquals (TContentStyle.Style.None)) {
-        var contentStyle = TContentStyle.CreateDefault;
-
-        GeometryModel.SizeCols = contentStyle.RequestBoardStyleSize (styleHorizontal);
-        GeometryModel.SizeRows = contentStyle.RequestBoardStyleSize (styleVertical);
+        GeometryModel.SizeCols = TContentStyle.RequestBoardStyleSize (styleHorizontal);
+        GeometryModel.SizeRows = TContentStyle.RequestBoardStyleSize (styleVertical);
       }
     }
 
@@ -426,7 +425,7 @@ namespace Shared.ViewModel
 
     public bool ContainsStyle (TContentStyle.Style styleHorizontal, TContentStyle.Style styleVertical)
     {
-      return (StyleHorizontal.Equals (styleHorizontal.ToString ()) && StyleVertical.Equals (styleVertical.ToString ()));
+      return (StyleHorizontal.Equals (styleHorizontal.ToString (), StringComparison.InvariantCulture) && StyleVertical.Equals (styleVertical.ToString (), StringComparison.InvariantCulture));
     }
 
     public TComponentModelItem Clone ()

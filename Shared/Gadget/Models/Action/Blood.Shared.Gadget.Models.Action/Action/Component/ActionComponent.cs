@@ -4,12 +4,7 @@
 ----------------------------------------------------------------*/
 
 //----- Include
-using System;
-using System.Collections.ObjectModel;
-
 using Server.Models.Infrastructure;
-
-using Shared.Gadget.Models.Component;
 //---------------------------//
 
 namespace Shared.Gadget.Models.Action
@@ -19,7 +14,7 @@ namespace Shared.Gadget.Models.Action
     #region Property
     public TActionModel Models
     {
-      get; 
+      get;
     }
 
     public TCategory Category
@@ -58,7 +53,7 @@ namespace Shared.Gadget.Models.Action
 
     #region Static
     public static TActionComponent Create (TCategory category) => new TActionComponent (category);
-    public static TActionComponent CreateDefault => new TActionComponent (); 
+    public static TActionComponent CreateDefault => new TActionComponent ();
     #endregion
   };
   //---------------------------//

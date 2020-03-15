@@ -83,7 +83,7 @@ namespace Server.Models.Infrastructure
 
   // TODO: review
   [Flags]
-  public enum TComponentExtensionName : short
+  public enum TComponentExtensionNames : int
   {
     None        = 0,
     Document    = 1,

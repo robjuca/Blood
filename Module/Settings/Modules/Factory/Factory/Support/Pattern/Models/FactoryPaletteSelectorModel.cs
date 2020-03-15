@@ -338,7 +338,7 @@ namespace Module.Settings.Factory.Support.Pattern.Models
     {
       get
       {
-        return (BaseTheme.Equals (TProcess.PALETTETHEMEDARK));
+        return (BaseTheme.Equals (TProcess.PALETTETHEMEDARK, StringComparison.InvariantCulture));
       }
     }
     #endregion

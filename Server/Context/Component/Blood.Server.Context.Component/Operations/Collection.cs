@@ -21,39 +21,43 @@ namespace Server.Context.Component
     #region Interface
     public void Invoke (IModelContext modelContext, IEntityAction entityAction, TExtension extension)
     {
-      var context = TModelContext.CastTo (modelContext);
+      if (modelContext.NotNull ()) {
+        var context = TModelContext.CastTo (modelContext);
 
-      var relationList = context.CategoryRelation
-        .ToList ()
-      ;
+        var relationList = context.CategoryRelation
+          .ToList ()
+        ;
 
-      var action = TEntityAction.Request (entityAction);
-      action.CollectionAction.SetCollection (relationList);
+        if (entityAction.NotNull ()) {
+          var action = TEntityAction.Request (entityAction);
+          action.CollectionAction.SetCollection (relationList);
 
-      if (action.Operation.HasExtension) {
-        switch (extension) {
-          case TExtension.Full: {
-              CollectionFull (context, action);
+          if (action.Operation.HasExtension) {
+            switch (extension) {
+              case TExtension.Full: {
+                  CollectionFull (context, action);
+                }
+                break;
+
+              case TExtension.Minimum: {
+                  CollectionMinimum (context, action);
+                }
+                break;
+
+              case TExtension.ById:
+              case TExtension.Idle:
+              case TExtension.Many:
+              case TExtension.Zap: {
+                  Models.Infrastructure.THelper.FormatExtensionNotImplementedException (action);
+                }
+                break;
             }
-            break;
+          }
 
-          case TExtension.Minimum: {
-              CollectionMinimum (context, action);
-            }
-            break;
-
-          case TExtension.ById:
-          case TExtension.Idle:
-          case TExtension.Many:
-          case TExtension.Zap: {
-              Models.Infrastructure.THelper.FormatExtensionNotImplementedException (action);
-            }
-            break;
+          else {
+            Models.Infrastructure.THelper.FormatExtensionMustExistException (action);
+          }
         }
-      }
-
-      else {
-        Models.Infrastructure.THelper.FormatExtensionMustExistException (action);
       }
     }
     #endregion
@@ -71,7 +75,7 @@ namespace Server.Context.Component
         // select Id by Category
         var categoryValue = TCategoryType.ToValue (action.Operation.CategoryType.Category);
 
-        var descriptors = context.ComponentDescriptor
+        var descriptors = context.ComponentDescriptor.AsQueryable()
           .Where (p => p.Category.Equals (categoryValue))
           .ToList ()
         ;
@@ -84,13 +88,13 @@ namespace Server.Context.Component
 
           foreach (var descriptor in descriptors) {
             // Info
-            var infoList = context.ComponentInfo
+            var infoList = context.ComponentInfo.AsQueryable()
               .Where (p => p.Id.Equals (descriptor.Id))
               .ToList ()
             ;
 
             // Status
-            var statusList = context.ComponentStatus
+            var statusList = context.ComponentStatus.AsQueryable()
               .Where (p => p.Id.Equals (descriptor.Id))
               .ToList ()
             ;
@@ -166,7 +170,7 @@ namespace Server.Context.Component
 
               foreach (var extensionName in extension.ExtensionList) {
                 switch (extensionName) {
-                  case TComponentExtensionName.Document: {
+                  case TComponentExtensionNames.Document: {
                       //var list = context.ExtensionDocument
                       //  .Where (p => p.Id.Equals (id))
                       //  .ToList ()
@@ -178,8 +182,8 @@ namespace Server.Context.Component
                     }
                     break;
 
-                  case TComponentExtensionName.Geometry: {
-                      var list = context.ExtensionGeometry
+                  case TComponentExtensionNames.Geometry: {
+                      var list = context.ExtensionGeometry.AsQueryable()
                         .Where (p => p.Id.Equals (id))
                         .ToList ()
                       ;
@@ -190,8 +194,11 @@ namespace Server.Context.Component
                     }
                     break;
 
-                  case TComponentExtensionName.Image: {
-                      var list = context.ExtensionImage.Where (p => p.Id.Equals (id)).ToList ();
+                  case TComponentExtensionNames.Image: {
+                      var list = context.ExtensionImage.AsQueryable()
+                        .Where (p => p.Id.Equals (id))
+                        .ToList ()
+                      ;
 
                       if (list.Count.Equals (1)) {
                         action.CollectionAction.ExtensionImageCollection.Add (list [0]);
@@ -199,8 +206,8 @@ namespace Server.Context.Component
                     }
                     break;
 
-                  case TComponentExtensionName.Layout: {
-                      var list = context.ExtensionLayout
+                  case TComponentExtensionNames.Layout: {
+                      var list = context.ExtensionLayout.AsQueryable()
                         .Where (p => p.Id.Equals (id))
                         .ToList ()
                       ;
@@ -211,15 +218,15 @@ namespace Server.Context.Component
                     }
                     break;
 
-                  case TComponentExtensionName.Node: {
-                      var nodeModeldList = context.ExtensionNode
+                  case TComponentExtensionNames.Node: {
+                      var nodeModeldList = context.ExtensionNode.AsQueryable()
                         .Where (p => p.ParentId.Equals (id))
                         .ToList ()
                       ;
 
                       // Node Reverse
                       if (compStatus.NodeReverse) {
-                        nodeModeldList = context.ExtensionNode
+                        nodeModeldList = context.ExtensionNode.AsQueryable()
                           .Where (p => p.ChildId.Equals (id))
                           .ToList ()
                         ;
@@ -242,8 +249,8 @@ namespace Server.Context.Component
                     }
                     break;
 
-                  case TComponentExtensionName.Text: {
-                      var list = context.ExtensionText
+                  case TComponentExtensionNames.Text: {
+                      var list = context.ExtensionText.AsQueryable()
                         .Where (p => p.Id.Equals (id))
                         .ToList ()
                       ;
@@ -254,8 +261,8 @@ namespace Server.Context.Component
                     }
                     break;
 
-                  case TComponentExtensionName.Content: {
-                      var list = context.ExtensionContent
+                  case TComponentExtensionNames.Content: {
+                      var list = context.ExtensionContent.AsQueryable()
                         .Where (p => p.Id.Equals (id))
                         .ToList ()
                       ;
@@ -301,7 +308,7 @@ namespace Server.Context.Component
             // extension
             foreach (var extensionName in componentExtension.ExtensionList) {
               switch (extensionName) {
-                case TComponentExtensionName.Document: {
+                case TComponentExtensionNames.Document: {
                     //var list = action.CollectionAction.ExtensionDocumentCollection
                     //  .Where (p => p.Id.Equals (id))
                     //  .ToList ()
@@ -313,7 +320,7 @@ namespace Server.Context.Component
                   }
                   break;
 
-                case TComponentExtensionName.Geometry: {
+                case TComponentExtensionNames.Geometry: {
                     var list = action.CollectionAction.ExtensionGeometryCollection
                       .Where (p => p.Id.Equals (id))
                       .ToList ()
@@ -325,7 +332,7 @@ namespace Server.Context.Component
                   }
                   break;
 
-                case TComponentExtensionName.Image: {
+                case TComponentExtensionNames.Image: {
                     var list = action.CollectionAction.ExtensionImageCollection
                       .Where (p => p.Id.Equals (id))
                       .ToList ()
@@ -337,7 +344,7 @@ namespace Server.Context.Component
                   }
                   break;
 
-                case TComponentExtensionName.Layout: {
+                case TComponentExtensionNames.Layout: {
                     var list = action.CollectionAction.ExtensionLayoutCollection
                       .Where (p => p.Id.Equals (id))
                       .ToList ()
@@ -349,7 +356,7 @@ namespace Server.Context.Component
                   }
                   break;
 
-                case TComponentExtensionName.Node: {
+                case TComponentExtensionNames.Node: {
                     var nodeModellist = action.CollectionAction.ExtensionNodeCollection
                       .Where (p => p.ParentId.Equals (id))
                       .ToList ()
@@ -370,7 +377,7 @@ namespace Server.Context.Component
                   }
                   break;
 
-                case TComponentExtensionName.Text: {
+                case TComponentExtensionNames.Text: {
                     var list = action.CollectionAction.ExtensionTextCollection
                       .Where (p => p.Id.Equals (id))
                       .ToList ()
@@ -382,7 +389,7 @@ namespace Server.Context.Component
                   }
                   break;
 
-                case TComponentExtensionName.Content: {
+                case TComponentExtensionNames.Content: {
                     var list = action.CollectionAction.ExtensionContentCollection
                       .Where (p => p.Id.Equals (id))
                       .ToList ()
@@ -420,7 +427,7 @@ namespace Server.Context.Component
         // select Id by Category
         var categoryValue = TCategoryType.ToValue (action.Operation.CategoryType.Category);
 
-        var descriptors = context.ComponentDescriptor
+        var descriptors = context.ComponentDescriptor.AsQueryable()
           .Where (p => p.Category.Equals (categoryValue))
           .ToList ()
         ;
@@ -433,13 +440,13 @@ namespace Server.Context.Component
 
           foreach (var descriptor in descriptors) {
             // Info
-            var infoList = context.ComponentInfo
+            var infoList = context.ComponentInfo.AsQueryable()
               .Where (p => p.Id.Equals (descriptor.Id))
               .ToList ()
             ;
 
             // Status
-            var statusList = context.ComponentStatus
+            var statusList = context.ComponentStatus.AsQueryable()
               .Where (p => p.Id.Equals (descriptor.Id))
               .ToList ()
             ;
@@ -475,8 +482,8 @@ namespace Server.Context.Component
 
               foreach (var extensionName in extension.ExtensionList) {
                 switch (extensionName) {
-                  case TComponentExtensionName.Layout: {
-                      var list = context.ExtensionLayout
+                  case TComponentExtensionNames.Layout: {
+                      var list = context.ExtensionLayout.AsQueryable()
                           .Where (p => p.Id.Equals (id))
                           .ToList ()
                         ;
@@ -521,7 +528,7 @@ namespace Server.Context.Component
             // extension
             foreach (var extensionName in componentExtension.ExtensionList) {
               switch (extensionName) {
-                case TComponentExtensionName.Layout: {
+                case TComponentExtensionNames.Layout: {
                     var list = action.CollectionAction.ExtensionLayoutCollection
                       .Where (p => p.Id.Equals (id))
                       .ToList ()

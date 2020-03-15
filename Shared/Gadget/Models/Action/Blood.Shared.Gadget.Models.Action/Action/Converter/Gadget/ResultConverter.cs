@@ -23,72 +23,80 @@ namespace Shared.Gadget.Models.Action
     #region Static Members
     public static void Collection (Collection<TActionComponent> gadgets, TEntityAction entityAction)
     {
-      gadgets.Clear ();
+      if (gadgets.NotNull ()) {
+        gadgets.Clear ();
 
-      if (entityAction.CategoryType.IsCategory (TCategory.Result)) {
-        var gadgetCollection = new Collection<GadgetResult> ();
+        if (entityAction.NotNull ()) {
+          if (entityAction.CategoryType.IsCategory (TCategory.Result)) {
+            var gadgetCollection = new Collection<GadgetResult> ();
 
-        foreach (var item in entityAction.CollectionAction.ModelCollection) {
-          var modelAction = item.Value;
-          var gadget = GadgetResult.CreateDefault;
+            foreach (var item in entityAction.CollectionAction.ModelCollection) {
+              var modelAction = item.Value;
+              var gadget = GadgetResult.CreateDefault;
 
-          gadget.Id = modelAction.ComponentInfoModel.Id;
-          gadget.GadgetName = modelAction.ExtensionTextModel.Text;
-          gadget.Description = modelAction.ExtensionTextModel.Description;
-          gadget.ExternalLink = modelAction.ExtensionTextModel.ExternalLink;
-          gadget.SetDate (modelAction.ExtensionTextModel.Date);
-          gadget.Enabled = modelAction.ComponentInfoModel.Enabled;
+              gadget.Id = modelAction.ComponentInfoModel.Id;
+              gadget.GadgetName = modelAction.ExtensionTextModel.Text;
+              gadget.Description = modelAction.ExtensionTextModel.Description;
+              gadget.ExternalLink = modelAction.ExtensionTextModel.ExternalLink;
+              gadget.SetDate (modelAction.ExtensionTextModel.Date);
+              gadget.Enabled = modelAction.ComponentInfoModel.Enabled;
 
-          gadget.GadgetInfo = modelAction.ComponentInfoModel.Name;
-          gadget.Busy = modelAction.ComponentStatusModel.Busy;
-          gadget.Locked = modelAction.ComponentStatusModel.Locked;
+              gadget.GadgetInfo = modelAction.ComponentInfoModel.Name;
+              gadget.Busy = modelAction.ComponentStatusModel.Busy;
+              gadget.Locked = modelAction.ComponentStatusModel.Locked;
 
-          if (modelAction.ExtensionContentModel.Id.Equals (gadget.Id)) {
-            string [] contentIdString = Regex.Split (modelAction.ExtensionContentModel.Contents, ";");
+              if (modelAction.ExtensionContentModel.Id.Equals (gadget.Id)) {
+                string [] contentIdString = Regex.Split (modelAction.ExtensionContentModel.Contents, ";");
 
-            foreach (var idString in contentIdString) {
-              if (string.IsNullOrEmpty (idString).IsFalse ()) {
-                var id = Guid.Parse (idString);
-                gadget.AddContentId (id, TCategoryType.ToValue (TCategory.Test));
+                foreach (var idString in contentIdString) {
+                  if (string.IsNullOrEmpty (idString).IsFalse ()) {
+                    var id = Guid.Parse (idString);
+                    gadget.AddContentId (id, TCategoryType.ToValue (TCategory.Test));
+                  }
+                }
               }
+
+              gadgetCollection.Add (gadget);
+            }
+
+            // sort
+            var list = gadgetCollection
+              .OrderBy (p => p.GadgetInfo)
+              .ToList ()
+            ;
+
+            foreach (var model in list) {
+              var component = TActionComponent.Create (TCategory.Result);
+              component.Models.GadgetResultModel.CopyFrom (model);
+
+              gadgets.Add (component);
             }
           }
-
-          gadgetCollection.Add (gadget);
-        }
-
-        // sort
-        var list = gadgetCollection
-          .OrderBy (p => p.GadgetInfo)
-          .ToList ()
-        ;
-
-        foreach (var model in list) {
-          var component = TActionComponent.Create (TCategory.Result);
-          component.Models.GadgetResultModel.CopyFrom (model);
-
-          gadgets.Add (component);
         }
       }
     }
 
     public static void Select (TActionComponent component, TEntityAction entityAction)
     {
-      if (entityAction.CategoryType.IsCategory (TCategory.Result)) {
-        component.Select (TCategory.Result);
+      if (entityAction.NotNull ()) {
+        if (entityAction.CategoryType.IsCategory (TCategory.Result)) {
+          if (component.NotNull ()) {
+            component.Select (TCategory.Result);
 
-        var gadget = component.Models.GadgetResultModel;
+            var gadget = component.Models.GadgetResultModel;
 
-        gadget.Id = entityAction.ModelAction.ComponentInfoModel.Id;
-        gadget.GadgetName = entityAction.ModelAction.ExtensionTextModel.Text;
-        gadget.SetDate (entityAction.ModelAction.ExtensionTextModel.Date);
-        gadget.Description = entityAction.ModelAction.ExtensionTextModel.Description;
-        gadget.ExternalLink = entityAction.ModelAction.ExtensionTextModel.ExternalLink;
-        gadget.Enabled = entityAction.ModelAction.ComponentInfoModel.Enabled;
-        
-        gadget.GadgetInfo = entityAction.ModelAction.ComponentInfoModel.Name;
-        gadget.Busy = entityAction.ModelAction.ComponentStatusModel.Busy;
-        gadget.Locked = entityAction.ModelAction.ComponentStatusModel.Locked;
+            gadget.Id = entityAction.ModelAction.ComponentInfoModel.Id;
+            gadget.GadgetName = entityAction.ModelAction.ExtensionTextModel.Text;
+            gadget.SetDate (entityAction.ModelAction.ExtensionTextModel.Date);
+            gadget.Description = entityAction.ModelAction.ExtensionTextModel.Description;
+            gadget.ExternalLink = entityAction.ModelAction.ExtensionTextModel.ExternalLink;
+            gadget.Enabled = entityAction.ModelAction.ComponentInfoModel.Enabled;
+
+            gadget.GadgetInfo = entityAction.ModelAction.ComponentInfoModel.Name;
+            gadget.Busy = entityAction.ModelAction.ComponentStatusModel.Busy;
+            gadget.Locked = entityAction.ModelAction.ComponentStatusModel.Locked;
+          }
+        }
       }
     }
 
@@ -96,21 +104,25 @@ namespace Shared.Gadget.Models.Action
     {
       //entityAction.CollectionAction.EntityCollection
 
-      if (entityAction.CategoryType.IsCategory (TCategory.Result)) {
-        if (gadgets.Any ()) {
-          foreach (var component in gadgets) {
-            
-          }
-        }
+      if (entityAction.NotNull ()) {
+        if (entityAction.CategoryType.IsCategory (TCategory.Result)) {
+          if (gadgets.NotNull ()) {
+            if (gadgets.Any ()) {
+              foreach (var component in gadgets) {
+                // TODO:??
+              }
+            }
 
-        else {
-          foreach (var item in entityAction.CollectionAction.EntityCollection) {
-            var someEntity = item.Value;
+            else {
+              foreach (var item in entityAction.CollectionAction.EntityCollection) {
+                var someEntity = item.Value;
 
-            var component = TActionComponent.Create (someEntity.CategoryType.Category);
-            TActionConverter.Select (someEntity.CategoryType.Category, component, someEntity);
+                var component = TActionComponent.Create (someEntity.CategoryType.Category);
+                TActionConverter.Select (someEntity.CategoryType.Category, component, someEntity);
 
-            gadgets.Add (component);
+                gadgets.Add (component);
+              }
+            }
           }
         }
       }
@@ -118,45 +130,55 @@ namespace Shared.Gadget.Models.Action
 
     public static void Request (TActionComponent component, TEntityAction entityAction)
     {
-      if (component.IsCategory (TCategory.Result)) {
-        var gadget = component.Models.GadgetResultModel;
+      if (component.NotNull ()) {
+        if (component.IsCategory (TCategory.Result)) {
+          var gadget = component.Models.GadgetResultModel;
 
-        entityAction.Id = gadget.Id;
-        entityAction.CategoryType.Select (TCategory.Result);
+          if (entityAction.NotNull ()) {
+            entityAction.Id = gadget.Id;
+            entityAction.CategoryType.Select (TCategory.Result);
 
-        entityAction.ModelAction.ComponentInfoModel.Name = gadget.GadgetInfo;
-        entityAction.ModelAction.ComponentStatusModel.Busy = gadget.Busy;
-        entityAction.ModelAction.ComponentStatusModel.Locked = gadget.Locked;
+            entityAction.ModelAction.ComponentInfoModel.Name = gadget.GadgetInfo;
+            entityAction.ModelAction.ComponentStatusModel.Busy = gadget.Busy;
+            entityAction.ModelAction.ComponentStatusModel.Locked = gadget.Locked;
 
-        entityAction.ModelAction.ComponentInfoModel.Id = gadget.Id;
-        entityAction.ModelAction.ExtensionTextModel.Text = gadget.GadgetName;
-        entityAction.ModelAction.ExtensionTextModel.Date = gadget.Date;
-        entityAction.ModelAction.ExtensionTextModel.Description = gadget.Description;
-        entityAction.ModelAction.ComponentInfoModel.Enabled = gadget.Enabled;
+            entityAction.ModelAction.ComponentInfoModel.Id = gadget.Id;
+            entityAction.ModelAction.ExtensionTextModel.Text = gadget.GadgetName;
+            entityAction.ModelAction.ExtensionTextModel.Date = gadget.Date;
+            entityAction.ModelAction.ExtensionTextModel.Description = gadget.Description;
+            entityAction.ModelAction.ComponentInfoModel.Enabled = gadget.Enabled;
 
-        var contentString = new StringBuilder ();
+            var contentString = new StringBuilder ();
 
-        var contentRegistration = GadgetRegistration.CreateDefault;
-        gadget.RequestContent (contentRegistration);
-        contentString.Append (contentRegistration.Id);
-        contentString.Append (";");
+            var contentRegistration = GadgetRegistration.CreateDefault;
+            gadget.RequestContent (contentRegistration);
+            contentString.Append (contentRegistration.Id);
+            contentString.Append (";");
 
-        var contents = new Collection<GadgetTest> ();
-        gadget.RequestContent (contents);
+            var contents = new Collection<GadgetTest> ();
+            gadget.RequestContent (contents);
 
-        foreach (var item in contents) {
-          contentString.Append (item.Id);
-          contentString.Append (";");
+            foreach (var item in contents) {
+              contentString.Append (item.Id);
+              contentString.Append (";");
+            }
+
+            entityAction.ModelAction.ExtensionContentModel.Id = gadget.Id;
+            entityAction.ModelAction.ExtensionContentModel.Category = TCategoryType.ToValue (TCategory.Result);
+            entityAction.ModelAction.ExtensionContentModel.Contents = contentString.ToString ();
+          }
         }
-
-        entityAction.ModelAction.ExtensionContentModel.Id = gadget.Id;
-        entityAction.ModelAction.ExtensionContentModel.Category = TCategoryType.ToValue (TCategory.Result);
-        entityAction.ModelAction.ExtensionContentModel.Contents = contentString.ToString ();
       }
     }
 
     public static void Modify (TActionComponent component, TEntityAction entityAction)
     {
+      // TODO:??
+      if (component.NotNull ()) {
+        if (entityAction.NotNull ()) {
+
+        }
+      }
     }
     #endregion
   };

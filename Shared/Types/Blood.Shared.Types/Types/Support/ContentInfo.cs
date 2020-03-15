@@ -101,10 +101,8 @@ namespace Shared.Types
           break;
       }
 
-      var contentStyle = TContentStyle.CreateDefault;
-
-      Size.SelectColumns (contentStyle.RequestBoardStyleSize (StyleHorizontal.Style));
-      Size.SelectRows (contentStyle.RequestBoardStyleSize (StyleVertical.Style));
+      Size.SelectColumns (TContentStyle.RequestBoardStyleSize (StyleHorizontal.Style));
+      Size.SelectRows (TContentStyle.RequestBoardStyleSize (StyleVertical.Style));
     }
 
     public void CopyFrom (TContentInfo alias)

@@ -4,6 +4,7 @@
 ----------------------------------------------------------------*/
 
 //----- Include
+using System;
 using System.ComponentModel.Composition;
 
 using rr.Library.Infrastructure;
@@ -25,25 +26,24 @@ namespace Module.Settings.Factory.Database.Pattern.ViewModels
     #region Constructor
     [ImportingConstructor]
     public TWADBBackSettingsViewModel (IFactoryDatabasePresentation presentation)
-      : base (new TWADBBackSettingsModel ())
+      : base (presentation, new TWADBBackSettingsModel ())
     {
       TypeName = GetType ().Name;
-
-      presentation.RequestPresentationCommand (this);
-      presentation.EventSubscribe (this);
     }
     #endregion
 
     #region Handle
     public void Handle (TMessageInternal message)
     {
-      // from sibiling
-      if (message.Node.IsSiblingToMe (TChild.Back, TypeInfo)) {
-        if (message.Support.Argument.Types.Authentication.Equals (TAuthentication.Windows)) {
-          if (message.IsAction (TInternalMessageAction.Select)) {
-            Model.ClearCheck ();
-            Model.Populate (message.Support.Argument.Types.ConnectionData);
-            RaiseChanged ();
+      if (message.NotNull ()) {
+        // from sibiling
+        if (message.Node.IsSiblingToMe (TChild.Back, TypeInfo)) {
+          if (message.Support.Argument.Types.Authentication.Equals (TAuthentication.Windows)) {
+            if (message.IsAction (TInternalMessageAction.Select)) {
+              Model.ClearCheck ();
+              Model.Populate (message.Support.Argument.Types.ConnectionData);
+              ApplyChanges ();
+            }
           }
         }
       }
@@ -54,7 +54,7 @@ namespace Module.Settings.Factory.Database.Pattern.ViewModels
     public void OnDatabaseApplyCommadClicked ()
     {
       Model.Apply ();
-      RaiseChanged ();
+      ApplyChanges ();
 
       // to sibiling front
       var message = new TFactoryMessageInternal (TInternalMessageAction.Change, TAuthentication.Windows, TypeInfo);
@@ -69,7 +69,7 @@ namespace Module.Settings.Factory.Database.Pattern.ViewModels
     public void OnBackCommadClicked ()
     {
       Model.ClearCheck ();
-      RaiseChanged ();
+      ApplyChanges ();
 
       // to sibiling 
       var message = new TFactoryMessageInternal (TInternalMessageAction.EditLeave, TAuthentication.SQL, TypeInfo);

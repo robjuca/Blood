@@ -8,16 +8,16 @@
 
 namespace Server.Models.Infrastructure
 {
-  public abstract class TEntityAction<M, C> : TEntityActionBase<TCategoryType>
+  public abstract class TEntityAction<TModelType, TCollectionType> : TEntityActionBase<TCategoryType>
   {
     #region Property
-    public M ModelAction
+    public TModelType ModelAction
     {
       get;
       private set;
     }
 
-    public C CollectionAction
+    public TCollectionType CollectionAction
     {
       get;
       private set;
@@ -25,14 +25,14 @@ namespace Server.Models.Infrastructure
     #endregion
 
     #region Constructor
-    protected TEntityAction (M model, C collection, TCategory category, string connectionString)
+    protected TEntityAction (TModelType model, TCollectionType collection, TCategory category, string connectionString)
       : base (TCategoryType.Create (category), connectionString)
     {
       ModelAction = model;
       CollectionAction = collection;
     }
 
-    protected TEntityAction (M model, C collection, TCategory category, string connectionString, object param1, object param2)
+    protected TEntityAction (TModelType model, TCollectionType collection, TCategory category, string connectionString, object param1, object param2)
       : base (TCategoryType.Create (category), connectionString, param1, param2)
     {
       ModelAction = model;

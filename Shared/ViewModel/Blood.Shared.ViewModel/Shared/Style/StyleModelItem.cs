@@ -56,7 +56,7 @@ namespace Shared.ViewModel
                 break;
             }
 
-            if (modelStyle.Equals (StyleInfo.StyleString)) {
+            if (modelStyle.Equals (StyleInfo.StyleString, StringComparison.InvariantCulture)) {
             }
           }
         }
