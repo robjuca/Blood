@@ -4,6 +4,7 @@
 ----------------------------------------------------------------*/
 
 //----- Include
+using System;
 using System.ComponentModel.Composition;
 
 using rr.Library.Infrastructure;
@@ -29,70 +30,69 @@ namespace Gadget.Factory.Pattern.ViewModels
     #region Constructor
     [ImportingConstructor]
     public TFactoryListViewModel (IFactoryPresentation presentation)
-      : base (new TFactoryListModel ())
+      : base (presentation, new TFactoryListModel ())
     {
       TypeName = GetType ().Name;
-
-      presentation.RequestPresentationCommand (this);
-      presentation.EventSubscribe (this);
     }
     #endregion
 
     #region IHandle
     public void Handle (TMessageInternal message)
     {
-      if (message.IsModule (TResource.TModule.Factory)) {
-        // from parent
-        if (message.Node.IsParentToMe (TChild.List)) {
-          // DatabaseValidated
-          if (message.IsAction (TInternalMessageAction.DatabaseValidated)) {
-            TDispatcher.Invoke (RequestDataDispatcher);
-          }
+      if (message.NotNull ()) {
+        if (message.IsModule (TResource.TModule.Factory)) {
+          // from parent
+          if (message.Node.IsParentToMe (TChild.List)) {
+            // DatabaseValidated
+            if (message.IsAction (TInternalMessageAction.DatabaseValidated)) {
+              TDispatcher.Invoke (RequestDataDispatcher);
+            }
 
-          // Response
-          if (message.IsAction (TInternalMessageAction.Response)) {
-            // Collection-Full
-            if (message.Support.Argument.Types.IsOperation (TOperation.Collection, TExtension.Full)) {
-              if (message.Result.IsValid) {
-                // Gadget Material
-                if (message.Support.Argument.Types.IsOperationCategory (TCategory.Material)) {
-                  var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
-                  TDispatcher.BeginInvoke (MaterialCollectionFullDispatcher, action);
+            // Response
+            if (message.IsAction (TInternalMessageAction.Response)) {
+              // Collection-Full
+              if (message.Support.Argument.Types.IsOperation (TOperation.Collection, TExtension.Full)) {
+                if (message.Result.IsValid) {
+                  // Gadget Material
+                  if (message.Support.Argument.Types.IsOperationCategory (TCategory.Material)) {
+                    var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
+                    TDispatcher.BeginInvoke (MaterialCollectionFullDispatcher, action);
+                  }
                 }
               }
             }
           }
-        }
 
-        // from sibilig
-        if (message.Node.IsSiblingToMe (TChild.List, TypeInfo)) {
-          // PropertySelect
-          if (message.IsAction (TInternalMessageAction.PropertySelect)) {
-            var propertyName = message.Support.Argument.Args.PropertyName;
+          // from sibilig
+          if (message.Node.IsSiblingToMe (TChild.List, TypeInfo)) {
+            // PropertySelect
+            if (message.IsAction (TInternalMessageAction.PropertySelect)) {
+              var propertyName = message.Support.Argument.Args.PropertyName;
 
-            if (propertyName.Equals ("edit")) {
-              if (message.Support.Argument.Args.Param1 is TActionComponent component) {
-                TDispatcher.BeginInvoke (EditDispatcher, component);
+              if (propertyName.Equals ("edit", StringComparison.InvariantCulture)) {
+                if (message.Support.Argument.Args.Param1 is TActionComponent component) {
+                  TDispatcher.BeginInvoke (EditDispatcher, component);
+                }
+              }
+
+              if (propertyName.Equals ("GadgetAdd", StringComparison.InvariantCulture) || propertyName.Equals ("GadgetRemove", StringComparison.InvariantCulture)) {
+                Model.PropertyChanged (message.Support.Argument.Args.PropertyName, message.Support.Argument.Types.ReportData.Locked);
+
+                TDispatcher.Invoke (RefreshAllDispatcher);
               }
             }
 
-            if (propertyName.Equals ("GadgetAdd") || propertyName.Equals ("GadgetRemove")) {
-              Model.PropertyChanged (message.Support.Argument.Args.PropertyName, message.Support.Argument.Types.ReportData.Locked);
+            // Reload
+            if (message.IsAction (TInternalMessageAction.Reload)) {
+              // to parent
+              DelegateCommand.PublishInternalMessage.Execute (message);
+            }
 
+            // Cleanup
+            if (message.IsAction (TInternalMessageAction.Cleanup)) {
+              Model.Cleanup ();
               TDispatcher.Invoke (RefreshAllDispatcher);
             }
-          }
-
-          // Reload
-          if (message.IsAction (TInternalMessageAction.Reload)) {
-            // to parent
-            DelegateCommand.PublishInternalMessage.Execute (message);
-          }
-
-          // Cleanup
-          if (message.IsAction (TInternalMessageAction.Cleanup)) {
-            Model.Cleanup ();
-            TDispatcher.Invoke (RefreshAllDispatcher);
           }
         }
       }
@@ -109,21 +109,21 @@ namespace Gadget.Factory.Pattern.ViewModels
     {
       Model.SlideIndex = 0;
 
-      RaiseChanged ();
+      ApplyChanges ();
     }
 
     public void OnSelectorTestCommadClicked ()
     {
       Model.SlideIndex = 1;
 
-      RaiseChanged ();
+      ApplyChanges ();
     }
     #endregion
 
     #region Dispatcher
     void RefreshAllDispatcher ()
     {
-      RaiseChanged ();
+      ApplyChanges ();
 
       RefreshCollection ("MaterialModelItemsViewSource");
     }

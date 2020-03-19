@@ -166,7 +166,7 @@ namespace Gadget.Factory.Pattern.Models
     internal void MaterialSelectionItemChanged (string materialName)
     {
       for (int index = 0; index < MaterialSelectionItemsSource.Count; index++) {
-        if (MaterialSelectionItemsSource [index].GadgetName.Equals (materialName)) {
+        if (MaterialSelectionItemsSource [index].GadgetName.Equals (materialName, StringComparison.InvariantCulture)) {
           MaterialSelectionSelectedIndex = index;
           break;
         }

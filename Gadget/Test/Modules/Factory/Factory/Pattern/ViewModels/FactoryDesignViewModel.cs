@@ -30,61 +30,60 @@ namespace Gadget.Factory.Pattern.ViewModels
     #region Constructor
     [ImportingConstructor]
     public TFactoryDesignViewModel (IFactoryPresentation presentation)
-      : base (new TFactoryDesignModel ())
+      : base (presentation, new TFactoryDesignModel ())
     {
       TypeName = GetType ().Name;
-
-      presentation.RequestPresentationCommand (this);
-      presentation.EventSubscribe (this);
     }
     #endregion
 
     #region IHandle
     public void Handle (TMessageInternal message)
     {
-      if (message.IsModule (TResource.TModule.Factory)) {
-        // from Sibling
-        if (message.Node.IsSiblingToMe (TChild.Design, TypeInfo)) {
-          // PropertySelect
-          if (message.IsAction (TInternalMessageAction.PropertySelect)) {
-            var propertyName = message.Support.Argument.Args.PropertyName;
+      if (message.NotNull ()) {
+        if (message.IsModule (TResource.TModule.Factory)) {
+          // from Sibling
+          if (message.Node.IsSiblingToMe (TChild.Design, TypeInfo)) {
+            // PropertySelect
+            if (message.IsAction (TInternalMessageAction.PropertySelect)) {
+              var propertyName = message.Support.Argument.Args.PropertyName;
 
-            if (propertyName.Equals ("GadgetAdd")) {
-              if (message.Support.Argument.Args.Param1 is TActionComponent component) {
-                Model.AddModel (component);
+              if (propertyName.Equals ("GadgetAdd", StringComparison.InvariantCulture)) {
+                if (message.Support.Argument.Args.Param1 is TActionComponent component) {
+                  Model.AddModel (component);
+                }
+
+                TDispatcher.Invoke (RefreshDesignDispatcher);
               }
 
-              TDispatcher.Invoke (RefreshDesignDispatcher);
-            }
+              if (propertyName.Equals ("GadgetRemove", StringComparison.InvariantCulture)) {
+                if (message.Support.Argument.Args.Param1 is TActionComponent component) {
+                  Model.RemoveModel (component);
+                }
 
-            if (propertyName.Equals ("GadgetRemove")) {
-              if (message.Support.Argument.Args.Param1 is TActionComponent component) {
-                Model.RemoveModel (component);
+                TDispatcher.Invoke (RefreshDesignDispatcher);
               }
 
-              TDispatcher.Invoke (RefreshDesignDispatcher);
-            }
+              if (propertyName.Equals ("edit", StringComparison.InvariantCulture)) {
+                if (message.Support.Argument.Args.Param1 is TActionComponent component) {
+                  Model.Edit (component);
+                }
 
-            if (propertyName.Equals ("edit")) {
-              if (message.Support.Argument.Args.Param1 is TActionComponent component) {
-                Model.Edit (component);
+                TDispatcher.Invoke (RefreshDesignDispatcher);
               }
-              
+
+              var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
+
+              if (action.NotNull ()) {
+                action.Param1 = propertyName;
+                TDispatcher.BeginInvoke (PropertySelectDispatcher, action);
+              }
+            }
+
+            // Cleanup
+            if (message.IsAction (TInternalMessageAction.Cleanup)) {
+              Model.Cleanup ();
               TDispatcher.Invoke (RefreshDesignDispatcher);
             }
-
-            var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
-
-            if (action.NotNull ()) {
-              action.Param1 = propertyName;
-              TDispatcher.BeginInvoke (PropertySelectDispatcher, action);
-            }
-          }
-
-          // Cleanup
-          if (message.IsAction (TInternalMessageAction.Cleanup)) {
-            Model.Cleanup ();
-            TDispatcher.Invoke (RefreshDesignDispatcher);
           }
         }
       }
@@ -105,14 +104,14 @@ namespace Gadget.Factory.Pattern.ViewModels
     {
       if (m_DesignControl.NotNull ()) {
         m_DesignControl.RefreshDesign ();
-        RaiseChanged ();
+        ApplyChanges ();
       }
     }
 
     void PropertySelectDispatcher (TEntityAction action)
     {
       if (action.Param1 is string propertyName) {
-        if (propertyName.Equals ("DescriptionProperty") || propertyName.Equals ("TextProperty") || propertyName.Equals ("ExternalLinkProperty")) {
+        if (propertyName.Equals ("DescriptionProperty", StringComparison.InvariantCulture) || propertyName.Equals ("TextProperty", StringComparison.InvariantCulture) || propertyName.Equals ("ExternalLinkProperty", StringComparison.InvariantCulture)) {
           Model.SelectModel (action);
           TDispatcher.Invoke (RefreshDesignDispatcher);
         }

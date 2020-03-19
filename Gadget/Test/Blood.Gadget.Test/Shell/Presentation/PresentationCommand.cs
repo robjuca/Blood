@@ -4,6 +4,8 @@
 ----------------------------------------------------------------*/
 
 //----- Include
+using System;
+
 using rr.Library.Types;
 
 using Shared.Message;
@@ -32,9 +34,18 @@ namespace Gadget.Test.Shell.Presentation
     #region Constructor
     public TPresentationCommand (TShellPresentation presentation)
     {
-      PublishModuleMessage = new DelegateCommand<TMessageModule> (presentation.PublishModuleMessageHandler);
+      if (presentation.NotNull ()) {
+        PublishModuleMessage = new DelegateCommand<TMessageModule> (presentation.PublishModuleMessageHandler);
 
-      NotifyNavigateRequestMessage = new DelegateCommand<TNavigateRequestMessage> (presentation.NotifyNavigateRequestMessageHandler);
+        NotifyNavigateRequestMessage = new DelegateCommand<TNavigateRequestMessage> (presentation.NotifyNavigateRequestMessageHandler);
+      }
+      }
+    #endregion
+
+    #region Interface
+    public void DoNothing ()
+    {
+      // do nothing
     }
     #endregion
   }

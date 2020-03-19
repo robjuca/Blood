@@ -158,7 +158,7 @@ namespace Gadget.Factory.Pattern.Models
 
       // found
       if (m_CurrentEditGadget.ValidateId) {
-        if (m_CurrentEditGadget.Material.Equals (m_CurrentMaterialGadget.Material)) {
+        if (m_CurrentEditGadget.Material.Equals (m_CurrentMaterialGadget.Material, StringComparison.InvariantCulture)) {
           MaterialChanged ();
         }
       }

@@ -4,6 +4,7 @@
 ----------------------------------------------------------------*/
 
 //----- Include
+using System;
 using System.ComponentModel.Composition;
 
 using rr.Library.Infrastructure;
@@ -31,48 +32,47 @@ namespace Gadget.Collection.Pattern.ViewModels
     #region Constructor
     [ImportingConstructor]
     public TCollectionDisplayViewModel (ICollectionPresentation presentation)
-      : base (new TCollectionDisplayModel ())
+      : base (presentation, new TCollectionDisplayModel ())
     {
       TypeName = GetType ().Name;
-
-      presentation.RequestPresentationCommand (this);
-      presentation.EventSubscribe (this);
     }
     #endregion
 
     #region IHandle
     public void Handle (TMessageInternal message)
     {
-      if (message.IsModule (TResource.TModule.Collection)) {
-        // from parent
-        if (message.Node.IsParentToMe (TChild.Display)) {
-          // Response
-          if (message.IsAction (TInternalMessageAction.Response)) {
-            // Remove
-            if (message.Support.Argument.Types.IsOperation (TOperation.Remove)) {
-              if (message.Result.IsValid) {
-                Model.Cleanup ();
-                RaiseChanged ();
+      if (message.NotNull ()) {
+        if (message.IsModule (TResource.TModule.Collection)) {
+          // from parent
+          if (message.Node.IsParentToMe (TChild.Display)) {
+            // Response
+            if (message.IsAction (TInternalMessageAction.Response)) {
+              // Remove
+              if (message.Support.Argument.Types.IsOperation (TOperation.Remove)) {
+                if (message.Result.IsValid) {
+                  Model.Cleanup ();
+                  ApplyChanges ();
 
-                // notify List            
-                TDispatcher.Invoke (ReloadDispatcher);
+                  // notify List            
+                  TDispatcher.Invoke (ReloadDispatcher);
+                }
               }
             }
           }
-        }
 
-        // from sibilig
-        if (message.Node.IsSiblingToMe (TChild.Display, TypeInfo)) {
-          // Select
-          if (message.IsAction (TInternalMessageAction.Select)) {
-            if (message.Support.Argument.Args.Param1 is TActionComponent component) {
-              TDispatcher.BeginInvoke (SelectDispatcher, component);
+          // from sibilig
+          if (message.Node.IsSiblingToMe (TChild.Display, TypeInfo)) {
+            // Select
+            if (message.IsAction (TInternalMessageAction.Select)) {
+              if (message.Support.Argument.Args.Param1 is TActionComponent component) {
+                TDispatcher.BeginInvoke (SelectDispatcher, component);
+              }
             }
-          }
 
-          // Cleanup
-          if (message.IsAction (TInternalMessageAction.Cleanup)) {
-            TDispatcher.Invoke (CleanupDispatcher);
+            // Cleanup
+            if (message.IsAction (TInternalMessageAction.Cleanup)) {
+              TDispatcher.Invoke (CleanupDispatcher);
+            }
           }
         }
       }
@@ -100,7 +100,7 @@ namespace Gadget.Collection.Pattern.ViewModels
         control.RefreshDesign ();
       }
 
-      RaiseChanged ();
+      ApplyChanges ();
     }
 
     void EditDispatcher ()
@@ -137,7 +137,7 @@ namespace Gadget.Collection.Pattern.ViewModels
     void CleanupDispatcher ()
     {
       Model.Cleanup ();
-      RaiseChanged ();
+      ApplyChanges ();
     }
     #endregion
 

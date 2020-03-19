@@ -31,84 +31,83 @@ namespace Gadget.Factory.Pattern.ViewModels
     #region Constructor
     [ImportingConstructor]
     public TFactoryListTestViewModel (IFactoryPresentation presentation)
-      : base (new TFactoryListTestModel ())
+      : base (presentation, new TFactoryListTestModel ())
     {
       TypeName = GetType ().Name;
-
-      presentation.RequestPresentationCommand (this);
-      presentation.EventSubscribe (this);
     }
     #endregion
 
     #region IHandle
     public void Handle (TMessageInternal message)
     {
-      if (message.IsModule (TResource.TModule.Factory)) {
-        // from parent
-        if (message.Node.IsParentToMe (TChild.List)) {
-          // DatabaseValidated
-          if (message.IsAction (TInternalMessageAction.DatabaseValidated)) {
-            TDispatcher.Invoke (RequestDataDispatcher);
-          }
+      if (message.NotNull ()) {
+        if (message.IsModule (TResource.TModule.Factory)) {
+          // from parent
+          if (message.Node.IsParentToMe (TChild.List)) {
+            // DatabaseValidated
+            if (message.IsAction (TInternalMessageAction.DatabaseValidated)) {
+              TDispatcher.Invoke (RequestDataDispatcher);
+            }
 
-          // Response
-          if (message.IsAction (TInternalMessageAction.Response)) {
-            // Collection - Full
-            if (message.Support.Argument.Types.IsOperation (TOperation.Collection, TExtension.Full)) {
-              if (message.Result.IsValid) {
-                // Gadget Test
-                if (message.Support.Argument.Types.IsOperationCategory (TCategory.Test)) {
-                  var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
-                  TDispatcher.BeginInvoke (ResponseDataDispatcher, action);
+            // Response
+            if (message.IsAction (TInternalMessageAction.Response)) {
+              // Collection - Full
+              if (message.Support.Argument.Types.IsOperation (TOperation.Collection, TExtension.Full)) {
+                if (message.Result.IsValid) {
+                  // Gadget Test
+                  if (message.Support.Argument.Types.IsOperationCategory (TCategory.Test)) {
+                    var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
+                    TDispatcher.BeginInvoke (ResponseDataDispatcher, action);
+                  }
+                }
+              }
+
+              // Select - ById
+              if (message.Support.Argument.Types.IsOperation (TOperation.Select, TExtension.ById)) {
+                if (message.Result.IsValid) {
+                  // Gadget Test
+                  if (message.Support.Argument.Types.IsOperationCategory (TCategory.Test)) {
+                    var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
+                    TDispatcher.BeginInvoke (ResponseSelectByIdDispatcher, action);
+                  }
                 }
               }
             }
-
-            // Select - ById
-            if (message.Support.Argument.Types.IsOperation (TOperation.Select, TExtension.ById)) {
-              if (message.Result.IsValid) {
-                // Gadget Test
-                if (message.Support.Argument.Types.IsOperationCategory (TCategory.Test)) {
-                  var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
-                  TDispatcher.BeginInvoke (ResponseSelectByIdDispatcher, action);
-                }
-              }
-            }
-          }
-        }
-
-        // from sibilig
-        if (message.Node.IsSiblingToMe (TChild.List, TypeInfo)) {
-          // Select
-          if (message.IsAction (TInternalMessageAction.Select)) {
-            // material
-            if (message.Support.Argument.Args.Param1 is TActionComponent component) {
-              Model.MaterialItemChanged (component);
-            }
-
-            TDispatcher.Invoke (RefreshAllDispatcher);
           }
 
-          // PropertySelect
-          if (message.IsAction (TInternalMessageAction.PropertySelect)) {
-            if (message.Support.Argument.Args.PropertyName.Equals ("edit")) {
+          // from sibilig
+          if (message.Node.IsSiblingToMe (TChild.List, TypeInfo)) {
+            // Select
+            if (message.IsAction (TInternalMessageAction.Select)) {
+              // material
               if (message.Support.Argument.Args.Param1 is TActionComponent component) {
-                TDispatcher.BeginInvoke (EditDispatcher, component);
+                Model.MaterialItemChanged (component);
+              }
+
+              TDispatcher.Invoke (RefreshAllDispatcher);
+            }
+
+            // PropertySelect
+            if (message.IsAction (TInternalMessageAction.PropertySelect)) {
+              if (message.Support.Argument.Args.PropertyName.Equals ("edit", StringComparison.InvariantCulture)) {
+                if (message.Support.Argument.Args.Param1 is TActionComponent component) {
+                  TDispatcher.BeginInvoke (EditDispatcher, component);
+                }
               }
             }
-          }
 
-          // Request
-          if (message.IsAction (TInternalMessageAction.Request)) {
-            TDispatcher.BeginInvoke (RequestDesignDispatcher, TEntityAction.Request (message.Support.Argument.Types.EntityAction));
-          }
+            // Request
+            if (message.IsAction (TInternalMessageAction.Request)) {
+              TDispatcher.BeginInvoke (RequestDesignDispatcher, TEntityAction.Request (message.Support.Argument.Types.EntityAction));
+            }
 
-          // Cleanup
-          if (message.IsAction (TInternalMessageAction.Cleanup)) {
-            Model.Cleanup ();
+            // Cleanup
+            if (message.IsAction (TInternalMessageAction.Cleanup)) {
+              Model.Cleanup ();
 
-            TDispatcher.Invoke (RefreshAllDispatcher);
-            TDispatcher.Invoke (RequestDataDispatcher);
+              TDispatcher.Invoke (RefreshAllDispatcher);
+              TDispatcher.Invoke (RequestDataDispatcher);
+            }
           }
         }
       }
@@ -130,7 +129,7 @@ namespace Gadget.Factory.Pattern.ViewModels
     #region Dispatcher
     void RefreshAllDispatcher ()
     {
-      RaiseChanged ();
+      ApplyChanges ();
 
       RefreshCollection ("TestModelItemsViewSource");
     }

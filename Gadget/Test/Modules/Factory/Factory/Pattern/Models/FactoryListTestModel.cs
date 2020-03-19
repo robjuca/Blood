@@ -163,7 +163,7 @@ namespace Gadget.Factory.Pattern.Models
 
       // found
       if (m_CurrentEditGadget.ValidateId) {
-        if (m_CurrentEditGadget.Material.Equals (m_CurrentMaterialGadget.Material)) {
+        if (m_CurrentEditGadget.Material.Equals (m_CurrentMaterialGadget.Material, StringComparison.InvariantCulture)) {
           MaterialChanged ();
         }
       }
@@ -366,7 +366,7 @@ namespace Gadget.Factory.Pattern.Models
         GadgetItemsSource.Clear ();
 
         foreach (var gadgetTest in GadgetFullCollection) {
-          if (gadgetTest.Material.Equals (m_CurrentMaterialGadget.Material)) {
+          if (gadgetTest.Material.Equals (m_CurrentMaterialGadget.Material, StringComparison.InvariantCulture)) {
             var checkedItem = IsChecked (gadgetTest.Id);
 
             if (checkedItem.ValidateId.IsFalse ()) {
