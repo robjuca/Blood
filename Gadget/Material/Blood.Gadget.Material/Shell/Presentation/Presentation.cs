@@ -35,19 +35,23 @@ namespace Gadget.Material.Shell.Presentation
     public void Handle (TMessageModule message)
     {
       if (ViewModel.NotNull ()) {
-        if (message.IsModule (TResource.TModule.Shell).IsFalse ()) {
-          ((IShellViewModel) ViewModel).Message (message);
+        if (message.NotNull ()) {
+          if (message.IsModule (TResource.TModule.Shell).IsFalse ()) {
+            ((IShellViewModel) ViewModel).Message (message);
+          }
         }
       }
     }
 
     public void Handle (TNavigateRequestMessage message)
     {
-      if (message.IsActionRequest) {
-        if (message.Sender.Equals (TNavigateMessage.TSender.Shell)) {
-          m_NavigateRequestMessage = message;
+      if (message.NotNull ()) {
+        if (message.IsActionRequest) {
+          if (message.Sender.Equals (TNavigateMessage.TSender.Shell)) {
+            m_NavigateRequestMessage = message;
 
-          TDispatcher.Invoke (NavigateRequestDispatcher);
+            TDispatcher.Invoke (NavigateRequestDispatcher);
+          }
         }
       }
     }

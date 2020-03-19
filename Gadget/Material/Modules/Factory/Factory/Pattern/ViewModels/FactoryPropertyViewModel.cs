@@ -32,12 +32,9 @@ namespace Gadget.Factory.Pattern.ViewModels
     #region Constructor
     [ImportingConstructor]
     public TFactoryPropertyViewModel (IFactoryPresentation presentation)
-      : base (new TFactoryPropertyModel ())
+      : base (presentation, new TFactoryPropertyModel ())
     {
       TypeName = GetType ().Name;
-
-      presentation.RequestPresentationCommand (this);
-      presentation.EventSubscribe (this);
 
       Model.PropertyChanged += OnModelPropertyChanged;
     }
@@ -46,37 +43,39 @@ namespace Gadget.Factory.Pattern.ViewModels
     #region IHandle
     public void Handle (TMessageInternal message)
     {
-      if (message.IsModule (TResource.TModule.Factory)) {
-        // from parent
-        if (message.Node.IsParentToMe (TChild.Property)) {
-          // RefreshModel
-          if (message.IsAction (TInternalMessageAction.RefreshModel)) {
-            var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
-            TDispatcher.BeginInvoke (RefreshCollectionDispatcher, action);
-          }
-
-          // Edit
-          if (message.IsAction (TInternalMessageAction.Edit)) {
-            TDispatcher.BeginInvoke (EditDispatcher, message.Support.Argument.Args.Param1);
-          }
-
-          // EditLeave
-          if (message.IsAction (TInternalMessageAction.EditLeave)) {
-            if (IsViewModeEdit) {
-              OnCancelCommadClicked ();
-            }
-          }
-
-          // Response
-          if (message.IsAction (TInternalMessageAction.Response)) {
-            // Insert
-            if (message.Support.Argument.Types.IsOperation (TOperation.Insert)) {
-              TDispatcher.Invoke (InsertSuccessDispatcher);
+      if (message.NotNull ()) {
+        if (message.IsModule (TResource.TModule.Factory)) {
+          // from parent
+          if (message.Node.IsParentToMe (TChild.Property)) {
+            // RefreshModel
+            if (message.IsAction (TInternalMessageAction.RefreshModel)) {
+              var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
+              TDispatcher.BeginInvoke (RefreshCollectionDispatcher, action);
             }
 
-            // Change - Full
-            if (message.Support.Argument.Types.IsOperation (TOperation.Change, TExtension.Full)) {
-              TDispatcher.Invoke (ChangeSuccessDispatcher);
+            // Edit
+            if (message.IsAction (TInternalMessageAction.Edit)) {
+              TDispatcher.BeginInvoke (EditDispatcher, message.Support.Argument.Args.Param1);
+            }
+
+            // EditLeave
+            if (message.IsAction (TInternalMessageAction.EditLeave)) {
+              if (IsViewModeEdit) {
+                OnCancelCommadClicked ();
+              }
+            }
+
+            // Response
+            if (message.IsAction (TInternalMessageAction.Response)) {
+              // Insert
+              if (message.Support.Argument.Types.IsOperation (TOperation.Insert)) {
+                TDispatcher.Invoke (InsertSuccessDispatcher);
+              }
+
+              // Change - Full
+              if (message.Support.Argument.Types.IsOperation (TOperation.Change, TExtension.Full)) {
+                TDispatcher.Invoke (ChangeSuccessDispatcher);
+              }
             }
           }
         }
@@ -107,7 +106,7 @@ namespace Gadget.Factory.Pattern.ViewModels
     public void OnApplyCommadClicked ()
     {
       Model.ShowPanels ();
-      RaiseChanged ();
+      ApplyChanges ();
 
       var action = TEntityAction.Create (TCategory.Material, TOperation.Insert);
 
@@ -130,7 +129,7 @@ namespace Gadget.Factory.Pattern.ViewModels
     #region Dispatcher
     void RefreshAllDispatcher ()
     {
-      RaiseChanged ();
+      ApplyChanges ();
 
       if (m_PropertyGridComponent.NotNull ()) {
         m_PropertyGridComponent.RefreshPropertyList ();
@@ -263,13 +262,13 @@ namespace Gadget.Factory.Pattern.ViewModels
         DelegateCommand.PublishInternalMessage.Execute (message);
       }
 
-      RaiseChanged ();
+      ApplyChanges ();
     }
 
     void Cleanup ()
     {
       Model.Cleanup ();
-      RaiseChanged ();
+      ApplyChanges ();
 
       CleanupPropertyControl ();
 

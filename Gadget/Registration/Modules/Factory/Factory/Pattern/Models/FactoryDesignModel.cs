@@ -31,7 +31,7 @@ namespace Gadget.Factory.Pattern.Models
     #endregion
 
     #region Members
-    internal void SelectModel (string propertyName, TActionComponent component)
+    internal void SelectModel (TActionComponent component)
     {
       ComponentControlModel.ThrowNull ();
       //TODO: review

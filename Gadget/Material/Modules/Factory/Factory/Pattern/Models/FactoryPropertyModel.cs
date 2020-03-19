@@ -6,6 +6,7 @@
 //----- Include
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 using rr.Library.Types;
 
@@ -91,7 +92,7 @@ namespace Gadget.Factory.Pattern.Models
     {
       bool res = true;
 
-      if (propertyName.Equals ("TextProperty")) {
+      if (propertyName.Equals ("TextProperty", StringComparison.InvariantCulture)) {
         AlertsModel.Select (isOpen: false); // default
 
         ComponentModelProperty.ValidateModel (true);
@@ -106,10 +107,8 @@ namespace Gadget.Factory.Pattern.Models
           ComponentModelProperty.ValidateModel (false);
 
           // show alerts
-          var message = $"Material (Text = EMPTY)";
-
           AlertsModel.Select (TAlertsModel.TKind.Warning);
-          AlertsModel.Select ("EMPTY ENTRY", message);
+          AlertsModel.Select (Properties.Resource.RES_EMPTY, Properties.Resource.RES_TEXT_EMPTY);
           AlertsModel.Select (isOpen: true);
 
           res = false;
@@ -121,7 +120,7 @@ namespace Gadget.Factory.Pattern.Models
             var material = gadget.Value.Material;
             var item = ComponentModelProperty.ExtensionModel.TextProperty;
 
-            bool validateModel = string.Compare (material, item, true).Equals (0).IsFalse ();
+            bool validateModel = string.Compare (material, item, true, CultureInfo.InvariantCulture).Equals (0).IsFalse ();
 
             // check same gadget (change)
             if (gadget.Value.Id.Equals (ComponentModelProperty.Id).IsFalse ()) {
@@ -132,7 +131,7 @@ namespace Gadget.Factory.Pattern.Models
                 var message = $"Material (Text = {material})";
 
                 AlertsModel.Select (TAlertsModel.TKind.Warning);
-                AlertsModel.Select ("DUPLICATED ENTRY", message);
+                AlertsModel.Select (Properties.Resource.RES_DUPLICATED, message);
                 AlertsModel.Select (isOpen: true);
 
                 res = false;

@@ -120,6 +120,9 @@ namespace Shared.ViewModel
       ServiceReportVisibility = Visibility.Collapsed;
 
       ErrorBoxContent = TErrorMessage.CreateDefault;
+
+      Message = string.Empty;
+      ServiceReportMessage = string.Empty;
     }
     #endregion
 

@@ -4,6 +4,8 @@
 ----------------------------------------------------------------*/
 
 //----- Include
+using System;
+
 using Microsoft.EntityFrameworkCore;
 
 using Server.Models.Component;
@@ -114,10 +116,24 @@ namespace Server.Context.Component
     #endregion
 
     #region Overrides
+    protected override void OnModelCreating (ModelBuilder modelBuilder)
+    {
+      if (modelBuilder.NotNull ()) {
+        base.OnModelCreating (modelBuilder);
+
+        modelBuilder
+          .Entity<ExtensionImage> (eb =>
+            {
+              eb.HasKey (b => b.Id);
+            })
+        ;
+      }
+    }
+
     protected override void OnConfiguring (DbContextOptionsBuilder optionsBuilder)
     {
-      if (optionsBuilder != null) {
-        if (!optionsBuilder.IsConfigured) {
+      if (optionsBuilder.NotNull ()) {
+        if (optionsBuilder.IsConfigured.IsFalse ()) {
           optionsBuilder.UseSqlServer (ConnectionString);
         }
       }

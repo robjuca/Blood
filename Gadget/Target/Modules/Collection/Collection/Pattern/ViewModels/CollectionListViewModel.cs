@@ -4,6 +4,7 @@
 ----------------------------------------------------------------*/
 
 //----- Include
+using System;
 using System.ComponentModel.Composition;
 
 using rr.Library.Infrastructure;
@@ -29,68 +30,67 @@ namespace Gadget.Collection.Pattern.ViewModels
     #region Constructor
     [ImportingConstructor]
     public TCollectionListViewModel (ICollectionPresentation presentation)
-      : base (new TCollectionListModel ())
+      : base (presentation, new TCollectionListModel ())
     {
       TypeName = GetType ().Name;
-
-      presentation.RequestPresentationCommand (this);
-      presentation.EventSubscribe (this);
     }
     #endregion
 
     #region IHandle
     public void Handle (TMessageInternal message)
     {
-      if (message.IsModule (TResource.TModule.Collection)) {
-        // from parent
-        if (message.Node.IsParentToMe (TChild.List)) {
-          // DatabaseValidated
-          if (message.IsAction (TInternalMessageAction.DatabaseValidated)) {
-            TDispatcher.Invoke (RequestDataDispatcher);
-          }
+      if (message.NotNull ()) {
+        if (message.IsModule (TResource.TModule.Collection)) {
+          // from parent
+          if (message.Node.IsParentToMe (TChild.List)) {
+            // DatabaseValidated
+            if (message.IsAction (TInternalMessageAction.DatabaseValidated)) {
+              TDispatcher.Invoke (RequestDataDispatcher);
+            }
 
-          // Response
-          if (message.IsAction (TInternalMessageAction.Response)) {
-            // Collection-Full
-            if (message.Support.Argument.Types.IsOperation (Server.Models.Infrastructure.TOperation.Collection, Server.Models.Infrastructure.TExtension.Full)) {
-              if (message.Result.IsValid) {
-                // Gadget Target
-                if (message.Support.Argument.Types.IsOperationCategory (Server.Models.Infrastructure.TCategory.Target)) {
-                  var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
-                  TDispatcher.BeginInvoke (ResponseDataDispatcher, action);
+            // Response
+            if (message.IsAction (TInternalMessageAction.Response)) {
+              // Collection-Full
+              if (message.Support.Argument.Types.IsOperation (Server.Models.Infrastructure.TOperation.Collection, Server.Models.Infrastructure.TExtension.Full)) {
+                if (message.Result.IsValid) {
+                  // Gadget Target
+                  if (message.Support.Argument.Types.IsOperationCategory (Server.Models.Infrastructure.TCategory.Target)) {
+                    var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
+                    TDispatcher.BeginInvoke (ResponseDataDispatcher, action);
+                  }
+
+                  // Gadget Material
+                  if (message.Support.Argument.Types.IsOperationCategory (Server.Models.Infrastructure.TCategory.Material)) {
+                    var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
+                    TDispatcher.BeginInvoke (RefreshModelDispatcher, action);
+                  }
                 }
+              }
 
-                // Gadget Material
-                if (message.Support.Argument.Types.IsOperationCategory (Server.Models.Infrastructure.TCategory.Material)) {
+              // Select-ById
+              if (message.Support.Argument.Types.IsOperation (Server.Models.Infrastructure.TOperation.Select, Server.Models.Infrastructure.TExtension.ById)) {
+                if (message.Result.IsValid) {
                   var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
-                  TDispatcher.BeginInvoke (RefreshModelDispatcher, action);
+                  TDispatcher.BeginInvoke (ResponseModelDispatcher, action);
                 }
               }
             }
 
-            // Select-ById
-            if (message.Support.Argument.Types.IsOperation (Server.Models.Infrastructure.TOperation.Select, Server.Models.Infrastructure.TExtension.ById)) {
-              if (message.Result.IsValid) {
-                var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
-                TDispatcher.BeginInvoke (ResponseModelDispatcher, action);
-              }
+            // Reload
+            if (message.IsAction (TInternalMessageAction.Reload)) {
+              TDispatcher.Invoke (RefreshAllDispatcher);
+              TDispatcher.Invoke (RequestDataDispatcher);
             }
           }
 
-          // Reload
-          if (message.IsAction (TInternalMessageAction.Reload)) {
-            TDispatcher.Invoke (RefreshAllDispatcher);
-            TDispatcher.Invoke (RequestDataDispatcher);
-          }
-        }
-
-        // from sibilig
-        if (message.Node.IsSiblingToMe (TChild.List, TypeInfo)) {
-          // Reload
-          if (message.IsAction (TInternalMessageAction.Reload)) {
-            TDispatcher.Invoke (RefreshAllDispatcher);
-            TDispatcher.Invoke (RequestDataDispatcher);
-            TDispatcher.Invoke (ReloadDispatcher);
+          // from sibilig
+          if (message.Node.IsSiblingToMe (TChild.List, TypeInfo)) {
+            // Reload
+            if (message.IsAction (TInternalMessageAction.Reload)) {
+              TDispatcher.Invoke (RefreshAllDispatcher);
+              TDispatcher.Invoke (RequestDataDispatcher);
+              TDispatcher.Invoke (ReloadDispatcher);
+            }
           }
         }
       }
@@ -112,7 +112,7 @@ namespace Gadget.Collection.Pattern.ViewModels
     #region Dispatcher
     void RefreshAllDispatcher ()
     {
-      RaiseChanged ();
+      ApplyChanges ();
 
       RefreshCollection ("MaterialModelItemsViewSource");
       RefreshCollection ("TargetModelItemsViewSource");

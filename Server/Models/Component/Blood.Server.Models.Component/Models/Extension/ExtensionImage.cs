@@ -15,7 +15,7 @@ namespace Server.Models.Component
     [Key]
     public Guid         Id { get; set; }
 
-    public Array       Image { get; set; }
+    public byte []      Image { get; set; } // TODO: how to fis this
     public bool         Distorted { get; set; }
     public int          Width { get; set; }
     public int          Height { get; set; }

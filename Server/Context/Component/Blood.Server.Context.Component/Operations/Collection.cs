@@ -81,7 +81,7 @@ namespace Server.Context.Component
         ;
 
         // found
-        if (descriptors.Count > 0) {
+        if (descriptors.Any ()) {
           // Component Info, Status
           action.CollectionAction.ComponentInfoCollection.Clear ();
           action.CollectionAction.ComponentStatusCollection.Clear ();
@@ -433,7 +433,7 @@ namespace Server.Context.Component
         ;
 
         // found
-        if (descriptors.Count > 0) {
+        if (descriptors.Any ()) {
           // Component Info, Status
           action.CollectionAction.ComponentInfoCollection.Clear ();
           action.CollectionAction.ComponentStatusCollection.Clear ();

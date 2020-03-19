@@ -70,10 +70,8 @@ namespace Gadget.Factory.Pattern.Models
           ComponentModelProperty.ValidateModel (false);
 
           // show alerts
-          var message = $"Material list is EMPTY!";
-
           AlertsModel.Select (TAlertsModel.TKind.Warning);
-          AlertsModel.Select ("EMPTY", message);
+          AlertsModel.Select (Properties.Resource.RES_EMPTY, Properties.Resource.RES_LIST_EMPTY);
           AlertsModel.Select (isOpen: true);
         }
       }
@@ -125,7 +123,7 @@ namespace Gadget.Factory.Pattern.Models
 
       AlertsModel.Select (isOpen: false); // default
 
-      if (propertyName.Equals ("TextProperty")) {
+      if (propertyName.Equals ("TextProperty", StringComparison.InvariantCulture)) {
         ComponentModelProperty.ValidateModel (true);
 
         var entityAction = TEntityAction.CreateDefault;
@@ -138,10 +136,8 @@ namespace Gadget.Factory.Pattern.Models
           ComponentModelProperty.ValidateModel (false);
 
           // show alerts
-          var message = $"Material (Text = EMPTY)";
-
           AlertsModel.Select (TAlertsModel.TKind.Warning);
-          AlertsModel.Select ("EMPTY ENTRY", message);
+          AlertsModel.Select (Properties.Resource.RES_EMPTY, Properties.Resource.RES_TEXT_EMPTY);
           AlertsModel.Select (isOpen: true);
 
           res = false;

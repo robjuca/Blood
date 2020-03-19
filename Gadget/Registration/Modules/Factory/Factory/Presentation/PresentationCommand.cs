@@ -4,6 +4,8 @@
 ----------------------------------------------------------------*/
 
 //----- Include
+using System;
+
 using rr.Library.Types;
 
 using Shared.Message;
@@ -31,8 +33,17 @@ namespace Gadget.Factory.Presentation
     #region Constructor
     public TPresentationCommand (TFactoryPresentation presentation)
     {
-      PublishMessage = new DelegateCommand<TMessageModule> (presentation.PublishMessageHandler);
-      PublishInternalMessage = new DelegateCommand<TMessageInternal> (presentation.PublishInternalMessageHandler);
+      if (presentation.NotNull ()) {
+        PublishMessage = new DelegateCommand<TMessageModule> (presentation.PublishMessageHandler);
+        PublishInternalMessage = new DelegateCommand<TMessageInternal> (presentation.PublishInternalMessageHandler);
+      }
+     }
+    #endregion
+
+    #region Interface
+    public void DoNothing ()
+    {
+      // do nothing
     }
     #endregion
   };

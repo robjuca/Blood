@@ -31,12 +31,9 @@ namespace Gadget.Factory.Pattern.ViewModels
     #region Constructor
     [ImportingConstructor]
     public TFactoryPropertyViewModel (IFactoryPresentation presentation)
-      : base (new TFactoryPropertyModel ())
+      : base (presentation, new TFactoryPropertyModel ())
     {
       TypeName = GetType ().Name;
-
-      presentation.RequestPresentationCommand (this);
-      presentation.EventSubscribe (this);
 
       Model.PropertyChanged += OnModelPropertyChanged;
     }
@@ -45,45 +42,47 @@ namespace Gadget.Factory.Pattern.ViewModels
     #region IHandle
     public void Handle (TMessageInternal message)
     {
-      if (message.IsModule (TResource.TModule.Factory)) {
-        // from parent
-        if (message.Node.IsParentToMe (TChild.Property)) {
-          // RefreshModel
-          if (message.IsAction (TInternalMessageAction.RefreshModel)) {
-            TDispatcher.BeginInvoke (RefreshModelDispatcher, TEntityAction.Request (message.Support.Argument.Types.EntityAction));
-          }
+      if (message.NotNull ()) {
+        if (message.IsModule (TResource.TModule.Factory)) {
+          // from parent
+          if (message.Node.IsParentToMe (TChild.Property)) {
+            // RefreshModel
+            if (message.IsAction (TInternalMessageAction.RefreshModel)) {
+              TDispatcher.BeginInvoke (RefreshModelDispatcher, TEntityAction.Request (message.Support.Argument.Types.EntityAction));
+            }
 
-          // Edit
-          if (message.IsAction (TInternalMessageAction.Edit)) {
-            TDispatcher.BeginInvoke (EditDispatcher, TEntityAction.Request (message.Support.Argument.Types.EntityAction));
-          }
+            // Edit
+            if (message.IsAction (TInternalMessageAction.Edit)) {
+              TDispatcher.BeginInvoke (EditDispatcher, TEntityAction.Request (message.Support.Argument.Types.EntityAction));
+            }
 
-          // EditLeave
-          if (message.IsAction (TInternalMessageAction.EditLeave)) {
-            if (IsViewModeEdit) {
-              OnCancelCommadClicked ();
+            // EditLeave
+            if (message.IsAction (TInternalMessageAction.EditLeave)) {
+              if (IsViewModeEdit) {
+                OnCancelCommadClicked ();
+              }
+            }
+
+            // Response
+            if (message.IsAction (TInternalMessageAction.Response)) {
+              // Insert
+              if (message.Support.Argument.Types.IsOperation (Server.Models.Infrastructure.TOperation.Insert)) {
+                TDispatcher.Invoke (InsertSuccessDispatcher);
+              }
+
+              // Change - Full
+              if (message.Support.Argument.Types.IsOperation (Server.Models.Infrastructure.TOperation.Change, Server.Models.Infrastructure.TExtension.Full)) {
+                TDispatcher.Invoke (ChangeSuccessDispatcher);
+              }
             }
           }
 
-          // Response
-          if (message.IsAction (TInternalMessageAction.Response)) {
-            // Insert
-            if (message.Support.Argument.Types.IsOperation (Server.Models.Infrastructure.TOperation.Insert)) {
-              TDispatcher.Invoke (InsertSuccessDispatcher);
+          // from Sibling
+          if (message.Node.IsSiblingToMe (TChild.Property, TypeInfo)) {
+            // Response
+            if (message.IsAction (TInternalMessageAction.Response)) {
+              TDispatcher.BeginInvoke (ResponseModelDispatcher, TEntityAction.Request (message.Support.Argument.Types.EntityAction));
             }
-
-            // Change - Full
-            if (message.Support.Argument.Types.IsOperation (Server.Models.Infrastructure.TOperation.Change, Server.Models.Infrastructure.TExtension.Full)) {
-              TDispatcher.Invoke (ChangeSuccessDispatcher);
-            }
-          }
-        }
-
-        // from Sibling
-        if (message.Node.IsSiblingToMe (TChild.Property, TypeInfo)) {
-          // Response
-          if (message.IsAction (TInternalMessageAction.Response)) {
-            TDispatcher.BeginInvoke (ResponseModelDispatcher, TEntityAction.Request (message.Support.Argument.Types.EntityAction));
           }
         }
       }
@@ -113,7 +112,7 @@ namespace Gadget.Factory.Pattern.ViewModels
     public void OnApplyCommadClicked ()
     {
       Model.ShowPanels ();
-      RaiseChanged ();
+      ApplyChanges ();
 
       // Insert
       var action = TEntityAction.Create (Server.Models.Infrastructure.TCategory.Report, Server.Models.Infrastructure.TOperation.Insert);
@@ -138,7 +137,7 @@ namespace Gadget.Factory.Pattern.ViewModels
     #region Dispatcher
     void RefreshAllDispatcher ()
     {
-      RaiseChanged ();
+      ApplyChanges ();
 
       if (m_PropertyGridComponent.NotNull ()) {
         m_PropertyGridComponent.RefreshPropertyList ();
@@ -243,7 +242,7 @@ namespace Gadget.Factory.Pattern.ViewModels
       action.ThrowNull ();
 
       Model.RefreshModel (action);
-      RaiseChanged ();
+      ApplyChanges ();
     }
     #endregion
 
@@ -282,13 +281,13 @@ namespace Gadget.Factory.Pattern.ViewModels
 
       DelegateCommand.PublishInternalMessage.Execute (message);
 
-      RaiseChanged ();
+      ApplyChanges ();
     }
 
     void Cleanup ()
     {
       Model.Cleanup ();
-      RaiseChanged ();
+      ApplyChanges ();
 
       CleanupPropertyControl ();
 

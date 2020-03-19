@@ -6,6 +6,7 @@
 //----- Include
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 //---------------------------//
 
@@ -30,10 +31,6 @@ namespace Server.Models.Infrastructure
     #region Interface
     public Task<IEntityAction> OperationAsync (IEntityAction entityAction)
     {
-      var taskScheduler = TaskScheduler.Default;
-      var taskFactory = new TaskFactory (taskScheduler);
-      var ct = new System.Threading.CancellationTokenSource ();
-
       var task = Task.Factory.StartNew (() =>
         {
           if (entityAction.NotNull ()) {
@@ -62,12 +59,10 @@ namespace Server.Models.Infrastructure
 
           return (entityAction);
         }, 
-        ct.Token,
+        CancellationToken.None,
         TaskCreationOptions.None,
-        taskScheduler
+        TaskScheduler.Default
       );
-
-      ct.Dispose ();
 
       return (task);
     }

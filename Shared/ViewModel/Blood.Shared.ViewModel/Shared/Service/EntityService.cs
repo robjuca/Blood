@@ -56,10 +56,13 @@ namespace Shared.ViewModel
     public void Operation (rr.Library.Services.TServiceAction<IEntityAction> serviceAction)
     {
       if (serviceAction.NotNull ()) {
-        OperationAsync (serviceAction).ContinueWith (delegate
-          {
-          //?
-        });
+        OperationAsync (serviceAction)
+          .ContinueWith (delegate
+            {
+              //?
+            },
+            TaskScheduler.Default)
+        ;
       }
     }
     #endregion
@@ -107,7 +110,7 @@ namespace Shared.ViewModel
         catch (Exception exception) {
           string msg = rr.Library.Helper.THelper.ExceptionStringFormat (serviceAction.ServiceArgs.CompletedCallbackName, exception);
 
-          var error = new TErrorMessage ("Database ERROR", messageError, msg)
+          var error = new TErrorMessage (Properties.Resource.RES_ERROR, messageError, msg)
           {
             Severity = TSeverity.Low
           };

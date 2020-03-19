@@ -76,15 +76,15 @@ namespace Module.Settings.Shell.Presentation
 
       switch (m_NavigateRequestMessage.Where) {
         case TNavigateMessage.TWhere.Database:
-          typeNavigateTo = typeof (Module.Settings.Shell.Pattern.ViewModels.TShellFactoryDatabaseViewModel);
+          typeNavigateTo = typeof (Pattern.ViewModels.TShellFactoryDatabaseViewModel);
           break;
 
         case TNavigateMessage.TWhere.Support:
-          typeNavigateTo = typeof (Module.Settings.Shell.Pattern.ViewModels.TShellFactorySupportViewModel);
+          typeNavigateTo = typeof (Pattern.ViewModels.TShellFactorySupportViewModel);
           break;
 
         case TNavigateMessage.TWhere.Report:
-          typeNavigateTo = typeof (Module.Settings.Shell.Pattern.ViewModels.TShellReportViewModel);
+          typeNavigateTo = typeof (Pattern.ViewModels.TShellReportViewModel);
           break;
       }
 

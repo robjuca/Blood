@@ -31,39 +31,38 @@ namespace Gadget.Factory.Pattern.ViewModels
     #region Constructor
     [ImportingConstructor]
     public TFactoryDesignViewModel (IFactoryPresentation presentation)
-      : base (new TFactoryDesignModel ())
+      : base (presentation, new TFactoryDesignModel ())
     {
       TypeName = GetType ().Name;
-
-      presentation.RequestPresentationCommand (this);
-      presentation.EventSubscribe (this);
     }
     #endregion
 
     #region IHandle
     public void Handle (TMessageInternal message)
     {
-      if (message.IsModule (TResource.TModule.Factory)) {
-        // from Sibling
-        if (message.Node.IsSiblingToMe (TChild.Design, TypeInfo)) {
-          // PropertySelect
-          if (message.IsAction (TInternalMessageAction.PropertySelect)) {
-            var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
-            var propertyName = message.Support.Argument.Args.PropertyName;
+      if (message.NotNull ()) {
+        if (message.IsModule (TResource.TModule.Factory)) {
+          // from Sibling
+          if (message.Node.IsSiblingToMe (TChild.Design, TypeInfo)) {
+            // PropertySelect
+            if (message.IsAction (TInternalMessageAction.PropertySelect)) {
+              var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
+              var propertyName = message.Support.Argument.Args.PropertyName;
 
-            //Model.SelectModel (propertyName, action);
+              //Model.SelectModel (propertyName, action);
 
-            TDispatcher.Invoke (RefreshDesignDispatcher);
-          }
+              TDispatcher.Invoke (RefreshDesignDispatcher);
+            }
 
-          // Request
-          if (message.IsAction (TInternalMessageAction.Request)) {
-            TDispatcher.BeginInvoke (RequestDesignDispatcher, TEntityAction.Request (message.Support.Argument.Types.EntityAction));
-          }
+            // Request
+            if (message.IsAction (TInternalMessageAction.Request)) {
+              TDispatcher.BeginInvoke (RequestDesignDispatcher, TEntityAction.Request (message.Support.Argument.Types.EntityAction));
+            }
 
-          // Cleanup
-          if (message.IsAction (TInternalMessageAction.Cleanup)) {
-            TDispatcher.Invoke (RefreshDesignDispatcher);
+            // Cleanup
+            if (message.IsAction (TInternalMessageAction.Cleanup)) {
+              TDispatcher.Invoke (RefreshDesignDispatcher);
+            }
           }
         }
       }
@@ -84,7 +83,7 @@ namespace Gadget.Factory.Pattern.ViewModels
     {
       if (m_DesignControl.NotNull ()) {
         m_DesignControl.RefreshDesign ();
-        RaiseChanged ();
+        ApplyChanges ();
       }
     }
 

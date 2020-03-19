@@ -68,5 +68,14 @@ namespace Shared.ViewModel.Properties {
                 return ResourceManager.GetString("RES_BUSY", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Database ERROR.
+        /// </summary>
+        internal static string RES_ERROR {
+            get {
+                return ResourceManager.GetString("RES_ERROR", resourceCulture);
+            }
+        }
     }
 }

@@ -120,4 +120,7 @@
   <data name="RES_BUSY" xml:space="preserve">
     <value>application is busy...</value>
   </data>
+  <data name="RES_ERROR" xml:space="preserve">
+    <value>Database ERROR</value>
+  </data>
 </root>

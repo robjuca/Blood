@@ -16,7 +16,7 @@ namespace Module.Settings
     #region Overrides
     protected override void ConfigureCatalog ()
     {
-      m_FactoryCatalog = new AssemblyCatalog (typeof (Module.Settings.Factory.TModuleCatalog).Assembly);
+      m_FactoryCatalog = new AssemblyCatalog (typeof (Factory.TModuleCatalog).Assembly);
       m_ServicesCatalog = new AssemblyCatalog (typeof (Shared.Services.TModuleCatalog).Assembly);
 
       AddToCatalog (m_FactoryCatalog);

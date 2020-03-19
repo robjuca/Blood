@@ -11,7 +11,6 @@ using rr.Library.Infrastructure;
 using rr.Library.Helper;
 
 using Server.Models.Action;
-using Server.Models.Infrastructure;
 
 using Shared.Resources;
 using Shared.Types;
@@ -31,40 +30,39 @@ namespace Gadget.Factory.Pattern.ViewModels
     #region Constructor
     [ImportingConstructor]
     public TFactoryDesignViewModel (IFactoryPresentation presentation)
-      : base (new TFactoryDesignModel ())
+      : base (presentation, new TFactoryDesignModel ())
     {
       TypeName = GetType ().Name;
-
-      presentation.RequestPresentationCommand (this);
-      presentation.EventSubscribe (this);
     }
     #endregion
 
     #region IHandle
     public void Handle (TMessageInternal message)
     {
-      if (message.IsModule (TResource.TModule.Factory)) {
-        // from Sibling
-        if (message.Node.IsSiblingToMe (TChild.Design, TypeInfo)) {
-          // PropertySelect
-          if (message.IsAction (TInternalMessageAction.PropertySelect)) {
-            if (message.Support.Argument.Args.Param1 is TActionComponent component) {
-              var propertyName = message.Support.Argument.Args.PropertyName;
+      if (message.NotNull ()) {
+        if (message.IsModule (TResource.TModule.Factory)) {
+          // from Sibling
+          if (message.Node.IsSiblingToMe (TChild.Design, TypeInfo)) {
+            // PropertySelect
+            if (message.IsAction (TInternalMessageAction.PropertySelect)) {
+              if (message.Support.Argument.Args.Param1 is TActionComponent component) {
+                var propertyName = message.Support.Argument.Args.PropertyName;
 
-              Model.SelectModel (propertyName, component);
+                Model.SelectModel (component);
+              }
+
+              TDispatcher.Invoke (RefreshDesignDispatcher);
             }
 
-            TDispatcher.Invoke (RefreshDesignDispatcher);
-          }
+            // Request
+            if (message.IsAction (TInternalMessageAction.Request)) {
+              TDispatcher.BeginInvoke (RequestDesignDispatcher, TEntityAction.Request (message.Support.Argument.Types.EntityAction));
+            }
 
-          // Request
-          if (message.IsAction (TInternalMessageAction.Request)) {
-            TDispatcher.BeginInvoke (RequestDesignDispatcher, TEntityAction.Request (message.Support.Argument.Types.EntityAction));
-          }
-
-          // Cleanup
-          if (message.IsAction (TInternalMessageAction.Cleanup)) {
-            TDispatcher.Invoke (RefreshDesignDispatcher);
+            // Cleanup
+            if (message.IsAction (TInternalMessageAction.Cleanup)) {
+              TDispatcher.Invoke (RefreshDesignDispatcher);
+            }
           }
         }
       }
@@ -85,7 +83,7 @@ namespace Gadget.Factory.Pattern.ViewModels
     {
       if (m_DesignControl.NotNull ()) {
         m_DesignControl.RefreshDesign ();
-        RaiseChanged ();
+        ApplyChanges ();
       }
     }
 
@@ -110,7 +108,7 @@ namespace Gadget.Factory.Pattern.ViewModels
     #endregion
 
     #region Fields
-    TComponentDesignControl                                     m_DesignControl;
+    TComponentDesignControl                 m_DesignControl;
     #endregion
   };
   //---------------------------//

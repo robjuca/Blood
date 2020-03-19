@@ -39,7 +39,7 @@ namespace Server.Models.Infrastructure
     {
       ExtensionList.Clear ();
 
-      foreach (short extensionNameValue in Enum.GetValues (typeof (TComponentExtensionNames))) {
+      foreach (int extensionNameValue in Enum.GetValues (typeof (TComponentExtensionNames))) {
         if ((extensionNameValue & Extension) != 0) {
           ExtensionList.Add ((TComponentExtensionNames) extensionNameValue);
         }
