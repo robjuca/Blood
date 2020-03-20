@@ -86,7 +86,7 @@ namespace Shared.Gadget.Registration
           {
             Stretch = Stretch.UniformToFill,
             Height = 140,
-            Source = imageSource.Clone (),
+            Source = imageSource,
           };
 
           image.SetValue (Grid.RowProperty, 0);  // row 0

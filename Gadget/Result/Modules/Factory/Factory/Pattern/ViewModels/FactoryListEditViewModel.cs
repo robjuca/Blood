@@ -32,80 +32,79 @@ namespace Gadget.Factory.Pattern.ViewModels
     #region Constructor
     [ImportingConstructor]
     public TFactoryListEditViewModel (IFactoryPresentation presentation)
-      : base (new TFactoryListEditModel ())
+      : base (presentation, new TFactoryListEditModel ())
     {
       TypeName = GetType ().Name;
-
-      presentation.RequestPresentationCommand (this);
-      presentation.EventSubscribe (this);
     }
     #endregion
 
     #region IHandle
     public void Handle (TMessageInternal message)
     {
-      if (message.IsModule (TResource.TModule.Factory)) {
-        // from parent
-        if (message.Node.IsParentToMe (TChild.List)) {
-          // DatabaseValidated
-          if (message.IsAction (TInternalMessageAction.DatabaseValidated)) {
-            TDispatcher.Invoke (RequestDataDispatcher);
-          }
-
-          // Response
-          if (message.IsAction (TInternalMessageAction.Response)) {
-            // Collection-Full
-            if (message.Support.Argument.Types.IsOperation (TOperation.Collection, TExtension.Full)) {
-              if (message.Result.IsValid) {
-                // Gadget Registration
-                if (message.Support.Argument.Types.IsOperationCategory (TCategory.Registration)) {
-                  var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
-                  TDispatcher.BeginInvoke (ResponseDataDispatcher, action);
-                }
-
-                // Gadget Test
-                if (message.Support.Argument.Types.IsOperationCategory (TCategory.Test)) {
-                  var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
-                  TDispatcher.BeginInvoke (ResponseDataDispatcher, action);
-                }
-              }
+      if (message.NotNull ()) {
+        if (message.IsModule (TResource.TModule.Factory)) {
+          // from parent
+          if (message.Node.IsParentToMe (TChild.List)) {
+            // DatabaseValidated
+            if (message.IsAction (TInternalMessageAction.DatabaseValidated)) {
+              TDispatcher.Invoke (RequestDataDispatcher);
             }
 
-            // Select-Many
-            if (message.Support.Argument.Types.IsOperation (TOperation.Select, TExtension.Many)) {
-              if (message.Result.IsValid) {
-                // Gadget Test
-                if (message.Support.Argument.Types.IsOperationCategory (TCategory.Test)) {
-                  var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
-                  TDispatcher.BeginInvoke (SelectManyDispatcher, action);
+            // Response
+            if (message.IsAction (TInternalMessageAction.Response)) {
+              // Collection-Full
+              if (message.Support.Argument.Types.IsOperation (TOperation.Collection, TExtension.Full)) {
+                if (message.Result.IsValid) {
+                  // Gadget Registration
+                  if (message.Support.Argument.Types.IsOperationCategory (TCategory.Registration)) {
+                    var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
+                    TDispatcher.BeginInvoke (ResponseDataDispatcher, action);
+                  }
+
+                  // Gadget Test
+                  if (message.Support.Argument.Types.IsOperationCategory (TCategory.Test)) {
+                    var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
+                    TDispatcher.BeginInvoke (ResponseDataDispatcher, action);
+                  }
                 }
               }
-            }
-          }
-        }
 
-        // from Sibling
-        if (message.Node.IsSiblingToMe (TChild.List, TypeInfo)) {
-          // PropertySelect
-          if (message.IsAction (TInternalMessageAction.PropertySelect)) {
-            var propertyName = message.Support.Argument.Args.PropertyName;
-
-            if (propertyName.Equals ("edit")) {
-              if (message.Support.Argument.Args.Param1 is TActionComponent component) {
-                TDispatcher.BeginInvoke (EditDispatcher, component);
+              // Select-Many
+              if (message.Support.Argument.Types.IsOperation (TOperation.Select, TExtension.Many)) {
+                if (message.Result.IsValid) {
+                  // Gadget Test
+                  if (message.Support.Argument.Types.IsOperationCategory (TCategory.Test)) {
+                    var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
+                    TDispatcher.BeginInvoke (SelectManyDispatcher, action);
+                  }
+                }
               }
             }
           }
 
-          // Request
-          if (message.IsAction (TInternalMessageAction.Request)) {
-            TDispatcher.BeginInvoke (RequestModelDispatcher, TEntityAction.Request (message.Support.Argument.Types.EntityAction));
-          }
+          // from Sibling
+          if (message.Node.IsSiblingToMe (TChild.List, TypeInfo)) {
+            // PropertySelect
+            if (message.IsAction (TInternalMessageAction.PropertySelect)) {
+              var propertyName = message.Support.Argument.Args.PropertyName;
 
-          // Cleanup
-          if (message.IsAction (TInternalMessageAction.Cleanup)) {
-            Model.Cleanup ();
-            TDispatcher.Invoke (RefreshAllDispatcher);
+              if (propertyName.Equals ("edit", StringComparison.InvariantCulture)) {
+                if (message.Support.Argument.Args.Param1 is TActionComponent component) {
+                  TDispatcher.BeginInvoke (EditDispatcher, component);
+                }
+              }
+            }
+
+            // Request
+            if (message.IsAction (TInternalMessageAction.Request)) {
+              TDispatcher.BeginInvoke (RequestModelDispatcher, TEntityAction.Request (message.Support.Argument.Types.EntityAction));
+            }
+
+            // Cleanup
+            if (message.IsAction (TInternalMessageAction.Cleanup)) {
+              Model.Cleanup ();
+              TDispatcher.Invoke (RefreshAllDispatcher);
+            }
           }
         }
       }
@@ -113,23 +112,23 @@ namespace Gadget.Factory.Pattern.ViewModels
     #endregion
 
     #region Event
-    public void OnCheckedRegistrationCommadClicked (object obj)
+    public void OnCheckedRegistrationCommadClicked (object value)
     {
-      if (obj is GadgetRegistration gadget) {
+      if (value is GadgetRegistration gadget) {
         TDispatcher.BeginInvoke (RegistrationItemSelectedDispatcher, gadget);
       }
     }
 
-    public void OnTestItemChecked (object obj)
+    public void OnTestItemChecked (object value)
     {
-      if (obj is TActionComponent component) {
+      if (value is TActionComponent component) {
         TDispatcher.BeginInvoke (TestItemCheckedDispatcher, component);
       }
     }
 
-    public void OnTestItemUnchecked (object obj)
+    public void OnTestItemUnchecked (object value)
     {
-      if (obj is TActionComponent component) {
+      if (value is TActionComponent component) {
         TDispatcher.BeginInvoke (TestItemUncheckedDispatcher, component);
       }
     }
@@ -139,7 +138,7 @@ namespace Gadget.Factory.Pattern.ViewModels
     #region Dispatcher
     void RefreshAllDispatcher ()
     {
-      RaiseChanged ();
+      ApplyChanges ();
 
       RefreshCollection ("TestModelItemsViewSource");
       RefreshCollection ("RegistrationModelItemsViewSource");
@@ -232,28 +231,28 @@ namespace Gadget.Factory.Pattern.ViewModels
         Model.SelectTestMany (gadgets);
       }
 
-      RaiseChanged ();
+      ApplyChanges ();
     }
 
     void RegistrationItemSelectedDispatcher (GadgetRegistration gadget)
     {
       Model.RegistrationCurrentSelected (gadget);
 
-      RaiseChanged ();
+      ApplyChanges ();
     }
 
     void TestItemCheckedDispatcher (TActionComponent component)
     {
       Model.TestSelected (component, isChecked: true);
 
-      RaiseChanged ();
+      ApplyChanges ();
     }
 
     void TestItemUncheckedDispatcher (TActionComponent component)
     {
       Model.TestSelected (component, isChecked: false);
 
-      RaiseChanged ();
+      ApplyChanges ();
     }
 
     void EditDispatcher (TActionComponent component)

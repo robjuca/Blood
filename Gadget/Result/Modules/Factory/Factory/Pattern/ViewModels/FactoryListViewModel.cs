@@ -32,46 +32,45 @@ namespace Gadget.Factory.Pattern.ViewModels
     #region Constructor
     [ImportingConstructor]
     public TFactoryListViewModel (IFactoryPresentation presentation)
-      : base (new TFactoryListModel ())
+      : base (presentation, new TFactoryListModel ())
     {
       TypeName = GetType ().Name;
-
-      presentation.RequestPresentationCommand (this);
-      presentation.EventSubscribe (this);
     }
     #endregion
 
     #region IHandle
     public void Handle (TMessageInternal message)
     {
-      if (message.IsModule (TResource.TModule.Factory)) {
-        // from parent
-        if (message.Node.IsParentToMe (TChild.List)) {
-          
-        }
+      if (message.NotNull ()) {
+        if (message.IsModule (TResource.TModule.Factory)) {
+          // from parent
+          if (message.Node.IsParentToMe (TChild.List)) {
 
-        // from Sibling
-        if (message.Node.IsSiblingToMe (TChild.List, TypeInfo)) {
-          // PropertySelect
-          if (message.IsAction (TInternalMessageAction.PropertySelect)) {
-            var propertyName = message.Support.Argument.Args.PropertyName;
-
-            if (propertyName.Equals ("edit")) {
-              Model.SlideIndex = 0;
-            }
-
-            if (propertyName.Equals ("modify")) {
-              Model.SlideIndex = 1;
-            }
-
-            RaiseChanged ();
           }
 
-          // Cleanup
-          if (message.IsAction (TInternalMessageAction.Cleanup)) {
-            Model.SlideIndex = 0;
+          // from Sibling
+          if (message.Node.IsSiblingToMe (TChild.List, TypeInfo)) {
+            // PropertySelect
+            if (message.IsAction (TInternalMessageAction.PropertySelect)) {
+              var propertyName = message.Support.Argument.Args.PropertyName;
 
-            RaiseChanged ();
+              if (propertyName.Equals ("edit", StringComparison.InvariantCulture)) {
+                Model.SlideIndex = 0;
+              }
+
+              if (propertyName.Equals ("modify", StringComparison.InvariantCulture)) {
+                Model.SlideIndex = 1;
+              }
+
+              ApplyChanges ();
+            }
+
+            // Cleanup
+            if (message.IsAction (TInternalMessageAction.Cleanup)) {
+              Model.SlideIndex = 0;
+
+              ApplyChanges ();
+            }
           }
         }
       }

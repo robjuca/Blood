@@ -101,7 +101,7 @@ namespace Gadget.Factory.Pattern.Models
     #region Support
     internal void ValidateProperty (string propertyName)
     {
-      if (propertyName.Equals ("TextProperty")) {
+      if (propertyName.Equals ("TextProperty", StringComparison.InvariantCulture)) {
         AlertsModel.Select (isOpen: false); // default
 
         var textProperty = ComponentModelProperty.ExtensionModel.TextProperty;
@@ -111,10 +111,8 @@ namespace Gadget.Factory.Pattern.Models
 
         // show alerts
         if (validateModel.IsFalse ()) {
-          var message = $"Test (Text = EMPTY)";
-
           AlertsModel.Select (TAlertsModel.TKind.Warning);
-          AlertsModel.Select ("ENTRY EMPTY", message);
+          AlertsModel.Select (Properties.Resource.RES_EMPTY, Properties.Resource.RES_TEXT_EMPTY);
           AlertsModel.Select (isOpen: true);
         }
 

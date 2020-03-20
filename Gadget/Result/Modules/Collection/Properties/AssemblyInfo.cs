@@ -1,6 +1,7 @@
-﻿/*----------------------------------------------------------------
-  Copyright (C) 2001 R&R Soft - All rights reserved.
-  author:     Roberto Oliveira Jucá
+﻿using System.Resources;
+/*----------------------------------------------------------------
+Copyright (C) 2001 R&R Soft - All rights reserved.
+author:     Roberto Oliveira Jucá
 ----------------------------------------------------------------*/
 
 //----- Include
@@ -19,4 +20,5 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyVersion ("1.0.2019.11")]
 [assembly: AssemblyFileVersion ("1.0.2019.11")]
 [assembly: ComVisible (false)]
+[assembly: NeutralResourcesLanguage ("en")]
 //---------------------------//

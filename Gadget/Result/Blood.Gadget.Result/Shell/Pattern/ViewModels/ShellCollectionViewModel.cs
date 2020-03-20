@@ -4,6 +4,7 @@
 ----------------------------------------------------------------*/
 
 //----- Include
+using System;
 using System.ComponentModel.Composition;
 
 using rr.Library.Infrastructure;
@@ -22,24 +23,24 @@ namespace Gadget.Result.Shell.Pattern.ViewModels
     #region Constructor
     [ImportingConstructor]
     public TShellCollectionViewModel (IShellPresentation presentation)
-      : base (new TShellCollectionModel ())
+      : base (presentation, new TShellCollectionModel ())
     {
-      presentation.RequestPresentationCommand (this);
-      presentation.EventSubscribe (this);
     }
     #endregion
 
     #region IHandle
     public void Handle (TNavigateResponseMessage message)
     {
-      if (message.IsActionNavigateTo) {
-        if (message.IsSender (TNavigateMessage.TSender.Shell)) {
-          if (message.IsWhere (TNavigateMessage.TWhere.Collection)) {
-            ShowViewAnimation ();
-          }
+      if (message.NotNull ()) {
+        if (message.IsActionNavigateTo) {
+          if (message.IsSender (TNavigateMessage.TSender.Shell)) {
+            if (message.IsWhere (TNavigateMessage.TWhere.Collection)) {
+              ShowViewAnimation ();
+            }
 
-          else {
-            HideViewAnimation ();
+            else {
+              HideViewAnimation ();
+            }
           }
         }
       }

@@ -32,51 +32,50 @@ namespace Gadget.Factory.Pattern.ViewModels
     #region Constructor
     [ImportingConstructor]
     public TFactoryListModifyViewModel (IFactoryPresentation presentation)
-      : base (new TFactoryListModifyModel ())
+      : base (presentation, new TFactoryListModifyModel ())
     {
       TypeName = GetType ().Name;
-
-      presentation.RequestPresentationCommand (this);
-      presentation.EventSubscribe (this);
     }
     #endregion
 
     #region IHandle
     public void Handle (TMessageInternal message)
     {
-      if (message.IsModule (TResource.TModule.Factory)) {
-        // from parent
-        if (message.Node.IsParentToMe (TChild.List)) {
-          // Response
-          if (message.IsAction (TInternalMessageAction.Response)) {
-            // Change - Many
-            if (message.Support.Argument.Types.IsOperation (TOperation.Change, TExtension.Many)) {
-              TDispatcher.Invoke (ChangeSuccessDispatcher);
-            }
-          }
-        }
-
-        // from Sibling
-        if (message.Node.IsSiblingToMe (TChild.List, TypeInfo)) {
-          // PropertySelect
-          if (message.IsAction (TInternalMessageAction.PropertySelect)) {
-            var propertyName = message.Support.Argument.Args.PropertyName;
-
-            if (propertyName.Equals ("modify")) {
-              if (message.Support.Argument.Args.Param1 is TActionComponent component) {
-                TDispatcher.BeginInvoke (ModifyDispatcher, component);
+      if (message.NotNull ()) {
+        if (message.IsModule (TResource.TModule.Factory)) {
+          // from parent
+          if (message.Node.IsParentToMe (TChild.List)) {
+            // Response
+            if (message.IsAction (TInternalMessageAction.Response)) {
+              // Change - Many
+              if (message.Support.Argument.Types.IsOperation (TOperation.Change, TExtension.Many)) {
+                TDispatcher.Invoke (ChangeSuccessDispatcher);
               }
             }
           }
 
-          // Cleanup
-          if (message.IsAction (TInternalMessageAction.Cleanup)) {
-            Model.Cleanup ();
-            TDispatcher.Invoke (RefreshAllDispatcher);
+          // from Sibling
+          if (message.Node.IsSiblingToMe (TChild.List, TypeInfo)) {
+            // PropertySelect
+            if (message.IsAction (TInternalMessageAction.PropertySelect)) {
+              var propertyName = message.Support.Argument.Args.PropertyName;
+
+              if (propertyName.Equals ("modify", StringComparison.InvariantCulture)) {
+                if (message.Support.Argument.Args.Param1 is TActionComponent component) {
+                  TDispatcher.BeginInvoke (ModifyDispatcher, component);
+                }
+              }
+            }
+
+            // Cleanup
+            if (message.IsAction (TInternalMessageAction.Cleanup)) {
+              Model.Cleanup ();
+              TDispatcher.Invoke (RefreshAllDispatcher);
+            }
           }
         }
       }
-    }
+     }
     #endregion
 
     #region Event
@@ -115,7 +114,7 @@ namespace Gadget.Factory.Pattern.ViewModels
     #region Dispatcher
     void RefreshAllDispatcher ()
     {
-      RaiseChanged ();
+      ApplyChanges ();
 
       RefreshCollection ("ContentTestModelItemsViewSource");
       RefreshCollection ("ContentTargetModelItemsViewSource");
@@ -133,25 +132,25 @@ namespace Gadget.Factory.Pattern.ViewModels
     void SelectorContentTestCheckedDispatcher ()
     {
       Model.SelectorContentTestIsChecked ();
-      RaiseChanged ();
+      ApplyChanges ();
     }
 
     void SelectorContentTargetCheckedDispatcher ()
     {
       Model.SelectorContentTargetIsChecked ();
-      RaiseChanged ();
+      ApplyChanges ();
     }
 
     void ContentTestTargetChangedDispatcher (GadgetTest gadget)
     {
       Model.ContentTestTargetChanged (gadget);
-      RaiseChanged ();
+      ApplyChanges ();
     }
 
     void ContentTargetChangedDispatcher (GadgetTest gadget)
     {
       Model.ContentTargetChanged (gadget);
-      RaiseChanged ();
+      ApplyChanges ();
     }
 
     void ModifyCommandDispatcher ()

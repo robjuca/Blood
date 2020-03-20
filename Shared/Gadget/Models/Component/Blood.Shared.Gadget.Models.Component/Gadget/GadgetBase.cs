@@ -123,7 +123,14 @@ namespace Shared.Gadget.Models.Component
       }
     }
 
-    
+    public Collection <byte> GadgetImage
+    {
+      get
+      {
+        return (m_Image);
+      }
+    }
+
 
     public bool HasImage
     {

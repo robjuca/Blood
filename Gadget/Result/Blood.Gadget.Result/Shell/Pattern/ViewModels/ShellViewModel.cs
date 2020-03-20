@@ -4,6 +4,7 @@
 ----------------------------------------------------------------*/
 
 //----- Include
+using System;
 using System.ComponentModel.Composition;
 
 using rr.Library.Message;
@@ -26,41 +27,42 @@ namespace Gadget.Result.Shell.Pattern.ViewModels
     #region Constructor
     [ImportingConstructor]
     public TShellViewModel (IShellPresentation presentation)
-      : base (new TShellModel (), TProcess.GADGETRESULT)
+      : base (presentation, new TShellModel (), TProcess.GADGETRESULT)
     {
-      presentation.ViewModel = this;
     }
     #endregion
 
     #region Overrides
     public override void ProcessMessage (TMessageModule message)
     {
-      // services
-      if (message.IsModule (TResource.TModule.Services)) {
-        // SettingsValidated
-        if (message.IsAction (TMessageAction.SettingsValidated)) {
-          SelectAuthentication (message.Support.Argument.Types.Authentication);
+      if (message.NotNull ()) {
+        // services
+        if (message.IsModule (TResource.TModule.Services)) {
+          // SettingsValidated
+          if (message.IsAction (TMessageAction.SettingsValidated)) {
+            SelectAuthentication (message.Support.Argument.Types.Authentication);
 
-          // sucess
-          if (message.Support.IsActionStatus (TActionStatus.Success)) {
-            TDispatcher.Invoke (DatabaseSettingsSuccessDispatcher);
-          }
+            // sucess
+            if (message.Support.IsActionStatus (TActionStatus.Success)) {
+              TDispatcher.Invoke (DatabaseSettingsSuccessDispatcher);
+            }
 
-          // error
-          if (message.Support.IsActionStatus (TActionStatus.Error)) {
-            TDispatcher.Invoke (DatabaseSettingsErrorDispatcher);
+            // error
+            if (message.Support.IsActionStatus (TActionStatus.Error)) {
+              TDispatcher.Invoke (DatabaseSettingsErrorDispatcher);
+            }
           }
         }
-      }
 
-      // focus
-      if (message.IsAction (TMessageAction.Focus)) {
-        if (message.Support.Argument.Args.IsWhere (TWhere.Collection)) {
-          OnCollectionCommadClicked ();
-        }
+        // focus
+        if (message.IsAction (TMessageAction.Focus)) {
+          if (message.Support.Argument.Args.IsWhere (TWhere.Collection)) {
+            OnCollectionCommadClicked ();
+          }
 
-        if (message.Support.Argument.Args.IsWhere (TWhere.Factory)) {
-          OnFactoryCommadClicked ();
+          if (message.Support.Argument.Args.IsWhere (TWhere.Factory)) {
+            OnFactoryCommadClicked ();
+          }
         }
       }
     }
@@ -78,14 +80,14 @@ namespace Gadget.Result.Shell.Pattern.ViewModels
     {
       DelegateCommand.NotifyNavigateRequestMessage.Execute (new TNavigateRequestMessage (TNavigateMessage.TSender.Shell, TNavigateMessage.TWhere.Collection));
 
-      RaiseChanged ();
+      ApplyChanges ();
     }
 
     public void OnFactoryCommadClicked ()
     {
       DelegateCommand.NotifyNavigateRequestMessage.Execute (new TNavigateRequestMessage (TNavigateMessage.TSender.Shell, TNavigateMessage.TWhere.Factory));
 
-      RaiseChanged ();
+      ApplyChanges ();
     }
     #endregion
 
@@ -103,7 +105,7 @@ namespace Gadget.Result.Shell.Pattern.ViewModels
       Model.DatabaseStatus (true);
       Model.Unlock ();
 
-      RaiseChanged ();
+      ApplyChanges ();
 
       OnCollectionCommadClicked ();
 
@@ -116,7 +118,7 @@ namespace Gadget.Result.Shell.Pattern.ViewModels
     {
       Model.ClearPanels ();
 
-      RaiseChanged ();
+      ApplyChanges ();
     }
     #endregion
 

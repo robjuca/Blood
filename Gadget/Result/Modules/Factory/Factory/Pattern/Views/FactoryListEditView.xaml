@@ -84,7 +84,7 @@
                         <!--image-->
                         <Image Stretch="UniformToFill"
                                Height="140"
-                               Source="{Binding Image, Converter={StaticResource CollectionToBitmapImageConverter}}" />
+                               Source="{Binding GadgetImage, Converter={StaticResource CollectionToBitmapImageConverter}}" />
 
                         <!--registration-->
                         <TextBlock FontWeight="DemiBold"
