@@ -46,7 +46,7 @@ namespace Shared.Gadget.Registration
       m_Grid = new Grid () 
       {
         HorizontalAlignment= HorizontalAlignment.Center,
-        VerticalAlignment=VerticalAlignment.Center,
+        VerticalAlignment=VerticalAlignment.Top,
       };
 
       m_Grid.RowDefinitions.Add (new RowDefinition () { Height = new GridLength (1, GridUnitType.Auto) }); // row 0 image 
@@ -55,6 +55,7 @@ namespace Shared.Gadget.Registration
 
       m_Card = new Card
       {
+        Margin = new Thickness (5),
         Padding = new Thickness (2),
         Width = 200,
         Content = m_Grid,
@@ -86,6 +87,7 @@ namespace Shared.Gadget.Registration
           {
             Stretch = Stretch.UniformToFill,
             Height = 140,
+            VerticalAlignment = VerticalAlignment.Top,
             Source = imageSource,
           };
 

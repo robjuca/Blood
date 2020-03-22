@@ -65,6 +65,7 @@ namespace Gadget.Factory.Pattern.ViewModels
 
             // Cleanup
             if (message.IsAction (TInternalMessageAction.Cleanup)) {
+              Model.Cleanup ();
               TDispatcher.Invoke (RefreshDesignDispatcher);
             }
           }
@@ -87,8 +88,9 @@ namespace Gadget.Factory.Pattern.ViewModels
     {
       if (m_DesignControl.NotNull ()) {
         m_DesignControl.RefreshDesign ();
-        ApplyChanges ();
       }
+
+      ApplyChanges ();
     }
 
     void RequestDesignDispatcher (TEntityAction action)

@@ -39,6 +39,11 @@ namespace Gadget.Factory.Pattern.Models
         ComponentControlModel.SelectModel (component);
       }
     }
+
+    internal void Cleanup ()
+    {
+      ComponentControlModel = TComponentControlModel.CreateDefault;
+    }
     #endregion
   };
   //---------------------------//
