@@ -113,11 +113,14 @@ namespace Server.Context.Component
       - action.CollectionAction.EntityCollection
       */
 
+      action.Result = TValidationResult.Success;
+
       foreach (var item in action.CollectionAction.EntityCollection) {
         var entityAction = item.Value;
         entityAction.Id = item.Key;
+        entityAction.CollectionAction.SetCollection (action.CollectionAction.CategoryRelationCollection);
 
-        ChangeFull (context, entityAction);
+        Modify (context, entityAction);
       }
     }
 
@@ -152,7 +155,7 @@ namespace Server.Context.Component
               var categoryValue = descriptor.Category;
 
               // Info
-              var infoList = context.ComponentInfo.AsQueryable().AsQueryable ()
+              var infoList = context.ComponentInfo.AsQueryable ()
                 .Where (p => p.Id.Equals (id))
                 .ToList ()
               ;
@@ -167,7 +170,7 @@ namespace Server.Context.Component
               // Status 
               var compStatus = ComponentStatus.CreateDefault;
 
-              var statusList = context.ComponentStatus.AsQueryable().AsQueryable ()
+              var statusList = context.ComponentStatus.AsQueryable ()
                 .Where (p => p.Id.Equals (id))
                 .ToList ()
               ;
@@ -183,7 +186,7 @@ namespace Server.Context.Component
 
               // status collection
               foreach (var item in action.CollectionAction.ComponentStatusCollection) {
-                var list = context.ComponentStatus.AsQueryable().AsQueryable ()
+                var list = context.ComponentStatus.AsQueryable ()
                   .Where (p => p.Id.Equals (item.Id))
                   .ToList ()
                 ;
@@ -208,7 +211,7 @@ namespace Server.Context.Component
 
               foreach (var relation in relationList) {
                 // change old child status busy to false
-                var childList = context.ComponentStatus.AsQueryable().AsQueryable ()
+                var childList = context.ComponentStatus.AsQueryable ()
                   .Where (p => p.Id.Equals (relation.ChildId))
                   .ToList ()
                 ;
@@ -227,7 +230,7 @@ namespace Server.Context.Component
               // insert new
               foreach (var item in action.CollectionAction.ComponentRelationCollection) {
                 // change child status busy to true
-                var childList = context.ComponentStatus.AsQueryable().AsQueryable ()
+                var childList = context.ComponentStatus.AsQueryable ()
                   .Where (p => p.Id.Equals (item.ChildId))
                   .ToList ()
                 ;
@@ -276,7 +279,7 @@ namespace Server.Context.Component
                     //  break;
 
                     case TComponentExtensionNames.Geometry: {
-                        var list = context.ExtensionGeometry.AsQueryable().AsQueryable ()
+                        var list = context.ExtensionGeometry.AsQueryable ()
                           .Where (p => p.Id.Equals (id))
                           .ToList ()
                         ;
@@ -290,7 +293,7 @@ namespace Server.Context.Component
                       break;
 
                     case TComponentExtensionNames.Image: {
-                        var list = context.ExtensionImage.AsQueryable().AsQueryable ()
+                        var list = context.ExtensionImage.AsQueryable ()
                           .Where (p => p.Id.Equals (id))
                           .ToList ()
                         ;
@@ -304,7 +307,7 @@ namespace Server.Context.Component
                       break;
 
                     case TComponentExtensionNames.Layout: {
-                        var list = context.ExtensionLayout.AsQueryable().AsQueryable ()
+                        var list = context.ExtensionLayout.AsQueryable ()
                           .Where (p => p.Id.Equals (id))
                           .ToList ()
                         ;
@@ -321,7 +324,7 @@ namespace Server.Context.Component
                         // Node reverse
                         if (compStatus.NodeReverse) {
                           // remove old first (use ChildId)
-                          var nodeList = context.ExtensionNode.AsQueryable().AsQueryable ()
+                          var nodeList = context.ExtensionNode.AsQueryable ()
                             .Where (p => p.ChildId.Equals (id))
                             .ToList ()
                           ;
@@ -591,6 +594,80 @@ namespace Server.Context.Component
 
       catch (Exception exception) {
         Models.Infrastructure.THelper.FormatException ("Change - Active", exception, action);
+      }
+    }
+
+    static void Modify (TModelContext context, TEntityAction action)
+    {
+      /*
+      DATA IN
+      - action.Id (Component id to change)
+      - action.ModelAction (Component model) (only Text extension)
+      */
+
+      var id = action.Id;
+
+      try {
+        //Component Id must exist
+        if (id.IsEmpty ()) {
+          action.Result = new TValidationResult ($"[{action.Operation.CategoryType.Category} - Modify] Component Id can NOT be NULL or EMPTY!");
+        }
+
+        else {
+          // search Id
+          var descriptors = context.ComponentDescriptor.AsQueryable ()
+            .Where (p => p.Id.Equals (id))
+            .ToList ()
+          ;
+
+          // Descriptor found
+          if (descriptors.Count.Equals (1)) {
+            var descriptor = descriptors [0];
+            var categoryValue = descriptor.Category;
+
+            // extensions
+
+            // search for extensions
+            var categoryRelationList = action.CollectionAction.CategoryRelationCollection
+              .Where (p => p.Category.Equals (categoryValue))
+              .ToList ()
+            ;
+
+            // found
+            if (categoryRelationList.Count.Equals (1)) {
+              var categoryRelation = categoryRelationList [0]; // get extension using TComponentExtension
+
+              var extension = TComponentExtension.Create (categoryRelation.Extension);
+              extension.Request ();
+
+              foreach (var extensionName in extension.ExtensionList) {
+                switch (extensionName) {
+                  case TComponentExtensionNames.Text: {
+                      var list = context.ExtensionText.AsQueryable ()
+                        .Where (p => p.Id.Equals (id))
+                        .ToList ()
+                      ;
+
+                      if (list.Count.Equals (1)) {
+                        var model = list [0];
+                        model.Change (action.ModelAction.ExtensionTextModel);
+                        context.ExtensionText.Update (model); // change model
+                      }
+                    }
+                    break;
+                }
+              }
+            }
+
+            context.SaveChanges (); // update
+
+            action.Result = TValidationResult.Success;
+          }
+        }
+      }
+
+      catch (Exception exception) {
+        Models.Infrastructure.THelper.FormatException ("Modify", exception, action);
       }
     }
 

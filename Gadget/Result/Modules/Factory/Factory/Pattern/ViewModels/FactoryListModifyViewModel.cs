@@ -109,6 +109,11 @@ namespace Gadget.Factory.Pattern.ViewModels
     {
       TDispatcher.Invoke (ModifyCommandDispatcher);
     }
+
+    public void OnLockCommandClicked ()
+    {
+      //TDispatcher.Invoke (ModifyCommandDispatcher);
+    }
     #endregion
 
     #region Dispatcher
@@ -170,6 +175,12 @@ namespace Gadget.Factory.Pattern.ViewModels
 
     void ChangeSuccessDispatcher ()
     {
+      Model.Cleanup ();
+      TDispatcher.Invoke (RefreshAllDispatcher);
+
+      // to Sibling
+      var message = new TFactorySiblingMessageInternal (TInternalMessageAction.Back, TChild.List, TypeInfo);
+      DelegateCommand.PublishInternalMessage.Execute (message);
     }
     #endregion
 

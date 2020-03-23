@@ -87,7 +87,7 @@ namespace Shared.ViewModel
     {
       if (Service.NotNull ()) {
         var param = serviceAction.Param as IEntityAction;
-        string messageError = $"[{param.Operation.CategoryType.Category} - {param.Operation.Operation}]";
+        string messageError = $"[{param.Operation.CategoryType.Category} - {param.Operation.Operation} - {param.Operation.Extension}]";
 
         try {
           var task = Service.OperationAsync (param);

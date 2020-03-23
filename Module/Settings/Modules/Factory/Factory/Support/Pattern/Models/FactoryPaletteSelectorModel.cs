@@ -7,7 +7,9 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Windows;
+using System.Windows.Media;
 
 using MaterialDesignColors;
 using MaterialDesignThemes.Wpf;
@@ -115,8 +117,7 @@ namespace Module.Settings.Factory.Support.Pattern.Models
 
     void ApplyPrimaryCommandHandler (Swatch swatch)
     {
-      var c = System.Drawing.Color.FromName (swatch.Name);
-      var primaryColor = System.Windows.Media.Color.FromRgb (c.R, c.G, c.B);
+      var primaryColor = swatch.ExemplarHue.Color;
 
       var paletteHelper = new PaletteHelper ();
 
@@ -125,13 +126,12 @@ namespace Module.Settings.Factory.Support.Pattern.Models
 
       paletteHelper.SetTheme (themes);
 
-      CurrentProcess.PaletteInfo.SetPalettePrimary (swatch.Name);
+      CurrentProcess.PaletteInfo.SetPalettePrimary (primaryColor);
     }
 
     void ApplyAccentCommandHandler (Swatch swatch)
     {
-      var c = System.Drawing.Color.FromName (swatch.Name);
-      var secondaryColor = System.Windows.Media.Color.FromRgb (c.R, c.G, c.B);
+      var secondaryColor = swatch.AccentExemplarHue.Color;
 
       var paletteHelper = new PaletteHelper ();
 
@@ -141,7 +141,7 @@ namespace Module.Settings.Factory.Support.Pattern.Models
       paletteHelper.SetTheme (themes);
 
 
-      CurrentProcess.PaletteInfo.SetPaletteAccent (swatch.Name);
+      CurrentProcess.PaletteInfo.SetPaletteAccent (secondaryColor);
     }
     #endregion
 
@@ -155,18 +155,12 @@ namespace Module.Settings.Factory.Support.Pattern.Models
     {
       BaseThemeDarkChecked = processInfo.IsBaseThemeDark;
 
-      var c = System.Drawing.Color.FromName (processInfo.PaletteInfo.PalettePrimary);
-      var primaryColor = System.Windows.Media.Color.FromRgb (c.R, c.G, c.B);
-
-      c = System.Drawing.Color.FromName (processInfo.PaletteInfo.PaletteAccent);
-      var secondaryColor = System.Windows.Media.Color.FromRgb (c.R, c.G, c.B);
-
       var paletteHelper = new PaletteHelper ();
 
       ITheme themes = paletteHelper.GetTheme ();
       themes.SetBaseTheme (BaseThemeDarkChecked ? Theme.Dark : Theme.Light);
-      themes.SetPrimaryColor (primaryColor);
-      themes.SetSecondaryColor (secondaryColor);
+      themes.SetPrimaryColor (processInfo.PaletteInfo.RequestPrimary ());
+      themes.SetSecondaryColor (processInfo.PaletteInfo.RequestAccent ());
 
       paletteHelper.SetTheme (themes);
     }
@@ -328,7 +322,19 @@ namespace Module.Settings.Factory.Support.Pattern.Models
       private set;
     }
 
+    public Color PaletteColorPrimary
+    {
+      get;
+      private set;
+    }
+
     public string PaletteAccent
+    {
+      get;
+      private set;
+    }
+
+    public Color PaletteColorAccent
     {
       get;
       private set;
@@ -366,23 +372,54 @@ namespace Module.Settings.Factory.Support.Pattern.Models
       BaseTheme = baseTheme;
     }
 
-    internal void SetPalettePrimary (string colorName)
+    internal void SetPalettePrimary (Color color)
     {
-      PalettePrimary = colorName;
+      PaletteColorPrimary = color;
+      PalettePrimary = color.ToString (CultureInfo.InvariantCulture);
     }
 
-    internal void SetPaletteAccent (string colorName)
+    internal void SetPaletteAccent (Color color)
     {
-      PaletteAccent = colorName;
+      PaletteColorAccent = color;
+      PaletteAccent = color.ToString (CultureInfo.InvariantCulture);
     }
 
     internal void CopyFrom (TPaletteInfo alias)
     {
       if (alias.NotNull ()) {
         SetBaseTheme (alias.BaseTheme);
-        SetPalettePrimary (alias.PalettePrimary);
-        SetPaletteAccent (alias.PaletteAccent);
+
+        PalettePrimary = alias.PalettePrimary;
+        PaletteAccent = alias.PaletteAccent;
       }
+    }
+
+    internal Color RequestPrimary ()
+    {
+      var color = Color.FromRgb (10, 10, 10);
+
+      if (string.IsNullOrEmpty (PalettePrimary).IsFalse ()) {
+        if (PalettePrimary.Contains ("#")) {
+          Int32 iColorInt = Convert.ToInt32 (PalettePrimary.Substring (1), 16);
+          System.Drawing.Color c = System.Drawing.Color.FromArgb (iColorInt);
+          color = Color.FromRgb (c.R, c.G, c.B);
+        }
+      }
+
+      return (color);
+    }
+
+    internal Color RequestAccent ()
+    {
+      var color = Color.FromRgb (100, 100, 100);
+
+      if (PaletteAccent.Contains ("#")) {
+        Int32 iColorInt = Convert.ToInt32 (PaletteAccent.Substring (1), 16);
+        System.Drawing.Color c = System.Drawing.Color.FromArgb (iColorInt);
+        color = Color.FromRgb (c.R, c.G, c.B);
+      }
+
+      return (color);
     }
     #endregion
 

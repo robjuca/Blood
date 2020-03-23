@@ -97,6 +97,7 @@ namespace Shared.Gadget.Models.Action
             entityAction.ModelAction.ComponentStatusModel.Busy = component.Models.GadgetMaterialModel.Busy;
 
             entityAction.ModelAction.ComponentInfoModel.Id = component.Models.GadgetMaterialModel.Id;
+            entityAction.ModelAction.ExtensionTextModel.Id = component.Models.GadgetMaterialModel.Id;
             entityAction.ModelAction.ExtensionTextModel.Text = component.Models.GadgetMaterialModel.GadgetName;
             entityAction.ModelAction.ExtensionTextModel.Description = component.Models.GadgetMaterialModel.Description;
             entityAction.ModelAction.ExtensionTextModel.ExternalLink = component.Models.GadgetMaterialModel.ExternalLink;

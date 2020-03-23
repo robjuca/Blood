@@ -29,11 +29,29 @@ namespace Shared.Gadget.Models.Component
         }
       }
 
+      internal bool HasContent
+      {
+        get
+        {
+          return (IdCollection.Any ());
+        }
+      }
+
       internal int Count
       {
         get
         {
           return (IdCollection.Count);
+        }
+      }
+
+      internal bool CanLock
+      {
+        get
+        {
+          ValidateLock ();
+
+          return (m_CanLock);
         }
       }
       #endregion
@@ -45,6 +63,8 @@ namespace Shared.Gadget.Models.Component
         TestCollection = new Collection<GadgetTest> ();
 
         Registration = GadgetRegistration.CreateDefault;
+
+        m_CanLock = false;
       }
       #endregion
 
@@ -134,11 +154,11 @@ namespace Shared.Gadget.Models.Component
       {
         if (collection.NotNull ()) {
           if (IsEmpty.IsFalse ()) {
-
             collection.Clear ();
 
             var list = TestCollection
-              .OrderBy (p => p.GadgetName)
+              .OrderBy (p => p.ContentCategory)
+              .ThenBy(p => p.GadgetName)
               .ToList ()
             ;
 
@@ -258,6 +278,10 @@ namespace Shared.Gadget.Models.Component
       internal static TContent CreateDefault => new TContent ();
       #endregion
 
+      #region Fields
+      bool                                  m_CanLock; 
+      #endregion
+
       #region Support
       bool Contains (Guid id)
       {
@@ -313,6 +337,55 @@ namespace Shared.Gadget.Models.Component
 
         return (res);
       }
+
+      void ValidateLock ()
+      {
+        m_CanLock = false;
+
+        if (HasContent) {
+          foreach (var gadgetTest in TestCollection) {
+            // Target
+            if (gadgetTest.IsContentTarget) {
+              var contentGadgetTarget = new Collection<GadgetTarget> ();
+              gadgetTest.RequestContent (contentGadgetTarget);
+
+              foreach (var gadget in contentGadgetTarget) {
+                if (gadget.HasValue.IsFalse ()) {
+                  m_CanLock = false;
+                  return;
+                }
+              }
+
+              m_CanLock = true;
+            }
+
+            // Test
+            if (gadgetTest.IsContentTest) {
+              var contentGadgetTest = new Collection<GadgetTest> ();
+              gadgetTest.RequestContent (contentGadgetTest);
+
+              foreach (var gadget in contentGadgetTest) {
+                if (gadget.HasContent) {
+                  // Target
+                  if (gadget.IsContentTarget) {
+                    var contentGadgetTarget = new Collection<GadgetTarget> ();
+                    gadget.RequestContent (contentGadgetTarget);
+
+                    foreach (var gadgetTarget in contentGadgetTarget) {
+                      if (gadgetTarget.HasValue.IsFalse ()) {
+                        m_CanLock = false;
+                        return;
+                      }
+                    }
+
+                    m_CanLock = true;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
       #endregion
     };
     #endregion
@@ -323,6 +396,14 @@ namespace Shared.Gadget.Models.Component
       get
       {
         return (Content.Count);
+      }
+    }
+
+    public bool HasContent
+    {
+      get
+      {
+        return (Content.HasContent);
       }
     }
 
@@ -339,6 +420,14 @@ namespace Shared.Gadget.Models.Component
       get
       {
         return (IsRemoveEnabled && Content.IsEmpty);
+      }
+    }
+
+    public bool CanLock
+    {
+      get
+      {
+        return (Content.CanLock);
       }
     }
     #endregion

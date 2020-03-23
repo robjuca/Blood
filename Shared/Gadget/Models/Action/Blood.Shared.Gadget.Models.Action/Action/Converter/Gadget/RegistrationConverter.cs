@@ -101,6 +101,7 @@ namespace Shared.Gadget.Models.Action
             entityAction.ModelAction.ComponentStatusModel.Busy = gadget.Busy;
 
             entityAction.ModelAction.ComponentInfoModel.Id = gadget.Id;
+            entityAction.ModelAction.ExtensionTextModel.Id = gadget.Id;
             entityAction.ModelAction.ExtensionTextModel.Text = gadget.GadgetName;
             entityAction.ModelAction.ExtensionTextModel.Date = gadget.Date;
             entityAction.ModelAction.ExtensionTextModel.Description = gadget.Description;

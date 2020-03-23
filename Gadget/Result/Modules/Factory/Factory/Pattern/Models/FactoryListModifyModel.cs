@@ -108,6 +108,14 @@ namespace Gadget.Factory.Pattern.Models
       get;
       set;
     }
+
+    public bool IsLockCommandEnabled
+    {
+      get
+      {
+        return (m_Gadget.CanLock);
+      }
+    }
     #endregion
 
     #region Constructor

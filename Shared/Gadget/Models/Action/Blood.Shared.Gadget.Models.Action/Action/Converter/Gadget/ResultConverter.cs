@@ -143,6 +143,7 @@ namespace Shared.Gadget.Models.Action
             entityAction.ModelAction.ComponentStatusModel.Locked = gadget.Locked;
 
             entityAction.ModelAction.ComponentInfoModel.Id = gadget.Id;
+            entityAction.ModelAction.ExtensionTextModel.Id = gadget.Id;
             entityAction.ModelAction.ExtensionTextModel.Text = gadget.GadgetName;
             entityAction.ModelAction.ExtensionTextModel.Date = gadget.Date;
             entityAction.ModelAction.ExtensionTextModel.Description = gadget.Description;
@@ -176,7 +177,65 @@ namespace Shared.Gadget.Models.Action
       // TODO:??
       if (component.NotNull ()) {
         if (entityAction.NotNull ()) {
+          entityAction.CollectionAction.EntityCollection.Clear ();
 
+          if (component.IsCategory (TCategory.Result)) {
+            var gadgetResult = component.Models.GadgetResultModel;
+
+            if (gadgetResult.HasContent) {
+              var gadgetTestContent = new Collection<GadgetTest> ();
+              gadgetResult.RequestContent (gadgetTestContent);
+
+              foreach (var gadget in gadgetTestContent) {
+                if (gadget.HasContent) {
+                  // Target
+                  if (gadget.IsContentTarget) {
+                    var contentGadgetTarget = new Collection<GadgetTarget> ();
+                    gadget.RequestContent (contentGadgetTarget);
+
+                    foreach (var gadgetTarget in contentGadgetTarget) {
+                      var action = TEntityAction.Create (TCategory.Target);
+                      action.Id = gadgetTarget.Id;
+
+                      var componentTarget = TActionComponent.Create (TCategory.Target);
+                      componentTarget.Models.GadgetTargetModel.CopyFrom (gadgetTarget);
+
+                      TActionConverter.Request (TCategory.Target, componentTarget, action);
+
+                      entityAction.CollectionAction.EntityCollection.Add (gadgetTarget.Id, action);
+                    }
+                  }
+
+                  // Test
+                  if (gadget.IsContentTest) {
+                    var contentGadgetTest = new Collection<GadgetTest> ();
+                    gadget.RequestContent (contentGadgetTest);
+
+                    foreach (var gadgetTest in contentGadgetTest) {
+                      if (gadgetTest.HasContent) {
+                        if (gadgetTest.IsContentTarget) {
+                          var contentGadgetTarget = new Collection<GadgetTarget> ();
+                          gadgetTest.RequestContent (contentGadgetTarget);
+
+                          foreach (var gadgetTarget in contentGadgetTarget) {
+                            var action = TEntityAction.Create (TCategory.Target);
+                            action.Id = gadgetTarget.Id;
+
+                            var componentTarget = TActionComponent.Create (TCategory.Target);
+                            componentTarget.Models.GadgetTargetModel.CopyFrom (gadgetTarget);
+
+                            TActionConverter.Request (TCategory.Target, componentTarget, action);
+
+                            entityAction.CollectionAction.EntityCollection.Add (gadgetTarget.Id, action);
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }

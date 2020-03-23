@@ -149,6 +149,7 @@ namespace Shared.Gadget.Models.Action
             entityAction.ModelAction.ExtensionNodeModel.ChildCategory = TCategoryType.ToValue (TCategory.Target);
             entityAction.ModelAction.ExtensionNodeModel.ParentId = component.Models.GadgetTargetModel.MaterialId;
             entityAction.ModelAction.ExtensionNodeModel.ParentCategory = TCategoryType.ToValue (TCategory.Material);
+            entityAction.ModelAction.ExtensionTextModel.Id = component.Models.GadgetTargetModel.Id;
             entityAction.ModelAction.ExtensionTextModel.Text = component.Models.GadgetTargetModel.GadgetName;
             entityAction.ModelAction.ExtensionTextModel.Description = component.Models.GadgetTargetModel.Description;
             entityAction.ModelAction.ExtensionTextModel.Reference = component.Models.GadgetTargetModel.Reference;

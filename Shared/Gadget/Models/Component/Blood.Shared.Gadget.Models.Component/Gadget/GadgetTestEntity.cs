@@ -226,13 +226,22 @@ namespace Shared.Gadget.Models.Component
             collection.Clear ();
 
             if (IsCategoryTest) {
-              var list = TestCollection
+              var testList = TestCollection
                 .OrderBy (p => p.GadgetName)
                 .ToList ()
               ;
 
-              foreach (var item in list) {
-                collection.Add (separator + item.GadgetName);
+              foreach (var gadgetTest in testList) {
+                collection.Add (separator + gadgetTest.GadgetName);
+
+                if (gadgetTest.IsContentTarget) {
+                  var namesCollection = new Collection<string> ();
+                  gadgetTest.RequestContentNamesFull (namesCollection);
+
+                  foreach (var itemName in namesCollection) {
+                    collection.Add (separator + itemName);
+                  }
+                }
               }
             }
 

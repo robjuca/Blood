@@ -372,6 +372,29 @@
                                     Content="Modify"
                                     caliburn:Message.Attach="[Event Click] = [OnModifyCommandClicked ()]">
                             </Button>
+
+                            <Button BorderThickness="0"
+                                    Margin="0 10 0 0"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Top"
+                                    Background="Transparent"
+                                    Content="Lock"
+                                    IsEnabled="{Binding Model.IsLockCommandEnabled}"
+                                    caliburn:Message.Attach="[Event Click] = [OnLockCommandClicked ()]">
+                            </Button>
+
+                            <TextBlock FontSize="11px"
+                                       TextWrapping="Wrap"
+                                       TextAlignment="Justify"
+                                       Margin="0 0 10 0">
+                                <Run>[ The current Result will be </Run>
+                                <Run FontWeight="DemiBold"
+                                     Foreground="Red">locked</Run>
+                                <Run> and can not be changed</Run>
+                                <Run FontWeight="DemiBold"
+                                     Foreground="Red">anymore!</Run>
+                                <Run> ]</Run>
+                            </TextBlock>
                         </StackPanel>
                     </Border>
                 </Grid>

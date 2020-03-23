@@ -205,12 +205,14 @@ namespace Shared.ViewModel
           var secondaryColor = Colors.Lime;
 
           if (string.IsNullOrEmpty (palettePrimary).IsFalse ()) {
-            var c = System.Drawing.Color.FromName (palettePrimary);
+            Int32 iColorInt = Convert.ToInt32 (palettePrimary.Substring (1), 16);
+            System.Drawing.Color c = System.Drawing.Color.FromArgb (iColorInt);
             primaryColor = Color.FromRgb (c.R, c.G, c.B);
           }
 
           if (string.IsNullOrEmpty (paletteAccent).IsFalse ()) {
-            var c = System.Drawing.Color.FromName (paletteAccent);
+            Int32 iColorInt = Convert.ToInt32 (paletteAccent.Substring (1), 16);
+            System.Drawing.Color c = System.Drawing.Color.FromArgb (iColorInt);
             secondaryColor = Color.FromRgb (c.R, c.G, c.B);
           }
 

@@ -180,7 +180,7 @@ namespace Shared.Gadget.Result
                         <Image Width='16'
                                Height='16'
                                ToolTip='{Binding Material}'
-                                Source='{Binding Image, Converter={StaticResource CollectionToBitmapImageConverter}}' />
+                                Source='{Binding GadgetImage, Converter={StaticResource CollectionToBitmapImageConverter}}' />
 
                         <ContentControl  Visibility='{Binding ContentTestVisibility}'
                                          Style='{DynamicResource GadgetTestMiniIcon}' />

@@ -106,7 +106,7 @@ namespace Module.Settings.Factory.Support.Pattern.ViewModels
                 var primaryColor = iniFileManager.RequestKey (processNameSection, TProcess.PALETTEPRIMARY);
                 var accentColor = iniFileManager.RequestKey (processNameSection, TProcess.PALETTEACCENT);
 
-                var paletteInfo = TPaletteInfo.Create(baseTheme, primaryColor, accentColor);
+                var paletteInfo = TPaletteInfo.Create (baseTheme, primaryColor, accentColor);
 
                 Model.AddProcessInfo (processNameSection, bool.Parse (isAlive), paletteInfo);
               }

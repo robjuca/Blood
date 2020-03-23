@@ -95,6 +95,11 @@ namespace Gadget.Factory.Pattern.ViewModels
             if (message.IsAction (TInternalMessageAction.Response)) {
               TDispatcher.BeginInvoke (ResponseModelDispatcher, TEntityAction.Request (message.Support.Argument.Types.EntityAction));
             }
+
+            // Back
+            if (message.IsAction (TInternalMessageAction.Back)) {
+              TDispatcher.Invoke (ChangeSuccessDispatcher);
+            }
           }
         }
       }

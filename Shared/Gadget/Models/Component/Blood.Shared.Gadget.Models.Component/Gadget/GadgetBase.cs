@@ -91,6 +91,14 @@ namespace Shared.Gadget.Models.Component
       }
     }
 
+    public bool HasValue
+    {
+      get
+      {
+        return (string.IsNullOrEmpty (Value.Trim ()).IsFalse ());
+      }
+    }
+
     public bool IsEditEnabled
     {
       get
