@@ -44,6 +44,11 @@ namespace Server.Context.Component
                 }
                 break;
 
+              case TExtension.Status: {
+                  ChangeStatus (context, action);
+                }
+                break;
+
               case TExtension.Full: {
                   ChangeFull (context, action);
                 }
@@ -120,7 +125,48 @@ namespace Server.Context.Component
         entityAction.Id = item.Key;
         entityAction.CollectionAction.SetCollection (action.CollectionAction.CategoryRelationCollection);
 
-        Modify (context, entityAction);
+        ModifyValue (context, entityAction);
+      }
+    }
+
+    static void ChangeStatus (TModelContext context, TEntityAction action)
+    {
+      /*
+      DATA IN
+      - action.Id (Component id to change)
+      - action.ModelAction (Component model) (only Status component)
+      */
+
+      var id = action.Id;
+
+      try {
+        //Component Id must exist
+        if (id.IsEmpty ()) {
+          action.Result = new TValidationResult ($"[{action.Operation.CategoryType.Category} - Change - Status] Component Id can NOT be NULL or EMPTY!");
+        }
+
+        else {
+          // Status 
+          var statusList = context.ComponentStatus.AsQueryable ()
+            .Where (p => p.Id.Equals (id))
+            .ToList ()
+          ;
+
+          // Status found
+          if (statusList.Count.Equals (1)) {
+            var model = statusList [0];
+            model.Change (action.ModelAction.ComponentStatusModel);
+            context.ComponentStatus.Update (model);// change Status model
+          }
+
+          context.SaveChanges (); // save here
+
+          action.Result = TValidationResult.Success;
+        }
+      }
+
+      catch (Exception exception) {
+        Models.Infrastructure.THelper.FormatException ("Change Status", exception, action);
       }
     }
 
@@ -597,7 +643,7 @@ namespace Server.Context.Component
       }
     }
 
-    static void Modify (TModelContext context, TEntityAction action)
+    static void ModifyValue (TModelContext context, TEntityAction action)
     {
       /*
       DATA IN

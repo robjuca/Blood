@@ -129,12 +129,23 @@ namespace Shared.Gadget.Models.Action
       }
     }
 
-    public static void Modify (TCategory category, TActionComponent component, TEntityAction entityAction)
+    public static void ModifyValue (TCategory category, TActionComponent component, TEntityAction entityAction)
     {
       if (component.NotNull () && entityAction.NotNull ()) {
         switch (category) {
           case TCategory.Result:
-            TGadgetResultConverter.Modify (component, entityAction);
+            TGadgetResultConverter.ModifyValue (component, entityAction);
+            break;
+        }
+      }
+    }
+
+    public static void ModifyStatus (TCategory category, TActionComponent component, TEntityAction entityAction)
+    {
+      if (component.NotNull () && entityAction.NotNull ()) {
+        switch (category) {
+          case TCategory.Result:
+            TGadgetResultConverter.ModifyStatus (component, entityAction);
             break;
         }
       }

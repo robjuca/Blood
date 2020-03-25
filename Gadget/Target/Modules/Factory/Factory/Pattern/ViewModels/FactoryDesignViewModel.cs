@@ -11,6 +11,7 @@ using rr.Library.Infrastructure;
 using rr.Library.Helper;
 
 using Server.Models.Action;
+using Server.Models.Infrastructure;
 
 using Shared.Types;
 using Shared.Resources;
@@ -51,8 +52,15 @@ namespace Gadget.Factory.Pattern.ViewModels
 
               if (propertyName.Equals ("edit", StringComparison.InvariantCulture)) {
                 if (message.Support.Argument.Args.Param1 is TActionComponent component) {
-                  Model.SelectModel (component);
+                  Model.SelectModel (component, propertyName);
                 }
+              }
+
+              else {
+                var component = TActionComponent.Create (TCategory.Target);
+                TActionConverter.Select (TCategory.Target, component, action);
+
+                Model.SelectModel (component, propertyName);
               }
 
               TDispatcher.Invoke (RefreshDesignDispatcher);

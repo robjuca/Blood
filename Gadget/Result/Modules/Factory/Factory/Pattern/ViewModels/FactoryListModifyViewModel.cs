@@ -49,7 +49,16 @@ namespace Gadget.Factory.Pattern.ViewModels
             if (message.IsAction (TInternalMessageAction.Response)) {
               // Change - Many
               if (message.Support.Argument.Types.IsOperation (TOperation.Change, TExtension.Many)) {
-                TDispatcher.Invoke (ChangeSuccessDispatcher);
+                if (message.Result.IsValid) {
+                  TDispatcher.Invoke (ChangeSuccessDispatcher);
+                }
+              }
+
+              // Change - Status
+              if (message.Support.Argument.Types.IsOperation (TOperation.Change, TExtension.Status)) {
+                if (message.Result.IsValid) {
+                  TDispatcher.Invoke (CleanupDispatcher);
+                }
               }
             }
           }
@@ -112,7 +121,7 @@ namespace Gadget.Factory.Pattern.ViewModels
 
     public void OnLockCommandClicked ()
     {
-      //TDispatcher.Invoke (ModifyCommandDispatcher);
+      TDispatcher.Invoke (ModifyCommandDispatcher);
     }
     #endregion
 
@@ -164,7 +173,7 @@ namespace Gadget.Factory.Pattern.ViewModels
       Model.Request (component);
 
       var entityAction = TEntityAction.Create (TCategory.Result, TOperation.Change, TExtension.Many);
-      TActionConverter.Modify (TCategory.Result, component, entityAction);
+      TActionConverter.ModifyValue (TCategory.Result, component, entityAction);
 
       // to parent
       var message = new TFactoryMessageInternal (TInternalMessageAction.Request, TChild.List, TypeInfo);
@@ -174,6 +183,27 @@ namespace Gadget.Factory.Pattern.ViewModels
     }
 
     void ChangeSuccessDispatcher ()
+    {
+      if (Model.CanLock) {
+        var component = TActionComponent.Create (TCategory.Result);
+        Model.RequestLockedStatus (component);
+
+        var entityAction = TEntityAction.Create (TCategory.Result, TOperation.Change, TExtension.Status);
+        TActionConverter.ModifyStatus (TCategory.Result, component, entityAction);
+
+        // to parent
+        var message = new TFactoryMessageInternal (TInternalMessageAction.Request, TChild.List, TypeInfo);
+        message.Support.Argument.Types.Select (entityAction);
+
+        DelegateCommand.PublishInternalMessage.Execute (message);
+      }
+
+      else {
+        TDispatcher.Invoke (CleanupDispatcher);
+      }
+    }
+
+    void CleanupDispatcher ()
     {
       Model.Cleanup ();
       TDispatcher.Invoke (RefreshAllDispatcher);

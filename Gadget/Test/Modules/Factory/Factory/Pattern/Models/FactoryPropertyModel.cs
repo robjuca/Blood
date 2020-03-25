@@ -54,7 +54,7 @@ namespace Gadget.Factory.Pattern.Models
 
         ComponentModelProperty.SelectModel (entityAction);
 
-        ValidateProperty ("TextProperty");
+        ValidateProperty ();
 
         res = component.Models.GadgetTestModel.ValidateId;
       }
@@ -77,25 +77,29 @@ namespace Gadget.Factory.Pattern.Models
       ComponentModelProperty.ShowPanels ();
     }
 
-    internal void ValidateProperty (string propertyName)
+    internal bool ValidateProperty ()
     {
-      if (propertyName.Equals ("TextProperty", StringComparison.InvariantCulture)) {
-        AlertsModel.Select (isOpen: false); // default
+      bool res = true;
 
-        var textProperty = ComponentModelProperty.ExtensionModel.TextProperty;
-        bool validateModel = string.IsNullOrEmpty (textProperty).IsFalse ();
+      AlertsModel.Select (isOpen: false); // default
 
-        ComponentModelProperty.ValidateModel (validateModel);
+      var textProperty = ComponentModelProperty.ExtensionModel.TextProperty;
+      bool validateModel = string.IsNullOrEmpty (textProperty).IsFalse ();
 
-        // show alerts
-        if (validateModel.IsFalse ()) {
-          AlertsModel.Select (TAlertsModel.TKind.Warning);
-          AlertsModel.Select (Properties.Resource.RES_EMPTY, Properties.Resource.RES_TEXT_EMPTY);
-          AlertsModel.Select (isOpen: true);
-        }
+      ComponentModelProperty.ValidateModel (validateModel);
 
-        AlertsModel.Refresh ();
+      // show alerts
+      if (validateModel.IsFalse ()) {
+        AlertsModel.Select (TAlertsModel.TKind.Warning);
+        AlertsModel.Select (Properties.Resource.RES_EMPTY, Properties.Resource.RES_TEXT_EMPTY);
+        AlertsModel.Select (isOpen: true);
+
+        res = false;
       }
+
+      AlertsModel.Refresh ();
+
+      return (res);
     }
 
     internal void Cleanup ()

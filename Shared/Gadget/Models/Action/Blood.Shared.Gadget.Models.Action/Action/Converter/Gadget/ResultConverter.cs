@@ -138,11 +138,13 @@ namespace Shared.Gadget.Models.Action
             entityAction.Id = gadget.Id;
             entityAction.CategoryType.Select (TCategory.Result);
 
+            entityAction.ModelAction.ComponentInfoModel.Id = gadget.Id;
             entityAction.ModelAction.ComponentInfoModel.Name = gadget.GadgetInfo;
+
+            entityAction.ModelAction.ComponentStatusModel.Id = gadget.Id;
             entityAction.ModelAction.ComponentStatusModel.Busy = gadget.Busy;
             entityAction.ModelAction.ComponentStatusModel.Locked = gadget.Locked;
-
-            entityAction.ModelAction.ComponentInfoModel.Id = gadget.Id;
+            
             entityAction.ModelAction.ExtensionTextModel.Id = gadget.Id;
             entityAction.ModelAction.ExtensionTextModel.Text = gadget.GadgetName;
             entityAction.ModelAction.ExtensionTextModel.Date = gadget.Date;
@@ -172,9 +174,8 @@ namespace Shared.Gadget.Models.Action
       }
     }
 
-    public static void Modify (TActionComponent component, TEntityAction entityAction)
+    public static void ModifyValue (TActionComponent component, TEntityAction entityAction)
     {
-      // TODO:??
       if (component.NotNull ()) {
         if (entityAction.NotNull ()) {
           entityAction.CollectionAction.EntityCollection.Clear ();
@@ -235,6 +236,24 @@ namespace Shared.Gadget.Models.Action
                 }
               }
             }
+          }
+        }
+      }
+    }
+
+    public static void ModifyStatus (TActionComponent component, TEntityAction entityAction)
+    {
+      if (component.NotNull ()) {
+        if (entityAction.NotNull ()) {
+          if (component.IsCategory (TCategory.Result)) {
+            var gadget = component.Models.GadgetResultModel;
+
+            entityAction.Id = gadget.Id;
+            entityAction.CategoryType.Select (TCategory.Result);
+
+            entityAction.ModelAction.ComponentStatusModel.Id = gadget.Id;
+            entityAction.ModelAction.ComponentStatusModel.Busy = gadget.Busy;
+            entityAction.ModelAction.ComponentStatusModel.Locked = gadget.Locked;
           }
         }
       }

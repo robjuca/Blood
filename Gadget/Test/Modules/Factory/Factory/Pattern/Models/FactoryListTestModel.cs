@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 
 using Server.Models.Action;
+using Server.Models.Component;
 using Server.Models.Infrastructure;
 
 using Shared.Gadget.Models.Action;
@@ -134,18 +135,18 @@ namespace Gadget.Factory.Pattern.Models
       foreach (var item in GadgetCheckedCollection) {
         // ensure ChildId diferent from ParentId
         if (item.Id.NotEquals (action.Id)) {
-          //var componentRelation = ComponentRelation.CreateDefault;
-          //componentRelation.ChildId = item.Id;
-          //componentRelation.ChildCategory = item.CategoryValue;
-          //componentRelation.ParentId = action.Id;
-          //componentRelation.ParentCategory = Server.Models.Infrastructure.TCategoryType.ToValue (action.CategoryType.Category);
+          var componentRelation = ComponentRelation.CreateDefault;
+          componentRelation.ChildId = item.Id;
+          componentRelation.ChildCategory = TCategoryType.ToValue (TCategory.Test);
+          componentRelation.ParentId = action.Id;
+          componentRelation.ParentCategory = TCategoryType.ToValue (action.CategoryType.Category);
 
-          //// Extension 
-          //if (string.IsNullOrEmpty (action.ModelAction.ExtensionTextModel.Extension)) {
-          //  action.ModelAction.ExtensionTextModel.Extension = m_CurrentMaterialName;
-          //}
+          // Extension 
+          if (string.IsNullOrEmpty (action.ModelAction.ExtensionTextModel.Extension)) {
+            action.ModelAction.ExtensionTextModel.Extension = m_CurrentMaterialGadget.GadgetName;
+          }
 
-          //action.CollectionAction.ComponentRelationCollection.Add (componentRelation);
+          action.CollectionAction.ComponentRelationCollection.Add (componentRelation);
         }
       }
 

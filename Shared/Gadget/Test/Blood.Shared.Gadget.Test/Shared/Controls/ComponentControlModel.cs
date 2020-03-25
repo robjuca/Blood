@@ -82,35 +82,29 @@ namespace Shared.Gadget.Test
     #region Members
     public void SelectModel (GadgetTest gadget)
     {
-      /*
-       action.ModelAction.GadgetTestModel
-       action.CollectionAction.EntityCollection
-      */
-
       if (gadget.NotNull ()) {
+        ControlModel.GadgetName = gadget.GadgetName;
+        ControlModel.Description = gadget.Description;
+        ControlModel.ExternalLink = gadget.ExternalLink;
+
         if (gadget.ValidateId) {
-          ComponentControlModels.Clear ();
+          if (ControlModel.Contains (gadget.Id).IsFalse ()) {
+            ComponentControlModels.Clear ();
 
-          ControlModel.CopyFrom (gadget);
+            ControlModel.CopyFrom (gadget);
 
-          if (ControlModel.IsContentTest) {
-            var contents = new Collection<GadgetTest> ();
-            ControlModel.RequestContent (contents);
+            if (ControlModel.IsContentTest) {
+              var contents = new Collection<GadgetTest> ();
+              ControlModel.RequestContent (contents);
 
-            foreach (var gadgetTest in contents) {
-              var controlModel = TComponentControlModel.CreateDefault;
-              controlModel.ControlModel.CopyFrom (gadgetTest.Clone ());
+              foreach (var gadgetTest in contents) {
+                var controlModel = TComponentControlModel.CreateDefault;
+                controlModel.ControlModel.CopyFrom (gadgetTest.Clone ());
 
-              ComponentControlModels.Add (controlModel);
+                ComponentControlModels.Add (controlModel);
+              }
             }
           }
-        }
-
-        // Change only
-        else {
-          ControlModel.GadgetName = gadget.GadgetName;
-          ControlModel.Description = gadget.Description;
-          ControlModel.ExternalLink = gadget.ExternalLink;
         }
       }
     }
@@ -180,8 +174,7 @@ namespace Shared.Gadget.Test
             break;
 
           case TCategory.Target: {
-              ControlModel.CopyFrom (component.Models.GadgetTestModel);
-              ControlModel.AddContent (component.Models.GadgetTargetModel);  // for sure
+              ControlModel.AddContent (component.Models.GadgetTargetModel);  
 
               SelectImage (component.Models.GadgetMaterialModel.GetImage ());
             }
@@ -193,30 +186,24 @@ namespace Shared.Gadget.Test
     public void RemoveComponent (TActionComponent component)
     {
       if (component.NotNull ()) {
-        if (component.Models.GadgetTestModel.Contains (ControlModelId)) {
-          Cleanup ();
-        }
+        switch (component.Category) {
+          case TCategory.Test: {
+              ControlModel.RemoveContent (component.Models.GadgetTestModel);
 
-        else {
-          switch (component.Category) {
-            case TCategory.Test: {
-                ControlModel.RemoveContent (component.Models.GadgetTestModel);
-
-                if (HasComponentControlModels) {
-                  foreach (var controlModelItem in ComponentControlModels) {
-                    if (component.Models.GadgetTestModel.Contains (controlModelItem.ControlModelId)) {
-                      ComponentControlModels.Remove (controlModelItem);
-                      break;
-                    }
+              if (HasComponentControlModels) {
+                foreach (var controlModelItem in ComponentControlModels) {
+                  if (component.Models.GadgetTestModel.Contains (controlModelItem.ControlModelId)) {
+                    ComponentControlModels.Remove (controlModelItem);
+                    break;
                   }
                 }
               }
-              break;
+            }
+            break;
 
-            case TCategory.Target:
-              ControlModel.RemoveContent (component.Models.GadgetTargetModel);
-              break;
-          }
+          case TCategory.Target:
+            ControlModel.RemoveContent (component.Models.GadgetTargetModel);
+            break;
         }
       }
     }

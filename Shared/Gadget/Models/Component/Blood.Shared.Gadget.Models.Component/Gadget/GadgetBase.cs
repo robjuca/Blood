@@ -103,7 +103,7 @@ namespace Shared.Gadget.Models.Component
     {
       get
       {
-        return (ValidateId && Locked.IsFalse ());
+        return (ValidateId && Locked.IsFalse () && Busy.IsFalse ());
       }
     }
 
@@ -183,6 +183,7 @@ namespace Shared.Gadget.Models.Component
       Description = string.Empty;
       ExternalLink = string.Empty;
       Enabled = false;
+      Locked = false;
       Busy = false;
       IsChecked = false;
       SetImage (new Collection<byte> ());
@@ -220,6 +221,7 @@ namespace Shared.Gadget.Models.Component
         Description = alias.Description;
         ExternalLink = alias.ExternalLink;
         Enabled = alias.Enabled;
+        Locked = alias.Locked;
         Busy = alias.Busy;
         IsChecked = alias.IsChecked;
         SetImage (alias.GetImage ());
@@ -239,6 +241,7 @@ namespace Shared.Gadget.Models.Component
         Description = alias.Description;
         ExternalLink = alias.ExternalLink;
         Enabled = alias.Enabled;
+        Locked = alias.Locked;
         Busy = alias.Busy;
         IsChecked = alias.IsChecked;
         SetImage (alias.GetImage ());

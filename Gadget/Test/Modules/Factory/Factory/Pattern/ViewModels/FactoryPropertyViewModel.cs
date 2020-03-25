@@ -114,18 +114,20 @@ namespace Gadget.Factory.Pattern.ViewModels
 
     public void OnApplyCommadClicked ()
     {
-      Model.ShowPanels ();
-      ApplyChanges ();
+      if (Model.ValidateProperty ()) {
+        Model.ShowPanels ();
+        ApplyChanges ();
 
-      var action = TEntityAction.Create (TCategory.Test, TOperation.Insert);
+        var action = TEntityAction.Create (TCategory.Test, TOperation.Insert);
 
-      if (IsViewModeEdit) {
-        action = TEntityAction.Create (TCategory.Test, TOperation.Change, TExtension.Full);
+        if (IsViewModeEdit) {
+          action = TEntityAction.Create (TCategory.Test, TOperation.Change, TExtension.Full);
+        }
+
+        Model.RequestModel (action);
+
+        TDispatcher.BeginInvoke (RequestModelDispatcher, action);
       }
-
-      Model.RequestModel (action);
-
-      TDispatcher.BeginInvoke (RequestModelDispatcher, action);
     }
 
     public void OnCancelCommadClicked ()
@@ -171,13 +173,11 @@ namespace Gadget.Factory.Pattern.ViewModels
 
     void ResponseModelDispatcher (TEntityAction action)
     {
-      //action.ModelAction.GadgetTestModel.CopyFrom (action);
+      if (action.SupportAction.Rule.IsCommit ("gadget")) {
+        action.SupportAction.Rule.Remove ("gadget");
 
-      //if (action.SupportAction.Rule.IsCommit ("gadget")) {
-      //  action.SupportAction.Rule.Remove ("gadget");
-
-      //  TDispatcher.BeginInvoke (ApplyDispatcher, action);
-      //}
+        TDispatcher.BeginInvoke (ApplyDispatcher, action);
+      }
     }
 
     void ApplyDispatcher (TEntityAction action)
@@ -286,7 +286,9 @@ namespace Gadget.Factory.Pattern.ViewModels
     #region Support
     void PropertySelect (string propertyName)
     {
-      Model.ValidateProperty (propertyName);
+      if (propertyName.Equals ("TextProperty", StringComparison.InvariantCulture)) {
+        Model.ValidateProperty ();
+      }
 
       var action = TEntityAction.Create(TCategory.Test);
       Model.RequestModel (action);

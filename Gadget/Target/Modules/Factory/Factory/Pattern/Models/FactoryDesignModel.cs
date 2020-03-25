@@ -31,13 +31,11 @@ namespace Gadget.Factory.Pattern.Models
     #endregion
 
     #region Members
-    internal void SelectModel (TActionComponent component)
+    internal void SelectModel (TActionComponent component, string propertyName)
     {
       component.ThrowNull ();
 
-      if (component.Models.GadgetTargetModel.ValidateId) {
-        ComponentControlModel.SelectModel (component);
-      }
+      ComponentControlModel.SelectModel (component, propertyName);
     }
 
     internal void Cleanup ()

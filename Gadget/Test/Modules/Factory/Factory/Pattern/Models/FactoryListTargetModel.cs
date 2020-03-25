@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 
 using Server.Models.Action;
+using Server.Models.Component;
 using Server.Models.Infrastructure;
 
 using Shared.Gadget.Models.Action;
@@ -81,12 +82,16 @@ namespace Gadget.Factory.Pattern.Models
 
       Cleanup ();
 
+      GadgetFullCollection.Clear ();
+
       var gadgets = new Collection<TActionComponent> ();
       TActionConverter.Collection (TCategory.Target, gadgets, entityAction);
 
       foreach (var gadget in gadgets) {
         GadgetFullCollection.Add (gadget.Models.GadgetTargetModel);
       }
+
+      MaterialChanged ();
     }
 
     internal void MaterialItemChanged (TActionComponent component)
@@ -122,18 +127,18 @@ namespace Gadget.Factory.Pattern.Models
       action.ThrowNull ();
 
       foreach (var item in GadgetCheckedCollection) {
-        //var componentRelation = ComponentRelation.CreateDefault;
-        //componentRelation.ChildId = item.Id;
-        //componentRelation.ChildCategory = item.CategoryValue;
-        //componentRelation.ParentId = action.Id;
-        //componentRelation.ParentCategory = Server.Models.Infrastructure.TCategoryType.ToValue (action.CategoryType.Category);
+        var componentRelation = ComponentRelation.CreateDefault;
+        componentRelation.ChildId = item.Id;
+        componentRelation.ChildCategory = TCategoryType.ToValue (TCategory.Target);
+        componentRelation.ParentId = action.Id;
+        componentRelation.ParentCategory = TCategoryType.ToValue (action.CategoryType.Category);
 
-        //action.CollectionAction.ComponentRelationCollection.Add (componentRelation);
+        action.CollectionAction.ComponentRelationCollection.Add (componentRelation);
       }
 
       // Extension 
       if (string.IsNullOrEmpty (action.ModelAction.ExtensionTextModel.Extension)) {
-        //action.ModelAction.ExtensionTextModel.Extension = m_CurrentMaterialName;
+        action.ModelAction.ExtensionTextModel.Extension = m_CurrentMaterialGadget.GadgetName;
       }
 
       // update rule
@@ -306,7 +311,6 @@ namespace Gadget.Factory.Pattern.Models
                 if (gadgetTargetModel.Busy.IsFalse ()) {
                   gadgetTargetModel.MaterialId = m_CurrentMaterialGadget.Id;
                   gadgetTargetModel.Material = m_CurrentMaterialGadget.Material;
-                  gadgetTargetModel.IsChecked = true;
 
                   GadgetItemsSource.Add (gadgetTargetModel);
                 }

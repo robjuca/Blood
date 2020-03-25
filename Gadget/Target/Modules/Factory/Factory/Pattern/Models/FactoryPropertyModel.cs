@@ -97,6 +97,7 @@ namespace Gadget.Factory.Pattern.Models
     internal void RequestModel (TEntityAction action)
     {
       if (action.NotNull ()) {
+        action.SelectCategoryType (TCategoryType.Create (TCategory.Target));
         action.CollectionAction.ExtensionNodeCollection.Clear ();
 
         ComponentModelProperty.RequestModel (action);

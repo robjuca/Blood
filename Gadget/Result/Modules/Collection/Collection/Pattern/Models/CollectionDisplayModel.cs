@@ -57,7 +57,7 @@ namespace Gadget.Collection.Pattern.Models
     {
       get
       {
-        return (Current.Enabled && Current.Locked.IsFalse ());
+        return (Current.Enabled && Current.Locked.IsFalse () && Current.HasContent);
       }
     }
 

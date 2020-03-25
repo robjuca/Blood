@@ -116,6 +116,14 @@ namespace Gadget.Factory.Pattern.Models
         return (m_Gadget.CanLock);
       }
     }
+
+    public bool CanLock
+    {
+      get
+      {
+        return (m_Gadget.CanLock && m_Gadget.Locked.IsFalse ());
+      }
+    }
     #endregion
 
     #region Constructor
@@ -268,6 +276,14 @@ namespace Gadget.Factory.Pattern.Models
         }
       }
 
+      component.Models.GadgetResultModel.CopyFrom (m_Gadget);
+    }
+
+    internal void RequestLockedStatus (TActionComponent component)
+    {
+      component.ThrowNull ();
+
+      m_Gadget.Locked = true;
       component.Models.GadgetResultModel.CopyFrom (m_Gadget);
     }
 

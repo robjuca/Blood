@@ -35,11 +35,46 @@ namespace Shared.Gadget.Target
     #endregion
 
     #region Members
-    public void SelectModel (TActionComponent component)
+    public void SelectModel (TActionComponent component, string propertyName = "")
     {
       if (component.NotNull ()) {
-        ControlModel.CopyFrom (component.Models.GadgetTargetModel);
-        ChildControlModel.CopyFrom (component.Models.GadgetMaterialModel);
+        var gadget = component.Models.GadgetTargetModel;
+
+        if (component.Models.GadgetTargetModel.ValidateId) {
+          ControlModel.CopyFrom (gadget);
+          ChildControlModel.CopyFrom (component.Models.GadgetMaterialModel);
+        }
+
+        // update
+        else {
+          if (string.IsNullOrEmpty (propertyName).IsFalse ()) {
+            switch (propertyName) {
+              case "DescriptionProperty" :
+                ControlModel.Description = gadget.Description;
+                break;
+
+              case "ExternalLinkProperty":
+                ControlModel.ExternalLink = gadget.ExternalLink;
+                break;
+
+              case "ReferenceProperty":
+                ControlModel.Reference = gadget.Reference;
+                break;
+
+              case "TextProperty":
+                ControlModel.GadgetName = gadget.GadgetName;
+                break;
+
+              case "NameProperty":
+                ControlModel.GadgetInfo = gadget.GadgetInfo;
+                break;
+
+              case "EnabledProperty":
+                ControlModel.Enabled = gadget.Enabled;
+                break;
+            }
+          }
+        }
       }
     }
     #endregion
