@@ -29,6 +29,12 @@ namespace Server.Models.Infrastructure
       private set;
     }
 
+    public Dictionary<Guid, Collection<Guid>> IdDictionary
+    {
+      get;
+      private set;
+    }
+
     public TValidationResult Result
     {
       get;
@@ -74,6 +80,7 @@ namespace Server.Models.Infrastructure
     protected TEntityActionBase ()
     {
       IdCollection = new Collection<Guid> ();
+      IdDictionary = new Dictionary<Guid, Collection<Guid>> ();
 
       Result = TValidationResult.CreateDefault;
 

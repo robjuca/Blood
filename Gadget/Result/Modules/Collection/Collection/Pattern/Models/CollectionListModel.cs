@@ -84,7 +84,7 @@ namespace Gadget.Collection.Pattern.Models
       RegistrationSelectedIndex = -1;
       ResultSelectedIndex = -1;
 
-      FullCollection = new Collection<GadgetResult> ();
+      FullDictionary = new Dictionary<Guid, GadgetResult> ();
     }
     #endregion
 
@@ -108,25 +108,27 @@ namespace Gadget.Collection.Pattern.Models
       }
     }
 
-    internal void SelectResult (Collection<TActionComponent> gadgets, Collection<Guid> idcontents)
+    internal void SelectResult (Collection<TActionComponent> gadgets, Dictionary<Guid, Collection<Guid>> idcontents)
     {
       gadgets.ThrowNull ();
       idcontents.ThrowNull ();
 
-      FullCollection.Clear ();
+      FullDictionary.Clear ();
       idcontents.Clear ();
 
       foreach (var component in gadgets) {
-        FullCollection.Add (component.Models.GadgetResultModel);
+        var gadget = component.Models.GadgetResultModel;
+
+        FullDictionary.Add (gadget.Id, gadget);
       }
 
-      foreach (var gadget in FullCollection) {
+      foreach (var item in FullDictionary) {
+        var gadget = item.Value;
+
         var idList = new Collection<Guid> ();
         gadget.RequestContent (idList);
 
-        foreach (var id in idList) {
-          idcontents.Add (id);
-        }
+        idcontents.Add (gadget.Id, idList);
       }
     }
 
@@ -147,7 +149,9 @@ namespace Gadget.Collection.Pattern.Models
         }
       }
 
-      foreach (var gadget in FullCollection) {
+      foreach (var item in FullDictionary) {
+        var gadget = item.Value;
+
         foreach (var gadgetRegistration in gadgetRegistrationList) {
           gadget.UpdateContent (gadgetRegistration);
         }
@@ -158,12 +162,49 @@ namespace Gadget.Collection.Pattern.Models
       RegistrationChanged (RegistrationCurrent);
     }
 
+    internal void SelectMany (Guid id, Dictionary<Guid, Collection<TActionComponent>> gadgetDictionary)
+    {
+      if (id.NotEmpty() && gadgetDictionary.NotNull ()) {
+        if (FullDictionary.ContainsKey (id)) {
+          var gadgetResult = FullDictionary [id];
+
+          var gadgetRegistrationList = new Collection<GadgetRegistration> ();
+          var gadgetTestList = new Collection<GadgetTest> ();
+
+          foreach (var item in gadgetDictionary) {
+            var gadgetId = item.Key;
+            var components = item.Value;
+
+            foreach (var component in components) {
+              if (component.IsCategory (TCategory.Registration)) {
+                gadgetRegistrationList.Add (component.Models.GadgetRegistrationModel);
+              }
+
+              if (component.IsCategory (TCategory.Test)) {
+                gadgetTestList.Add (component.Models.GadgetTestModel);
+              }
+            }
+          }
+
+          foreach (var gadgetRegistration in gadgetRegistrationList) {
+            gadgetResult.UpdateContent (gadgetRegistration);
+          }
+
+          gadgetResult.UpdateContent (gadgetTestList);
+        }
+
+        RegistrationChanged (RegistrationCurrent);
+      }
+    }
+
     internal void RegistrationChanged (GadgetRegistration gadget)
     {
       if (gadget.NotNull ()) {
         ItemsSource.Clear ();
 
-        foreach (var gadgetResult in FullCollection) {
+        foreach (var item in FullDictionary) {
+          var gadgetResult = item.Value;
+
           if (gadgetResult.IsRegistrationContent (gadget.Id)) {
             ItemsSource.Add (gadgetResult);
           }
@@ -177,7 +218,7 @@ namespace Gadget.Collection.Pattern.Models
     #endregion
 
     #region Property
-    Collection<GadgetResult> FullCollection
+    Dictionary<Guid, GadgetResult> FullDictionary
     {
       get;
     }

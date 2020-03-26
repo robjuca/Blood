@@ -401,8 +401,14 @@
                                         <materialDesign:Flipper.FrontContent>
                                             <Button IsEnabled="{Binding Model.IsLockCommandEnabled}"
                                                     Style="{StaticResource MaterialDesignFlatButton}"
-                                                    Command="{x:Static materialDesign:Flipper.FlipCommand}"
-                                                    Content="LOCK..." />
+                                                    Command="{x:Static materialDesign:Flipper.FlipCommand}">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <ContentControl Margin="0 0 2 0"
+                                                                    Style="{DynamicResource ContentLockedIcon}" />
+
+                                                    <TextBlock VerticalAlignment="Center"  Text="LOCK..." />
+                                                </StackPanel>
+                                            </Button>
                                         </materialDesign:Flipper.FrontContent>
 
                                         <materialDesign:Flipper.BackContent>

@@ -36,10 +36,13 @@
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
 
-                    <!--busy-->
+                    <!--lock busy disable-->
                     <Border Grid.Column="0"
                             Padding="0 0 3 0">
                         <StackPanel Orientation="Horizontal">
+                            <ContentControl Visibility="{Binding LockedVisibility}"
+                                            Style="{DynamicResource ContentLockedIcon}" />
+
                             <ContentControl Visibility="{Binding BusyVisibility}"
                                             Style="{DynamicResource ContentBusyIcon}" />
 

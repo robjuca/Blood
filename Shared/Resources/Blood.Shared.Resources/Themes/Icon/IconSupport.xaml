@@ -459,6 +459,31 @@
         </Setter>
     </Style>
 
+    <!--ContentLockedIcon-->
+    <Style x:Key="ContentLockedIcon"
+           TargetType="{x:Type ContentControl}">
+        <Setter Property="Foreground"
+                Value="DarkTurquoise" />
+        <Setter Property="ToolTip"
+                Value="locked" />
+        <Setter Property="VerticalAlignment"
+                Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ContentControl}">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                        <materialDesign:PackIcon Kind="LockOutline"
+                                                 Width="20"
+                                                 Height="20"
+                                                 Foreground="DarkTurquoise" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <!-- ____________________ -->
 
 </ResourceDictionary>

@@ -176,7 +176,7 @@ namespace Gadget.Collection.Pattern.ViewModels
       if (action.CategoryType.IsCategory (TCategory.Result)) {
         TActionConverter.Collection (TCategory.Result, gadgets, action);
 
-        Model.SelectResult (gadgets, action.IdCollection);
+        Model.SelectResult (gadgets, action.IdDictionary);
 
         // update
         // Test - Select - Many
@@ -202,10 +202,35 @@ namespace Gadget.Collection.Pattern.ViewModels
 
     void SelectManyDispatcher (TEntityAction action)
     {
-      var gadgets = new Collection<TActionComponent> ();
-      TActionConverter.SelectMany (TCategory.Result, gadgets, action);
+      foreach (var itemIdResult in action.CollectionAction.EntityDictionary) {
+        var gadgetCollection = new Dictionary<Guid, Collection<TActionComponent>> ();
 
-      Model.SelectMany (gadgets);
+        foreach (var entityCollection in itemIdResult.Value) {
+          var id = entityCollection.Key;
+          var entityAction = entityCollection.Value;
+          var gadgetComponent = new Collection<TActionComponent> ();
+
+          // Registration
+          if (entityAction.CategoryType.IsCategory (TCategory.Registration)) {
+            var gadgets = TActionComponent.Create (TCategory.Registration);
+            TActionConverter.Select (TCategory.Registration, gadgets, entityAction);
+
+            gadgetComponent.Add (gadgets);
+          }
+
+          // Test
+          if (entityAction.CategoryType.IsCategory (TCategory.Test)) {
+            var gadgets = TActionComponent.Create (TCategory.Test);
+            TActionConverter.Select (TCategory.Test, gadgets, entityAction);
+
+            gadgetComponent.Add (gadgets);
+          }
+
+          gadgetCollection.Add (id, gadgetComponent);
+        }
+
+        Model.SelectMany (itemIdResult.Key, gadgetCollection);
+      }
 
       TDispatcher.Invoke (RefreshAllDispatcher);
     }

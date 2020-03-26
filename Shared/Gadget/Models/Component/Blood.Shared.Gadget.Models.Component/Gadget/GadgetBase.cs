@@ -131,6 +131,14 @@ namespace Shared.Gadget.Models.Component
       }
     }
 
+    public Visibility LockedVisibility
+    {
+      get
+      {
+        return (Locked ? Visibility.Visible : Visibility.Collapsed);
+      }
+    }
+
     public Collection <byte> GadgetImage
     {
       get

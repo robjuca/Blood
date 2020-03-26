@@ -100,6 +100,12 @@ namespace Server.Models.Action
       get;
       private set;
     }
+
+    public Dictionary<Guid, Dictionary<Guid, TEntityAction>> EntityDictionary
+    {
+      get;
+      private set;
+    }
     #endregion
 
     public TComponentOperation ComponentOperation
@@ -132,6 +138,7 @@ namespace Server.Models.Action
       // ById
       ModelCollection = new Dictionary<Guid, TModelAction> ();
       EntityCollection = new Dictionary<Guid, TEntityAction> ();
+      EntityDictionary = new Dictionary<Guid, Dictionary<Guid, TEntityAction>> ();
 
       ComponentOperation = TComponentOperation.CreateDefault;
     }

@@ -5,6 +5,7 @@
 
 //----- Include
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -536,24 +537,50 @@ namespace Server.Context.Component
     {
       /*
        DATA IN
-      - action.IdCollection (id)
+      - action.IdCollection (id) or action.IdDictionaryCollection
       - action.CollectionAction.CategoryRelationCollection
 
       DATA OUT
-      - action.CollectionAction.EntityCollection {id, entityAction}
+      - action.CollectionAction.EntityCollection {id, entityAction} or action.CollectionAction.EntityDictionaryCollection {id, Collection<TEntityAction>} 
       */
 
       try {
         action.CollectionAction.ModelCollection.Clear ();
+        action.CollectionAction.EntityCollection.Clear ();
+        action.CollectionAction.EntityDictionary.Clear ();
 
-        foreach (var id in action.IdCollection) {
-          var entityAction = TEntityAction.CreateDefault;
-          entityAction.Id = id;
-          entityAction.CollectionAction.SetCollection (action.CollectionAction.CategoryRelationCollection);
+        // IdCollection
+        if (action.IdCollection.Any ()) {
+          foreach (var id in action.IdCollection) {
+            var entityAction = TEntityAction.CreateDefault;
+            entityAction.Id = id;
+            entityAction.CollectionAction.SetCollection (action.CollectionAction.CategoryRelationCollection);
 
-          SelectById (context, entityAction);
+            SelectById (context, entityAction);
 
-          action.CollectionAction.EntityCollection.Add (id, entityAction); 
+            action.CollectionAction.EntityCollection.Add (id, entityAction);
+          }
+        }
+
+        else {
+          // IdDictionary
+          if (action.IdDictionary.Any ()) {
+            foreach (var item in action.IdDictionary) {
+              var entityCollection = new Dictionary<Guid, TEntityAction> ();
+
+              foreach (var id in item.Value) {
+                var entityAction = TEntityAction.CreateDefault;
+                entityAction.Id = id;
+                entityAction.CollectionAction.SetCollection (action.CollectionAction.CategoryRelationCollection);
+
+                SelectById (context, entityAction);
+
+                entityCollection.Add (id, entityAction);
+              }
+              
+              action.CollectionAction.EntityDictionary.Add (item.Key, entityCollection);
+            }
+          }
         }
 
         action.Result = TValidationResult.Success;
