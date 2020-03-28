@@ -37,6 +37,22 @@ namespace Shared.Gadget.Models.Component
         }
       }
 
+      internal bool HasRegistration
+      {
+        get
+        {
+          return (Registration.ValidateId);
+        }
+      }
+
+      internal Guid RegistrationId
+      {
+        get
+        {
+          return (Registration.Id);
+        }
+      }
+
       internal int Count
       {
         get
@@ -201,6 +217,12 @@ namespace Shared.Gadget.Models.Component
             if (Registration.ValidateId.IsFalse ()) {
               Add (gadget); // registration must exist
             }
+
+            else {
+              if (Registration.Contains (gadget.Id)) {
+                Registration.CopyFrom (gadget); // update
+              }
+            }
           }
         }
       }
@@ -213,6 +235,10 @@ namespace Shared.Gadget.Models.Component
               if (Contains (gadgetTest.Id)) {
                 if (ContainsTest (gadgetTest.Id).IsFalse ()) {
                   TestCollection.Add (gadgetTest);
+                }
+
+                else {
+                  UpdateContent (gadgetTest);
                 }
               }
             }
@@ -386,6 +412,16 @@ namespace Shared.Gadget.Models.Component
           }
         }
       }
+
+      void UpdateContent (GadgetTest gadgetTest)
+      {
+        foreach (var gadget in TestCollection) {
+          if (gadget.Id.Equals (gadgetTest.Id)) {
+            gadget.UpdateFrom (gadgetTest);
+            break;
+          }
+        }
+      }
       #endregion
     };
     #endregion
@@ -404,6 +440,22 @@ namespace Shared.Gadget.Models.Component
       get
       {
         return (Content.HasContent);
+      }
+    }
+
+    public bool HasRegistration
+    {
+      get
+      {
+        return (Content.HasRegistration);
+      }
+    }
+
+    public Guid RegistrationId
+    {
+      get
+      {
+        return (Content.RegistrationId);
       }
     }
 

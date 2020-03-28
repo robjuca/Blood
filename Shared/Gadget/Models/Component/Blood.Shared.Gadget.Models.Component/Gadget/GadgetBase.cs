@@ -266,6 +266,26 @@ namespace Shared.Gadget.Models.Component
       }
     }
 
+    public void ChangeFrom (TGadgetBase gadget)
+    {
+      if (gadget.NotNull ()) {
+        // preserve Value property
+        GadgetInfo = gadget.GadgetInfo;
+        GadgetName = gadget.GadgetName;
+        Material = gadget.Material;
+        Description = gadget.Description;
+        ExternalLink = gadget.ExternalLink;
+        Enabled = gadget.Enabled;
+        Locked = gadget.Locked;
+        Busy = gadget.Busy;
+        IsChecked = gadget.IsChecked;
+        SetImage (gadget.GetImage ());
+        Date = gadget.Date;
+        MaterialId = gadget.MaterialId;
+        Reference = gadget.Reference;
+      }
+    }
+
     public byte [] GetImage ()
     {
       var image = new byte [m_Image.Count];

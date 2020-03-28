@@ -10,6 +10,8 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
+using rr.Library.Helper;
+
 using Server.Models.Infrastructure;
 using Server.Models.Action;
 
@@ -46,12 +48,14 @@ namespace Shared.Gadget.Models.Action
               gadget.Locked = modelAction.ComponentStatusModel.Locked;
 
               if (modelAction.ExtensionContentModel.Id.Equals (gadget.Id)) {
-                string [] contentIdString = Regex.Split (modelAction.ExtensionContentModel.Contents, ";");
+                string [] contentClientString = Regex.Split (modelAction.ExtensionContentModel.Contents, ";");
 
-                foreach (var idString in contentIdString) {
-                  if (string.IsNullOrEmpty (idString).IsFalse ()) {
-                    var id = Guid.Parse (idString);
-                    gadget.AddContentId (id, TCategoryType.ToValue (TCategory.Test));
+                // Jason serializer
+                foreach (var jasonClientString in contentClientString) {
+                  if (string.IsNullOrEmpty (jasonClientString).IsFalse ()) {
+                    var jason = new TJasonSerializer<TContentClient> (new TContentClient ());
+                    jason.ToClient (jasonClientString);
+                    jason.Client.Request (gadget);
                   }
                 }
               }
@@ -140,6 +144,7 @@ namespace Shared.Gadget.Models.Action
 
             entityAction.ModelAction.ComponentInfoModel.Id = gadget.Id;
             entityAction.ModelAction.ComponentInfoModel.Name = gadget.GadgetInfo;
+            entityAction.ModelAction.ComponentInfoModel.Enabled = gadget.Enabled;
 
             entityAction.ModelAction.ComponentStatusModel.Id = gadget.Id;
             entityAction.ModelAction.ComponentStatusModel.Busy = gadget.Busy;
@@ -149,21 +154,28 @@ namespace Shared.Gadget.Models.Action
             entityAction.ModelAction.ExtensionTextModel.Text = gadget.GadgetName;
             entityAction.ModelAction.ExtensionTextModel.Date = gadget.Date;
             entityAction.ModelAction.ExtensionTextModel.Description = gadget.Description;
-            entityAction.ModelAction.ComponentInfoModel.Enabled = gadget.Enabled;
 
-            var contentString = new StringBuilder ();
+            // Jason serializer
+            var clientList = new Collection<TContentClient> ();
 
             var contentRegistration = GadgetRegistration.CreateDefault;
             gadget.RequestContent (contentRegistration);
-            contentString.Append (contentRegistration.Id);
-            contentString.Append (";");
+            clientList.Add (new TContentClient (contentRegistration));
 
             var contents = new Collection<GadgetTest> ();
             gadget.RequestContent (contents);
 
             foreach (var item in contents) {
-              contentString.Append (item.Id);
-              contentString.Append (";");
+              clientList.Add (new TContentClient (item));
+            }
+
+            StringBuilder contentString = new StringBuilder ();
+
+            foreach (var item in clientList) {
+              var jason = new TJasonSerializer<TContentClient> (item);
+              jason.ToJsonString ();
+              var str = jason.JasonString + ";";
+              contentString.Append (str);
             }
 
             entityAction.ModelAction.ExtensionContentModel.Id = gadget.Id;
@@ -258,6 +270,182 @@ namespace Shared.Gadget.Models.Action
         }
       }
     }
+    #endregion
+  };
+  //---------------------------//
+
+  //----- TContentClient
+  public class TContentClient
+  {
+    #region Property
+    public Guid Id
+    {
+      get;
+      set;
+    }
+
+    public string Name
+    {
+      get;
+      set;
+    }
+
+    public string Info
+    {
+      get;
+      set;
+    }
+
+    public string Value
+    {
+      get;
+      set;
+    }
+
+    public int Category
+    {
+      get;
+      set;
+    }
+
+    public Collection<TContentClient> ClientList
+    {
+      get; 
+    }
+    #endregion
+
+    #region Constructor
+    public TContentClient (GadgetRegistration gadget)
+      : this ()
+    {
+      if (gadget.NotNull ()) {
+        Id = gadget.Id;
+        Category = TCategoryType.ToValue (TCategory.Registration);
+        Name = gadget.GadgetName;
+        Info = gadget.GadgetInfo;
+      }
+    }
+
+    public TContentClient (GadgetTest gadget)
+      : this ()
+    {
+      if (gadget.NotNull ()) {
+        Id = gadget.Id;
+        Category = TCategoryType.ToValue (TCategory.Test);
+        Name = gadget.GadgetName;
+        Info = gadget.GadgetInfo;
+
+        if (gadget.HasContent) {
+          // Target
+          if (gadget.IsContentTarget) {
+            var contents = new Collection<GadgetTarget> ();
+            gadget.RequestContent (contents);
+
+            foreach (var item in contents) {
+              ClientList.Add (new TContentClient (item));
+            }
+          }
+
+          // Test
+          if (gadget.IsContentTest) {
+            var contents = new Collection<GadgetTest> ();
+            gadget.RequestContent (contents);
+
+            foreach (var item in contents) {
+              ClientList.Add (new TContentClient (item));
+            }
+          }
+        }
+      }
+    }
+
+    public TContentClient (GadgetTarget gadget)
+      : this ()
+    {
+      if (gadget.NotNull ()) {
+        Id = gadget.Id;
+        Category = TCategoryType.ToValue (TCategory.Target);
+        Name = gadget.GadgetName;
+        Info = gadget.GadgetInfo;
+        Value = gadget.Value;
+      }
+    }
+
+    public TContentClient ()
+    {
+      Id = Guid.Empty;
+      Category = TCategoryType.ToValue (TCategory.None);
+      Name = string.Empty;
+      Info = string.Empty;
+      Value = string.Empty;
+      ClientList = new Collection<TContentClient> ();
+    }
+    #endregion
+
+    #region Members
+    public void RequestData (TGadgetBase gadget)
+    {
+      if (gadget.NotNull ()) {
+        gadget.Id = Id;
+        gadget.GadgetInfo = Info;
+        gadget.GadgetName = Name;
+        gadget.Value = Value;
+      }
+    }
+
+    public void Request (GadgetResult gadget)
+    {
+      if (gadget.NotNull ()) {
+        var category = TCategoryType.FromValue (Category);
+
+        // Registration
+        if (category.Equals (TCategory.Registration)) {
+          var gadgetRegistration = GadgetRegistration.CreateDefault;
+          RequestData (gadgetRegistration);
+
+          gadget.AddContent (gadgetRegistration);
+        }
+
+        // Test
+        if (category.Equals (TCategory.Test)) {
+          var gadgetTest = GadgetTest.CreateDefault;
+          Request (this, gadgetTest);
+ 
+          gadget.AddContent (gadgetTest);
+        }
+      }
+    }
+    #endregion
+
+    #region Support
+    static void Request (TContentClient rootClient, GadgetTest rootGadget)
+    {
+      if (rootClient.NotNull () && rootGadget.NotNull ()) {
+        rootClient.RequestData (rootGadget);
+
+        if (rootClient.ClientList.Any ()) {
+          foreach (var client in rootClient.ClientList) {
+            var category = TCategoryType.FromValue (client.Category);
+
+            // Target
+            if (category.Equals (TCategory.Target)) {
+              var gadgetTarget = GadgetTarget.CreateDefault;
+              client.RequestData (gadgetTarget);
+
+              rootGadget.AddContent (gadgetTarget);
+            }
+
+            // Test
+            if (category.Equals (TCategory.Test)) {
+              var gadgetTest = GadgetTest.CreateDefault;
+              Request (client, gadgetTest);
+
+              rootGadget.AddContent (gadgetTest);
+            }
+          }
+        }
+      }
+    } 
     #endregion
   };
   //---------------------------//

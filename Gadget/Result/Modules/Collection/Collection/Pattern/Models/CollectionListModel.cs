@@ -128,6 +128,10 @@ namespace Gadget.Collection.Pattern.Models
         var idList = new Collection<Guid> ();
         gadget.RequestContent (idList);
 
+        if (gadget.HasRegistration) {
+          idList.Add (gadget.RegistrationId);
+        }
+
         idcontents.Add (gadget.Id, idList);
       }
     }

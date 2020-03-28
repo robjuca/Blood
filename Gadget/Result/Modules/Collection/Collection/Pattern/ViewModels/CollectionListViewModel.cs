@@ -74,7 +74,7 @@ namespace Gadget.Collection.Pattern.ViewModels
               if (message.Support.Argument.Types.IsOperation (TOperation.Select, TExtension.ById)) {
                 if (message.Result.IsValid) {
                   var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
-                  TDispatcher.BeginInvoke (ResponseModelDispatcher, action);
+                  TDispatcher.BeginInvoke (ResponseSelectByIdDispatcher, action);
                 }
               }
 
@@ -83,7 +83,7 @@ namespace Gadget.Collection.Pattern.ViewModels
                 if (message.Result.IsValid) {
                   if (message.Support.Argument.Types.IsOperationCategory (TCategory.Dummy)) {
                     var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
-                    TDispatcher.BeginInvoke (SelectManyDispatcher, action);
+                    TDispatcher.BeginInvoke (ResponseSelectManyDispatcher, action);
                   }
                 }
               }
@@ -179,7 +179,7 @@ namespace Gadget.Collection.Pattern.ViewModels
         Model.SelectResult (gadgets, action.IdDictionary);
 
         // update
-        // Test - Select - Many
+        // Dummy - Select - Many
         action.Operation.Select (TCategory.Dummy, TOperation.Select, TExtension.Many);
         
         var message = new TCollectionMessageInternal (TInternalMessageAction.Request, TChild.List, TypeInfo);
@@ -191,7 +191,7 @@ namespace Gadget.Collection.Pattern.ViewModels
       TDispatcher.Invoke (RefreshAllDispatcher);
     }
 
-    void ResponseModelDispatcher (TEntityAction action)
+    void ResponseSelectByIdDispatcher (TEntityAction action)
     {
       // to Sibling (Select)
       var message = new TCollectionSiblingMessageInternal (TInternalMessageAction.Select, TChild.List, TypeInfo);
@@ -200,7 +200,7 @@ namespace Gadget.Collection.Pattern.ViewModels
       DelegateCommand.PublishInternalMessage.Execute (message);
     }
 
-    void SelectManyDispatcher (TEntityAction action)
+    void ResponseSelectManyDispatcher (TEntityAction action)
     {
       foreach (var itemIdResult in action.CollectionAction.EntityDictionary) {
         var gadgetCollection = new Dictionary<Guid, Collection<TActionComponent>> ();

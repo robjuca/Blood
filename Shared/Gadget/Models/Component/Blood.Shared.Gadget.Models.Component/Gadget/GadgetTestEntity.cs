@@ -390,6 +390,49 @@ namespace Shared.Gadget.Models.Component
         return (res);
       }
 
+      public bool UpdateFrom (GadgetTest gadgetContent)
+      {
+        bool res = false;
+
+        if (gadgetContent.NotNull ()) {
+          if (gadgetContent.ValidateId) {
+            if (Contains (gadgetContent.Id)) {
+              if (RequestTest (gadgetContent.Id) is GadgetTest gadgetItem) {
+                gadgetItem.ChangeFrom (gadgetContent);
+
+                // Target
+                if (gadgetItem.IsContentTarget) {
+                  var list = new Collection<GadgetTarget> ();
+                  gadgetItem.RequestContent (list);
+
+                  foreach (var item in list) {
+                    if (gadgetContent.RequestContentTarget (item.Id) is GadgetTarget gadget) {
+                      item.ChangeFrom (gadget);
+                      res = true;
+                    }
+                  }
+                }
+
+                // Test
+                if (gadgetItem.IsContentTest) {
+                  var list = new Collection<GadgetTest> ();
+                  gadgetItem.RequestContent (list);
+
+                  foreach (var item in list) {
+                    if (gadgetContent.RequestContentTest (item.Id) is GadgetTest gadget) {
+                      item.UpdateFrom (gadget);
+                      res = true;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        return (res);
+      }
+
       public void CopyFrom (TContent alias)
       {
         if (alias.NotNull ()) {
@@ -798,6 +841,11 @@ namespace Shared.Gadget.Models.Component
     public bool UpdateValue (GadgetTest gadget)
     {
       return (Content.UpdateValue (gadget));
+    }
+
+    public bool UpdateFrom (GadgetTest gadget)
+    {
+      return (Content.UpdateFrom (gadget));
     }
 
     public GadgetTest Clone ()
