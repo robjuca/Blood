@@ -156,6 +156,14 @@ namespace Shared.Gadget.Models.Component
       }
     }
 
+    public bool HasMaterial
+    {
+      get
+      {
+        return (MaterialId.IsEmpty ().IsFalse ());
+      }
+    }
+
     public DateTime Date
     {
       get;
@@ -215,48 +223,6 @@ namespace Shared.Gadget.Models.Component
     public bool Contains (Guid id)
     {
       return (Id.Equals (id));
-    }
-    #endregion
-
-    #region Protected
-    protected void CopyFrom (TGadgetBase alias)
-    {
-      if (alias.NotNull ()) {
-        Id = alias.Id;
-        GadgetInfo = alias.GadgetInfo;
-        GadgetName = alias.GadgetName;
-        Material = alias.Material;
-        Description = alias.Description;
-        ExternalLink = alias.ExternalLink;
-        Enabled = alias.Enabled;
-        Locked = alias.Locked;
-        Busy = alias.Busy;
-        IsChecked = alias.IsChecked;
-        SetImage (alias.GetImage ());
-        Date = alias.Date;
-        MaterialId = alias.MaterialId;
-        Reference = alias.Reference;
-        Value = alias.Value;
-      }
-    }
-
-    protected void Change (TGadgetBase alias)
-    {
-      if (alias.NotNull ()) {
-        GadgetInfo = alias.GadgetInfo;
-        GadgetName = alias.GadgetName;
-        Material = alias.Material;
-        Description = alias.Description;
-        ExternalLink = alias.ExternalLink;
-        Enabled = alias.Enabled;
-        Locked = alias.Locked;
-        Busy = alias.Busy;
-        IsChecked = alias.IsChecked;
-        SetImage (alias.GetImage ());
-        Date = alias.Date;
-        Reference = alias.Reference;
-        Value = alias.Value;
-      }
     }
 
     public void ChangeValue (string value)
@@ -322,6 +288,59 @@ namespace Shared.Gadget.Models.Component
     {
       if (date.NotNull ()) {
         Date = date;
+      }
+    }
+
+    public void Select (GadgetMaterial gadget)
+    {
+      if (gadget.NotNull ()) {
+        if (MaterialId.IsEmpty ()) {
+          MaterialId = gadget.Id;
+          Material = gadget.GadgetName;
+          SetImage (gadget.GetImage ());
+        }
+      }
+    }
+    #endregion
+
+    #region Protected
+    protected void CopyFrom (TGadgetBase alias)
+    {
+      if (alias.NotNull ()) {
+        Id = alias.Id;
+        GadgetInfo = alias.GadgetInfo;
+        GadgetName = alias.GadgetName;
+        Material = alias.Material;
+        Description = alias.Description;
+        ExternalLink = alias.ExternalLink;
+        Enabled = alias.Enabled;
+        Locked = alias.Locked;
+        Busy = alias.Busy;
+        IsChecked = alias.IsChecked;
+        SetImage (alias.GetImage ());
+        Date = alias.Date;
+        MaterialId = alias.MaterialId;
+        Reference = alias.Reference;
+        Value = alias.Value;
+      }
+    }
+
+    protected void Change (TGadgetBase alias)
+    {
+      if (alias.NotNull ()) {
+        GadgetInfo = alias.GadgetInfo;
+        GadgetName = alias.GadgetName;
+        Material = alias.Material;
+        Description = alias.Description;
+        ExternalLink = alias.ExternalLink;
+        Enabled = alias.Enabled;
+        Locked = alias.Locked;
+        Busy = alias.Busy;
+        IsChecked = alias.IsChecked;
+        SetImage (alias.GetImage ());
+        Date = alias.Date;
+        Reference = alias.Reference;
+        Value = alias.Value;
       }
     }
     #endregion

@@ -6,6 +6,7 @@
 //----- Include
 using System;
 using System.ComponentModel.Composition;
+using System.Collections.Generic;
 
 using rr.Library.Infrastructure;
 using rr.Library.Helper;
@@ -17,6 +18,7 @@ using Shared.Resources;
 using Shared.Types;
 using Shared.ViewModel;
 using Shared.Gadget.Models.Action;
+using Shared.Gadget.Models.Component;
 using Shared.Gadget.Result;
 
 using Gadget.Collection.Presentation;
@@ -64,7 +66,11 @@ namespace Gadget.Collection.Pattern.ViewModels
             // Select
             if (message.IsAction (TInternalMessageAction.Select)) {
               if (message.Support.Argument.Args.Param1 is TActionComponent component) {
-                TDispatcher.BeginInvoke (SelectDispatcher, component);
+                if (message.Support.Argument.Args.Param2 is Dictionary<Guid, GadgetMaterial> materialDictionary) {
+                  var tuple = Tuple.Create (component, materialDictionary);
+
+                  TDispatcher.BeginInvoke (SelectDispatcher, tuple);
+                }
               }
             }
 
@@ -96,9 +102,11 @@ namespace Gadget.Collection.Pattern.ViewModels
     #endregion
 
     #region Dispatcher
-    void SelectDispatcher (TActionComponent component)
+    void SelectDispatcher (Tuple<TActionComponent, Dictionary<Guid, GadgetMaterial>> tuple)
     {
-      Model.Select (component);
+      if (tuple.NotNull ()) {
+        Model.Select (tuple.Item1, tuple.Item2);
+      }
 
       if (FrameworkElementView.FindName ("DisplayControl") is TComponentDisplayControl control) {
         control.RefreshDesign ();

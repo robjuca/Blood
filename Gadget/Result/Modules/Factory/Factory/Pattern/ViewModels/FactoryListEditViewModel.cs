@@ -75,7 +75,7 @@ namespace Gadget.Factory.Pattern.ViewModels
                   // Gadget Test
                   if (message.Support.Argument.Types.IsOperationCategory (TCategory.Test)) {
                     var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
-                    TDispatcher.BeginInvoke (SelectManyDispatcher, action);
+                    TDispatcher.BeginInvoke (ResponseSelectManyDispatcher, action);
                   }
                 }
               }
@@ -219,7 +219,7 @@ namespace Gadget.Factory.Pattern.ViewModels
       }
     }
 
-    void SelectManyDispatcher (TEntityAction action)
+    void ResponseSelectManyDispatcher (TEntityAction action)
     {
       // Test
       if (action.CategoryType.IsCategory (TCategory.Test)) {

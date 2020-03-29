@@ -47,7 +47,7 @@
                         <Image Width="16"
                                Height="16"
                                ToolTip="{Binding Models.GadgetTestModel.Material}"
-                               Source="{Binding Models.GadgetMaterialModel.Image, Converter={StaticResource CollectionToBitmapImageConverter}}" />
+                               Source="{Binding Models.GadgetMaterialModel.GadgetImage, Converter={StaticResource CollectionToBitmapImageConverter}}" />
 
                         <!--test icon-->
                         <ContentControl  Visibility="{Binding Models.GadgetTestModel.ContentTestVisibility}"

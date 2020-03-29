@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
+using Server.Models.Infrastructure;
+
 using Shared.Gadget.Models.Action;
 using Shared.Gadget.Models.Component;
 //---------------------------//
@@ -105,7 +107,17 @@ namespace Gadget.Factory.Pattern.Models
       gadgets.ThrowNull ();
 
       foreach (var component in gadgets) {
+        if (component.IsCategory (TCategory.Test)) {
+          var gadgetMaterial = component.Models.GadgetMaterialModel;
+          var gadgetTest = component.Models.GadgetTestModel;
 
+          var componentItem = RequestTest (gadgetTest.Id);
+
+          if (componentItem.IsCategory (TCategory.Test)) {
+            componentItem.Models.GadgetTestModel.Select (gadgetMaterial);
+            componentItem.Models.GadgetTestModel.UpdateFrom (gadgetTest);
+          }
+        }
       }
     }
 
@@ -267,6 +279,19 @@ namespace Gadget.Factory.Pattern.Models
       foreach (var component in TestItemsSource) {
         component.Models.GadgetTestModel.IsChecked = false;
       }
+    }
+
+    TActionComponent RequestTest (Guid id)
+    {
+      foreach (var item in TestItemsSource) {
+        if (item.IsCategory (TCategory.Test)) {
+          if (item.Models.GadgetTestModel.Contains (id)) {
+            return (item);
+          }
+        }
+      }
+
+      return (TActionComponent.CreateDefault);
     }
     #endregion
   };

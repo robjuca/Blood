@@ -247,9 +247,12 @@ namespace Gadget.Collection.Pattern.ViewModels
         // to Sibling (Select)
         var component = TActionComponent.Create (TCategory.Result);
         component.Models.GadgetResultModel.CopyFrom (gadget);
+        
+        var materialDictionary = new Dictionary<Guid, GadgetMaterial> ();
+        Model.RequestMaterial (materialDictionary);
 
         var message = new TCollectionSiblingMessageInternal (TInternalMessageAction.Select, TChild.List, TypeInfo);
-        message.Support.Argument.Args.Select (component);
+        message.Support.Argument.Args.Select (component, materialDictionary);
 
         DelegateCommand.PublishInternalMessage.Execute (message);
       }

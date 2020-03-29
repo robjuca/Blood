@@ -84,7 +84,8 @@ namespace Gadget.Collection.Pattern.Models
       RegistrationSelectedIndex = -1;
       ResultSelectedIndex = -1;
 
-      FullDictionary = new Dictionary<Guid, GadgetResult> ();
+      GadgetResultDictionary = new Dictionary<Guid, GadgetResult> ();
+      GadgetMaterialDictionary = new Dictionary<Guid, GadgetMaterial> ();
     }
     #endregion
 
@@ -113,16 +114,16 @@ namespace Gadget.Collection.Pattern.Models
       gadgets.ThrowNull ();
       idcontents.ThrowNull ();
 
-      FullDictionary.Clear ();
+      GadgetResultDictionary.Clear ();
       idcontents.Clear ();
 
       foreach (var component in gadgets) {
         var gadget = component.Models.GadgetResultModel;
 
-        FullDictionary.Add (gadget.Id, gadget);
+        GadgetResultDictionary.Add (gadget.Id, gadget);
       }
 
-      foreach (var item in FullDictionary) {
+      foreach (var item in GadgetResultDictionary) {
         var gadget = item.Value;
 
         var idList = new Collection<Guid> ();
@@ -136,41 +137,13 @@ namespace Gadget.Collection.Pattern.Models
       }
     }
 
-    internal void SelectMany (Collection<TActionComponent> gadgets)
-    {
-      gadgets.ThrowNull ();
-
-      var gadgetRegistrationList = new Collection<GadgetRegistration> ();
-      var gadgetTestList = new Collection<GadgetTest> ();
-
-      foreach (var component in gadgets) {
-        if (component.IsCategory (TCategory.Registration)) {
-          gadgetRegistrationList.Add (component.Models.GadgetRegistrationModel);
-        }
-
-        if (component.IsCategory (TCategory.Test)) {
-          gadgetTestList.Add (component.Models.GadgetTestModel);
-        }
-      }
-
-      foreach (var item in FullDictionary) {
-        var gadget = item.Value;
-
-        foreach (var gadgetRegistration in gadgetRegistrationList) {
-          gadget.UpdateContent (gadgetRegistration);
-        }
-
-        gadget.UpdateContent (gadgetTestList);
-      }
-
-      RegistrationChanged (RegistrationCurrent);
-    }
-
     internal void SelectMany (Guid id, Dictionary<Guid, Collection<TActionComponent>> gadgetDictionary)
     {
       if (id.NotEmpty() && gadgetDictionary.NotNull ()) {
-        if (FullDictionary.ContainsKey (id)) {
-          var gadgetResult = FullDictionary [id];
+        GadgetMaterialDictionary.Clear ();
+
+        if (GadgetResultDictionary.ContainsKey (id)) {
+          var gadgetResult = GadgetResultDictionary [id];
 
           var gadgetRegistrationList = new Collection<GadgetRegistration> ();
           var gadgetTestList = new Collection<GadgetTest> ();
@@ -185,6 +158,12 @@ namespace Gadget.Collection.Pattern.Models
               }
 
               if (component.IsCategory (TCategory.Test)) {
+                if (GadgetMaterialDictionary.ContainsKey (component.Models.GadgetMaterialModel.Id).IsFalse ()) {
+                  GadgetMaterialDictionary.Add (component.Models.GadgetMaterialModel.Id, component.Models.GadgetMaterialModel);
+                }
+
+                component.Models.GadgetTestModel.Select (component.Models.GadgetMaterialModel); // update Material
+
                 gadgetTestList.Add (component.Models.GadgetTestModel);
               }
             }
@@ -201,12 +180,23 @@ namespace Gadget.Collection.Pattern.Models
       }
     }
 
+    internal void RequestMaterial (Dictionary<Guid, GadgetMaterial> materialDictionary)
+    {
+      if (materialDictionary.NotNull ()) {
+        materialDictionary.Clear ();
+
+        foreach (var item in GadgetMaterialDictionary) {
+          materialDictionary.Add (item.Key, item.Value);
+        }
+      }
+    }
+
     internal void RegistrationChanged (GadgetRegistration gadget)
     {
       if (gadget.NotNull ()) {
         ItemsSource.Clear ();
 
-        foreach (var item in FullDictionary) {
+        foreach (var item in GadgetResultDictionary) {
           var gadgetResult = item.Value;
 
           if (gadgetResult.IsRegistrationContent (gadget.Id)) {
@@ -222,7 +212,12 @@ namespace Gadget.Collection.Pattern.Models
     #endregion
 
     #region Property
-    Dictionary<Guid, GadgetResult> FullDictionary
+    Dictionary<Guid, GadgetResult> GadgetResultDictionary
+    {
+      get;
+    }
+
+    Dictionary<Guid, GadgetMaterial> GadgetMaterialDictionary
     {
       get;
     }

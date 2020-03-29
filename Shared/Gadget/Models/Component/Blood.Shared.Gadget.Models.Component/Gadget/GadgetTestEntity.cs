@@ -396,33 +396,51 @@ namespace Shared.Gadget.Models.Component
 
         if (gadgetContent.NotNull ()) {
           if (gadgetContent.ValidateId) {
-            if (Contains (gadgetContent.Id)) {
-              if (RequestTest (gadgetContent.Id) is GadgetTest gadgetItem) {
-                gadgetItem.ChangeFrom (gadgetContent);
+            // Test
+            if (IsCategoryTest && gadgetContent.IsContentTest) {
+              if (Contains (gadgetContent.Id)) {
+                if (RequestTest (gadgetContent.Id) is GadgetTest gadgetItem) {
+                  gadgetItem.ChangeFrom (gadgetContent);
 
-                // Target
-                if (gadgetItem.IsContentTarget) {
-                  var list = new Collection<GadgetTarget> ();
-                  gadgetItem.RequestContent (list);
+                  // Target
+                  if (gadgetItem.IsContentTarget) {
+                    var list = new Collection<GadgetTarget> ();
+                    gadgetItem.RequestContent (list);
 
-                  foreach (var item in list) {
-                    if (gadgetContent.RequestContentTarget (item.Id) is GadgetTarget gadget) {
-                      item.ChangeFrom (gadget);
-                      res = true;
+                    foreach (var item in list) {
+                      if (gadgetContent.RequestContentTarget (item.Id) is GadgetTarget gadget) {
+                        item.ChangeFrom (gadget);
+                        res = true;
+                      }
+                    }
+                  }
+
+                  // Test
+                  if (gadgetItem.IsContentTest) {
+                    var list = new Collection<GadgetTest> ();
+                    gadgetItem.RequestContent (list);
+
+                    foreach (var item in list) {
+                      if (gadgetContent.RequestContentTest (item.Id) is GadgetTest gadget) {
+                        item.UpdateFrom (gadget);
+                        res = true;
+                      }
                     }
                   }
                 }
+              }
+            }
 
-                // Test
-                if (gadgetItem.IsContentTest) {
-                  var list = new Collection<GadgetTest> ();
-                  gadgetItem.RequestContent (list);
+            // Target
+            if (IsCategoryTarget && gadgetContent.IsContentTarget) {
+              if (gadgetContent.HasContent) {
+                var gadgetTargetList = new Collection<GadgetTarget> ();
+                gadgetContent.RequestContent (gadgetTargetList);
 
-                  foreach (var item in list) {
-                    if (gadgetContent.RequestContentTest (item.Id) is GadgetTest gadget) {
-                      item.UpdateFrom (gadget);
-                      res = true;
-                    }
+                foreach (var gadgetTarget in gadgetTargetList) {
+                  if (RequestTarget (gadgetTarget.Id) is GadgetTarget gadgetItem) {
+                    gadgetItem.ChangeFrom (gadgetTarget);
+                    res = true;
                   }
                 }
               }
@@ -845,6 +863,20 @@ namespace Shared.Gadget.Models.Component
 
     public bool UpdateFrom (GadgetTest gadget)
     {
+      if (gadget.NotNull ()) {
+        if (Contains (gadget.Id)) {
+          if (string.IsNullOrEmpty (Description)) {
+            Description = gadget.Description;
+          }
+
+          if (HasMaterial.IsFalse ()) {
+            MaterialId = gadget.MaterialId;
+            Material = gadget.Material;
+            SetImage (gadget.GetImage ());
+          }
+        }
+      }
+      
       return (Content.UpdateFrom (gadget));
     }
 

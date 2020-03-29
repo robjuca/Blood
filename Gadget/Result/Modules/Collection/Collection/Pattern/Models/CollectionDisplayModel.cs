@@ -5,6 +5,7 @@
 
 //----- Include
 using System;
+using System.Collections.Generic;
 using System.Windows;
 
 using Server.Models.Infrastructure;
@@ -89,14 +90,15 @@ namespace Gadget.Collection.Pattern.Models
     #endregion
 
     #region Members
-    internal void Select (TActionComponent component)
+    internal void Select (TActionComponent component, Dictionary<Guid, GadgetMaterial> materialDictionary)
     {
       component.ThrowNull ();
+      materialDictionary.ThrowNull ();
 
       if (component.IsCategory (TCategory.Result)) {
         Current.CopyFrom (component.Models.GadgetResultModel);
 
-        ComponentControlModel.Select (component);
+        ComponentControlModel.Select (component, materialDictionary);
 
         BusyVisibility = Current.BusyVisibility;
       }

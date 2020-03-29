@@ -143,7 +143,7 @@ namespace Shared.Gadget.Models.Action
                   }
 
                   // update image
-                  component.Models.GadgetTestModel.SetImage (component.Models.GadgetMaterialModel.GetImage ());
+                  component.Models.GadgetTestModel.Select (component.Models.GadgetMaterialModel);
                 }
               }
             }
