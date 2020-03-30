@@ -147,7 +147,7 @@ namespace Gadget.Factory.Pattern.ViewModels
     void RequestDataDispatcher ()
     {
       // to parent
-      // Collection - Full 
+      // Target - Collection - Full 
       var action = TEntityAction.Create (
         TCategory.Target,
         TOperation.Collection,

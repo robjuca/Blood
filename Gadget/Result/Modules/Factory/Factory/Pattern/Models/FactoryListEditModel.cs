@@ -29,6 +29,8 @@ namespace Gadget.Factory.Pattern.Models
       get;
     }
 
+    
+
     public GadgetRegistration RegistrationCurrent
     {
       get;
@@ -72,14 +74,26 @@ namespace Gadget.Factory.Pattern.Models
     {
       TestItemsSource = new ObservableCollection<TActionComponent> ();
       RegistrationItemsSource = new ObservableCollection<GadgetRegistration> ();
+      MaterialCollection = new Collection<GadgetMaterial> ();
 
       RegistrationCurrent = GadgetRegistration.CreateDefault;
-
+      
       m_TestCheckedItems = new Collection<GadgetTest> ();
     }
     #endregion
 
     #region Members
+    internal void SelectMaterial (Collection<TActionComponent> gadgets)
+    {
+      gadgets.ThrowNull ();
+
+      MaterialCollection.Clear ();
+
+      foreach (var component in gadgets) {
+        MaterialCollection.Add (component.Models.GadgetMaterialModel);
+      }
+    }
+
     internal void SelectRegistration (Collection<TActionComponent> gadgets)
     {
       gadgets.ThrowNull ();
@@ -98,26 +112,8 @@ namespace Gadget.Factory.Pattern.Models
       TestItemsSource.Clear ();
 
       foreach (var component in gadgets) {
+        UpdateMaterial (component);
         TestItemsSource.Add (component);
-      }
-    }
-
-    internal void SelectTestMany (Collection<TActionComponent> gadgets)
-    {
-      gadgets.ThrowNull ();
-
-      foreach (var component in gadgets) {
-        if (component.IsCategory (TCategory.Test)) {
-          var gadgetMaterial = component.Models.GadgetMaterialModel;
-          var gadgetTest = component.Models.GadgetTestModel;
-
-          var componentItem = RequestTest (gadgetTest.Id);
-
-          if (componentItem.IsCategory (TCategory.Test)) {
-            componentItem.Models.GadgetTestModel.Select (gadgetMaterial);
-            componentItem.Models.GadgetTestModel.UpdateFrom (gadgetTest);
-          }
-        }
       }
     }
 
@@ -228,6 +224,13 @@ namespace Gadget.Factory.Pattern.Models
     }
     #endregion
 
+    #region Property
+    Collection<GadgetMaterial> MaterialCollection
+    {
+      get;
+    } 
+    #endregion
+
     #region Fields
     readonly Collection<GadgetTest> m_TestCheckedItems;
     #endregion
@@ -292,6 +295,18 @@ namespace Gadget.Factory.Pattern.Models
       }
 
       return (TActionComponent.CreateDefault);
+    }
+
+    void UpdateMaterial (TActionComponent component)
+    {
+      if (component.NotNull ()) {
+        foreach (var gadgetMaterial in MaterialCollection) {
+          if (gadgetMaterial.GadgetName.Equals (component.Models.GadgetTestModel.Material, StringComparison.InvariantCulture)) {
+            component.Models.GadgetTestModel.Select (gadgetMaterial);
+            component.Models.GadgetMaterialModel.CopyFrom (gadgetMaterial);
+          }
+        }
+      }
     }
     #endregion
   };

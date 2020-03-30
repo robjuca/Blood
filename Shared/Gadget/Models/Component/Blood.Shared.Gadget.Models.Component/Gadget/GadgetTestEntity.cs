@@ -215,7 +215,14 @@ namespace Shared.Gadget.Models.Component
 
                 if (gadgetTest.HasContentTarget) {
                   var namesCollection = new Collection<string> ();
-                  gadgetTest.RequestContentNamesFull (namesCollection);
+
+                  if (full) {
+                    gadgetTest.RequestContentNamesFull (namesCollection);
+                  }
+
+                  else {
+                    gadgetTest.RequestContentNames (namesCollection);
+                  }
 
                   foreach (var itemName in namesCollection) {
                     collection.Add (separator + itemName);

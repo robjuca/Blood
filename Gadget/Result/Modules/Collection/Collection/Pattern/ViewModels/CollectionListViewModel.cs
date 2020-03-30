@@ -8,6 +8,7 @@ using System;
 using System.ComponentModel.Composition;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
+using System.Linq;
 
 using rr.Library.Infrastructure;
 using rr.Library.Helper;
@@ -136,7 +137,7 @@ namespace Gadget.Collection.Pattern.ViewModels
     void RequestDataDispatcher ()
     {
       // to parent
-      // Collection - Full (Result)
+      // Result - Collection - Full (Result)
       var action = TEntityAction.Create (
         TCategory.Result,
         TOperation.Collection,
@@ -149,7 +150,7 @@ namespace Gadget.Collection.Pattern.ViewModels
       DelegateCommand.PublishInternalMessage.Execute (message);
 
       // to parent
-      // Collection - Full (Registration)
+      // Registration - Collection - Full (Registration)
       action = TEntityAction.Create (
         TCategory.Registration,
         TOperation.Collection,
@@ -166,13 +167,13 @@ namespace Gadget.Collection.Pattern.ViewModels
     {
       var gadgets = new Collection<TActionComponent> ();
 
-      // Collection - Full (Registration)
+      // Registration - Collection - Full (Registration)
       if (action.CategoryType.IsCategory (TCategory.Registration)) {
         TActionConverter.Collection (TCategory.Registration, gadgets, action);
         Model.SelectRegistration (gadgets);
       }
 
-      // Collection - Full (Result )
+      // Result - Collection - Full (Result )
       if (action.CategoryType.IsCategory (TCategory.Result)) {
         TActionConverter.Collection (TCategory.Result, gadgets, action);
 
@@ -180,12 +181,14 @@ namespace Gadget.Collection.Pattern.ViewModels
 
         // update
         // Dummy - Select - Many
-        action.Operation.Select (TCategory.Dummy, TOperation.Select, TExtension.Many);
-        
-        var message = new TCollectionMessageInternal (TInternalMessageAction.Request, TChild.List, TypeInfo);
-        message.Support.Argument.Types.Select (action);
+        if (action.IdCollection.Any ()) {
+          action.Operation.Select (TCategory.Dummy, TOperation.Select, TExtension.Many);
 
-        DelegateCommand.PublishInternalMessage.Execute (message);
+          var message = new TCollectionMessageInternal (TInternalMessageAction.Request, TChild.List, TypeInfo);
+          message.Support.Argument.Types.Select (action);
+
+          DelegateCommand.PublishInternalMessage.Execute (message);
+        }
       }
 
       TDispatcher.Invoke (RefreshAllDispatcher);

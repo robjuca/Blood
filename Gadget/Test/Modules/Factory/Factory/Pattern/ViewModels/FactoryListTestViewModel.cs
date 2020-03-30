@@ -7,6 +7,7 @@
 using System;
 using System.ComponentModel.Composition;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 using rr.Library.Infrastructure;
 using rr.Library.Helper;
@@ -60,6 +61,14 @@ namespace Gadget.Factory.Pattern.ViewModels
                     var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
                     TDispatcher.BeginInvoke (ResponseDataDispatcher, action);
                   }
+                }
+              }
+
+              // Select - Many
+              if (message.Support.Argument.Types.IsOperation (TOperation.Select, TExtension.Many)) {
+                if (message.Result.IsValid) {
+                  var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
+                  TDispatcher.BeginInvoke (ResponseSelectManyDispatcher, action);
                 }
               }
 
@@ -138,7 +147,7 @@ namespace Gadget.Factory.Pattern.ViewModels
     void RequestDataDispatcher ()
     {
       // to parent
-      // Collection - Full 
+      // Test - Collection - Full 
       var action = TEntityAction.Create (
         TCategory.Test,
         TOperation.Collection,
@@ -157,10 +166,51 @@ namespace Gadget.Factory.Pattern.ViewModels
         // DATA IN:
         // action.CollectionAction.ModelCollection (Test collection)
 
-        var gadgets = new Collection<TActionComponent> ();
-        TActionConverter.Collection (TCategory.Test, gadgets, entityAction);
+        if (entityAction.IdCollection.Any ()) {
+          // to parent
+          // Dummy - Select - Many
+          var action = TEntityAction.Create (
+            TCategory.Dummy,
+            TOperation.Select,
+            TExtension.Many
+          );
 
-        Model.Select (gadgets);  // Test collection
+          foreach (var item in entityAction.IdCollection) {
+            action.IdCollection.Add (item);
+          }
+
+          action.Param2 = entityAction; // preserve
+
+          var message = new TFactoryMessageInternal (TInternalMessageAction.Request, TChild.List, TypeInfo);
+          message.Support.Argument.Types.Select (action);
+
+          DelegateCommand.PublishInternalMessage.Execute (message);
+        }
+
+        else {
+          var gadgets = new Collection<TActionComponent> ();
+          TActionConverter.Collection (TCategory.Test, gadgets, entityAction);
+
+          Model.Select (gadgets);
+        }
+      }
+
+      TDispatcher.Invoke (RefreshAllDispatcher);
+    }
+
+    void ResponseSelectManyDispatcher (TEntityAction entityAction)
+    {
+      if (entityAction.NotNull ()) {
+        if (entityAction.Param2 is TEntityAction action) {
+          foreach (var item in entityAction.CollectionAction.EntityCollection) {
+            action.CollectionAction.EntityCollection.Add (item.Key, item.Value);
+          }
+
+          var gadgets = new Collection<TActionComponent> ();
+          TActionConverter.Collection (TCategory.Test, gadgets, action);
+
+          Model.Select (gadgets);
+        }
       }
 
       TDispatcher.Invoke (RefreshAllDispatcher);

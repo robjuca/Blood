@@ -131,7 +131,7 @@ namespace Gadget.Factory.Pattern.ViewModels
     void RequestDataDispatcher ()
     {
       // to parent
-      // Collection - Full (Material list - used to send RefreshModel)
+      // Material - Collection - Full (Material list - used to send RefreshModel)
       var entityAction = TEntityAction.Create (
         TCategory.Material,
         TOperation.Collection,
