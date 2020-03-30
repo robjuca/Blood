@@ -6,6 +6,7 @@
 //----- Include
 using System;
 using System.ComponentModel.Composition;
+using System.Collections.ObjectModel;
 
 using rr.Library.Infrastructure;
 using rr.Library.Helper;
@@ -150,9 +151,17 @@ namespace Gadget.Factory.Pattern.ViewModels
       DelegateCommand.PublishInternalMessage.Execute (message);
     }
 
-    void ResponseDataDispatcher (TEntityAction action)
+    void ResponseDataDispatcher (TEntityAction entityAction)
     {
-      Model.Select (action);  // Test collection
+      if (entityAction.NotNull ()) {
+        // DATA IN:
+        // action.CollectionAction.ModelCollection (Test collection)
+
+        var gadgets = new Collection<TActionComponent> ();
+        TActionConverter.Collection (TCategory.Test, gadgets, entityAction);
+
+        Model.Select (gadgets);  // Test collection
+      }
 
       TDispatcher.Invoke (RefreshAllDispatcher);
     }
@@ -173,7 +182,7 @@ namespace Gadget.Factory.Pattern.ViewModels
       entityAction.ThrowNull ();
 
       if (entityAction.Param2 is GadgetTest gadget) {
-        if (gadget.IsContentTarget) {
+        if (gadget.HasContentTarget) {
           var component = TActionComponent.Create (TCategory.Test);
           component.Models.GadgetTestModel.CopyFrom (gadget);
 

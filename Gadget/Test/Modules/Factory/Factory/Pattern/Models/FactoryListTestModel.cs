@@ -73,23 +73,17 @@ namespace Gadget.Factory.Pattern.Models
     #endregion
 
     #region Members
-    internal void Select (TEntityAction entityAction)
+    internal void Select (Collection<TActionComponent> gadgets)
     {
-      // DATA IN:
-      // action.CollectionAction.ModelCollection (Test collection)
+      if (gadgets.NotNull ()) {
+        Cleanup ();
 
-      entityAction.ThrowNull ();
+        foreach (var gadget in gadgets) {
+          GadgetFullCollection.Add (gadget.Models.GadgetTestModel);
+        }
 
-      Cleanup ();
-
-      var gadgets = new Collection<TActionComponent> ();
-      TActionConverter.Collection (TCategory.Test, gadgets, entityAction);
-
-      foreach (var gadget in gadgets) {
-        GadgetFullCollection.Add (gadget.Models.GadgetTestModel);
+        MaterialChanged ();
       }
-
-      MaterialChanged ();
     }
 
     internal void MaterialItemChanged (TActionComponent component)
@@ -338,7 +332,7 @@ namespace Gadget.Factory.Pattern.Models
           GadgetItemsSource.Remove (itemSource);
         }
 
-        if (m_CurrentEditGadget.IsContentTest) {
+        if (m_CurrentEditGadget.HasContentTest) {
           var contents = new Collection<GadgetTest> ();
           m_CurrentEditGadget.RequestContent (contents);
 
@@ -374,7 +368,7 @@ namespace Gadget.Factory.Pattern.Models
               if (gadgetTest.Enabled) {
                 if (gadgetTest.Busy.IsFalse ()) {
                   // only Target content
-                  if (gadgetTest.IsContentTarget) {
+                  if (gadgetTest.HasContentTarget) {
                     gadgetTest.Material = m_CurrentMaterialGadget.Material;
 
                     AddGadget (gadgetTest);

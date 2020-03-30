@@ -53,12 +53,12 @@ namespace Shared.Gadget.Models.Action
 
               foreach (var relation in entityAction.CollectionAction.ComponentRelationCollection) {
                 if (relation.ParentId.IsEmpty ()) {
-                  gadget.AddContentId (relation.ChildId, TCategoryType.FromValue (relation.ChildCategory));
+                  gadget.AddContentId (relation.ChildId);
                 }
 
                 else {
                   if (gadget.Contains (relation.ParentId)) {
-                    gadget.AddContentId (relation.ChildId, TCategoryType.FromValue (relation.ChildCategory));
+                    gadget.AddContentId (relation.ChildId);
                   }
                 }
               }
@@ -72,9 +72,37 @@ namespace Shared.Gadget.Models.Action
               .ToList ()
             ;
 
-            foreach (var model in list) {
+            foreach (var gadgetTest in list) {
+              // update Content
+              if (gadgetTest.HasContent) {
+                var idList = new Collection<Guid> ();
+                gadgetTest.RequestContentId (idList);
+
+                foreach (var id in idList) {
+                  if (entityAction.CollectionAction.EntityCollection.ContainsKey (id)) {
+                    var action = entityAction.CollectionAction.EntityCollection [id];
+
+                    // Target
+                    if (action.CategoryType.IsCategory (TCategory.Target)) {
+                      var componentTarget = TActionComponent.Create (TCategory.Target);
+                      TGadgetTargetConverter.Select (componentTarget, action);
+
+                      gadgetTest.AddContent (componentTarget.Models.GadgetTargetModel);
+                    }
+
+                    // Test
+                    if (action.CategoryType.IsCategory (TCategory.Test)) {
+                      var componentTest = TActionComponent.Create (TCategory.Test);
+                      Select (componentTest, action);
+
+                      gadgetTest.AddContent (componentTest.Models.GadgetTestModel);
+                    }
+                  }
+                }
+              }
+
               var component = TActionComponent.Create (TCategory.Test);
-              component.Models.GadgetTestModel.CopyFrom (model);
+              component.Models.GadgetTestModel.CopyFrom (gadgetTest);
 
               gadgets.Add (component);
             }
@@ -105,7 +133,7 @@ namespace Shared.Gadget.Models.Action
               // content list
               foreach (var item in entityAction.ComponentOperation.ParentIdCollection) {
                 foreach (var relation in item.Value) {
-                  component.Models.GadgetTestModel.AddContentId (relation.ChildId, TCategoryType.FromValue (relation.ChildCategory));
+                  component.Models.GadgetTestModel.AddContentId (relation.ChildId);
                 }
               }
 
@@ -169,7 +197,7 @@ namespace Shared.Gadget.Models.Action
                 gadget.RequestContentId (idCollection);
 
                 // target
-                if (gadget.IsContentTarget) {
+                if (gadget.HasContentTarget) {
                   foreach (var id in idCollection) {
                     if (action.CollectionAction.EntityCollection.ContainsKey (id)) {
                       var gadgetEntityAction = action.CollectionAction.EntityCollection [id];
@@ -188,7 +216,7 @@ namespace Shared.Gadget.Models.Action
                 }
 
                 // test
-                if (gadget.IsContentTest) {
+                if (gadget.HasContentTest) {
                   foreach (var id in idCollection) {
                     if (action.CollectionAction.EntityCollection.ContainsKey (id)) {
                       var gadgetEntityAction = action.CollectionAction.EntityCollection [id];

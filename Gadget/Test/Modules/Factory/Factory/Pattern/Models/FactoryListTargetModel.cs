@@ -277,7 +277,7 @@ namespace Gadget.Factory.Pattern.Models
     void UpdateCurrentEditGadget ()
     {
       if (m_CurrentEditGadget.ValidateId) {
-        if (m_CurrentEditGadget.IsContentTarget) {
+        if (m_CurrentEditGadget.HasContentTarget) {
           var contents = new Collection<GadgetTarget> ();
           m_CurrentEditGadget.RequestContent (contents);
 

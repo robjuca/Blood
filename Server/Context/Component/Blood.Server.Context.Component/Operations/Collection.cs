@@ -5,6 +5,7 @@
 
 //----- Include
 using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 using rr.Library.Helper;
@@ -404,6 +405,19 @@ namespace Server.Context.Component
             }
 
             action.CollectionAction.ModelCollection.Add (id, models);
+          }
+        }
+
+        // ComponentOperation - Operation.Category
+        if (action.CollectionAction.ComponentOperation.IsComponentOperation (TComponentOperation.TInternalOperation.Category)) {
+          action.IdCollection.Clear ();
+
+          var list = new Collection<ComponentRelation> (action.CollectionAction.ComponentOperation.RequestParentCategoryCollection ());
+
+          foreach (var relation in list) {
+            if (relation.ChildId.NotEmpty ()) {
+              action.IdCollection.Add (relation.ChildId);
+            }
           }
         }
 

@@ -164,11 +164,11 @@ namespace Gadget.Factory.Pattern.Models
       m_Gadget.RequestContent (m_FullCollection);
 
       foreach (var item in m_FullCollection) {
-        if (item.IsContentTest) {
+        if (item.HasContentTest) {
           SelectorContentTestEnabled = true;
         }
 
-        if (item.IsContentTarget) {
+        if (item.HasContentTarget) {
           SelectorContentTargetEnabled = true;
         }
       }
@@ -201,7 +201,7 @@ namespace Gadget.Factory.Pattern.Models
         ContentTestItemsSource.Clear ();
 
         foreach (var item in m_FullCollection) {
-          if (item.IsContentTest) {
+          if (item.HasContentTest) {
             ContentTestItemsSource.Add (item);
           }
         }
@@ -212,7 +212,7 @@ namespace Gadget.Factory.Pattern.Models
           var gadget = ContentTestItemsSource [0];
 
           if (gadget.HasContent) {
-            if (gadget.IsContentTest) {
+            if (gadget.HasContentTest) {
               var list = new Collection<GadgetTest> ();
               gadget.RequestContent (list);
 
@@ -235,7 +235,7 @@ namespace Gadget.Factory.Pattern.Models
         ContentTargetItemsSource.Clear ();
 
         foreach (var item in m_FullCollection) {
-          if (item.IsContentTarget) {
+          if (item.HasContentTarget) {
             ContentTargetItemsSource.Add (item);
           }
         }

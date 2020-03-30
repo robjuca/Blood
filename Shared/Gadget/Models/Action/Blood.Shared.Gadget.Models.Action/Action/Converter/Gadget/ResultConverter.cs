@@ -202,7 +202,7 @@ namespace Shared.Gadget.Models.Action
               foreach (var gadget in gadgetTestContent) {
                 if (gadget.HasContent) {
                   // Target
-                  if (gadget.IsContentTarget) {
+                  if (gadget.HasContentTarget) {
                     var contentGadgetTarget = new Collection<GadgetTarget> ();
                     gadget.RequestContent (contentGadgetTarget);
 
@@ -220,13 +220,13 @@ namespace Shared.Gadget.Models.Action
                   }
 
                   // Test
-                  if (gadget.IsContentTest) {
+                  if (gadget.HasContentTest) {
                     var contentGadgetTest = new Collection<GadgetTest> ();
                     gadget.RequestContent (contentGadgetTest);
 
                     foreach (var gadgetTest in contentGadgetTest) {
                       if (gadgetTest.HasContent) {
-                        if (gadgetTest.IsContentTarget) {
+                        if (gadgetTest.HasContentTarget) {
                           var contentGadgetTarget = new Collection<GadgetTarget> ();
                           gadgetTest.RequestContent (contentGadgetTarget);
 
@@ -337,7 +337,7 @@ namespace Shared.Gadget.Models.Action
 
         if (gadget.HasContent) {
           // Target
-          if (gadget.IsContentTarget) {
+          if (gadget.HasContentTarget) {
             var contents = new Collection<GadgetTarget> ();
             gadget.RequestContent (contents);
 
@@ -347,7 +347,7 @@ namespace Shared.Gadget.Models.Action
           }
 
           // Test
-          if (gadget.IsContentTest) {
+          if (gadget.HasContentTest) {
             var contents = new Collection<GadgetTest> ();
             gadget.RequestContent (contents);
 

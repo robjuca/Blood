@@ -10,6 +10,8 @@ using System.Linq;
 using System.Windows;
 
 using rr.Library.Types;
+
+using Server.Models.Infrastructure;
 //---------------------------//
 
 namespace Shared.Gadget.Models.Component
@@ -21,6 +23,12 @@ namespace Shared.Gadget.Models.Component
     {
       get; 
       set;
+    }
+
+    public TCategory Category
+    {
+      get;
+      private set;
     }
 
     public string GadgetInfo
@@ -189,10 +197,16 @@ namespace Shared.Gadget.Models.Component
     #endregion
 
     #region Constructor
-    protected TGadgetBase ()
+    protected TGadgetBase (TCategory category)
+      : this ()
+    {
+      Category = category;
+    }
+
+    TGadgetBase ()
     {
       Id = Guid.Empty;
-
+      Category = TCategory.None;
       GadgetInfo = string.Empty;
       GadgetName = string.Empty;
       Material = string.Empty;
@@ -210,12 +224,6 @@ namespace Shared.Gadget.Models.Component
       Value = string.Empty;
 
       ObservableCommand = new TObservableCommand (new DelegateCommand<object> (ObservableCommandHandler));
-    }
-
-    protected TGadgetBase (TGadgetBase alias)
-      : this ()
-    {
-      CopyFrom (alias);
     }
     #endregion
 
@@ -308,6 +316,7 @@ namespace Shared.Gadget.Models.Component
     {
       if (alias.NotNull ()) {
         Id = alias.Id;
+        Category = alias.Category;
         GadgetInfo = alias.GadgetInfo;
         GadgetName = alias.GadgetName;
         Material = alias.Material;

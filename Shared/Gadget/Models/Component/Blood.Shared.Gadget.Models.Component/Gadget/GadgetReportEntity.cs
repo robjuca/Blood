@@ -5,6 +5,8 @@
 
 //----- Include
 using System;
+
+using Server.Models.Infrastructure;
 //---------------------------//
 
 namespace Shared.Gadget.Models.Component
@@ -13,7 +15,7 @@ namespace Shared.Gadget.Models.Component
   {
     #region Constructor
     public GadgetReport ()
-      : base ()
+      : base (TCategory.Report)
     {
     }
 

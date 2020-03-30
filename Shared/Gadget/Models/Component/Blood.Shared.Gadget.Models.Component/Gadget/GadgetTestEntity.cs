@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Windows;
 
 using Server.Models.Infrastructure;
@@ -23,43 +22,37 @@ namespace Shared.Gadget.Models.Component
     class TContent
     {
       #region Property
-      public TCategory Category
+      public Collection<Guid> IdCollection
       {
         get;
         private set;
       }
 
-      public Collection<Guid> IdCollection
-      {
-        get; 
-        private set;
-      }
-
       public Collection<GadgetTest> TestCollection
       {
-        get; 
+        get;
         private set;
       }
 
       public Collection<GadgetTarget> TargetCollection
       {
-        get; 
+        get;
         private set;
       }
 
-      public bool IsCategoryTest
+      public bool HasContentTest
       {
         get
         {
-          return (Category.Equals (TCategory.Test));
+          return (TestCollection.Any ());
         }
       }
 
-      public bool IsCategoryTarget
+      public bool HasContentTarget
       {
         get
         {
-          return (Category.Equals (TCategory.Target));
+          return (TargetCollection.Any ());
         }
       }
 
@@ -83,8 +76,6 @@ namespace Shared.Gadget.Models.Component
       #region Constructor
       TContent ()
       {
-        Category = TCategory.None;
-
         IdCollection = new Collection<Guid> ();
         TestCollection = new Collection<GadgetTest> ();
         TargetCollection = new Collection<GadgetTarget> ();
@@ -92,18 +83,14 @@ namespace Shared.Gadget.Models.Component
       #endregion
 
       #region Members
-      public bool Add (Guid id, TCategory category)
+      public bool Add (Guid id)
       {
         bool res = false;
 
         if (id.NotEmpty ()) {
           if (Contains (id).IsFalse ()) {
-            if (ValidateCategory (category)) {
-              IdCollection.Add (id);
-              UpdateCategory (category);
-
-              res = true;
-            }
+            IdCollection.Add (id);
+            res = true;
           }
         }
 
@@ -117,18 +104,14 @@ namespace Shared.Gadget.Models.Component
         if (gadget.NotNull ()) {
           if (Contains (gadget.Id).IsFalse ()) {
             IdCollection.Add (gadget.Id);
-            UpdateCategory (TCategory.Test);
-
             TestCollection.Add (gadget);
 
             res = true;
           }
 
           else {
-            if (IsCategoryTest) {
-              if (ContainsTest (gadget.Id).IsFalse ()) {
-                TestCollection.Add (gadget);
-              }
+            if (ContainsTest (gadget.Id).IsFalse ()) {
+              TestCollection.Add (gadget);
             }
           }
         }
@@ -143,18 +126,14 @@ namespace Shared.Gadget.Models.Component
         if (gadget.NotNull ()) {
           if (Contains (gadget.Id).IsFalse ()) {
             IdCollection.Add (gadget.Id);
-            UpdateCategory (TCategory.Target);
-
             TargetCollection.Add (gadget);
 
             res = true;
           }
 
           else {
-            if (IsCategoryTarget) {
-              if (ContainsTarget (gadget.Id).IsFalse ()) {
-                TargetCollection.Add (gadget);
-              }
+            if (ContainsTarget (gadget.Id).IsFalse ()) {
+              TargetCollection.Add (gadget);
             }
           }
         }
@@ -181,7 +160,7 @@ namespace Shared.Gadget.Models.Component
       {
         if (collection.NotNull ()) {
           if (IsEmpty.IsFalse ()) {
-            if (IsCategoryTest) {
+            if (HasContentTest) {
               collection.Clear ();
 
               var list = TestCollection
@@ -201,7 +180,7 @@ namespace Shared.Gadget.Models.Component
       {
         if (collection.NotNull ()) {
           if (IsEmpty.IsFalse ()) {
-            if (IsCategoryTarget) {
+            if (HasContentTarget) {
               collection.Clear ();
 
               var list = TargetCollection
@@ -225,7 +204,7 @@ namespace Shared.Gadget.Models.Component
 
             collection.Clear ();
 
-            if (IsCategoryTest) {
+            if (HasContentTest) {
               var testList = TestCollection
                 .OrderBy (p => p.GadgetName)
                 .ToList ()
@@ -234,7 +213,7 @@ namespace Shared.Gadget.Models.Component
               foreach (var gadgetTest in testList) {
                 collection.Add (separator + gadgetTest.GadgetName);
 
-                if (gadgetTest.IsContentTarget) {
+                if (gadgetTest.HasContentTarget) {
                   var namesCollection = new Collection<string> ();
                   gadgetTest.RequestContentNamesFull (namesCollection);
 
@@ -245,7 +224,7 @@ namespace Shared.Gadget.Models.Component
               }
             }
 
-            if (IsCategoryTarget) {
+            if (HasContentTarget) {
               var list = TargetCollection
                 .OrderBy (p => p.GadgetName)
                 .ToList ()
@@ -309,7 +288,7 @@ namespace Shared.Gadget.Models.Component
       {
         var names = new Collection<string> ();
 
-        if (IsCategoryTest) {
+        if (HasContentTest) {
           var list = TestCollection
             .OrderBy (p => p.GadgetName)
             .ToList ()
@@ -320,7 +299,7 @@ namespace Shared.Gadget.Models.Component
           }
         }
 
-        if (IsCategoryTarget) {
+        if (HasContentTarget) {
           var list = TargetCollection
             .OrderBy (p => p.GadgetName)
             .ToList ()
@@ -338,7 +317,7 @@ namespace Shared.Gadget.Models.Component
       {
         if (list.NotNull ()) {
           if (IsEmpty.IsFalse ()) {
-            if (IsCategoryTest) {
+            if (HasContentTest) {
               foreach (var gadgetTest in list) {
                 if (Contains (gadgetTest.Id)) {
                   if (ContainsTest (gadgetTest.Id).IsFalse ()) {
@@ -359,7 +338,7 @@ namespace Shared.Gadget.Models.Component
           if (gadgetContent.ValidateId) {
             if (Contains (gadgetContent.Id)) {
               if (RequestTest (gadgetContent.Id) is GadgetTest gadgetItem) {
-                if (gadgetItem.IsContentTarget) {
+                if (gadgetItem.HasContentTarget) {
                   var list = new Collection<GadgetTarget> ();
                   gadgetItem.RequestContent (list);
 
@@ -371,7 +350,7 @@ namespace Shared.Gadget.Models.Component
                   }
                 }
 
-                if (gadgetItem.IsContentTest) {
+                if (gadgetItem.HasContentTest) {
                   var list = new Collection<GadgetTest> ();
                   gadgetItem.RequestContent (list);
 
@@ -397,13 +376,13 @@ namespace Shared.Gadget.Models.Component
         if (gadgetContent.NotNull ()) {
           if (gadgetContent.ValidateId) {
             // Test
-            if (IsCategoryTest && gadgetContent.IsContentTest) {
+            if (HasContentTest && gadgetContent.HasContentTest) {
               if (Contains (gadgetContent.Id)) {
                 if (RequestTest (gadgetContent.Id) is GadgetTest gadgetItem) {
                   gadgetItem.ChangeFrom (gadgetContent);
 
                   // Target
-                  if (gadgetItem.IsContentTarget) {
+                  if (gadgetItem.HasContentTarget) {
                     var list = new Collection<GadgetTarget> ();
                     gadgetItem.RequestContent (list);
 
@@ -416,7 +395,7 @@ namespace Shared.Gadget.Models.Component
                   }
 
                   // Test
-                  if (gadgetItem.IsContentTest) {
+                  if (gadgetItem.HasContentTest) {
                     var list = new Collection<GadgetTest> ();
                     gadgetItem.RequestContent (list);
 
@@ -432,7 +411,7 @@ namespace Shared.Gadget.Models.Component
             }
 
             // Target
-            if (IsCategoryTarget && gadgetContent.IsContentTarget) {
+            if (HasContentTarget && gadgetContent.HasContentTarget) {
               if (gadgetContent.HasContent) {
                 var gadgetTargetList = new Collection<GadgetTarget> ();
                 gadgetContent.RequestContent (gadgetTargetList);
@@ -455,8 +434,6 @@ namespace Shared.Gadget.Models.Component
       {
         if (alias.NotNull ()) {
           Cleanup ();
-
-          Category = alias.Category;
 
           foreach (var id in alias.IdCollection) {
             IdCollection.Add (id);
@@ -482,22 +459,10 @@ namespace Shared.Gadget.Models.Component
 
       public void Cleanup ()
       {
-        Category = TCategory.None;
-
         IdCollection = new Collection<Guid> ();
         TestCollection = new Collection<GadgetTest> ();
         TargetCollection = new Collection<GadgetTarget> ();
       }
-      #endregion
-
-      #region Property
-      bool IsCategoryEmpty
-      {
-        get
-        {
-          return (Category.Equals (TCategory.None));
-        }
-      } 
       #endregion
 
       #region Static
@@ -539,22 +504,6 @@ namespace Shared.Gadget.Models.Component
         return (false);
       }
 
-      bool ValidateCategory (TCategory category)
-      {
-        if (IsCategoryEmpty) {
-          return (category.Equals (TCategory.Test) || category.Equals (TCategory.Target));
-        }
-
-        return (category.Equals (Category));
-      }
-
-      void UpdateCategory (TCategory category)
-      {
-        if (IsCategoryEmpty) {
-          Category = category;
-        }
-      }
-
       bool RemoveFromCollection (Guid id)
       {
         bool res = false;
@@ -565,10 +514,6 @@ namespace Shared.Gadget.Models.Component
 
             RemoveTest (id);
             RemoveTarget (id);
-
-            if (IsEmpty) {
-              Category = TCategory.None;
-            }
 
             res = true;
           }
@@ -582,7 +527,7 @@ namespace Shared.Gadget.Models.Component
         bool res = false;
 
         if (id.NotEmpty ()) {
-          if (IsCategoryTest) {
+          if (HasContentTest) {
             foreach (var item in TestCollection) {
               if (item.Id.Equals (id)) {
                 TestCollection.Remove (item);
@@ -601,7 +546,7 @@ namespace Shared.Gadget.Models.Component
         bool res = false;
 
         if (id.NotEmpty ()) {
-          if (IsCategoryTarget) {
+          if (HasContentTarget) {
             foreach (var item in TargetCollection) {
               if (item.Id.Equals (id)) {
                 TargetCollection.Remove (item);
@@ -687,27 +632,19 @@ namespace Shared.Gadget.Models.Component
       }
     }
 
-    public bool IsContentTarget
+    public bool HasContentTest 
     {
       get
       {
-        return (RequestCategory ().Equals (TCategory.Target));
+        return (Content.HasContentTest);
       }
     }
 
-    public bool IsContentTest
+    public bool HasContentTarget 
     {
       get
       {
-        return (RequestCategory ().Equals (TCategory.Test));
-      }
-    }
-
-    public string ContentCategory
-    {
-      get
-      {
-        return (RequestCategory ().ToString ());
+        return (Content.HasContentTarget);
       }
     }
 
@@ -723,7 +660,7 @@ namespace Shared.Gadget.Models.Component
     {
       get
       {
-        return (IsContentTarget ? Visibility.Visible : Visibility.Collapsed);
+        return (HasContentTarget ? Visibility.Visible : Visibility.Collapsed);
       }
     }
 
@@ -731,14 +668,14 @@ namespace Shared.Gadget.Models.Component
     {
       get
       {
-        return (IsContentTest ? Visibility.Visible : Visibility.Collapsed);
+        return (HasContentTest ? Visibility.Visible : Visibility.Collapsed);
       }
     }
     #endregion
 
     #region Constructor
     public GadgetTest ()
-      : base ()
+      : base (TCategory.Test)
     {
       Content = TContent.CreateDefault;
     }
@@ -751,9 +688,9 @@ namespace Shared.Gadget.Models.Component
     #endregion
 
     #region Members
-    public bool AddContentId (Guid id, TCategory category)
+    public bool AddContentId (Guid id)
     {
-      return (Content.Add (id, category));
+      return (Content.Add (id));
     }
 
     public bool AddContent (GadgetTest gadget)
@@ -797,11 +734,6 @@ namespace Shared.Gadget.Models.Component
 
         Content.CopyFrom (alias.Content);
       }
-    }
-    
-    public TCategory RequestCategory ()
-    {
-      return (Content.Category);
     }
 
     public void RequestContent (IList<GadgetTest> collection)
@@ -849,7 +781,7 @@ namespace Shared.Gadget.Models.Component
       }
     }
 
-    public void UpdateContents (Collection <GadgetTest> list)
+    public void UpdateContents (Collection<GadgetTest> list)
     {
       if (list.NotNull ()) {
         Content.Update (list);
@@ -876,7 +808,7 @@ namespace Shared.Gadget.Models.Component
           }
         }
       }
-      
+
       return (Content.UpdateFrom (gadget));
     }
 
@@ -893,7 +825,7 @@ namespace Shared.Gadget.Models.Component
     TContent Content
     {
       get;
-    } 
+    }
     #endregion
 
     #region Static

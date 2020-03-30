@@ -93,7 +93,7 @@ namespace Shared.Gadget.Test
 
             ControlModel.CopyFrom (gadget);
 
-            if (ControlModel.IsContentTest) {
+            if (ControlModel.HasContentTest) {
               var contents = new Collection<GadgetTest> ();
               ControlModel.RequestContent (contents);
 
@@ -130,9 +130,14 @@ namespace Shared.Gadget.Test
       }
     }
     
-    public TCategory RequestCategory ()
+    public bool HasContentTest ()
     {
-      return (ControlModel.RequestCategory ());
+      return (ControlModel.HasContentTest);
+    }
+
+    public bool HasContentTarget ()
+    {
+      return (ControlModel.HasContentTarget);
     }
 
     public void AddComponent (TActionComponent component)
@@ -151,7 +156,7 @@ namespace Shared.Gadget.Test
                 var componentControlModel = TComponentControlModel.CreateDefault;
                 componentControlModel.ControlModel.CopyFrom (gadgetTest);
 
-                if (componentControlModel.ControlModel.IsContentTest) {
+                if (componentControlModel.ControlModel.HasContentTest) {
                   var internalContents = new Collection<GadgetTest> ();
                   componentControlModel.ControlModel.RequestContent (internalContents);
 
@@ -164,7 +169,7 @@ namespace Shared.Gadget.Test
                   }
                 }
 
-                if (componentControlModel.ControlModel.IsContentTarget) {
+                if (componentControlModel.ControlModel.HasContentTarget) {
                   componentControlModel.SelectImage (component.Models.GadgetMaterialModel.GetImage ());
                 }
 

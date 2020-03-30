@@ -201,7 +201,7 @@ namespace Shared.Gadget.Test
     #region Support
     void InsertTargetRelation ()
     {
-      if (Model.RequestCategory ().Equals (TCategory.Target)) {
+      if (Model.HasContentTarget ()) {
         var targetsItemSource = new Collection<GadgetTarget> ();
         Model.ControlModel.RequestContent (targetsItemSource);
 
@@ -232,7 +232,7 @@ namespace Shared.Gadget.Test
 
     void InsertTestRelation ()
     {
-      if (Model.RequestCategory ().Equals (TCategory.Test) ) {
+      if (Model.HasContentTest ()) {
         var stack = new StackPanel ();
 
         var scrow = new ScrollViewer

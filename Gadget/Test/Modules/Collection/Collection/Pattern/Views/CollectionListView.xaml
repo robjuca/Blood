@@ -11,7 +11,7 @@
         <CollectionViewSource x:Key="ModelItemsViewSource"
                               Source="{Binding Model.ItemsSource}">
             <CollectionViewSource.GroupDescriptions>
-                <PropertyGroupDescription PropertyName="ContentCategory" />
+                <PropertyGroupDescription PropertyName="HasContentTest" />
             </CollectionViewSource.GroupDescriptions>
 
             <CollectionViewSource.SortDescriptions>

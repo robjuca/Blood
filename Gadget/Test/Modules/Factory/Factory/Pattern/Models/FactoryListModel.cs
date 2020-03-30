@@ -151,12 +151,12 @@ namespace Gadget.Factory.Pattern.Models
         IsEnabledSelector = gadget.IsContentEmpty;
         MaterialSelectionEnabled = gadget.IsContentEmpty;
 
-        if (gadget.IsContentTarget) {
+        if (gadget.HasContentTarget) {
           SlideIndex = 0;
           SelectorTargetChecked = true;
         }
 
-        if (gadget.IsContentTest) {
+        if (gadget.HasContentTest) {
           SlideIndex = 1;
           SelectorTestChecked = true;
         }

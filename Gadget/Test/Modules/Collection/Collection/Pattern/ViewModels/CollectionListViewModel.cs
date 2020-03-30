@@ -5,7 +5,9 @@
 
 //----- Include
 using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
+using System.Linq;
 
 using rr.Library.Infrastructure;
 using rr.Library.Helper;
@@ -62,6 +64,14 @@ namespace Gadget.Collection.Pattern.ViewModels
                 }
               }
 
+              // Select - Many
+              if (message.Support.Argument.Types.IsOperation (TOperation.Select, TExtension.Many)) {
+                if (message.Result.IsValid) {
+                  var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
+                  TDispatcher.BeginInvoke (ResponseSelectManyDispatcher, action);
+                }
+              }
+
               // Select - ById
               if (message.Support.Argument.Types.IsOperation (TOperation.Select, TExtension.ById)) {
                 if (message.Result.IsValid) {
@@ -114,7 +124,7 @@ namespace Gadget.Collection.Pattern.ViewModels
     void RequestDataDispatcher ()
     {
       // to parent
-      // Collection - Full
+      // Test - Collection - Full
       var action = TEntityAction.Create (
         TCategory.Test,
         TOperation.Collection,
@@ -129,7 +139,54 @@ namespace Gadget.Collection.Pattern.ViewModels
 
     void ResponseDataDispatcher (TEntityAction entityAction)
     {
-      Model.Select (entityAction);
+      if (entityAction.NotNull ()) {
+        // request
+        if (entityAction.IdCollection.Any ()) {
+          // to parent
+          // Dummy - Select - Many
+          var action = TEntityAction.Create (
+            TCategory.Dummy,
+            TOperation.Select,
+            TExtension.Many
+          );
+
+          foreach (var item in entityAction.IdCollection) {
+            action.IdCollection.Add (item);
+          }
+
+          action.Param2 = entityAction; // preserve
+
+          var message = new TCollectionMessageInternal (TInternalMessageAction.Request, TChild.List, TypeInfo);
+          message.Support.Argument.Types.Select (action);
+
+          DelegateCommand.PublishInternalMessage.Execute (message);
+        }
+
+        else {
+          var gadgets = new Collection<TActionComponent> ();
+          TActionConverter.Collection (TCategory.Test, gadgets, entityAction);
+
+          Model.Select (gadgets);
+        }
+      }
+
+      TDispatcher.Invoke (RefreshAllDispatcher);
+    }
+
+    void ResponseSelectManyDispatcher (TEntityAction entityAction)
+    {
+      if (entityAction.NotNull ()) {
+        if (entityAction.Param2 is TEntityAction action) {
+          foreach (var item in entityAction.CollectionAction.EntityCollection) {
+            action.CollectionAction.EntityCollection.Add (item.Key, item.Value);
+          }
+
+          var gadgets = new Collection<TActionComponent> ();
+          TActionConverter.Collection (TCategory.Test, gadgets, action);
+
+          Model.Select (gadgets);
+        }   
+      }
 
       TDispatcher.Invoke (RefreshAllDispatcher);
     }

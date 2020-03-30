@@ -8,7 +8,6 @@ using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-using Server.Models.Action;
 using Server.Models.Infrastructure;
 
 using Shared.Gadget.Models.Action;
@@ -22,7 +21,7 @@ namespace Gadget.Collection.Pattern.Models
     #region Property
     public ObservableCollection<GadgetTest> ItemsSource
     {
-      get; 
+      get;
     }
 
     public int SelectedIndex
@@ -57,20 +56,16 @@ namespace Gadget.Collection.Pattern.Models
     #endregion
 
     #region Members
-    internal void Select (TEntityAction entityAction)
+    internal void Select (Collection<TActionComponent> gadgets)
     {
-      // DATA IN:
-      // action.CollectionAction.ModelCollection
-
-      entityAction.ThrowNull ();
+      gadgets.ThrowNull ();
 
       ItemsSource.Clear ();
 
-      var gadgets = new Collection<TActionComponent> ();
-      TActionConverter.Collection (TCategory.Test, gadgets, entityAction);
-
       foreach (var component in gadgets) {
-        ItemsSource.Add (component.Models.GadgetTestModel);
+        if (component.IsCategory (TCategory.Test)) {
+          ItemsSource.Add (component.Models.GadgetTestModel);
+        }
       }
 
       if (ItemsSource.Any ()) {
@@ -87,7 +82,7 @@ namespace Gadget.Collection.Pattern.Models
 
       Current.CopyFrom (gadget);
 
-      return (Current.ValidateId); 
+      return (Current.ValidateId);
     }
     #endregion
   };

@@ -173,8 +173,7 @@ namespace Shared.Gadget.Models.Component
             collection.Clear ();
 
             var list = TestCollection
-              .OrderBy (p => p.ContentCategory)
-              .ThenBy(p => p.GadgetName)
+              .OrderBy (p => p.GadgetName)
               .ToList ()
             ;
 
@@ -371,7 +370,7 @@ namespace Shared.Gadget.Models.Component
         if (HasContent) {
           foreach (var gadgetTest in TestCollection) {
             // Target
-            if (gadgetTest.IsContentTarget) {
+            if (gadgetTest.HasContentTarget) {
               var contentGadgetTarget = new Collection<GadgetTarget> ();
               gadgetTest.RequestContent (contentGadgetTarget);
 
@@ -386,14 +385,14 @@ namespace Shared.Gadget.Models.Component
             }
 
             // Test
-            if (gadgetTest.IsContentTest) {
+            if (gadgetTest.HasContentTest) {
               var contentGadgetTest = new Collection<GadgetTest> ();
               gadgetTest.RequestContent (contentGadgetTest);
 
               foreach (var gadget in contentGadgetTest) {
                 if (gadget.HasContent) {
                   // Target
-                  if (gadget.IsContentTarget) {
+                  if (gadget.HasContentTarget) {
                     var contentGadgetTarget = new Collection<GadgetTarget> ();
                     gadget.RequestContent (contentGadgetTarget);
 
@@ -486,7 +485,7 @@ namespace Shared.Gadget.Models.Component
 
     #region Constructor
     public GadgetResult ()
-      : base ()
+      : base (TCategory.Result)
     {
       Content = TContent.CreateDefault;
     }
