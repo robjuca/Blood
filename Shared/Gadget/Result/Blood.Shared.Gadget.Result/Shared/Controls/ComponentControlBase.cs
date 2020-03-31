@@ -89,7 +89,7 @@ namespace Shared.Gadget.Result
       {
         Padding = new Thickness (2),
         FontWeight = FontWeights.SemiBold,
-        Text = Model.ControlModel.Date.ToString ("dd-MMM-yy HH:mm", CultureInfo.InvariantCulture),
+        Text = Model.ControlModel.Date.ToString ("dd-MMM-yy", CultureInfo.InvariantCulture),
         HorizontalAlignment = HorizontalAlignment.Right,
       };
 

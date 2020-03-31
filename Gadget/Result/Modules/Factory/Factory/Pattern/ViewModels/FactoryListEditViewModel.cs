@@ -84,12 +84,6 @@ namespace Gadget.Factory.Pattern.ViewModels
                     var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
                     TDispatcher.BeginInvoke (ResponseSelectManyDispatcher, action);
                   }
-
-                  // Gadget Test
-                  if (message.Support.Argument.Types.IsOperationCategory (TCategory.Test)) {
-                    var action = TEntityAction.Request (message.Support.Argument.Types.EntityAction);
-                    TDispatcher.BeginInvoke (ResponseSelectManyDispatcher, action);
-                  }
                 }
               }
             }
@@ -244,18 +238,6 @@ namespace Gadget.Factory.Pattern.ViewModels
           TActionConverter.Collection (TCategory.Test, gadgets, entityAction);
           Model.SelectTest (gadgets);
         }
-
-
-
-        // update
-        // Test - Select - Many
-        //entityAction.Operation.Select (TCategory.Test, TOperation.Select, TExtension.Many);
-        //Model.RequestTestIdCollection (entityAction.IdCollection);
-
-        //var message = new TFactoryMessageInternal (TInternalMessageAction.Request, TChild.List, TypeInfo);
-        //message.Support.Argument.Types.Select (entityAction);
-
-        //DelegateCommand.PublishInternalMessage.Execute (message);
       }
 
       TDispatcher.Invoke (RefreshAllDispatcher);
@@ -268,6 +250,7 @@ namespace Gadget.Factory.Pattern.ViewModels
         Model.Request (component);
 
         TActionConverter.Request (TCategory.Result, component, action);
+        action.Param1 = component;
 
         // to Sibling
         var message = new TFactorySiblingMessageInternal (TInternalMessageAction.Response, TChild.List, TypeInfo);
@@ -292,16 +275,6 @@ namespace Gadget.Factory.Pattern.ViewModels
         }
       }
 
-      // Test
-      //if (action.CategoryType.IsCategory (TCategory.Test)) {
-      //  var gadgets = new Collection<TActionComponent> ();
-      //  Model.RequestTestCollection (gadgets);
-
-      //  TActionConverter.SelectMany (TCategory.Test, gadgets, action);
-
-      //  Model.SelectTestMany (gadgets);
-      //}
-
       ApplyChanges ();
     }
 
@@ -310,6 +283,13 @@ namespace Gadget.Factory.Pattern.ViewModels
       Model.RegistrationCurrentSelected (gadget);
 
       ApplyChanges ();
+
+      // to Sibling (PropertySelect)
+      var message = new TFactorySiblingMessageInternal (TInternalMessageAction.PropertySelect, TChild.List, TypeInfo);
+      message.Support.Argument.Args.Select ("RegistrationChanged");
+      message.Support.Argument.Args.Select (gadget);
+
+      DelegateCommand.PublishInternalMessage.Execute (message);
     }
 
     void TestItemCheckedDispatcher (TActionComponent component)

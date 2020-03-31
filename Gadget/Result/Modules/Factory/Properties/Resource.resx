@@ -120,6 +120,9 @@
   <data name="RES_EMPTY" xml:space="preserve">
     <value>Entry Empty</value>
   </data>
+  <data name="RES_REGISTRATION_EMPTY" xml:space="preserve">
+    <value>Result (Registration = EMPTY)</value>
+  </data>
   <data name="RES_TEXT_EMPTY" xml:space="preserve">
     <value>Test (Text = EMPTY)</value>
   </data>

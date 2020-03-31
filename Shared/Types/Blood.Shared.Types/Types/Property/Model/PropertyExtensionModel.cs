@@ -329,7 +329,9 @@ namespace Shared.Types
       RowsProperty = TInt4PropertyInfo.Create (4);
 
       SelectionProperty = TSelectionPropertyInfo.CreateDefault;
+
       DateProperty = TDatePropertyInfo.CreateDefault;
+      DateProperty.PropertyChanged += OnPropertyChanged;
 
       m_Names = new Collection<string> ();
       m_ModelCategory = Server.Models.Infrastructure.TCategoryType.ToValue (Server.Models.Infrastructure.TCategory.None);
@@ -523,6 +525,8 @@ namespace Shared.Types
         m_GeometryModel.CopyFrom (action.ModelAction.ExtensionGeometryModel);
         m_TextModel.CopyFrom (action.ModelAction.ExtensionTextModel);
 
+        DateProperty.TheDate = m_TextModel.Date;
+
         SelectionProperty.SelectModel (action);
       }
     }
@@ -663,7 +667,9 @@ namespace Shared.Types
     {
       m_GeometryModel.PositionImage = ImagePositionProperty.Current.PositionString;
 
-      var category = Server.Models.Infrastructure.TCategoryType.FromValue (m_ModelCategory);
+      m_TextModel.Date = DateProperty.TheDate;
+
+      //var category = Server.Models.Infrastructure.TCategoryType.FromValue (m_ModelCategory);
 
       //if (category.Equals (Server.Models.Infrastructure.TCategory.Document)) {
       //  m_ImageModel.Width = ImagePositionProperty.Current.Size.Width;

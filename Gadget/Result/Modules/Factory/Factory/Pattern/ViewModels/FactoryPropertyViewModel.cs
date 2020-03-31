@@ -19,6 +19,7 @@ using Shared.Resources;
 using Shared.Types;
 using Shared.ViewModel;
 using Shared.Gadget.Models.Action;
+using Shared.Gadget.Models.Component;
 
 using Gadget.Factory.Presentation;
 using Gadget.Factory.Pattern.Models;
@@ -94,6 +95,17 @@ namespace Gadget.Factory.Pattern.ViewModels
             // Response
             if (message.IsAction (TInternalMessageAction.Response)) {
               TDispatcher.BeginInvoke (ResponseModelDispatcher, TEntityAction.Request (message.Support.Argument.Types.EntityAction));
+            }
+
+            // Response
+            if (message.IsAction (TInternalMessageAction.PropertySelect)) {
+              if (message.Support.Argument.Args.PropertyName.Equals ("RegistrationChanged", StringComparison.InvariantCulture)) {
+                if (message.Support.Argument.Args.Param1 is GadgetRegistration gadget) {
+                  Model.Select (gadget);
+
+                  ApplyChanges ();
+                }
+              }
             }
 
             // Back
@@ -185,9 +197,9 @@ namespace Gadget.Factory.Pattern.ViewModels
 
     void ResponseModelDispatcher (TEntityAction action)
     {
-      Model.RequestModel (action);
-
-      TDispatcher.BeginInvoke (ApplyDispatcher, action);
+      if (Model.RequestModel (action)) {
+        TDispatcher.BeginInvoke (ApplyDispatcher, action);
+      }
     }
 
     void ApplyDispatcher (TEntityAction action)
@@ -318,7 +330,7 @@ namespace Gadget.Factory.Pattern.ViewModels
       var action = TEntityAction.CreateDefault;
       Model.RequestModel (action);
 
-      // to Sibling
+      // to Sibling (PropertySelect)
       var message = new TFactorySiblingMessageInternal (TInternalMessageAction.PropertySelect, TChild.Property, TypeInfo);
       message.Support.Argument.Types.Select (action);
       message.Support.Argument.Args.Select (propertyName);

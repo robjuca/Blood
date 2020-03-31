@@ -70,6 +70,15 @@ namespace Gadget.Factory.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Result (Registration = EMPTY).
+        /// </summary>
+        internal static string RES_REGISTRATION_EMPTY {
+            get {
+                return ResourceManager.GetString("RES_REGISTRATION_EMPTY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Test (Text = EMPTY).
         /// </summary>
         internal static string RES_TEXT_EMPTY {

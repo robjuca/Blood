@@ -14,6 +14,7 @@ using Server.Models.Action;
 using Shared.Resources;
 using Shared.Types;
 using Shared.Gadget.Models.Action;
+using Shared.Gadget.Models.Component;
 //---------------------------//
 
 namespace Gadget.Factory.Pattern.Models
@@ -40,6 +41,8 @@ namespace Gadget.Factory.Pattern.Models
       ComponentModelProperty.PropertyChanged += OnModelPropertyChanged;
 
       AlertsModel = TAlertsModel.CreateDefault;
+
+      m_Registration = GadgetRegistration.CreateDefault;
     }
     #endregion
 
@@ -52,7 +55,7 @@ namespace Gadget.Factory.Pattern.Models
 
         ComponentModelProperty.SelectModel (entityAction);
 
-        ValidateProperty ("TextProperty");
+        ValidateProperty ();
       }
     }
 
@@ -69,14 +72,33 @@ namespace Gadget.Factory.Pattern.Models
       }
     }
 
-    internal void RequestModel (TEntityAction action)
+    internal bool RequestModel (TEntityAction action)
     {
       if (action.NotNull ()) {
-        //action.CollectionAction.ExtensionNodeCollection.Clear ();
-
         ComponentModelProperty.RequestModel (action);
 
-        
+        if (action.Param1 is TActionComponent component) {
+          var gadget = component.Models.GadgetResultModel;
+
+          if (gadget.HasRegistration) {
+            if (m_Registration.Contains (gadget.RegistrationId).IsFalse ()) {
+              gadget.RequestContent (m_Registration);
+            }
+          }
+        }
+
+        return (ValidateProperty ());
+      }
+
+      return (false);
+    }
+
+    internal void Select (GadgetRegistration gadget)
+    {
+      if (gadget.NotNull ()) {
+        m_Registration.CopyFrom (gadget);
+
+        ValidateProperty ();
       }
     }
 
@@ -88,6 +110,8 @@ namespace Gadget.Factory.Pattern.Models
     internal void Cleanup ()
     {
       ComponentModelProperty.Cleanup ();
+
+      m_Registration = GadgetRegistration.CreateDefault;
     }
     #endregion
 
@@ -98,27 +122,39 @@ namespace Gadget.Factory.Pattern.Models
     }
     #endregion
 
+    #region Fields
+    GadgetRegistration                                          m_Registration; 
+    #endregion
+
     #region Support
-    internal void ValidateProperty (string propertyName)
+    bool ValidateProperty ()
     {
-      if (propertyName.Equals ("TextProperty", StringComparison.InvariantCulture)) {
-        AlertsModel.Select (isOpen: false); // default
+      AlertsModel.Select (isOpen: false); // default
 
-        var textProperty = ComponentModelProperty.ExtensionModel.TextProperty;
-        bool validateModel = string.IsNullOrEmpty (textProperty).IsFalse ();
+      // TextProperty
+      var textProperty = ComponentModelProperty.ExtensionModel.TextProperty;
+      var emptyText = string.IsNullOrEmpty (textProperty);
+      var emptyRegistration = m_Registration.ValidateId.IsFalse ();
 
-        ComponentModelProperty.ValidateModel (validateModel);
+      bool validateModel = emptyText.IsFalse () && emptyRegistration.IsFalse ();
 
-        // show alerts
-        if (validateModel.IsFalse ()) {
-          AlertsModel.Select (TAlertsModel.TKind.Warning);
-          AlertsModel.Select (Properties.Resource.RES_EMPTY, Properties.Resource.RES_TEXT_EMPTY);
-          AlertsModel.Select (isOpen: true);
-        }
+      ComponentModelProperty.ValidateModel (validateModel);
 
-        AlertsModel.Refresh ();
+      // show alerts
+      if (validateModel.IsFalse ()) {
+        string message = emptyText ? Properties.Resource.RES_TEXT_EMPTY : string.Empty;
+        message += Environment.NewLine;
+        message += emptyRegistration ? Properties.Resource.RES_REGISTRATION_EMPTY : string.Empty;
+
+        AlertsModel.Select (TAlertsModel.TKind.Warning);
+        AlertsModel.Select (Properties.Resource.RES_EMPTY, message);
+        AlertsModel.Select (isOpen: true);
       }
-    } 
+
+      AlertsModel.Refresh ();
+
+      return (validateModel);
+    }
     #endregion
   };
   //---------------------------//
