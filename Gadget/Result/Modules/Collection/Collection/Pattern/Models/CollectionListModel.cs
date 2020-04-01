@@ -139,7 +139,7 @@ namespace Gadget.Collection.Pattern.Models
 
     internal void SelectMany (Guid id, Dictionary<Guid, Collection<TActionComponent>> gadgetDictionary)
     {
-      if (id.NotEmpty() && gadgetDictionary.NotNull ()) {
+      if (id.NotEmpty () && gadgetDictionary.NotNull ()) {
         GadgetMaterialDictionary.Clear ();
 
         if (GadgetResultDictionary.ContainsKey (id)) {

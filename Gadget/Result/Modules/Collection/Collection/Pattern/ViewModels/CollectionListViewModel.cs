@@ -175,13 +175,15 @@ namespace Gadget.Collection.Pattern.ViewModels
 
       // Result - Collection - Full (Result )
       if (action.CategoryType.IsCategory (TCategory.Result)) {
+        action.IdCollection.Clear (); // empty for sure
+
         TActionConverter.Collection (TCategory.Result, gadgets, action);
 
         Model.SelectResult (gadgets, action.IdDictionary);
 
         // update
         // Dummy - Select - Many
-        if (action.IdCollection.Any ()) {
+        if (action.IdDictionary.Any ()) {
           action.Operation.Select (TCategory.Dummy, TOperation.Select, TExtension.Many);
 
           var message = new TCollectionMessageInternal (TInternalMessageAction.Request, TChild.List, TypeInfo);
@@ -205,37 +207,39 @@ namespace Gadget.Collection.Pattern.ViewModels
 
     void ResponseSelectManyDispatcher (TEntityAction action)
     {
-      foreach (var itemIdResult in action.CollectionAction.EntityDictionary) {
-        var gadgetCollection = new Dictionary<Guid, Collection<TActionComponent>> ();
+      if (action.NotNull ()) {
+        foreach (var itemIdResult in action.CollectionAction.EntityDictionary) {
+          var gadgetCollection = new Dictionary<Guid, Collection<TActionComponent>> ();
 
-        foreach (var entityCollection in itemIdResult.Value) {
-          var id = entityCollection.Key;
-          var entityAction = entityCollection.Value;
-          var gadgetComponent = new Collection<TActionComponent> ();
+          foreach (var entityCollection in itemIdResult.Value) {
+            var id = entityCollection.Key;
+            var entityAction = entityCollection.Value;
+            var gadgetComponent = new Collection<TActionComponent> ();
 
-          // Registration
-          if (entityAction.CategoryType.IsCategory (TCategory.Registration)) {
-            var gadgets = TActionComponent.Create (TCategory.Registration);
-            TActionConverter.Select (TCategory.Registration, gadgets, entityAction);
+            // Registration
+            if (entityAction.CategoryType.IsCategory (TCategory.Registration)) {
+              var gadgets = TActionComponent.Create (TCategory.Registration);
+              TActionConverter.Select (TCategory.Registration, gadgets, entityAction);
 
-            gadgetComponent.Add (gadgets);
+              gadgetComponent.Add (gadgets);
+            }
+
+            // Test
+            if (entityAction.CategoryType.IsCategory (TCategory.Test)) {
+              var gadgets = TActionComponent.Create (TCategory.Test);
+              TActionConverter.Select (TCategory.Test, gadgets, entityAction);
+
+              gadgetComponent.Add (gadgets);
+            }
+
+            gadgetCollection.Add (id, gadgetComponent);
           }
 
-          // Test
-          if (entityAction.CategoryType.IsCategory (TCategory.Test)) {
-            var gadgets = TActionComponent.Create (TCategory.Test);
-            TActionConverter.Select (TCategory.Test, gadgets, entityAction);
-
-            gadgetComponent.Add (gadgets);
-          }
-
-          gadgetCollection.Add (id, gadgetComponent);
+          Model.SelectMany (itemIdResult.Key, gadgetCollection);
         }
 
-        Model.SelectMany (itemIdResult.Key, gadgetCollection);
+        TDispatcher.Invoke (RefreshAllDispatcher);
       }
-
-      TDispatcher.Invoke (RefreshAllDispatcher);
     }
 
     void ResultChangedDispatcher (GadgetResult gadget)
