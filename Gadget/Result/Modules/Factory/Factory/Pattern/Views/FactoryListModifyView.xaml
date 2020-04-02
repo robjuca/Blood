@@ -386,14 +386,13 @@
                                             VerticalAlignment="Bottom">
                                     <TextBlock FontSize="11px"
                                                TextWrapping="Wrap"
-                                               TextAlignment="Justify">
-                                                <Run>[ The current Result will be </Run>
+                                               TextAlignment="Center">
+                                                <Run>The current Result will be </Run>
                                                 <Run FontWeight="DemiBold"
                                                      Foreground="Red">locked</Run>
                                                 <Run> and can not be changed</Run>
                                                 <Run FontWeight="DemiBold"
                                                      Foreground="Red">anymore!</Run>
-                                                <Run> ]</Run>
                                     </TextBlock>
 
                                     <materialDesign:Flipper Style="{StaticResource MaterialDesignCardFlipper}"

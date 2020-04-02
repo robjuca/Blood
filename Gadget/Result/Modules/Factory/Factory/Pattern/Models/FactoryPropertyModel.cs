@@ -70,13 +70,21 @@ namespace Gadget.Factory.Pattern.Models
     internal void ModifyEnter (TActionComponent component)
     {
       if (component.NotNull ()) {
-        var entityAction = TEntityAction.CreateDefault;
-        TActionConverter.Request (TCategory.Result, component, entityAction);
+        if (component.IsCategory (TCategory.Result)) {
+          var gadget = component.Models.GadgetResultModel;
 
-        ComponentModelProperty.SelectModel (entityAction);
-        ComponentModelProperty.ValidateModel (validated: false);
-        ComponentModelProperty.IsComponentModelEnabled = false;
-        ComponentModelProperty.IsExtensionModelEnabled = false;
+          if (gadget.HasRegistration) {
+            gadget.RequestContent (m_Registration);
+          }
+
+          var entityAction = TEntityAction.CreateDefault;
+          TActionConverter.Request (TCategory.Result, component, entityAction);
+
+          ComponentModelProperty.SelectModel (entityAction);
+          ComponentModelProperty.ValidateModel (validated: false);
+          ComponentModelProperty.IsComponentModelEnabled = false;
+          ComponentModelProperty.IsExtensionModelEnabled = false;
+        }
       }
     }
 

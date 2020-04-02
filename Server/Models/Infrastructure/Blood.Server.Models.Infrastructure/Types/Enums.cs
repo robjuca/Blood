@@ -28,6 +28,7 @@ namespace Server.Models.Infrastructure
     None,
     Active,
     ById,
+    Content,
     Full,
     Idle,
     Many,
@@ -36,6 +37,7 @@ namespace Server.Models.Infrastructure
     Relation,
     Settings,
     Status,
+    Text,
     Summary,
     Zap,
   };
@@ -47,12 +49,9 @@ namespace Server.Models.Infrastructure
     None                = 0,
     Dummy               = 1,
 
-    // gadget Test
     Material            = 200,
     Target              = 210,
     Test                = 220,
-
-    // gadget Care
     Registration        = 400,
     Result              = 410,
     Report              = 420,
@@ -70,19 +69,13 @@ namespace Server.Models.Infrastructure
   // |        |content|   text   |  node   | layout  |  image   | geometry | document |
   // ----------------------------------------------------------------------------------
 
-  // TODO: review
-  // gadget Test
   //  Material          = 00100100 binary -> 24 hex -> 36 decimal
   //  Target            = 00110000 binary -> 30 hex -> 48 decimal
   //  Test              = 00110100 binary -> 34 hex -> 52 decimal
-
-  // gadget Care
   //  Registration      = 00100100 binary -> 24 hex -> 36 decimal
   //  Result            = 01100000 binary -> 60 hex -> 96 decimal
   //  Report            = 00000000 binary -> 00 hex -> 00 decimal
 
-
-  // TODO: review
   [Flags]
   public enum TComponentExtensionNames : int
   {

@@ -35,6 +35,8 @@ namespace Gadget.Factory.Pattern.ViewModels
       : base (presentation, new TFactoryListModifyModel ())
     {
       TypeName = GetType ().Name;
+
+      m_CanLock = false;
     }
     #endregion
 
@@ -47,8 +49,8 @@ namespace Gadget.Factory.Pattern.ViewModels
           if (message.Node.IsParentToMe (TChild.List)) {
             // Response
             if (message.IsAction (TInternalMessageAction.Response)) {
-              // Change - Many
-              if (message.Support.Argument.Types.IsOperation (TOperation.Change, TExtension.Many)) {
+              // Change - Content
+              if (message.Support.Argument.Types.IsOperation (TOperation.Change, TExtension.Content)) {
                 if (message.Result.IsValid) {
                   TDispatcher.Invoke (ChangeSuccessDispatcher);
                 }
@@ -116,11 +118,15 @@ namespace Gadget.Factory.Pattern.ViewModels
 
     public void OnModifyCommandClicked ()
     {
+      m_CanLock = false;
+
       TDispatcher.Invoke (ModifyCommandDispatcher);
     }
 
     public void OnLockCommandClicked ()
     {
+      m_CanLock = true;
+
       TDispatcher.Invoke (ModifyCommandDispatcher);
     }
     #endregion
@@ -172,8 +178,16 @@ namespace Gadget.Factory.Pattern.ViewModels
       var component = TActionComponent.Create (TCategory.Result);
       Model.Request (component);
 
-      var entityAction = TEntityAction.Create (TCategory.Result, TOperation.Change, TExtension.Many);
-      TActionConverter.ModifyValue (TCategory.Result, component, entityAction);
+      var gadget = component.Models.GadgetResultModel;
+
+      var action = TEntityAction.Create (TCategory.Result);
+      action.Id = gadget.Id;
+
+      TActionConverter.Request (TCategory.Result, component, action);
+
+      // Result - Change - Content
+      var entityAction = TEntityAction.Create (TCategory.Result, TOperation.Change, TExtension.Content);
+      entityAction.CollectionAction.EntityCollection.Add (gadget.Id, action);
 
       // to parent
       var message = new TFactoryMessageInternal (TInternalMessageAction.Request, TChild.List, TypeInfo);
@@ -184,10 +198,13 @@ namespace Gadget.Factory.Pattern.ViewModels
 
     void ChangeSuccessDispatcher ()
     {
-      if (Model.CanLock) {
+      if (Model.CanLock && m_CanLock) {
+        m_CanLock = false;
+
         var component = TActionComponent.Create (TCategory.Result);
         Model.RequestLockedStatus (component);
 
+        // Result - Change - Status
         var entityAction = TEntityAction.Create (TCategory.Result, TOperation.Change, TExtension.Status);
         TActionConverter.ModifyStatus (TCategory.Result, component, entityAction);
 
@@ -205,6 +222,8 @@ namespace Gadget.Factory.Pattern.ViewModels
 
     void CleanupDispatcher ()
     {
+      m_CanLock = false;
+
       Model.Cleanup ();
       TDispatcher.Invoke (RefreshAllDispatcher);
 
@@ -222,6 +241,10 @@ namespace Gadget.Factory.Pattern.ViewModels
         return (PresentationCommand as IDelegateCommand);
       }
     }
+    #endregion
+
+    #region Fields
+    bool                                    m_CanLock; 
     #endregion
   };
   //---------------------------//

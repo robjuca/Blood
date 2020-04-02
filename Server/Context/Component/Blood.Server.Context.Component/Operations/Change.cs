@@ -39,10 +39,16 @@ namespace Server.Context.Component
                 }
                 break;
 
-              case TExtension.Many: {
-                  ChangeMany (context, action);
+              case TExtension.Text: {
+                  ChangeText (context, action);
                 }
                 break;
+
+              case TExtension.Content: {
+                  ChangeContent (context, action);
+                }
+                break;
+
 
               case TExtension.Status: {
                   ChangeStatus (context, action);
@@ -111,7 +117,7 @@ namespace Server.Context.Component
       }
     }
 
-    void ChangeMany (TModelContext context, TEntityAction action)
+    void ChangeText (TModelContext context, TEntityAction action)
     {
       /*
       DATA IN
@@ -125,7 +131,25 @@ namespace Server.Context.Component
         entityAction.Id = item.Key;
         entityAction.CollectionAction.SetCollection (action.CollectionAction.CategoryRelationCollection);
 
-        ModifyValue (context, entityAction);
+        ModifyText (context, entityAction);
+      }
+    }
+
+    void ChangeContent (TModelContext context, TEntityAction action)
+    {
+      /*
+      DATA IN
+      - action.CollectionAction.EntityCollection
+      */
+
+      action.Result = TValidationResult.Success;
+
+      foreach (var item in action.CollectionAction.EntityCollection) {
+        var entityAction = item.Value;
+        entityAction.Id = item.Key;
+        entityAction.CollectionAction.SetCollection (action.CollectionAction.CategoryRelationCollection);
+
+        ModifyContent (context, entityAction);
       }
     }
 
@@ -643,7 +667,7 @@ namespace Server.Context.Component
       }
     }
 
-    static void ModifyValue (TModelContext context, TEntityAction action)
+    static void ModifyText (TModelContext context, TEntityAction action)
     {
       /*
       DATA IN
@@ -698,6 +722,80 @@ namespace Server.Context.Component
                         var model = list [0];
                         model.Change (action.ModelAction.ExtensionTextModel);
                         context.ExtensionText.Update (model); // change model
+                      }
+                    }
+                    break;
+                }
+              }
+            }
+
+            context.SaveChanges (); // update
+
+            action.Result = TValidationResult.Success;
+          }
+        }
+      }
+
+      catch (Exception exception) {
+        Models.Infrastructure.THelper.FormatException ("Modify", exception, action);
+      }
+    }
+
+    static void ModifyContent (TModelContext context, TEntityAction action)
+    {
+      /*
+      DATA IN
+      - action.Id (Component id to change)
+      - action.ModelAction (Component model) (only Content extension)
+      */
+
+      var id = action.Id;
+
+      try {
+        //Component Id must exist
+        if (id.IsEmpty ()) {
+          action.Result = new TValidationResult ($"[{action.Operation.CategoryType.Category} - Modify] Component Id can NOT be NULL or EMPTY!");
+        }
+
+        else {
+          // search Id
+          var descriptors = context.ComponentDescriptor.AsQueryable ()
+            .Where (p => p.Id.Equals (id))
+            .ToList ()
+          ;
+
+          // Descriptor found
+          if (descriptors.Count.Equals (1)) {
+            var descriptor = descriptors [0];
+            var categoryValue = descriptor.Category;
+
+            // extensions
+
+            // search for extensions
+            var categoryRelationList = action.CollectionAction.CategoryRelationCollection
+              .Where (p => p.Category.Equals (categoryValue))
+              .ToList ()
+            ;
+
+            // found
+            if (categoryRelationList.Count.Equals (1)) {
+              var categoryRelation = categoryRelationList [0]; // get extension using TComponentExtension
+
+              var extension = TComponentExtension.Create (categoryRelation.Extension);
+              extension.Request ();
+
+              foreach (var extensionName in extension.ExtensionList) {
+                switch (extensionName) {
+                  case TComponentExtensionNames.Content: {
+                      var list = context.ExtensionContent.AsQueryable ()
+                        .Where (p => p.Id.Equals (id))
+                        .ToList ()
+                      ;
+
+                      if (list.Count.Equals (1)) {
+                        var model = list [0];
+                        model.Change (action.ModelAction.ExtensionContentModel);
+                        context.ExtensionContent.Update (model); // change model
                       }
                     }
                     break;
